@@ -1,0 +1,38 @@
+{
+  "name": "eliashaeussler/cache-warmup",
+  "description": "Composer package to warm up website caches, based on a given sitemap.xml",
+  "type": "library",
+  "license": "GPL-3.0-or-later",
+  "homepage": "https://haeussler.dev",
+  "authors": [{
+    "name": "Elias Häußler",
+    "email": "elias@haeussler.dev",
+    "homepage": "https://haeussler.dev",
+    "role": "Maintainer"
+  }],
+  "require": {
+    "php": ">= 7.1 < 7.5",
+    "ext-curl": "*",
+    "ext-dom": "*",
+    "ext-libxml": "*",
+    "ext-simplexml": "*",
+    "guzzlehttp/guzzle": "^6.0 || 7.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^7.0 || ^8.0 || ^9.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "EliasHaeussler\\CacheWarmup\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "EliasHaeussler\\CacheWarmup\\Tests\\": "tests"
+    }
+  },
+  "scripts": {
+    "test": "phpunit -c phpunit.xml",
+    "test:ci": "@php -d pcov.enabled=1 -d pcov.directory=src -d memory_limit=-1 vendor/bin/phpunit -c phpunit.ci.xml"
+  }
+}
