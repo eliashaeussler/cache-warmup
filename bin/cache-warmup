@@ -21,8 +21,25 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-require __DIR__ . '/../vendor/autoload.php';
+// Check Composer autoloader
+$autoloadFile = null;
+foreach ([__DIR__ . '/../../../autoload.php', __DIR__ . '/../vendor/autoload.php', __DIR__ . '/vendor/autoload.php'] as $file) {
+    if (file_exists($file)) {
+        $autoloadFile = $file;
+        break;
+    }
+}
+if ($autoloadFile === null) {
+    $message = 'Unable to determine path to Composer autoload file. Please set up your project using Composer.';
+    fwrite(STDERR, $message);
+    die(1);
+}
 
+// Require Composer autoloader
+require $autoloadFile;
+unset($autoloadFile, $file);
+
+// Run application
 $command = new \EliasHaeussler\CacheWarmup\Command\CacheWarmupCommand();
 $application = new \Symfony\Component\Console\Application('echo');
 $application->add($command);
