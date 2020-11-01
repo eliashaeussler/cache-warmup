@@ -55,24 +55,31 @@ trait RequestProphecyTrait
      */
     protected function prophesizeSitemapRequest(string $fixture, Uri $expectedUri = null): void
     {
-        $this->closeStream();
-
         $absolutePath = 'Fixtures/' . $fixture . '.xml';
         $fixtureFile = realpath(__DIR__ . '/' . $absolutePath);
         if (!$fixtureFile) {
             $fixtureFile =  realpath(__DIR__ . '/../' . $absolutePath);
         }
 
-        $this->stream = new Stream(fopen($fixtureFile, 'r'));
+        $this->openStream($fixtureFile);
         /** @noinspection PhpParamsInspection */
+        /** @noinspection PhpUndefinedMethodInspection */
         $this->clientProphecy
-            ->sendRequest(Argument::that(function (Request $request) use ($expectedUri) {
-                if ($expectedUri === null) {
-                    return true;
-                }
-                return (string)$request->getUri() === (string)$expectedUri;
-            }))
+            ->sendRequest(
+                Argument::that(function (Request $request) use ($expectedUri) {
+                    if ($expectedUri === null) {
+                        return true;
+                    }
+                    return (string)$request->getUri() === (string)$expectedUri;
+                })
+            )
             ->willReturn(new Response(200, [], $this->stream));
+    }
+
+    protected function openStream(string $file): void
+    {
+        $this->closeStream();
+        $this->stream = new Stream(fopen($file, 'r'));
     }
 
     protected function closeStream(): void
