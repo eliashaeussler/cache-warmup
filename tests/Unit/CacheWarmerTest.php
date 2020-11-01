@@ -69,17 +69,24 @@ class CacheWarmerTest extends TestCase
      * @test
      * @dataProvider addSitemapsAddsAndParsesGivenSitemapsDataProvider
      * @param string[]|Sitemap[]|string|Sitemap|null $sitemaps
-     * @param array $expected
+     * @param array $expectedSitemaps
+     * @param array $expectedUrls
      * @param array $prophesizedRequests
      * @throws ClientExceptionInterface
      */
-    public function addSitemapsAddsAndParsesGivenSitemaps($sitemaps, array $expected, array $prophesizedRequests = []): void
+    public function addSitemapsAddsAndParsesGivenSitemaps(
+        $sitemaps,
+        array $expectedSitemaps,
+        array $expectedUrls,
+        array $prophesizedRequests = []
+    ): void
     {
         foreach ($prophesizedRequests as $fixture => $expectedUri) {
             $this->prophesizeSitemapRequest($fixture, $expectedUri);
         }
         $this->subject->addSitemaps($sitemaps);
-        static::assertEquals($expected, $this->subject->getUrls());
+        static::assertEquals($expectedSitemaps, $this->subject->getSitemaps());
+        static::assertEquals($expectedUrls, $this->subject->getUrls());
     }
 
     /**
@@ -151,13 +158,18 @@ class CacheWarmerTest extends TestCase
             'no sitemaps' => [
                 null,
                 [],
+                [],
             ],
             'empty sitemaps' => [
+                [],
                 [],
                 [],
             ],
             'one sitemap url' => [
                 'https://www.example.org/sitemap.xml',
+                [
+                    new Sitemap(new Uri('https://www.example.org/sitemap.xml')),
+                ],
                 [
                     new Uri('https://www.example.org/'),
                     new Uri('https://www.example.org/foo'),
@@ -169,6 +181,9 @@ class CacheWarmerTest extends TestCase
             ],
             'one sitemap object' => [
                 new Sitemap(new Uri('https://www.example.org/sitemap.xml')),
+                [
+                    new Sitemap(new Uri('https://www.example.org/sitemap.xml')),
+                ],
                 [
                     new Uri('https://www.example.org/'),
                     new Uri('https://www.example.org/foo'),
@@ -184,6 +199,10 @@ class CacheWarmerTest extends TestCase
                     'https://www.example.com/sitemap.xml',
                 ],
                 [
+                    new Sitemap(new Uri('https://www.example.org/sitemap.xml')),
+                    new Sitemap(new Uri('https://www.example.com/sitemap.xml')),
+                ],
+                [
                     new Uri('https://www.example.org/'),
                     new Uri('https://www.example.org/foo'),
                     new Uri('https://www.example.org/baz'),
@@ -196,6 +215,10 @@ class CacheWarmerTest extends TestCase
                 ],
             ],
             'multiple sitemap objects' => [
+                [
+                    new Sitemap(new Uri('https://www.example.org/sitemap.xml')),
+                    new Sitemap(new Uri('https://www.example.com/sitemap.xml')),
+                ],
                 [
                     new Sitemap(new Uri('https://www.example.org/sitemap.xml')),
                     new Sitemap(new Uri('https://www.example.com/sitemap.xml')),
@@ -216,6 +239,11 @@ class CacheWarmerTest extends TestCase
                 [
                     new Sitemap(new Uri('https://www.example.org/sitemap.xml')),
                     new Sitemap(new Uri('https://www.example.com/sitemap.xml')),
+                ],
+                [
+                    new Sitemap(new Uri('https://www.example.org/sitemap.xml')),
+                    new Sitemap(new Uri('https://www.example.com/sitemap.xml')),
+                    new Sitemap(new Uri('https://www.example.org/sitemap_en.xml')),
                 ],
                 [
                     new Uri('https://www.example.org/'),

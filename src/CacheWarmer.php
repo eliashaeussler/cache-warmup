@@ -42,6 +42,11 @@ class CacheWarmer
     protected $urls = [];
 
     /**
+     * @var Sitemap[]
+     */
+    protected $sitemaps = [];
+
+    /**
      * @var ClientInterface
      */
     protected $client;
@@ -90,6 +95,7 @@ class CacheWarmer
             }
             // Parse sitemap object
             if ($sitemap instanceof Sitemap) {
+                $this->addSitemap($sitemap);
                 $parser = new XmlParser($sitemap, $this->client);
                 $parser->parse();
                 foreach ($parser->getParsedSitemaps() as $parsedSitemap) {
@@ -117,12 +123,28 @@ class CacheWarmer
         return $this;
     }
 
+    protected function addSitemap(Sitemap $sitemap): self
+    {
+        if (!in_array($sitemap, $this->sitemaps, true)) {
+            $this->sitemaps[] = $sitemap;
+        }
+        return $this;
+    }
+
     /**
      * @return Uri[]
      */
     public function getUrls(): array
     {
         return $this->urls;
+    }
+
+    /**
+     * @return Sitemap[]
+     */
+    public function getSitemaps(): array
+    {
+        return $this->sitemaps;
     }
 
     protected function validateSitemapUrl(string $url): void
