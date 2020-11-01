@@ -47,6 +47,11 @@ class CacheWarmer
     protected $sitemaps = [];
 
     /**
+     * @var int
+     */
+    protected $limit = 0;
+
+    /**
      * @var ClientInterface
      */
     protected $client;
@@ -55,10 +60,12 @@ class CacheWarmer
      * CacheWarmupService constructor.
      *
      * @param string[]|Sitemap[]|string|Sitemap|null $sitemaps
+     * @param int $limit
      * @param ClientInterface|null $client
      */
-    public function __construct($sitemaps = null, ClientInterface $client = null)
+    public function __construct($sitemaps = null, int $limit = 0, ClientInterface $client = null)
     {
+        $this->limit = $limit;
         $this->client = $client ?? new Client();
         $this->addSitemaps($sitemaps);
     }
@@ -76,6 +83,11 @@ class CacheWarmer
      */
     public function addSitemaps($sitemaps): self
     {
+        // Early return if no more URLs should be added
+        if ($this->exceededLimit()) {
+            return $this;
+        }
+
         // Early return if no sitemaps are given
         if ($sitemaps === null) {
             return $this;
@@ -115,20 +127,25 @@ class CacheWarmer
         return $this;
     }
 
-    public function addUrl(Uri $url): self
-    {
-        if (!in_array($url, $this->urls, true)) {
-            $this->urls[] = $url;
-        }
-        return $this;
-    }
-
     protected function addSitemap(Sitemap $sitemap): self
     {
         if (!in_array($sitemap, $this->sitemaps, true)) {
             $this->sitemaps[] = $sitemap;
         }
         return $this;
+    }
+
+    public function addUrl(Uri $url): self
+    {
+        if (!$this->exceededLimit() && !in_array($url, $this->urls, true)) {
+            $this->urls[] = $url;
+        }
+        return $this;
+    }
+
+    protected function exceededLimit(): bool
+    {
+        return $this->limit > 0 && count($this->urls) >= $this->limit;
     }
 
     /**
@@ -145,6 +162,17 @@ class CacheWarmer
     public function getSitemaps(): array
     {
         return $this->sitemaps;
+    }
+
+    public function getLimit(): int
+    {
+        return $this->limit;
+    }
+
+    public function setLimit(int $limit): self
+    {
+        $this->limit = $limit;
+        return $this;
     }
 
     protected function validateSitemapUrl(string $url): void

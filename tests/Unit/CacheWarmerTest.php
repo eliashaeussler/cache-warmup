@@ -46,7 +46,7 @@ class CacheWarmerTest extends TestCase
     protected function setUp(): void
     {
         $this->clientProphecy = $this->prophesize(ClientInterface::class);
-        $this->subject = new CacheWarmer(null, $this->clientProphecy->reveal());
+        $this->subject = new CacheWarmer(null, 0, $this->clientProphecy->reveal());
     }
 
     /**
@@ -59,34 +59,9 @@ class CacheWarmerTest extends TestCase
         foreach ($urls as $url) {
             $this->subject->addUrl($url);
         }
-
         $crawler = $this->subject->run();
         $processedUrls = array_merge($crawler->getSuccessfulUrls(), $crawler->getFailedUrls());
         static::assertTrue(array_diff($urls, array_column($processedUrls, 'url')) === []);
-    }
-
-    /**
-     * @test
-     * @dataProvider addSitemapsAddsAndParsesGivenSitemapsDataProvider
-     * @param string[]|Sitemap[]|string|Sitemap|null $sitemaps
-     * @param array $expectedSitemaps
-     * @param array $expectedUrls
-     * @param array $prophesizedRequests
-     * @throws ClientExceptionInterface
-     */
-    public function addSitemapsAddsAndParsesGivenSitemaps(
-        $sitemaps,
-        array $expectedSitemaps,
-        array $expectedUrls,
-        array $prophesizedRequests = []
-    ): void
-    {
-        foreach ($prophesizedRequests as $fixture => $expectedUri) {
-            $this->prophesizeSitemapRequest($fixture, $expectedUri);
-        }
-        $this->subject->addSitemaps($sitemaps);
-        static::assertEquals($expectedSitemaps, $this->subject->getSitemaps());
-        static::assertEquals($expectedUrls, $this->subject->getUrls());
     }
 
     /**
@@ -121,6 +96,52 @@ class CacheWarmerTest extends TestCase
 
     /**
      * @test
+     * @throws ClientExceptionInterface
+     */
+    public function addSitemapsIgnoresSitemapsIfLimitWasExceeded(): void
+    {
+        $this->prophesizeSitemapRequest('valid_sitemap_2');
+        $expected = [new Uri('https://www.example.org/')];
+
+        // Set URL limit
+        $this->subject->setLimit(1);
+
+        // Add sitemap (first time)
+        $this->subject->addSitemaps('https://www.example.org/sitemap.xml');
+        static::assertEquals($expected, $this->subject->getUrls());
+
+        // Add sitemap (second time)
+        $this->subject->addSitemaps('https://www.example.com/sitemap.xml');
+        static::assertEquals($expected, $this->subject->getUrls());
+
+    }
+
+    /**
+     * @test
+     * @dataProvider addSitemapsAddsAndParsesGivenSitemapsDataProvider
+     * @param string[]|Sitemap[]|string|Sitemap|null $sitemaps
+     * @param array $expectedSitemaps
+     * @param array $expectedUrls
+     * @param array $prophesizedRequests
+     * @throws ClientExceptionInterface
+     */
+    public function addSitemapsAddsAndParsesGivenSitemaps(
+        $sitemaps,
+        array $expectedSitemaps,
+        array $expectedUrls,
+        array $prophesizedRequests = []
+    ): void
+    {
+        foreach ($prophesizedRequests as $fixture => $expectedUri) {
+            $this->prophesizeSitemapRequest($fixture, $expectedUri);
+        }
+        $this->subject->addSitemaps($sitemaps);
+        static::assertEquals($expectedSitemaps, $this->subject->getSitemaps());
+        static::assertEquals($expectedUrls, $this->subject->getUrls());
+    }
+
+    /**
+     * @test
      */
     public function addUrlAddsGivenUrlToListOfUrls(): void
     {
@@ -135,6 +156,38 @@ class CacheWarmerTest extends TestCase
     {
         $url = new Uri('https://www.example.org/sitemap.xml');
         static::assertSame([$url], $this->subject->addUrl($url)->addUrl($url)->getUrls());
+    }
+
+    /**
+     * @test
+     */
+    public function addUrlDoesNotAddUrlIfLimitWasExceeded(): void
+    {
+        $url1 = new Uri('https://www.example.org/sitemap.xml');
+        $url2 = new Uri('https://www.example.com/sitemap.xml');
+
+        $this->subject->setLimit(1);
+        $this->subject->addUrl($url1)->addUrl($url2);
+
+        static::assertSame([$url1], $this->subject->getUrls());
+    }
+
+    /**
+     * @test
+     */
+    public function getLimitReturnsUrlLimit(): void
+    {
+        static::assertSame(0, $this->subject->getLimit());
+        static::assertSame(10, $this->subject->setLimit(10)->getLimit());
+    }
+
+    /**
+     * @test
+     */
+    public function setLimitDefinesUrlLimit(): void
+    {
+        $this->subject->setLimit(10);
+        static::assertSame(10, $this->subject->getLimit());
     }
 
     public function runCrawlsListOfUrlsDataProvider(): array
