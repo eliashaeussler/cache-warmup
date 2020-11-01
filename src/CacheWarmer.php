@@ -58,10 +58,10 @@ class CacheWarmer
         $this->addSitemaps($sitemaps);
     }
 
-    public function run(): CrawlerInterface
+    public function run(CrawlerInterface $crawler = null): CrawlerInterface
     {
-        $crawler = new ConcurrentCrawler($this->urls);
-        $crawler->crawl();
+        $crawler = $crawler ?? new ConcurrentCrawler();
+        $crawler->crawl($this->urls);
         return $crawler;
     }
 

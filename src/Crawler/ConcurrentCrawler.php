@@ -25,7 +25,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
-use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -51,14 +50,9 @@ class ConcurrentCrawler implements CrawlerInterface
      */
     protected $failedUrls = [];
 
-    public function __construct(array $urls)
+    public function crawl(array $urls): void
     {
         $this->urls = array_values($urls);
-    }
-
-    public function crawl(): void
-    {
-        // Reset previous crawling results
         $this->successfulUrls = [];
         $this->failedUrls = [];
 
@@ -75,7 +69,7 @@ class ConcurrentCrawler implements CrawlerInterface
         $promise->wait();
     }
 
-    public function onSuccess(ResponseInterface $response, int $index = null): void
+    public function onSuccess(ResponseInterface $response, int $index): void
     {
         $this->successfulUrls[] = [
             'url' => $this->urls[$index],
@@ -83,7 +77,7 @@ class ConcurrentCrawler implements CrawlerInterface
         ];
     }
 
-    public function onFailure(\Throwable $exception, int $index = null): void
+    public function onFailure(\Throwable $exception, int $index): void
     {
         $this->failedUrls[] = [
             'url' => $this->urls[$index],

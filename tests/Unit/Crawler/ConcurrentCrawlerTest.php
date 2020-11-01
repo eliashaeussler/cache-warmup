@@ -45,8 +45,8 @@ class ConcurrentCrawlerTest extends TestCase
             new Uri('https://www.example.edu'),
             new Uri('https://www.beispiel.de'),
         ];
-        $subject = new ConcurrentCrawler($urls);
-        $subject->crawl();
+        $subject = new ConcurrentCrawler();
+        $subject->crawl($urls);
 
         $processedUrls = array_merge($subject->getSuccessfulUrls(), $subject->getFailedUrls());
         static::assertTrue(array_diff($urls, array_column($processedUrls, 'url')) === []);
@@ -60,8 +60,8 @@ class ConcurrentCrawlerTest extends TestCase
         $urls = [
             new Uri('https://www.example.org'),
         ];
-        $subject = new ConcurrentCrawler($urls);
-        $subject->crawl();
+        $subject = new ConcurrentCrawler();
+        $subject->crawl($urls);
 
         static::assertSame($urls, array_column($subject->getSuccessfulUrls(), 'url'));
         static::assertSame([], $subject->getFailedUrls());
@@ -75,8 +75,8 @@ class ConcurrentCrawlerTest extends TestCase
         $urls = [
             new Uri('https://www.foo.baz'),
         ];
-        $subject = new ConcurrentCrawler($urls);
-        $subject->crawl();
+        $subject = new ConcurrentCrawler();
+        $subject->crawl($urls);
 
         static::assertSame($urls, array_column($subject->getFailedUrls(), 'url'));
         static::assertSame([], $subject->getSuccessfulUrls());

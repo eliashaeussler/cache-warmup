@@ -32,13 +32,9 @@ use GuzzleHttp\Psr7\Uri;
 interface CrawlerInterface
 {
     /**
-     * CrawlerInterface constructor.
-     *
      * @param Uri[] $urls
      */
-    public function __construct(array $urls);
-
-    public function crawl(): void;
+    public function crawl(array $urls): void;
 
     /**
      * @return Uri[]
