@@ -21,9 +21,8 @@ namespace EliasHaeussler\CacheWarmup\Http;
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use EliasHaeussler\CacheWarmup\Exception\ClientException;
 use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\RequestOptions;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -39,13 +38,12 @@ class Client extends GuzzleClient implements ClientInterface
 {
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
-        try {
-            return $this->send($request);
-        } catch (GuzzleException $e) {
-            if (method_exists($e, 'getResponse')) {
-                $response = $e->getResponse();
-            }
-            throw new ClientException($e->getMessage(), $request, $response ?? null, $e);
+        if (method_exists(GuzzleClient::class, 'sendRequest')) {
+            return parent::sendRequest($request);
         }
+        $options[RequestOptions::SYNCHRONOUS] = true;
+        $options[RequestOptions::ALLOW_REDIRECTS] = false;
+        $options[RequestOptions::HTTP_ERRORS] = false;
+        return $this->sendAsync($request, $options)->wait();
     }
 }
