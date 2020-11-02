@@ -37,6 +37,6 @@
   },
   "scripts": {
     "test": "phpunit -c phpunit.xml",
-    "test:ci": "@php -d pcov.enabled=1 -d pcov.directory=src -d memory_limit=-1 vendor/bin/phpunit -c phpunit.ci.xml"
+    "test:ci": "phpunit -c phpunit.ci.xml"
   }
 }

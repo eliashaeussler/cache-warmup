@@ -9,26 +9,7 @@ stages:
 # Test template
 .test: &test-template
   stage: test
-  image: webdevops/php:${PHP_VERSION}
-  before_script:
-    - >
-      if [[ "${PHP_VERSION}" == "8.0" ]]; then
-        apt-get update \
-          && apt-get install -y libzip-dev \
-          && docker-php-ext-install -j$(nproc) zip \
-          && curl -L -o /usr/local/bin/pickle https://github.com/FriendsOfPHP/pickle/releases/download/v0.6.0/pickle.phar \
-          && chmod +x /usr/local/bin/pickle \
-          && pickle install pcov
-      else
-        pecl channel-update pecl.php.net \
-          && pecl install pcov \
-          && docker-php-ext-enable pcov
-      fi
-    - >
-      if [[ $TEST_COMPATIBILITY ]]; then
-        composer require --dev pcov/clobber
-        vendor/bin/pcov clobber
-      fi
+  image: webdevops/php-dev:${PHP_VERSION}
   script:
     - composer install --no-progress
     - COMPOSER_PROCESS_TIMEOUT=1000 composer test:ci -- --testdox
@@ -44,7 +25,6 @@ test:php7.1:
   <<: *test-template
   variables:
     PHP_VERSION: "7.1"
-    TEST_COMPATIBILITY: "1"
     COMPOSER_VERSION: "1"
 
 # Test: PHP 7.2
