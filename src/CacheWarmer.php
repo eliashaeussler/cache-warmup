@@ -23,8 +23,8 @@ namespace EliasHaeussler\CacheWarmup;
 
 use EliasHaeussler\CacheWarmup\Crawler\ConcurrentCrawler;
 use EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface;
+use EliasHaeussler\CacheWarmup\Http\Client;
 use EliasHaeussler\CacheWarmup\Xml\XmlParser;
-use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Client\ClientInterface;
 
