@@ -25,6 +25,7 @@ use EliasHaeussler\CacheWarmup\CacheWarmer;
 use EliasHaeussler\CacheWarmup\Crawler\ConcurrentCrawler;
 use EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface;
 use EliasHaeussler\CacheWarmup\Crawler\OutputtingCrawler;
+use EliasHaeussler\CacheWarmup\CrawlingState;
 use EliasHaeussler\CacheWarmup\Sitemap;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Client\ClientInterface;
@@ -203,11 +204,11 @@ class CacheWarmupCommand extends Command
         if ($output->isVerbose()) {
             if ($successfulUrls !== []) {
                 $io->section('The following URLs were successfully crawled:');
-                $io->listing(array_column($successfulUrls, 'url'));
+                $io->listing($this->decorateCrawledUrls($successfulUrls));
             }
             if ($failedUrls !== []) {
                 $io->section('The following URLs failed during crawling:');
-                $io->listing(array_column($failedUrls, 'url'));
+                $io->listing($this->decorateCrawledUrls($failedUrls));
             }
         }
 
@@ -260,6 +261,19 @@ class CacheWarmupCommand extends Command
     protected function decorateSitemap(Sitemap $sitemap): string
     {
         return (string)$sitemap->getUri();
+    }
+
+    /**
+     * @param CrawlingState[] $crawledUrls
+     * @return string[]
+     */
+    protected function decorateCrawledUrls(array $crawledUrls): array
+    {
+        $urls = [];
+        foreach ($crawledUrls as $crawlingState) {
+            $urls[] = $crawlingState->getUri();
+        }
+        return $urls;
     }
 
     public function setClient(?ClientInterface $client): self

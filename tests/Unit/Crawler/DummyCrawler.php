@@ -44,11 +44,11 @@ class DummyCrawler implements CrawlerInterface
 
     public function getSuccessfulUrls(): array
     {
-        return static::$crawledUrls;
+        return [];
     }
 
     public function getFailedUrls(): array
     {
-        return static::$crawledUrls;
+        return [];
     }
 }

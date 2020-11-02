@@ -22,6 +22,8 @@ namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler;
  */
 
 use EliasHaeussler\CacheWarmup\Crawler\ConcurrentCrawler;
+use EliasHaeussler\CacheWarmup\CrawlingState;
+use EliasHaeussler\CacheWarmup\Tests\Unit\CrawlerResultProcessorTrait;
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
 
@@ -33,6 +35,8 @@ use PHPUnit\Framework\TestCase;
  */
 class ConcurrentCrawlerTest extends TestCase
 {
+    use CrawlerResultProcessorTrait;
+
     /**
      * @test
      */
@@ -48,8 +52,8 @@ class ConcurrentCrawlerTest extends TestCase
         $subject = new ConcurrentCrawler();
         $subject->crawl($urls);
 
-        $processedUrls = array_merge($subject->getSuccessfulUrls(), $subject->getFailedUrls());
-        static::assertTrue(array_diff($urls, array_column($processedUrls, 'url')) === []);
+        $processedUrls = $this->getProcessedUrlsFromCrawler($subject);
+        static::assertTrue(array_diff($urls, $processedUrls) === []);
     }
 
     /**
@@ -63,7 +67,7 @@ class ConcurrentCrawlerTest extends TestCase
         $subject = new ConcurrentCrawler();
         $subject->crawl($urls);
 
-        static::assertSame($urls, array_column($subject->getSuccessfulUrls(), 'url'));
+        static::assertSame($urls, $this->getProcessedUrlsFromCrawler($subject, CrawlingState::SUCCESSFUL));
         static::assertSame([], $subject->getFailedUrls());
     }
 
@@ -78,7 +82,7 @@ class ConcurrentCrawlerTest extends TestCase
         $subject = new ConcurrentCrawler();
         $subject->crawl($urls);
 
-        static::assertSame($urls, array_column($subject->getFailedUrls(), 'url'));
+        static::assertSame($urls, $this->getProcessedUrlsFromCrawler($subject, CrawlingState::FAILED));
         static::assertSame([], $subject->getSuccessfulUrls());
     }
 }

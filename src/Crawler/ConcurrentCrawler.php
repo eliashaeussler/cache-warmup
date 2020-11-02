@@ -21,6 +21,7 @@ namespace EliasHaeussler\CacheWarmup\Crawler;
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use EliasHaeussler\CacheWarmup\CrawlingState;
 use GuzzleHttp\Client;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Psr7\Request;
@@ -71,18 +72,18 @@ class ConcurrentCrawler implements CrawlerInterface
 
     public function onSuccess(ResponseInterface $response, int $index): void
     {
-        $this->successfulUrls[] = [
-            'url' => $this->urls[$index],
-            'status' => $response->getStatusCode(),
+        $data = [
+            'response' => $response,
         ];
+        $this->successfulUrls[] = CrawlingState::createSuccessful($this->urls[$index], $data);
     }
 
     public function onFailure(\Throwable $exception, int $index): void
     {
-        $this->failedUrls[] = [
-            'url' => $this->urls[$index],
+        $data = [
             'exception' => $exception,
         ];
+        $this->failedUrls[] = CrawlingState::createFailed($this->urls[$index], $data);
     }
 
     protected function getRequests(): \Iterator
@@ -93,7 +94,7 @@ class ConcurrentCrawler implements CrawlerInterface
     }
 
     /**
-     * @return Uri[]
+     * @return CrawlingState[]
      */
     public function getSuccessfulUrls(): array
     {
@@ -101,7 +102,7 @@ class ConcurrentCrawler implements CrawlerInterface
     }
 
     /**
-     * @return Uri[]
+     * @return CrawlingState[]
      */
     public function getFailedUrls(): array
     {

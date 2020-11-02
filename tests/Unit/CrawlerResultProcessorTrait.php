@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace EliasHaeussler\CacheWarmup\Crawler;
+namespace EliasHaeussler\CacheWarmup\Tests\Unit;
 
 /*
  * This file is part of the Composer package "eliashaeussler/cache-warmup".
@@ -21,29 +21,27 @@ namespace EliasHaeussler\CacheWarmup\Crawler;
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface;
 use EliasHaeussler\CacheWarmup\CrawlingState;
-use GuzzleHttp\Psr7\Uri;
 
 /**
- * CrawlerInterface
+ * CrawlerResultProcessorTrait
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-interface CrawlerInterface
+trait CrawlerResultProcessorTrait
 {
-    /**
-     * @param Uri[] $urls
-     */
-    public function crawl(array $urls): void;
-
-    /**
-     * @return CrawlingState[]
-     */
-    public function getSuccessfulUrls(): array;
-
-    /**
-     * @return CrawlingState[]
-     */
-    public function getFailedUrls(): array;
+    protected function getProcessedUrlsFromCrawler(CrawlerInterface $crawler, int $state = null): array
+    {
+        $urls = [];
+        $crawledUrls = array_merge($crawler->getSuccessfulUrls(), $crawler->getFailedUrls());
+        /** @var CrawlingState $crawlingState */
+        foreach ($crawledUrls as $crawlingState) {
+            if ($state === null || $crawlingState->is($state)) {
+                $urls[] = $crawlingState->getUri();
+            }
+        }
+        return $urls;
+    }
 }

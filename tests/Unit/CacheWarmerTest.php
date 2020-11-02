@@ -37,6 +37,7 @@ use Psr\Http\Client\ClientInterface;
 class CacheWarmerTest extends TestCase
 {
     use RequestProphecyTrait;
+    use CrawlerResultProcessorTrait;
 
     /**
      * @var CacheWarmer
@@ -60,8 +61,8 @@ class CacheWarmerTest extends TestCase
             $this->subject->addUrl($url);
         }
         $crawler = $this->subject->run();
-        $processedUrls = array_merge($crawler->getSuccessfulUrls(), $crawler->getFailedUrls());
-        static::assertTrue(array_diff($urls, array_column($processedUrls, 'url')) === []);
+        $processedUrls = $this->getProcessedUrlsFromCrawler($crawler);
+        static::assertTrue(array_diff($urls, $processedUrls) === []);
     }
 
     /**
