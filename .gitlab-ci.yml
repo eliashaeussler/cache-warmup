@@ -60,3 +60,5 @@ test:php8.0:
   variables:
     PHP_VERSION: "8.0"
     COMPOSER_VERSION: "2"
+  # Allow failures as long as PHP 8 and Xdebug 3 are not stable
+  allow_failure: true
