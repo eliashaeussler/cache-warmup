@@ -3,10 +3,6 @@ variables:
   COMPOSER_ALLOW_SUPERUSER: "1"
   COMPOSER_NO_INTERACTION: "1"
 
-before_script:
-  - composer self-update --1
-  - composer global require hirak/prestissimo --no-progress
-
 stages:
   - test
 
@@ -14,15 +10,26 @@ stages:
 .test: &test-template
   stage: test
   image: webdevops/php:${PHP_VERSION}
-  script:
-    - pecl channel-update pecl.php.net
-    - pecl install pcov
-    - docker-php-ext-enable pcov
+  before_script:
+    - >
+      if [[ "${PHP_VERSION}" == "8.0" ]]; then
+        apt-get update \
+          && apt-get install -y libzip-dev \
+          && docker-php-ext-install -j$(nproc) zip \
+          && curl -L -o /usr/local/bin/pickle https://github.com/FriendsOfPHP/pickle/releases/download/v0.6.0/pickle.phar \
+          && chmod +x /usr/local/bin/pickle \
+          && pickle install pcov
+      else
+        pecl channel-update pecl.php.net \
+          && pecl install pcov \
+          && docker-php-ext-enable pcov
+      fi
     - >
       if [[ $TEST_COMPATIBILITY ]]; then
         composer require --dev pcov/clobber
         vendor/bin/pcov clobber
       fi
+  script:
     - composer install --no-progress
     - COMPOSER_PROCESS_TIMEOUT=1000 composer test:ci -- --testdox
   coverage: '/^\s*Lines:\s*\d+.\d+\%/'
@@ -38,21 +45,32 @@ test:php7.1:
   variables:
     PHP_VERSION: "7.1"
     TEST_COMPATIBILITY: "1"
+    COMPOSER_VERSION: "1"
 
 # Test: PHP 7.2
 test:php7.2:
   <<: *test-template
   variables:
     PHP_VERSION: "7.2"
+    COMPOSER_VERSION: "1"
 
 # Test: PHP 7.3
 test:php7.3:
   <<: *test-template
   variables:
     PHP_VERSION: "7.3"
+    COMPOSER_VERSION: "1"
 
 # Test: PHP 7.4
 test:php7.4:
   <<: *test-template
   variables:
     PHP_VERSION: "7.4"
+    COMPOSER_VERSION: "1"
+
+# Test: PHP 8.0
+test:php8.0:
+  <<: *test-template
+  variables:
+    PHP_VERSION: "8.0"
+    COMPOSER_VERSION: "2"
