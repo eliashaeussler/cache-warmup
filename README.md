@@ -70,7 +70,7 @@ $cacheWarmer->setLimit(50);
 
 // Use custom crawler (must implement EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface)
 $crawler = new \Vendor\Crawler\MyCrawler();
-$cacheWarmer->crawl($crawler);
+$cacheWarmer->run($crawler);
 
 // Define URLs to be crawled
 $cacheWarmer->addUrl(new \GuzzleHttp\Psr7\Uri('https://www.example.org/'));
