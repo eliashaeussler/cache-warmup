@@ -22,7 +22,7 @@ namespace EliasHaeussler\CacheWarmup\Crawler;
  */
 
 use EliasHaeussler\CacheWarmup\CrawlingState;
-use GuzzleHttp\Psr7\Uri;
+use Psr\Http\Message\UriInterface;
 
 /**
  * CrawlerInterface
@@ -33,7 +33,7 @@ use GuzzleHttp\Psr7\Uri;
 interface CrawlerInterface
 {
     /**
-     * @param Uri[] $urls
+     * @param UriInterface[] $urls
      */
     public function crawl(array $urls): void;
 

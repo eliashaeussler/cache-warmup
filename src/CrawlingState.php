@@ -21,7 +21,7 @@ namespace EliasHaeussler\CacheWarmup;
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use GuzzleHttp\Psr7\Uri;
+use Psr\Http\Message\UriInterface;
 
 /**
  * CrawlingState
@@ -35,7 +35,7 @@ class CrawlingState
     public const FAILED = 1;
 
     /**
-     * @var Uri
+     * @var UriInterface
      */
     protected $uri;
 
@@ -49,7 +49,7 @@ class CrawlingState
      */
     protected $data = [];
 
-    public function __construct(Uri $uri, int $state = self::SUCCESSFUL, array $data = [])
+    public function __construct(UriInterface $uri, int $state = self::SUCCESSFUL, array $data = [])
     {
         $this->uri = $uri;
         $this->state = $state;
@@ -57,17 +57,17 @@ class CrawlingState
         $this->validateState();
     }
 
-    public static function createSuccessful(Uri $uri, array $data = []): self
+    public static function createSuccessful(UriInterface $uri, array $data = []): self
     {
         return new static($uri, self::SUCCESSFUL, $data);
     }
 
-    public static function createFailed(Uri $uri, array $data = []): self
+    public static function createFailed(UriInterface $uri, array $data = []): self
     {
         return new static($uri, self::FAILED, $data);
     }
 
-    public function getUri(): Uri
+    public function getUri(): UriInterface
     {
         return $this->uri;
     }

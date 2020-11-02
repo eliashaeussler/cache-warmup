@@ -26,6 +26,7 @@ use EliasHaeussler\CacheWarmup\Sitemap;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\UriInterface;
 
 /**
  * XmlParser
@@ -54,7 +55,7 @@ class XmlParser
     protected $parsedSitemaps = [];
 
     /**
-     * @var Uri[]
+     * @var UriInterface[]
      */
     protected $parsedUrls = [];
 
@@ -84,7 +85,7 @@ class XmlParser
             case self::ELEMENT_URLSET:
                 foreach ($xml->url as $url) {
                     $parsedUrl = $this->parseUrl($url);
-                    if ($parsedUrl instanceof Uri) {
+                    if ($parsedUrl instanceof UriInterface) {
                         $this->parsedUrls[] = $parsedUrl;
                     }
                 }
@@ -101,7 +102,7 @@ class XmlParser
     }
 
     /**
-     * @return Uri[]
+     * @return UriInterface[]
      */
     public function getParsedUrls(): array
     {
@@ -119,7 +120,7 @@ class XmlParser
         return new Sitemap($sitemapUri);
     }
 
-    protected function parseUrl(\SimpleXMLElement $xml): ?Uri
+    protected function parseUrl(\SimpleXMLElement $xml): ?UriInterface
     {
         if (!isset($xml->loc)) {
             return null;

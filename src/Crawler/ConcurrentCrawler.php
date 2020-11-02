@@ -25,8 +25,8 @@ use EliasHaeussler\CacheWarmup\CrawlingState;
 use EliasHaeussler\CacheWarmup\Http\Client;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\UriInterface;
 
 /**
  * ConcurrentCrawler
@@ -37,17 +37,17 @@ use Psr\Http\Message\ResponseInterface;
 class ConcurrentCrawler implements CrawlerInterface
 {
     /**
-     * @var Uri[]
+     * @var UriInterface[]
      */
     protected $urls;
 
     /**
-     * @var Uri[]
+     * @var UriInterface[]
      */
     protected $successfulUrls = [];
 
     /**
-     * @var Uri[]
+     * @var UriInterface[]
      */
     protected $failedUrls = [];
 

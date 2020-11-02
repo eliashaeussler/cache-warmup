@@ -21,7 +21,7 @@ namespace EliasHaeussler\CacheWarmup;
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use GuzzleHttp\Psr7\Uri;
+use Psr\Http\Message\UriInterface;
 
 /**
  * Sitemap
@@ -32,16 +32,16 @@ use GuzzleHttp\Psr7\Uri;
 class Sitemap
 {
     /**
-     * @var Uri
+     * @var UriInterface
      */
     protected $uri;
 
-    public function __construct(Uri $uri)
+    public function __construct(UriInterface $uri)
     {
         $this->uri = $uri;
     }
 
-    public function getUri(): Uri
+    public function getUri(): UriInterface
     {
         return $this->uri;
     }

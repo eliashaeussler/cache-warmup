@@ -27,6 +27,7 @@ use EliasHaeussler\CacheWarmup\Http\Client;
 use EliasHaeussler\CacheWarmup\Xml\XmlParser;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\UriInterface;
 
 /**
  * CacheWarmer
@@ -37,7 +38,7 @@ use Psr\Http\Client\ClientInterface;
 class CacheWarmer
 {
     /**
-     * @var Uri[]
+     * @var UriInterface[]
      */
     protected $urls = [];
 
@@ -149,7 +150,7 @@ class CacheWarmer
     }
 
     /**
-     * @return Uri[]
+     * @return UriInterface[]
      */
     public function getUrls(): array
     {
