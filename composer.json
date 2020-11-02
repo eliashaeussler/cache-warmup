@@ -37,6 +37,6 @@
   },
   "scripts": {
     "test": "phpunit -c phpunit.xml",
-    "test:ci": "phpunit -c phpunit.ci.xml"
+    "test:ci": "@php -d xdebug.mode=coverage vendor/bin/phpunit -c phpunit.ci.xml"
   }
 }

@@ -11,6 +11,12 @@ stages:
   stage: test
   image: webdevops/php-dev:${PHP_VERSION}
   script:
+    - >
+      if [[ "${PHP_VERSION}" == "8.0" ]]; then
+        mkdir -p /usr/src/php/ext/xdebug \
+          && curl -fsSL https://pecl.php.net/get/xdebug | tar xvz -C "/usr/src/php/ext/xdebug" --strip 1 \
+          && docker-php-ext-install xdebug
+      fi
     - composer install --no-progress
     - COMPOSER_PROCESS_TIMEOUT=1000 composer test:ci -- --testdox
   coverage: '/^\s*Lines:\s*\d+.\d+\%/'
