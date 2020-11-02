@@ -13,6 +13,71 @@
 composer req --dev eliashaeussler/cache-warmup
 ```
 
+## Usage
+
+### Command-line usage
+
+**General usage**
+
+```bash
+./vendor/bin/cache-warmup [--urls...] [--limit] [--progress] [--crawler] [<sitemaps>...]
+```
+
+**Extended usage**
+
+```bash
+# Warm up caches of specific sitemap
+./vendor/bin/cache-warmup "https://www.example.org/sitemap.xml"
+
+# Limit number of pages to be crawled
+./vendor/bin/cache-warmup "https://www.example.org/sitemap.xml" --limit 50
+
+# Show progress bar (can also be achieved by increasing verbosity)
+./vendor/bin/cache-warmup "https://www.example.org/sitemap.xml" --progress
+./vendor/bin/cache-warmup "https://www.example.org/sitemap.xml" -v
+
+# Use custom crawler (must implement EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface)
+./vendor/bin/cache-warmup "https://www.example.org/sitemap.xml" --crawler "Vendor\Crawler\MyCrawler"
+
+# Define URLs to be crawled
+./vendor/bin/cache-warmup -u "https://www.example.org/" \
+    -u "https://www.example.org/foo" \
+    -u "https://www.example.org/baz"
+```
+
+For more detailed information run `./vendor/bin/cache-warmup --help`.
+
+### Code usage
+
+**General usage**
+
+```php
+// Instantiate and run cache warmer
+$cacheWarmer = new \EliasHaeussler\CacheWarmup\CacheWarmer();
+$cacheWarmer->addSitemaps('https://www.example.org/sitemap.xml');
+$crawler = $cacheWarmer->run();
+
+// Get successful and failed URLs
+$successfulUrls = $crawler->getSuccessfulUrls();
+$failedUrls = $crawler->getFailedUrls();
+```
+
+**Extended usage**
+
+```php
+// Limit number of pages to be crawled
+$cacheWarmer->setLimit(50);
+
+// Use custom crawler (must implement EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface)
+$crawler = new \Vendor\Crawler\MyCrawler();
+$cacheWarmer->crawl($crawler);
+
+// Define URLs to be crawled
+$cacheWarmer->addUrl(new \GuzzleHttp\Psr7\Uri('https://www.example.org/'));
+$cacheWarmer->addUrl(new \GuzzleHttp\Psr7\Uri('https://www.example.org/foo'));
+$cacheWarmer->addUrl(new \GuzzleHttp\Psr7\Uri('https://www.example.org/baz'));
+```
+
 ## Development
 
 ### Preparation
