@@ -33,6 +33,7 @@ use Psr\Http\Message\ResponseInterface;
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
+ * @codeCoverageIgnore
  */
 class Client extends GuzzleClient implements ClientInterface
 {
