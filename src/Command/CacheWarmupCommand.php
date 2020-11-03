@@ -25,6 +25,7 @@ use EliasHaeussler\CacheWarmup\CacheWarmer;
 use EliasHaeussler\CacheWarmup\Crawler\ConcurrentCrawler;
 use EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface;
 use EliasHaeussler\CacheWarmup\Crawler\OutputtingCrawler;
+use EliasHaeussler\CacheWarmup\Crawler\VerboseCrawlerInterface;
 use EliasHaeussler\CacheWarmup\CrawlingState;
 use EliasHaeussler\CacheWarmup\Sitemap;
 use GuzzleHttp\Psr7\Uri;
@@ -188,13 +189,13 @@ class CacheWarmupCommand extends Command
 
         // Initialize crawler
         $crawler = $this->initializeCrawler($input, $output);
-        $isOutputtingCrawler = $crawler instanceof OutputtingCrawler;
+        $isVerboseCrawler = $crawler instanceof VerboseCrawlerInterface;
 
         // Start crawling
         $urlCount = count($cacheWarmer->getUrls());
-        $output->write(sprintf('Crawling URL%s... ', $urlCount === 1 ? '' : 's'), $isOutputtingCrawler);
+        $output->write(sprintf('Crawling URL%s... ', $urlCount === 1 ? '' : 's'), $isVerboseCrawler);
         $cacheWarmer->run($crawler);
-        if (!$isOutputtingCrawler) {
+        if (!$isVerboseCrawler) {
             $output->writeln('<info>Done</info>');
         }
 
@@ -253,7 +254,8 @@ class CacheWarmupCommand extends Command
         }
 
         if ($output->isVerbose() || $input->getOption('progress')) {
-            return new OutputtingCrawler($output);
+            $crawler = new OutputtingCrawler();
+            return $crawler->setOutput($output);
         }
         return new ConcurrentCrawler();
     }

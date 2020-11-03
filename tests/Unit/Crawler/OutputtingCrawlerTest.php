@@ -47,7 +47,8 @@ class OutputtingCrawlerTest extends TestCase
     protected function setUp(): void
     {
         $this->output = new BufferedOutput();
-        $this->subject = new OutputtingCrawler($this->output);
+        $this->subject = new OutputtingCrawler();
+        $this->subject->setOutput($this->output);
     }
 
     /**

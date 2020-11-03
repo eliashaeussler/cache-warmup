@@ -31,7 +31,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-class OutputtingCrawler extends ConcurrentCrawler
+class OutputtingCrawler extends ConcurrentCrawler implements VerboseCrawlerInterface
 {
     protected const PROGRESS_BAR_FORMAT = ' %current%/%max% [%bar%] %percent:3s%% -- %url% %state%';
 
@@ -45,9 +45,8 @@ class OutputtingCrawler extends ConcurrentCrawler
      */
     protected $progress;
 
-    public function __construct(OutputInterface $output)
+    public function __construct()
     {
-        $this->output = $output;
         ProgressBar::setFormatDefinition('cache-warmup', self::PROGRESS_BAR_FORMAT);
     }
 
@@ -75,6 +74,12 @@ class OutputtingCrawler extends ConcurrentCrawler
         $this->progress->advance();
         $this->progress->display();
         parent::onFailure($exception, $index);
+    }
+
+    public function setOutput(OutputInterface $output): VerboseCrawlerInterface
+    {
+        $this->output = $output;
+        return $this;
     }
 
     protected function startProgressBar(int $max): void
