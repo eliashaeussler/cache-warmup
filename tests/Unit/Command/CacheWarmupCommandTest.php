@@ -92,7 +92,7 @@ class CacheWarmupCommandTest extends TestCase
             'https://www.example.com/sitemap.xml',
             null,
         ]);
-        $this->commandTester->execute([], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
+        $this->commandTester->execute([], ['verbosity' => OutputInterface::VERBOSITY_VERY_VERBOSE]);
 
         $output = $this->commandTester->getDisplay();
         static::assertStringContainsString('* https://www.example.com/sitemap.xml', $output);
@@ -114,7 +114,7 @@ class CacheWarmupCommandTest extends TestCase
                 ],
             ],
             [
-                'verbosity' => OutputInterface::VERBOSITY_VERBOSE,
+                'verbosity' => OutputInterface::VERBOSITY_VERY_VERBOSE,
             ]
         );
 
@@ -139,7 +139,7 @@ class CacheWarmupCommandTest extends TestCase
                 '--limit' => 1,
             ],
             [
-                'verbosity' => OutputInterface::VERBOSITY_VERBOSE,
+                'verbosity' => OutputInterface::VERBOSITY_VERY_VERBOSE,
             ]
         );
 
@@ -165,7 +165,7 @@ class CacheWarmupCommandTest extends TestCase
                 ],
             ],
             [
-                'verbosity' => OutputInterface::VERBOSITY_VERBOSE,
+                'verbosity' => OutputInterface::VERBOSITY_VERY_VERBOSE,
             ]
         );
 

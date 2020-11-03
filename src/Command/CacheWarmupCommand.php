@@ -175,14 +175,14 @@ class CacheWarmupCommand extends Command
         $output->writeln('<info>Done</info>');
 
         // Print parsed sitemaps
-        if ($output->isVerbose()) {
+        if ($output->isVeryVerbose()) {
             $decoratedSitemaps = array_map([$this, 'decorateSitemap'], $cacheWarmer->getSitemaps());
             $io->section('The following sitemaps were processed:');
             $io->listing($decoratedSitemaps);
         }
 
         // Print parsed URLs
-        if ($output->isVerbose()) {
+        if ($output->isVeryVerbose()) {
             $io->section('The following URLs will be crawled:');
             $io->listing($cacheWarmer->getUrls());
         }
