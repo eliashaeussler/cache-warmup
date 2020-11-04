@@ -21,7 +21,7 @@
     "ocramius/package-versions": "^1.0 || ^2.0",
     "psr/http-client": "^1.0",
     "psr/http-message": "^1.0",
-    "symfony/console": "^4.0 || ^5.0"
+    "symfony/console": "^3.4 || ^4.0 || ^5.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^7.0 || ^8.0 || ^9.0"
