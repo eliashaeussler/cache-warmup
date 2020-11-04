@@ -136,7 +136,7 @@ class CacheWarmer
         return $this;
     }
 
-    public function addUrl(Uri $url): self
+    public function addUrl(UriInterface $url): self
     {
         if (!$this->exceededLimit() && !in_array($url, $this->urls, true)) {
             $this->urls[] = $url;

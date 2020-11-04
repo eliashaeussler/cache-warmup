@@ -151,6 +151,7 @@ class CacheWarmupCommand extends Command
             throw new RuntimeException('You must enter at least one sitemap URL.', 1604258903);
         }
 
+        /** @noinspection PhpParamsInspection */
         $input->setArgument('sitemaps', $sitemaps);
     }
 
