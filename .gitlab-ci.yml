@@ -24,8 +24,8 @@ stages:
   artifacts:
     reports:
       junit: .build/coverage/junit.xml
-  only:
-    - branches
+  rules:
+    - if: '$CI_COMMIT_BRANCH'
 
 # Test: PHP 7.1
 test:php7.1:
