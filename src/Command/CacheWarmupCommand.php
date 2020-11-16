@@ -129,8 +129,8 @@ class CacheWarmupCommand extends Command
 
     protected function interact(InputInterface $input, OutputInterface $output): void
     {
-        // Early return if sitemaps are already specified
-        if ($input->getArgument('sitemaps') !== []) {
+        // Early return if sitemaps or URLs are already specified
+        if ($input->getArgument('sitemaps') !== [] || $input->getOption('urls') !== []) {
             return;
         }
 
