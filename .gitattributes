@@ -1,7 +1,8 @@
-*                    text=auto
-/tests               export-ignore
-/.gitattributes      export-ignore
-/.gitignore          export-ignore
-/.gitlab-ci.yml      export-ignore
-/phpunit.xml         export-ignore
-/phpunit.ci.xml      export-ignore
+*                   text=auto
+/tests              export-ignore
+/.gitattributes     export-ignore
+/.gitignore         export-ignore
+/.gitlab-ci.yml     export-ignore
+/Dockerfile         export-ignore
+/phpunit.xml        export-ignore
+/phpunit.ci.xml     export-ignore

@@ -1,6 +1,7 @@
 [![Pipeline](https://gitlab.elias-haeussler.de/eliashaeussler/cache-warmup/badges/master/pipeline.svg)](https://gitlab.elias-haeussler.de/eliashaeussler/cache-warmup/-/pipelines)
 [![Coverage](https://gitlab.elias-haeussler.de/eliashaeussler/cache-warmup/badges/master/coverage.svg)](https://gitlab.elias-haeussler.de/eliashaeussler/cache-warmup/-/pipelines)
 [![Packagist](https://badgen.net/packagist/v/eliashaeussler/cache-warmup)](https://packagist.org/packages/eliashaeussler/cache-warmup)
+[![Docker](https://badgen.net/docker/metadata/version/eliashaeussler/cache-warmup/latest)](https://hub.docker.com/r/eliashaeussler/cache-warmup)
 [![License](https://badgen.net/packagist/license/eliashaeussler/cache-warmup)](LICENSE)
 
 # Cache warmup
@@ -76,6 +77,35 @@ $cacheWarmer->run($crawler);
 $cacheWarmer->addUrl(new \GuzzleHttp\Psr7\Uri('https://www.example.org/'));
 $cacheWarmer->addUrl(new \GuzzleHttp\Psr7\Uri('https://www.example.org/foo'));
 $cacheWarmer->addUrl(new \GuzzleHttp\Psr7\Uri('https://www.example.org/baz'));
+```
+
+### Usage with Docker
+
+**General usage**
+
+```bash
+docker run --rm -it eliashaeussler/cache-warmup <options>
+```
+
+**Extended usage**
+
+```bash
+# Use latest version
+docker run --rm -it eliashaeussler/cache-warmup:latest <options>
+
+# Use specific version
+docker run --rm -it eliashaeussler/cache-warmup:0.3.0 <options>
+```
+
+**Usage with docker-compose**
+
+```yaml
+version: '3.6'
+
+services:
+  cache-warmup:
+    image: eliashaeussler/cache-warmup
+    command: [<options>]
 ```
 
 ## Development
