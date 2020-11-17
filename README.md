@@ -1,7 +1,7 @@
 [![Pipeline](https://gitlab.elias-haeussler.de/eliashaeussler/cache-warmup/badges/master/pipeline.svg)](https://gitlab.elias-haeussler.de/eliashaeussler/cache-warmup/-/pipelines)
 [![Coverage](https://gitlab.elias-haeussler.de/eliashaeussler/cache-warmup/badges/master/coverage.svg)](https://gitlab.elias-haeussler.de/eliashaeussler/cache-warmup/-/pipelines)
 [![Packagist](https://badgen.net/packagist/v/eliashaeussler/cache-warmup)](https://packagist.org/packages/eliashaeussler/cache-warmup)
-[![Docker](https://badgen.net/docker/metadata/version/eliashaeussler/cache-warmup/latest)](https://hub.docker.com/r/eliashaeussler/cache-warmup)
+[![Docker](https://img.shields.io/docker/v/eliashaeussler/cache-warmup?label=docker&sort=semver)](https://hub.docker.com/r/eliashaeussler/cache-warmup)
 [![License](https://badgen.net/packagist/license/eliashaeussler/cache-warmup)](LICENSE)
 
 # Cache warmup
