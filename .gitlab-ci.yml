@@ -119,6 +119,7 @@ deploy:docker:
     - docker build --pull --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG --tag $CI_REGISTRY_IMAGE:latest .
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG
     - docker push $CI_REGISTRY_IMAGE:latest
+  cache: {}
   rules:
     - if: '$CI_COMMIT_TAG'
       when: on_success
