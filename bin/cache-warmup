@@ -39,19 +39,9 @@ if ($autoloadFile === null) {
 require $autoloadFile;
 unset($autoloadFile, $file);
 
-// Determine package version
-try {
-    $version = \PackageVersions\Versions::getVersion('eliashaeussler/cache-warmup');
-    if (substr($version, 0, 4) !== 'dev-') {
-        [$version] = explode('@', $version);
-    }
-} catch (OutOfBoundsException $e) {
-    $version = 'UNKNOWN';
-}
-
 // Run application
 $command = new \EliasHaeussler\CacheWarmup\Command\CacheWarmupCommand();
-$application = new \Symfony\Component\Console\Application('Cache Warmup', $version);
+$application = new \Symfony\Component\Console\Application('Cache Warmup');
 $application->add($command);
 $application->setDefaultCommand($command->getName(), true);
 $application->run();
