@@ -129,6 +129,9 @@ composer normalize
 
 # PHP-CS Fixer
 composer lint
+
+# PHPStan
+composer sca
 ```
 
 ### Run tests
