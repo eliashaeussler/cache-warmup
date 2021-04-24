@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Command;
 
 /*
@@ -34,7 +36,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * CacheWarmupCommandTest
+ * CacheWarmupCommandTest.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
@@ -83,6 +85,7 @@ class CacheWarmupCommandTest extends TestCase
 
     /**
      * @test
+     *
      * @throws ClientExceptionInterface
      */
     public function executeUsesSitemapUrlsFromInteractiveUserInputIfSitemapsArgumentIsNotGiven(): void
@@ -102,6 +105,7 @@ class CacheWarmupCommandTest extends TestCase
 
     /**
      * @test
+     *
      * @throws ClientExceptionInterface
      */
     public function executeCrawlsUrlsFromGivenSitemaps(): void
@@ -126,6 +130,7 @@ class CacheWarmupCommandTest extends TestCase
 
     /**
      * @test
+     *
      * @throws ClientExceptionInterface
      */
     public function executeLimitsCrawlingIfLimitOptionIsSet(): void
@@ -151,6 +156,7 @@ class CacheWarmupCommandTest extends TestCase
 
     /**
      * @test
+     *
      * @throws ClientExceptionInterface
      */
     public function executeCrawlsAdditionalUrls(): void
@@ -176,6 +182,7 @@ class CacheWarmupCommandTest extends TestCase
 
     /**
      * @test
+     *
      * @throws ClientExceptionInterface
      */
     public function executeHidesVerboseOutputIfVerbosityIsNormal(): void
@@ -197,6 +204,7 @@ class CacheWarmupCommandTest extends TestCase
 
     /**
      * @test
+     *
      * @throws ClientExceptionInterface
      */
     public function executeThrowsExceptionIfGivenCrawlerClassDoesNotExist(): void
@@ -216,6 +224,7 @@ class CacheWarmupCommandTest extends TestCase
 
     /**
      * @test
+     *
      * @throws ClientExceptionInterface
      */
     public function executeThrowsExceptionIfGivenCrawlerClassIsNotValid(): void
@@ -235,6 +244,7 @@ class CacheWarmupCommandTest extends TestCase
 
     /**
      * @test
+     *
      * @throws ClientExceptionInterface
      */
     public function executeUsesCustomCrawler(): void

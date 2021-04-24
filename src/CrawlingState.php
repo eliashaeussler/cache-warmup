@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace EliasHaeussler\CacheWarmup;
 
 /*
@@ -24,7 +26,7 @@ namespace EliasHaeussler\CacheWarmup;
 use Psr\Http\Message\UriInterface;
 
 /**
- * CrawlingState
+ * CrawlingState.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
@@ -96,13 +98,7 @@ class CrawlingState
     {
         $supportedStates = [self::SUCCESSFUL, self::FAILED];
         if (!in_array($this->state, $supportedStates, true)) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'The given crawling state is not supported, use one of "%s" instead.',
-                    implode('", "', $supportedStates)
-                ),
-                1604334815
-            );
+            throw new \InvalidArgumentException(sprintf('The given crawling state is not supported, use one of "%s" instead.', implode('", "', $supportedStates)), 1604334815);
         }
     }
 }

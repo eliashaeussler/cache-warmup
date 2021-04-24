@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace EliasHaeussler\CacheWarmup\Tests\Unit;
 
 /*
@@ -31,7 +33,7 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 
 /**
- * RequestProphecyTrait
+ * RequestProphecyTrait.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
@@ -49,28 +51,27 @@ trait RequestProphecyTrait
     protected $stream;
 
     /**
-     * @param string $fixture
-     * @param Uri|null $expectedUri
      * @throws ClientExceptionInterface
      */
     protected function prophesizeSitemapRequest(string $fixture, Uri $expectedUri = null): void
     {
-        $absolutePath = 'Fixtures/' . $fixture . '.xml';
-        $fixtureFile = realpath(__DIR__ . '/' . $absolutePath);
+        $absolutePath = 'Fixtures/'.$fixture.'.xml';
+        $fixtureFile = realpath(__DIR__.'/'.$absolutePath);
         if (!$fixtureFile) {
-            $fixtureFile =  realpath(__DIR__ . '/../' . $absolutePath);
+            $fixtureFile = realpath(__DIR__.'/../'.$absolutePath);
         }
 
         $this->openStream($fixtureFile);
-        /** @noinspection PhpParamsInspection */
-        /** @noinspection PhpUndefinedMethodInspection */
+        /* @noinspection PhpParamsInspection */
+        /* @noinspection PhpUndefinedMethodInspection */
         $this->clientProphecy
             ->sendRequest(
                 Argument::that(function (Request $request) use ($expectedUri) {
-                    if ($expectedUri === null) {
+                    if (null === $expectedUri) {
                         return true;
                     }
-                    return (string)$request->getUri() === (string)$expectedUri;
+
+                    return (string) $request->getUri() === (string) $expectedUri;
                 })
             )
             ->willReturn(new Response(200, [], $this->stream));

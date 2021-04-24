@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler;
 
 /*
@@ -27,7 +29,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Output\BufferedOutput;
 
 /**
- * OutputtingCrawlerTest
+ * OutputtingCrawlerTest.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
@@ -62,11 +64,11 @@ class OutputtingCrawlerTest extends TestCase
 
         $output = $this->output->fetch();
         static::assertStringMatchesRegularExpression(
-            sprintf('#^\s*\d/\d [^\s]+\s+\d+%% -- %s \((success|failed)\)$#m', preg_quote((string)$uri1)),
+            sprintf('#^\s*\d/\d [^\s]+\s+\d+%% -- %s \((success|failed)\)$#m', preg_quote((string) $uri1)),
             $output
         );
         static::assertStringMatchesRegularExpression(
-            sprintf('#^\s*\d/\d [^\s]+\s+\d+%% -- %s \(failed\)$#m', preg_quote((string)$uri2)),
+            sprintf('#^\s*\d/\d [^\s]+\s+\d+%% -- %s \(failed\)$#m', preg_quote((string) $uri2)),
             $output
         );
     }

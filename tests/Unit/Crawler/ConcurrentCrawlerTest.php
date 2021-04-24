@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler;
 
 /*
@@ -28,7 +30,7 @@ use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
 
 /**
- * ConcurrentCrawlerTest
+ * ConcurrentCrawlerTest.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
@@ -53,7 +55,7 @@ class ConcurrentCrawlerTest extends TestCase
         $subject->crawl($urls);
 
         $processedUrls = $this->getProcessedUrlsFromCrawler($subject);
-        static::assertTrue(array_diff($urls, $processedUrls) === []);
+        static::assertTrue([] === array_diff($urls, $processedUrls));
     }
 
     /**

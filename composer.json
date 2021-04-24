@@ -25,7 +25,11 @@
   },
   "require-dev": {
     "ergebnis/composer-normalize": "^2.8",
+    "friendsofphp/php-cs-fixer": "^2.17",
     "phpunit/phpunit": "^7.0 || ^8.0 || ^9.0"
+  },
+  "config": {
+    "sort-packages": true
   },
   "autoload": {
     "psr-4": {
@@ -41,6 +45,7 @@
     "bin/cache-warmup"
   ],
   "scripts": {
+    "lint": "php-cs-fixer fix",
     "test": "phpunit -c phpunit.xml",
     "test:coverage": "@php -d pcov.enabled=1 -d pcov.directory=src -d memory_limit=-1 vendor/bin/phpunit -c phpunit.coverage.xml"
   }

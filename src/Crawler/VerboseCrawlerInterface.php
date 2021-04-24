@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace EliasHaeussler\CacheWarmup\Crawler;
 
 /*
@@ -24,16 +26,12 @@ namespace EliasHaeussler\CacheWarmup\Crawler;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * VerboseCrawlerInterface
+ * VerboseCrawlerInterface.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
 interface VerboseCrawlerInterface extends CrawlerInterface
 {
-    /**
-     * @param OutputInterface $output
-     * @return self
-     */
     public function setOutput(OutputInterface $output): self;
 }

@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace EliasHaeussler\CacheWarmup\Tests\Unit;
 
 /*
@@ -29,7 +31,7 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 
 /**
- * CacheWarmerTest
+ * CacheWarmerTest.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
@@ -53,6 +55,7 @@ class CacheWarmerTest extends TestCase
     /**
      * @test
      * @dataProvider runCrawlsListOfUrlsDataProvider
+     *
      * @param Uri[] $urls
      */
     public function runCrawlsListOfUrls(array $urls): void
@@ -62,7 +65,7 @@ class CacheWarmerTest extends TestCase
         }
         $crawler = $this->subject->run();
         $processedUrls = $this->getProcessedUrlsFromCrawler($crawler);
-        static::assertTrue(array_diff($urls, $processedUrls) === []);
+        static::assertTrue([] === array_diff($urls, $processedUrls));
     }
 
     /**
@@ -97,6 +100,7 @@ class CacheWarmerTest extends TestCase
 
     /**
      * @test
+     *
      * @throws ClientExceptionInterface
      */
     public function addSitemapsIgnoresSitemapsIfLimitWasExceeded(): void
@@ -114,16 +118,14 @@ class CacheWarmerTest extends TestCase
         // Add sitemap (second time)
         $this->subject->addSitemaps('https://www.example.com/sitemap.xml');
         static::assertEquals($expected, $this->subject->getUrls());
-
     }
 
     /**
      * @test
      * @dataProvider addSitemapsAddsAndParsesGivenSitemapsDataProvider
+     *
      * @param string[]|Sitemap[]|string|Sitemap|null $sitemaps
-     * @param array $expectedSitemaps
-     * @param array $expectedUrls
-     * @param array $prophesizedRequests
+     *
      * @throws ClientExceptionInterface
      */
     public function addSitemapsAddsAndParsesGivenSitemaps(
@@ -131,8 +133,7 @@ class CacheWarmerTest extends TestCase
         array $expectedSitemaps,
         array $expectedUrls,
         array $prophesizedRequests = []
-    ): void
-    {
+    ): void {
         foreach ($prophesizedRequests as $fixture => $expectedUri) {
             $this->prophesizeSitemapRequest($fixture, $expectedUri);
         }
@@ -201,7 +202,7 @@ class CacheWarmerTest extends TestCase
                 [
                     new Uri('https://www.example.org'),
                     new Uri('https://www.example.com'),
-                ]
+                ],
             ],
         ];
     }

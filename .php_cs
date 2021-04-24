@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-namespace EliasHaeussler\CacheWarmup;
-
 /*
  * This file is part of the Composer package "eliashaeussler/cache-warmup".
  *
- * Copyright (C) 2020 Elias Häußler <elias@haeussler.dev>
+ * Copyright (C) 2021 Elias Häußler <elias@haeussler.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,28 +21,13 @@ namespace EliasHaeussler\CacheWarmup;
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Psr\Http\Message\UriInterface;
+$finder = \PhpCsFixer\Finder::create()
+    ->in([__DIR__.'/src', __DIR__.'/tests']);
 
-/**
- * Sitemap.
- *
- * @author Elias Häußler <elias@haeussler.dev>
- * @license GPL-3.0-or-later
- */
-class Sitemap
-{
-    /**
-     * @var UriInterface
-     */
-    protected $uri;
+$config = new \PhpCsFixer\Config();
 
-    public function __construct(UriInterface $uri)
-    {
-        $this->uri = $uri;
-    }
-
-    public function getUri(): UriInterface
-    {
-        return $this->uri;
-    }
-}
+return $config->setRules([
+    '@PSR2' => true,
+    '@Symfony' => true,
+])
+    ->setFinder($finder);

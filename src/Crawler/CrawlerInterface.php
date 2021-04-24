@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace EliasHaeussler\CacheWarmup\Crawler;
 
 /*
@@ -25,7 +27,7 @@ use EliasHaeussler\CacheWarmup\CrawlingState;
 use Psr\Http\Message\UriInterface;
 
 /**
- * CrawlerInterface
+ * CrawlerInterface.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later

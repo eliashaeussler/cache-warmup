@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace EliasHaeussler\CacheWarmup\Command;
 
 /*
@@ -40,7 +42,7 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
- * CacheWarmupCommand
+ * CacheWarmupCommand.
  *
  * @author Elias Häußler <elias@heussler.dev>
  * @license GPL-3.0-or-later
@@ -72,7 +74,7 @@ class CacheWarmupCommand extends Command
             '',
             '<info>Custom URLs</info>',
             '<info>===========</info>',
-            'In addition or as an alternative to sitemaps, it\'s also possible to provide a given URL set ' .
+            'In addition or as an alternative to sitemaps, it\'s also possible to provide a given URL set '.
             'using the <comment>--urls</comment> option:',
             '',
             '   <comment>bin/cache-warmup -u https://www.example.com/foo -u https://www.example.com/baz</comment>',
@@ -92,7 +94,7 @@ class CacheWarmupCommand extends Command
             '',
             'It\'s up to you to ensure the given crawler class is available and fully loaded.',
             'This can best be achieved by registering the class with Composer autoloader.',
-            'Also make sure the crawler implements the <comment>' . CrawlerInterface::class . '</comment> interface.',
+            'Also make sure the crawler implements the <comment>'.CrawlerInterface::class.'</comment> interface.',
         ]));
 
         $this->addArgument(
@@ -130,7 +132,7 @@ class CacheWarmupCommand extends Command
     protected function interact(InputInterface $input, OutputInterface $output): void
     {
         // Early return if sitemaps or URLs are already specified
-        if ($input->getArgument('sitemaps') !== [] || $input->getOption('urls') !== []) {
+        if ([] !== $input->getArgument('sitemaps') || [] !== $input->getOption('urls')) {
             return;
         }
 
@@ -140,18 +142,17 @@ class CacheWarmupCommand extends Command
         do {
             $question = new Question('Please enter the URL of a XML sitemap: ');
             $sitemap = $helper->ask($input, $output, $question);
-            if ($sitemap !== null) {
+            if (null !== $sitemap) {
                 $sitemaps[] = $sitemap;
                 $output->writeln(sprintf('<info>Sitemap added: %s</info>', $sitemap));
             }
-        } while ($sitemap !== null);
+        } while (null !== $sitemap);
 
         // Throw exception if no sitemaps were added
-        if ($sitemaps === [] && $input->getOption('urls') === []) {
+        if ([] === $sitemaps && [] === $input->getOption('urls')) {
             throw new RuntimeException('You must enter at least one sitemap URL.', 1604258903);
         }
 
-        /** @noinspection PhpParamsInspection */
         $input->setArgument('sitemaps', $sitemaps);
     }
 
@@ -159,11 +160,11 @@ class CacheWarmupCommand extends Command
     {
         $sitemaps = $input->getArgument('sitemaps');
         $urls = $input->getOption('urls');
-        $limit = (int)$input->getOption('limit');
+        $limit = (int) $input->getOption('limit');
         $io = new SymfonyStyle($input, $output);
 
         // Throw exception if neither sitemaps nor URLs are defined
-        if ($sitemaps === [] && $urls === []) {
+        if ([] === $sitemaps && [] === $urls) {
             throw new RuntimeException('Neither sitemaps nor URLs are defined.', 1604261236);
         }
 
@@ -194,7 +195,7 @@ class CacheWarmupCommand extends Command
 
         // Start crawling
         $urlCount = count($cacheWarmer->getUrls());
-        $output->write(sprintf('Crawling URL%s... ', $urlCount === 1 ? '' : 's'), $isVerboseCrawler);
+        $output->write(sprintf('Crawling URL%s... ', 1 === $urlCount ? '' : 's'), $isVerboseCrawler);
         $cacheWarmer->run($crawler);
         if (!$isVerboseCrawler) {
             $output->writeln('<info>Done</info>');
@@ -204,39 +205,39 @@ class CacheWarmupCommand extends Command
         $successfulUrls = $crawler->getSuccessfulUrls();
         $failedUrls = $crawler->getFailedUrls();
         if ($output->isVerbose()) {
-            if ($successfulUrls !== []) {
+            if ([] !== $successfulUrls) {
                 $io->section('The following URLs were successfully crawled:');
                 $io->listing($this->decorateCrawledUrls($successfulUrls));
             }
-            if ($failedUrls !== []) {
+            if ([] !== $failedUrls) {
                 $io->section('The following URLs failed during crawling:');
                 $io->listing($this->decorateCrawledUrls($failedUrls));
             }
         }
 
         // Print crawler results
-        if ($successfulUrls !== []) {
+        if ([] !== $successfulUrls) {
             $countSuccessfulUrls = count($successfulUrls);
             $io->success(
                 sprintf(
                     'Successfully warmed up caches for %d URL%s.',
                     $countSuccessfulUrls,
-                    $countSuccessfulUrls === 1 ? '' : 's'
+                    1 === $countSuccessfulUrls ? '' : 's'
                 )
             );
         }
-        if ($failedUrls !== []) {
+        if ([] !== $failedUrls) {
             $countFailedUrls = count($failedUrls);
             $io->error(
                 sprintf(
                     'Failed to warm up caches for %d URL%s.',
                     $countFailedUrls,
-                    $countFailedUrls === 1 ? '' : 's'
+                    1 === $countFailedUrls ? '' : 's'
                 )
             );
         }
 
-        return $failedUrls === [] ? 0 : 1;
+        return [] === $failedUrls ? 0 : 1;
     }
 
     protected function initializeCrawler(InputInterface $input, OutputInterface $output): CrawlerInterface
@@ -251,23 +252,27 @@ class CacheWarmupCommand extends Command
             if (!in_array(CrawlerInterface::class, class_implements($crawler) ?: [])) {
                 throw new RuntimeException('The specified crawler is not valid.', 1604261885);
             }
+
             return new $crawler();
         }
 
         if ($output->isVerbose() || $input->getOption('progress')) {
             $crawler = new OutputtingCrawler();
+
             return $crawler->setOutput($output);
         }
+
         return new ConcurrentCrawler();
     }
 
     protected function decorateSitemap(Sitemap $sitemap): string
     {
-        return (string)$sitemap->getUri();
+        return (string) $sitemap->getUri();
     }
 
     /**
      * @param CrawlingState[] $crawledUrls
+     *
      * @return string[]
      */
     protected function decorateCrawledUrls(array $crawledUrls): array
@@ -276,12 +281,14 @@ class CacheWarmupCommand extends Command
         foreach ($crawledUrls as $crawlingState) {
             $urls[] = $crawlingState->getUri();
         }
+
         return $urls;
     }
 
     public function setClient(?ClientInterface $client): self
     {
         $this->client = $client;
+
         return $this;
     }
 }

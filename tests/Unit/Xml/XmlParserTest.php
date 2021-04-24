@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Xml;
 
 /*
@@ -30,7 +32,7 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 
 /**
- * XmlParserTest
+ * XmlParserTest.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
@@ -53,6 +55,7 @@ class XmlParserTest extends TestCase
 
     /**
      * @test
+     *
      * @throws ClientExceptionInterface
      */
     public function parseParsesSitemapIndex(): void
@@ -69,6 +72,7 @@ class XmlParserTest extends TestCase
 
     /**
      * @test
+     *
      * @throws ClientExceptionInterface
      */
     public function parseParsesSitemapUrlSet(): void
@@ -87,6 +91,7 @@ class XmlParserTest extends TestCase
 
     /**
      * @test
+     *
      * @throws ClientExceptionInterface
      */
     public function parseParsesSitemapIndexAndSkipsInvalidSitemaps(): void
@@ -103,6 +108,7 @@ class XmlParserTest extends TestCase
 
     /**
      * @test
+     *
      * @throws ClientExceptionInterface
      */
     public function parseParsesSitemapUrlSetAndSkipsInvalidUrls(): void

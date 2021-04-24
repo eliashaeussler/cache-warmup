@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace EliasHaeussler\CacheWarmup\Crawler;
 
 /*
@@ -26,7 +28,7 @@ use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * OutputtingCrawler
+ * OutputtingCrawler.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
@@ -60,7 +62,7 @@ class OutputtingCrawler extends ConcurrentCrawler implements VerboseCrawlerInter
 
     public function onSuccess(ResponseInterface $response, int $index): void
     {
-        $this->progress->setMessage((string)$this->urls[$index], 'url');
+        $this->progress->setMessage((string) $this->urls[$index], 'url');
         $this->progress->setMessage('(<info>success</info>)', 'state');
         $this->progress->advance();
         $this->progress->display();
@@ -69,7 +71,7 @@ class OutputtingCrawler extends ConcurrentCrawler implements VerboseCrawlerInter
 
     public function onFailure(\Throwable $exception, int $index): void
     {
-        $this->progress->setMessage((string)$this->urls[$index], 'url');
+        $this->progress->setMessage((string) $this->urls[$index], 'url');
         $this->progress->setMessage('(<error>failed</error>)', 'state');
         $this->progress->advance();
         $this->progress->display();
@@ -79,6 +81,7 @@ class OutputtingCrawler extends ConcurrentCrawler implements VerboseCrawlerInter
     public function setOutput(OutputInterface $output): VerboseCrawlerInterface
     {
         $this->output = $output;
+
         return $this;
     }
 

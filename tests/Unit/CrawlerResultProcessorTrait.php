@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace EliasHaeussler\CacheWarmup\Tests\Unit;
 
 /*
@@ -25,7 +27,7 @@ use EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface;
 use EliasHaeussler\CacheWarmup\CrawlingState;
 
 /**
- * CrawlerResultProcessorTrait
+ * CrawlerResultProcessorTrait.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
@@ -38,10 +40,11 @@ trait CrawlerResultProcessorTrait
         $crawledUrls = array_merge($crawler->getSuccessfulUrls(), $crawler->getFailedUrls());
         /** @var CrawlingState $crawlingState */
         foreach ($crawledUrls as $crawlingState) {
-            if ($state === null || $crawlingState->is($state)) {
+            if (null === $state || $crawlingState->is($state)) {
                 $urls[] = $crawlingState->getUri();
             }
         }
+
         return $urls;
     }
 }

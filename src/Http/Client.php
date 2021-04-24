@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace EliasHaeussler\CacheWarmup\Http;
 
 /*
@@ -44,6 +46,7 @@ class Client extends GuzzleClient implements ClientInterface
         $options[RequestOptions::SYNCHRONOUS] = true;
         $options[RequestOptions::ALLOW_REDIRECTS] = false;
         $options[RequestOptions::HTTP_ERRORS] = false;
+
         return $this->sendAsync($request, $options)->wait();
     }
 }

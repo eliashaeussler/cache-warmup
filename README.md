@@ -121,6 +121,16 @@ cd cache-warmup
 composer install
 ```
 
+### Run linters
+
+```bash
+# Composer normalization
+composer normalize
+
+# PHP-CS Fixer
+composer lint
+```
+
 ### Run tests
 
 Unit tests of this plugin can be executed using the provided Composer

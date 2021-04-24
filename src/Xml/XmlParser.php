@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace EliasHaeussler\CacheWarmup\Xml;
 
 /*
@@ -29,7 +31,7 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\UriInterface;
 
 /**
- * XmlParser
+ * XmlParser.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
@@ -114,9 +116,10 @@ class XmlParser
         if (!isset($xml->loc)) {
             return null;
         }
-        /** @noinspection PhpParamsInspection */
+
         $sitemapUri = reset($xml->loc);
-        $sitemapUri = new Uri((string)$sitemapUri);
+        $sitemapUri = new Uri((string) $sitemapUri);
+
         return new Sitemap($sitemapUri);
     }
 
@@ -125,8 +128,9 @@ class XmlParser
         if (!isset($xml->loc)) {
             return null;
         }
-        /** @noinspection PhpParamsInspection */
+
         $uri = reset($xml->loc);
-        return new Uri((string)$uri);
+
+        return new Uri((string) $uri);
     }
 }

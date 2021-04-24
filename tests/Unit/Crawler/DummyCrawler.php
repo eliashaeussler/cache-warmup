@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler;
 
 /*
@@ -25,7 +27,7 @@ use EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface;
 use GuzzleHttp\Psr7\Uri;
 
 /**
- * DummyCrawler
+ * DummyCrawler.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
