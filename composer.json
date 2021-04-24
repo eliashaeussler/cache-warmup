@@ -1,16 +1,17 @@
 {
   "name": "eliashaeussler/cache-warmup",
-  "description": "Composer package to warm up website caches, based on a given sitemap.xml",
   "type": "library",
-  "license": "GPL-3.0-or-later",
+  "description": "Composer package to warm up website caches, based on a given sitemap.xml",
   "homepage": "https://haeussler.dev",
-  "authors": [{
-    "name": "Elias Häußler",
-    "email": "elias@haeussler.dev",
-    "homepage": "https://haeussler.dev",
-    "role": "Maintainer"
-  }],
-  "bin": ["bin/cache-warmup"],
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Elias Häußler",
+      "email": "elias@haeussler.dev",
+      "homepage": "https://haeussler.dev",
+      "role": "Maintainer"
+    }
+  ],
   "require": {
     "php": "^7.1 || 8.0.*",
     "ext-curl": "*",
@@ -23,6 +24,7 @@
     "symfony/console": "^3.4 || ^4.0 || ^5.0"
   },
   "require-dev": {
+    "ergebnis/composer-normalize": "^2.8",
     "phpunit/phpunit": "^7.0 || ^8.0 || ^9.0"
   },
   "autoload": {
@@ -35,6 +37,9 @@
       "EliasHaeussler\\CacheWarmup\\Tests\\": "tests"
     }
   },
+  "bin": [
+    "bin/cache-warmup"
+  ],
   "scripts": {
     "test": "phpunit -c phpunit.xml",
     "test:ci": "@php -d xdebug.mode=coverage vendor/bin/phpunit -c phpunit.ci.xml"

@@ -1,11 +1,42 @@
+default:
+  image: webdevops/php:8.0
+
+cache: &cache
+  key: "$CI_COMMIT_REF_SLUG"
+  paths:
+    - vendor/
+  policy: pull
+
 variables:
-  COMPOSER_CACHE_DIR: "/cache/composer"
   COMPOSER_ALLOW_SUPERUSER: "1"
   COMPOSER_NO_INTERACTION: "1"
 
 stages:
+  - build
+  - lint
   - test
   - deploy
+
+build:
+  stage: build
+  script:
+    - composer install --no-progress
+  cache:
+    <<: *cache
+    policy: pull-push
+  rules:
+    - if: '$CI_COMMIT_BRANCH'
+      when: on_success
+
+lint:composer:
+  stage: lint
+  needs:
+    - build
+  script:
+    - composer normalize --dry-run
+  rules:
+    - if: '$CI_COMMIT_BRANCH'
+      when: on_success
 
 # Test template
 .test: &test-template
