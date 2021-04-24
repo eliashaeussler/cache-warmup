@@ -6,6 +6,7 @@
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
+         executionOrder="defects"
          verbose="true"
 >
     <testsuites>
@@ -18,4 +19,7 @@
             <directory suffix=".php">src</directory>
         </whitelist>
     </filter>
+    <logging>
+        <log type="junit" target=".build/coverage/junit.xml" />
+    </logging>
 </phpunit>
