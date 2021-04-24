@@ -80,6 +80,7 @@ test:
     - php --version
   script:
     - mkdir -p .build/coverage
+    - composer install --no-progress
     - >
       if [ "$COVERAGE" == "1" ]; then
         COMPOSER_PROCESS_TIMEOUT=1000 composer test:coverage
