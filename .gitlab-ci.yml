@@ -69,7 +69,6 @@ test:
   image: webdevops/php:${PHP_VERSION}
   before_script:
     - mkdir -p .build/coverage
-    - composer global require --dev --no-progress --prefer-stable brianium/paratest:"*"
     - >
       if [ "$COVERAGE" == "1" ]; then
         pecl channel-update pecl.php.net
@@ -81,12 +80,11 @@ test:
     - php --version
   script:
     - mkdir -p .build/coverage
-    - composer require --dev --no-progress "composer/composer:^${COMPOSER_VERSION}.0"
     - >
       if [ "$COVERAGE" == "1" ]; then
-        COMPOSER_PROCESS_TIMEOUT=1000 /root/.composer/vendor/bin/paratest --runner=WrapperRunner -c phpunit.coverage.xml --coverage-text
+        COMPOSER_PROCESS_TIMEOUT=1000 composer test:coverage
       else
-        /root/.composer/vendor/bin/paratest --runner=WrapperRunner -c phpunit.xml
+        composer test
       fi
   parallel:
     matrix:
