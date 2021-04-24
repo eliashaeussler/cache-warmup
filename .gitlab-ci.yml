@@ -39,61 +39,50 @@ lint:composer:
       when: on_success
 
 # Test template
-.test: &test-template
+test:
   stage: test
-  image: webdevops/php-dev:${PHP_VERSION}
-  script:
+  image: webdevops/php:${PHP_VERSION}
+  before_script:
+    - mkdir -p .build/coverage
+    - composer global require --dev --no-progress --prefer-stable brianium/paratest:"*"
     - >
-      if [[ "${PHP_VERSION}" == "8.0" ]]; then
-        mkdir -p /usr/src/php/ext/xdebug \
-          && curl -fsSL https://pecl.php.net/get/xdebug | tar xvz -C "/usr/src/php/ext/xdebug" --strip 1 \
-          && docker-php-ext-install xdebug
+      if [ "$COVERAGE" == "1" ]; then
+        pecl channel-update pecl.php.net
+        pecl install pcov
+        docker-php-ext-enable pcov
       fi
-    - composer install --no-progress
-    - COMPOSER_PROCESS_TIMEOUT=1000 composer test:ci -- --testdox
+    - composer self-update --${COMPOSER_VERSION}
+    - composer --version
+    - php --version
+  script:
+    - mkdir -p .build/coverage
+    - composer require --dev --no-progress "composer/composer:^${COMPOSER_VERSION}.0"
+    - >
+      if [ "$COVERAGE" == "1" ]; then
+        COMPOSER_PROCESS_TIMEOUT=1000 /root/.composer/vendor/bin/paratest --runner=WrapperRunner -c phpunit.coverage.xml --coverage-text
+      else
+        /root/.composer/vendor/bin/paratest --runner=WrapperRunner -c phpunit.xml
+      fi
+  parallel:
+    matrix:
+      - PHP_VERSION: ["7.1", "7.2", "7.3", "7.4"]
+        COMPOSER_VERSION: ["1", "2"]
+      - PHP_VERSION: "8.0"
+        COMPOSER_VERSION: "1.0"
+      - PHP_VERSION: "8.0"
+        COMPOSER_VERSION: "2.0"
+        COVERAGE: "1"
   coverage: '/^\s*Lines:\s*\d+.\d+\%/'
+  cache:
+    <<: *cache
+    key: "${CI_COMMIT_REF_SLUG}-${PHP_VERSION}-${COMPOSER_VERSION}"
+    policy: pull-push
   artifacts:
     reports:
       junit: .build/coverage/junit.xml
   rules:
     - if: '$CI_COMMIT_BRANCH'
-
-# Test: PHP 7.1
-test:php7.1:
-  <<: *test-template
-  variables:
-    PHP_VERSION: "7.1"
-    COMPOSER_VERSION: "1"
-
-# Test: PHP 7.2
-test:php7.2:
-  <<: *test-template
-  variables:
-    PHP_VERSION: "7.2"
-    COMPOSER_VERSION: "1"
-
-# Test: PHP 7.3
-test:php7.3:
-  <<: *test-template
-  variables:
-    PHP_VERSION: "7.3"
-    COMPOSER_VERSION: "1"
-
-# Test: PHP 7.4
-test:php7.4:
-  <<: *test-template
-  variables:
-    PHP_VERSION: "7.4"
-    COMPOSER_VERSION: "1"
-
-# Test: PHP 8.0
-test:php8.0:
-  <<: *test-template
-  variables:
-    PHP_VERSION: "8.0"
-    COMPOSER_VERSION: "2"
-  # Allow failures as long as PHP 8 and Xdebug 3 are not stable
-  allow_failure: true
+      when: on_success
 
 # Deploy docker image
 deploy:docker:
