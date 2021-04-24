@@ -24,7 +24,7 @@ namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler;
  */
 
 use EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface;
-use GuzzleHttp\Psr7\Uri;
+use Psr\Http\Message\UriInterface;
 
 /**
  * DummyCrawler.
@@ -35,7 +35,7 @@ use GuzzleHttp\Psr7\Uri;
 class DummyCrawler implements CrawlerInterface
 {
     /**
-     * @var Uri[]
+     * @var UriInterface[]
      */
     public static $crawledUrls = [];
 

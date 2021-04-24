@@ -44,12 +44,12 @@ class ConcurrentCrawler implements CrawlerInterface
     protected $urls;
 
     /**
-     * @var UriInterface[]
+     * @var CrawlingState[]
      */
     protected $successfulUrls = [];
 
     /**
-     * @var UriInterface[]
+     * @var CrawlingState[]
      */
     protected $failedUrls = [];
 
@@ -88,6 +88,9 @@ class ConcurrentCrawler implements CrawlerInterface
         $this->failedUrls[] = CrawlingState::createFailed($this->urls[$index], $data);
     }
 
+    /**
+     * @return \Iterator<Request>
+     */
     protected function getRequests(): \Iterator
     {
         foreach ($this->urls as $url) {

@@ -25,6 +25,7 @@ namespace EliasHaeussler\CacheWarmup\Tests\Unit;
 
 use EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface;
 use EliasHaeussler\CacheWarmup\CrawlingState;
+use Psr\Http\Message\UriInterface;
 
 /**
  * CrawlerResultProcessorTrait.
@@ -34,6 +35,9 @@ use EliasHaeussler\CacheWarmup\CrawlingState;
  */
 trait CrawlerResultProcessorTrait
 {
+    /**
+     * @return UriInterface[]
+     */
     protected function getProcessedUrlsFromCrawler(CrawlerInterface $crawler, int $state = null): array
     {
         $urls = [];

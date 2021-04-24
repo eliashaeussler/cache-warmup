@@ -5,5 +5,6 @@
 /.gitlab-ci.yml       export-ignore
 /.php_cs              export-ignore
 /Dockerfile           export-ignore
+/phpstan.neon         export-ignore
 /phpunit.xml          export-ignore
 /phpunit.coverage.xml export-ignore

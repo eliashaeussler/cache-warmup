@@ -47,10 +47,13 @@ class CrawlingState
     protected $state = self::SUCCESSFUL;
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $data = [];
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public function __construct(UriInterface $uri, int $state = self::SUCCESSFUL, array $data = [])
     {
         $this->uri = $uri;
@@ -59,14 +62,20 @@ class CrawlingState
         $this->validateState();
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public static function createSuccessful(UriInterface $uri, array $data = []): self
     {
-        return new static($uri, self::SUCCESSFUL, $data);
+        return new self($uri, self::SUCCESSFUL, $data);
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public static function createFailed(UriInterface $uri, array $data = []): self
     {
-        return new static($uri, self::FAILED, $data);
+        return new self($uri, self::FAILED, $data);
     }
 
     public function getUri(): UriInterface
@@ -74,6 +83,9 @@ class CrawlingState
         return $this->uri;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getData(): array
     {
         return $this->data;

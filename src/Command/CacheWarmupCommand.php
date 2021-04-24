@@ -56,7 +56,7 @@ class CacheWarmupCommand extends Command
      */
     protected $client;
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Warms up caches of URLs provided by a given set of XML sitemaps.');
         $this->setHelp(implode(PHP_EOL, [
@@ -113,7 +113,7 @@ class CacheWarmupCommand extends Command
             'l',
             InputOption::VALUE_OPTIONAL,
             'Limit the number of URLs to be processed',
-            0
+            '0'
         );
         $this->addOption(
             'progress',
@@ -279,7 +279,7 @@ class CacheWarmupCommand extends Command
     {
         $urls = [];
         foreach ($crawledUrls as $crawlingState) {
-            $urls[] = $crawlingState->getUri();
+            $urls[] = (string) $crawlingState->getUri();
         }
 
         return $urls;

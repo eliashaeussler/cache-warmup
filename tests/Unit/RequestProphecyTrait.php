@@ -26,11 +26,11 @@ namespace EliasHaeussler\CacheWarmup\Tests\Unit;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Stream;
-use GuzzleHttp\Psr7\Uri;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\UriInterface;
 
 /**
  * RequestProphecyTrait.
@@ -46,14 +46,14 @@ trait RequestProphecyTrait
     protected $clientProphecy;
 
     /**
-     * @var resource|null
+     * @var Stream|resource|null
      */
     protected $stream;
 
     /**
      * @throws ClientExceptionInterface
      */
-    protected function prophesizeSitemapRequest(string $fixture, Uri $expectedUri = null): void
+    protected function prophesizeSitemapRequest(string $fixture, UriInterface $expectedUri = null): void
     {
         $absolutePath = 'Fixtures/'.$fixture.'.xml';
         $fixtureFile = realpath(__DIR__.'/'.$absolutePath);

@@ -29,6 +29,7 @@ use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\UriInterface;
 
 /**
  * CacheWarmerTest.
@@ -95,6 +96,8 @@ class CacheWarmerTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionCode(1604055096);
+
+        /* @phpstan-ignore-next-line */
         $this->subject->addSitemaps([false]);
     }
 
@@ -125,6 +128,9 @@ class CacheWarmerTest extends TestCase
      * @dataProvider addSitemapsAddsAndParsesGivenSitemapsDataProvider
      *
      * @param string[]|Sitemap[]|string|Sitemap|null $sitemaps
+     * @param Sitemap[]                              $expectedSitemaps
+     * @param UriInterface[]                         $expectedUrls
+     * @param array<string, UriInterface>            $prophesizedRequests
      *
      * @throws ClientExceptionInterface
      */
@@ -192,6 +198,9 @@ class CacheWarmerTest extends TestCase
         static::assertSame(10, $this->subject->getLimit());
     }
 
+    /**
+     * @return array<string, array>
+     */
     public function runCrawlsListOfUrlsDataProvider(): array
     {
         return [
@@ -207,6 +216,9 @@ class CacheWarmerTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<string, array>
+     */
     public function addSitemapsAddsAndParsesGivenSitemapsDataProvider(): array
     {
         return [
