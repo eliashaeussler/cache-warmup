@@ -23,6 +23,7 @@ namespace EliasHaeussler\CacheWarmup\Crawler;
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use EliasHaeussler\CacheWarmup\Exception\MissingArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -53,8 +54,14 @@ class OutputtingCrawler extends ConcurrentCrawler implements VerboseCrawlerInter
         ProgressBar::setFormatDefinition('cache-warmup', self::PROGRESS_BAR_FORMAT);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @throws MissingArgumentException
+     */
     public function crawl(array $urls): void
     {
+        $this->assureOutputIsAvailable();
         $this->startProgressBar(count($urls));
         parent::crawl($urls);
         $this->progress->finish();
@@ -93,5 +100,15 @@ class OutputtingCrawler extends ConcurrentCrawler implements VerboseCrawlerInter
         $this->progress->setOverwrite(false);
         $this->progress->setMessage('', 'url');
         $this->progress->setMessage('', 'state');
+    }
+
+    /**
+     * @throws MissingArgumentException
+     */
+    protected function assureOutputIsAvailable(): void
+    {
+        if (null === $this->output) {
+            throw MissingArgumentException::create('output');
+        }
     }
 }
