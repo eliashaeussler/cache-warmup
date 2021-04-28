@@ -24,6 +24,7 @@ namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler;
  */
 
 use EliasHaeussler\CacheWarmup\Crawler\OutputtingCrawler;
+use EliasHaeussler\CacheWarmup\Exception\MissingArgumentException;
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -55,6 +56,21 @@ class OutputtingCrawlerTest extends TestCase
 
     /**
      * @test
+     */
+    public function crawlThrowsExceptionIfOutputIsNotSet(): void
+    {
+        $subject = new OutputtingCrawler();
+
+        $this->expectException(MissingArgumentException::class);
+        $this->expectExceptionCode(1619635638);
+
+        $subject->crawl([]);
+    }
+
+    /**
+     * @test
+     *
+     * @throws MissingArgumentException
      */
     public function crawlCreatesProgressBarAndWritesCrawlingStateToOutput(): void
     {
