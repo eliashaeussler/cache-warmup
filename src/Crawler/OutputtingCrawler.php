@@ -49,6 +49,7 @@ class OutputtingCrawler extends ConcurrentCrawler implements VerboseCrawlerInter
 
     public function __construct()
     {
+        parent::__construct();
         ProgressBar::setFormatDefinition('cache-warmup', self::PROGRESS_BAR_FORMAT);
     }
 

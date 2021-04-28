@@ -25,6 +25,7 @@ namespace EliasHaeussler\CacheWarmup\Crawler;
 
 use EliasHaeussler\CacheWarmup\CrawlingState;
 use EliasHaeussler\CacheWarmup\Http\Client;
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\ResponseInterface;
@@ -38,6 +39,11 @@ use Psr\Http\Message\UriInterface;
  */
 class ConcurrentCrawler implements CrawlerInterface
 {
+    /**
+     * @var ClientInterface
+     */
+    protected $client;
+
     /**
      * @var UriInterface[]
      */
@@ -53,6 +59,11 @@ class ConcurrentCrawler implements CrawlerInterface
      */
     protected $failedUrls = [];
 
+    public function __construct()
+    {
+        $this->client = $this->initializeClient();
+    }
+
     public function crawl(array $urls): void
     {
         $this->urls = array_values($urls);
@@ -60,8 +71,7 @@ class ConcurrentCrawler implements CrawlerInterface
         $this->failedUrls = [];
 
         // Create request pool
-        $client = new Client();
-        $pool = new Pool($client, $this->getRequests(), [
+        $pool = new Pool($this->client, $this->getRequests(), [
             'concurrency' => 5,
             'fulfilled' => [$this, 'onSuccess'],
             'rejected' => [$this, 'onFailure'],
@@ -96,6 +106,11 @@ class ConcurrentCrawler implements CrawlerInterface
         foreach ($this->urls as $url) {
             yield new Request('HEAD', $url);
         }
+    }
+
+    protected function initializeClient(): ClientInterface
+    {
+        return new Client();
     }
 
     /**
