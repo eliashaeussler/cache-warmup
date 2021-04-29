@@ -25,6 +25,7 @@ namespace EliasHaeussler\CacheWarmup\Tests\Unit\Command;
 
 use EliasHaeussler\CacheWarmup\Command\CacheWarmupCommand;
 use EliasHaeussler\CacheWarmup\Tests\Unit\Crawler\DummyCrawler;
+use EliasHaeussler\CacheWarmup\Tests\Unit\Crawler\DummyVerboseCrawler;
 use EliasHaeussler\CacheWarmup\Tests\Unit\RequestProphecyTrait;
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
@@ -262,5 +263,29 @@ class CacheWarmupCommandTest extends TestCase
             new Uri('https://www.example.com/foo'),
         ];
         static::assertEquals($expected, DummyCrawler::$crawledUrls);
+
+        // Reset static variables
+        DummyCrawler::$crawledUrls = [];
+    }
+
+    /**
+     * @test
+     *
+     * @throws ClientExceptionInterface
+     */
+    public function executeAppliesOutputToVerboseCrawler(): void
+    {
+        $this->prophesizeSitemapRequest('valid_sitemap_3');
+        $this->commandTester->execute([
+            'sitemaps' => [
+                'https://www.example.com/sitemap.xml',
+            ],
+            '--crawler' => DummyVerboseCrawler::class,
+        ]);
+
+        static::assertSame($this->commandTester->getOutput(), DummyVerboseCrawler::$output);
+
+        // Reset static variables
+        DummyVerboseCrawler::$output = null;
     }
 }
