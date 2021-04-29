@@ -244,25 +244,28 @@ class CacheWarmupCommand extends Command
     {
         $crawler = $input->getOption('crawler');
 
-        // Use crawler specified by --crawler option
         if (is_string($crawler)) {
+            // Use crawler specified by --crawler option
             if (!class_exists($crawler)) {
                 throw new RuntimeException('The specified crawler class does not exist.', 1604261816);
             }
             if (!in_array(CrawlerInterface::class, class_implements($crawler) ?: [])) {
                 throw new RuntimeException('The specified crawler is not valid.', 1604261885);
             }
-
-            return new $crawler();
-        }
-
-        if ($output->isVerbose() || $input->getOption('progress')) {
+            $crawler = new $crawler();
+        } elseif ($output->isVerbose() || $input->getOption('progress')) {
+            // Use default verbose crawler
             $crawler = new OutputtingCrawler();
-
-            return $crawler->setOutput($output);
+        } else {
+            // Use default crawler
+            return new ConcurrentCrawler();
         }
 
-        return new ConcurrentCrawler();
+        if ($crawler instanceof VerboseCrawlerInterface) {
+            $crawler->setOutput($output);
+        }
+
+        return $crawler;
     }
 
     protected function decorateSitemap(Sitemap $sitemap): string
