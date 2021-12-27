@@ -24,7 +24,7 @@ namespace EliasHaeussler\CacheWarmup\Crawler;
  */
 
 use EliasHaeussler\CacheWarmup\CrawlingState;
-use EliasHaeussler\CacheWarmup\Http\Client;
+use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Psr7\Request;

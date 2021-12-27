@@ -23,8 +23,8 @@ namespace EliasHaeussler\CacheWarmup\Xml;
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use EliasHaeussler\CacheWarmup\Http\Client;
 use EliasHaeussler\CacheWarmup\Sitemap;
+use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Client\ClientInterface;

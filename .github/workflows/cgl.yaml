@@ -1,0 +1,37 @@
+name: CGL
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  cgl:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      # Prepare environment
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.0
+          tools: composer:v2
+
+      # Install dependencies
+      - name: Install Composer dependencies
+        run: composer install --no-progress
+
+      # Linting
+      - name: Lint composer.json
+        run: composer normalize --dry-run
+      - name: Lint PHP
+        run: composer lint -- --dry-run
+
+      # SCA
+      - name: SCA PHP
+        run: composer sca -- --error-format github
