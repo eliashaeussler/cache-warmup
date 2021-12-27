@@ -153,7 +153,7 @@ class CacheWarmerTest extends TestCase
      */
     public function addUrlAddsGivenUrlToListOfUrls(): void
     {
-        $url = new Uri('https://www.example.org/sitemap.xml');
+        $url = $this->getExpectedUri('https://www.example.org/sitemap.xml');
         static::assertSame([$url], $this->subject->addUrl($url)->getUrls());
     }
 
@@ -162,7 +162,7 @@ class CacheWarmerTest extends TestCase
      */
     public function addUrlDoesNotAddAlreadyAvailableUrlToListOfUrls(): void
     {
-        $url = new Uri('https://www.example.org/sitemap.xml');
+        $url = $this->getExpectedUri('https://www.example.org/sitemap.xml');
         static::assertSame([$url], $this->subject->addUrl($url)->addUrl($url)->getUrls());
     }
 
@@ -171,8 +171,8 @@ class CacheWarmerTest extends TestCase
      */
     public function addUrlDoesNotAddUrlIfLimitWasExceeded(): void
     {
-        $url1 = new Uri('https://www.example.org/sitemap.xml');
-        $url2 = new Uri('https://www.example.com/sitemap.xml');
+        $url1 = $this->getExpectedUri('https://www.example.org/sitemap.xml');
+        $url2 = $this->getExpectedUri('https://www.example.com/sitemap.xml');
 
         $this->subject->setLimit(1);
         $this->subject->addUrl($url1)->addUrl($url2);
@@ -199,7 +199,7 @@ class CacheWarmerTest extends TestCase
     }
 
     /**
-     * @return array<string, array>
+     * @return array<string, array{array<int, Uri>}>
      */
     public function runCrawlsListOfUrlsDataProvider(): array
     {
@@ -209,15 +209,15 @@ class CacheWarmerTest extends TestCase
             ],
             'multiple urls' => [
                 [
-                    new Uri('https://www.example.org'),
-                    new Uri('https://www.example.com'),
+                    $this->getExpectedUri('https://www.example.org'),
+                    $this->getExpectedUri('https://www.example.com'),
                 ],
             ],
         ];
     }
 
     /**
-     * @return array<string, array>
+     * @return array<string, array<int, mixed>>
      */
     public function addSitemapsAddsAndParsesGivenSitemapsDataProvider(): array
     {
@@ -266,8 +266,8 @@ class CacheWarmerTest extends TestCase
                     'https://www.example.com/sitemap.xml',
                 ],
                 [
-                    new Sitemap(new Uri('https://www.example.org/sitemap.xml')),
-                    new Sitemap(new Uri('https://www.example.com/sitemap.xml')),
+                    new Sitemap($this->getExpectedUri('https://www.example.org/sitemap.xml')),
+                    new Sitemap($this->getExpectedUri('https://www.example.com/sitemap.xml')),
                 ],
                 [
                     new Uri('https://www.example.org/'),
@@ -283,12 +283,12 @@ class CacheWarmerTest extends TestCase
             ],
             'multiple sitemap objects' => [
                 [
-                    new Sitemap(new Uri('https://www.example.org/sitemap.xml')),
-                    new Sitemap(new Uri('https://www.example.com/sitemap.xml')),
+                    new Sitemap($this->getExpectedUri('https://www.example.org/sitemap.xml')),
+                    new Sitemap($this->getExpectedUri('https://www.example.com/sitemap.xml')),
                 ],
                 [
-                    new Sitemap(new Uri('https://www.example.org/sitemap.xml')),
-                    new Sitemap(new Uri('https://www.example.com/sitemap.xml')),
+                    new Sitemap($this->getExpectedUri('https://www.example.org/sitemap.xml')),
+                    new Sitemap($this->getExpectedUri('https://www.example.com/sitemap.xml')),
                 ],
                 [
                     new Uri('https://www.example.org/'),
@@ -304,13 +304,13 @@ class CacheWarmerTest extends TestCase
             ],
             'mix of sitemap url set and sitemap index' => [
                 [
-                    new Sitemap(new Uri('https://www.example.org/sitemap.xml')),
-                    new Sitemap(new Uri('https://www.example.com/sitemap.xml')),
+                    new Sitemap($this->getExpectedUri('https://www.example.org/sitemap.xml')),
+                    new Sitemap($this->getExpectedUri('https://www.example.com/sitemap.xml')),
                 ],
                 [
-                    new Sitemap(new Uri('https://www.example.org/sitemap.xml')),
-                    new Sitemap(new Uri('https://www.example.com/sitemap.xml')),
-                    new Sitemap(new Uri('https://www.example.org/sitemap_en.xml')),
+                    new Sitemap($this->getExpectedUri('https://www.example.org/sitemap.xml')),
+                    new Sitemap($this->getExpectedUri('https://www.example.com/sitemap.xml')),
+                    new Sitemap($this->getExpectedUri('https://www.example.org/sitemap_en.xml')),
                 ],
                 [
                     new Uri('https://www.example.org/'),
@@ -331,5 +331,19 @@ class CacheWarmerTest extends TestCase
     protected function tearDown(): void
     {
         $this->closeStream();
+    }
+
+    private function getExpectedUri(string $url): Uri
+    {
+        $uri = new Uri($url);
+
+        // Due to a new introduced behavior in guzzlehttp/psr7 2.0.0,
+        // we have to call the __toString() method in order to explicitly
+        // create first-level caches within the instance. Otherwise,
+        // self::assertEquals() will fail,
+        // see https://github.com/guzzle/psr7/pull/293
+        $uri->__toString();
+
+        return $uri;
     }
 }

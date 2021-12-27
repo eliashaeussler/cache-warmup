@@ -6,7 +6,3 @@ parameters:
         - src
         - tests
     treatPhpDocTypesAsCertain: false
-    ignoreErrors:
-        - message: '#Parameter \#1 \$array of function reset expects array, SimpleXMLElement given\.#'
-          path: src/Xml/XmlParser.php
-          count: 2

@@ -1,20 +1,43 @@
-[![Pipeline](https://gitlab.elias-haeussler.de/eliashaeussler/cache-warmup/badges/master/pipeline.svg)](https://gitlab.elias-haeussler.de/eliashaeussler/cache-warmup/-/pipelines)
-[![Coverage](https://gitlab.elias-haeussler.de/eliashaeussler/cache-warmup/badges/master/coverage.svg)](https://gitlab.elias-haeussler.de/eliashaeussler/cache-warmup/-/pipelines)
-[![Packagist](https://badgen.net/packagist/v/eliashaeussler/cache-warmup)](https://packagist.org/packages/eliashaeussler/cache-warmup)
-[![Docker](https://img.shields.io/docker/v/eliashaeussler/cache-warmup?label=docker&sort=semver)](https://hub.docker.com/r/eliashaeussler/cache-warmup)
-[![License](https://badgen.net/packagist/license/eliashaeussler/cache-warmup)](LICENSE)
+<div align="center">
+
+![Logo](docs/logo.png)
 
 # Cache warmup
 
-> Composer package to warm up caches of pages located in XML sitemaps
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=eliashaeussler_cache-warmup&metric=coverage)](https://sonarcloud.io/dashboard?id=eliashaeussler_cache-warmup)
+[![Tests](https://github.com/eliashaeussler/cache-warmup/actions/workflows/tests.yaml/badge.svg)](https://github.com/eliashaeussler/cache-warmup/actions/workflows/tests.yaml)
+[![CGL](https://github.com/eliashaeussler/cache-warmup/actions/workflows/cgl.yaml/badge.svg)](https://github.com/eliashaeussler/cache-warmup/actions/workflows/cgl.yaml)
+[![Latest Stable Version](http://poser.pugx.org/eliashaeussler/cache-warmup/v)](https://packagist.org/packages/eliashaeussler/cache-warmup)
+[![Total Downloads](http://poser.pugx.org/eliashaeussler/cache-warmup/downloads)](https://packagist.org/packages/eliashaeussler/cache-warmup)
+[![Docker](https://img.shields.io/docker/v/eliashaeussler/cache-warmup?label=docker&sort=semver)](https://hub.docker.com/r/eliashaeussler/cache-warmup)
+[![License](http://poser.pugx.org/eliashaeussler/cache-warmup/license)](LICENSE.md)
 
-## Installation
+:package:&nbsp;[Packagist](https://packagist.org/packages/eliashaeussler/cache-warmup) |
+:floppy_disk:&nbsp;[Repository](https://github.com/eliashaeussler/cache-warmup) |
+:bug:&nbsp;[Issue tracker](https://github.com/eliashaeussler/cache-warmup/issues)
+
+</div>
+
+A PHP library to warm up caches of pages located in XML sitemaps. Cache warmup
+is performed by concurrently sending a simple `HEAD` request to those pages,
+either from the command-line or by using the provided PHP API. It is even
+possible to write custom crawlers that take care of cache warmup.
+
+## :rocket: Features
+
+* Warmup caches of pages located in XML sitemaps
+* Optionally warmup caches of single pages
+* Console command and PHP API for cache warmup
+* Additional Docker image
+* Interface for custom crawler implementations
+
+## :fire: Installation
 
 ```bash
-composer req --dev eliashaeussler/cache-warmup
+composer require eliashaeussler/cache-warmup
 ```
 
-## Usage
+## :zap: Usage
 
 ### Command-line usage
 
@@ -108,13 +131,13 @@ services:
     command: [<options>]
 ```
 
-## Development
+## :technologist: Development
 
 ### Preparation
 
 ```bash
 # Clone repository
-git clone https://gitlab.elias-haeussler.de/eliashaeussler/cache-warmup.git
+git clone https://github.com/eliashaeussler/cache-warmup.git
 cd cache-warmup
 
 # Install Composer dependencies
@@ -147,6 +170,10 @@ composer test
 composer test -- --coverage-text
 ```
 
-## License
+## :gem: Credits
 
-[GPL 3.0 or later](LICENSE)
+[Background vector created by photoroyalty - www.freepik.com](https://www.freepik.com/vectors/background)
+
+## :star: License
+
+This project is licensed under [GNU General Public License 3.0 (or later)](LICENSE).
