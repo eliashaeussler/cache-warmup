@@ -1,0 +1,119 @@
+name: Tests
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  # Job: Run unit tests
+  tests:
+    name: PHP ${{ matrix.php-version }}
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - php-version: 7.2
+          - php-version: 7.3
+          - php-version: 7.4
+          - php-version: 8.0
+          - php-version: 8.0
+            coverage: 1
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      # Prepare environment
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          tools: composer:v2
+          coverage: pcov
+
+      # Define Composer cache
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Define Composer cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: tests-php-${{ matrix.php-version }}
+          restore-keys: |
+            tests-php-
+
+      # Install dependencies
+      - name: Install Composer and dependencies
+        run: composer update --no-progress
+
+      # Run tests
+      - name: Build coverage directory
+        run: mkdir -p .build/coverage
+      - name: Run tests with coverage
+        run: composer test:coverage
+        if: ${{ matrix.coverage }}
+      - name: Run tests without coverage
+        run: composer test
+        if: ${{ !matrix.coverage }}
+
+      # Report coverage
+      - name: Fix coverage path
+        working-directory: .build/coverage
+        run: sed -i 's/\/home\/runner\/work\/cache-warmup\/cache-warmup\//\/github\/workspace\//g' clover.xml
+        if: ${{ matrix.coverage }}
+      - name: Run SonarCloud scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        if: ${{ matrix.coverage }}
+
+  # Job: Run unit tests with lowest installed dependency versions
+  tests-lowest:
+    name: '[test-lowest] PHP ${{ matrix.php-version }}'
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ["7.2", "7.3", "7.4", "8.0"]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      # Prepare environment
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          tools: composer:v2
+          coverage: none
+
+      # Define Composer cache
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Define Composer cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: tests-lowest-php-${{ matrix.php-version }}
+          restore-keys: |
+            tests-lowest-php-
+
+      # Install dependencies
+      - name: Install Composer and dependencies
+        run: composer update --no-progress --prefer-lowest
+
+      # Run tests
+      - name: Build coverage directory
+        run: mkdir -p .build/coverage
+      - name: Run tests
+        run: composer test
