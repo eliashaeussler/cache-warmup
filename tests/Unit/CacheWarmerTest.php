@@ -199,7 +199,7 @@ class CacheWarmerTest extends TestCase
     }
 
     /**
-     * @return array<string, array>
+     * @return array<string, array{array<int, Uri>}>
      */
     public function runCrawlsListOfUrlsDataProvider(): array
     {
@@ -217,7 +217,7 @@ class CacheWarmerTest extends TestCase
     }
 
     /**
-     * @return array<string, array>
+     * @return array<string, array<int, mixed>>
      */
     public function addSitemapsAddsAndParsesGivenSitemapsDataProvider(): array
     {
