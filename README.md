@@ -10,7 +10,7 @@
 [![Latest Stable Version](http://poser.pugx.org/eliashaeussler/cache-warmup/v)](https://packagist.org/packages/eliashaeussler/cache-warmup)
 [![Total Downloads](http://poser.pugx.org/eliashaeussler/cache-warmup/downloads)](https://packagist.org/packages/eliashaeussler/cache-warmup)
 [![Docker](https://img.shields.io/docker/v/eliashaeussler/cache-warmup?label=docker&sort=semver)](https://hub.docker.com/r/eliashaeussler/cache-warmup)
-[![License](http://poser.pugx.org/eliashaeussler/cache-warmup/license)](LICENSE.md)
+[![License](http://poser.pugx.org/eliashaeussler/cache-warmup/license)](LICENSE)
 
 :package:&nbsp;[Packagist](https://packagist.org/packages/eliashaeussler/cache-warmup) |
 :floppy_disk:&nbsp;[Repository](https://github.com/eliashaeussler/cache-warmup) |

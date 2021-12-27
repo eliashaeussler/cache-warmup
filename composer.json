@@ -13,7 +13,7 @@
   ],
   "homepage": "https://haeussler.dev",
   "require": {
-    "php": "^7.1 || 8.0.*",
+    "php": ">= 7.1 < 8.1",
     "ext-curl": "*",
     "ext-dom": "*",
     "ext-libxml": "*",
