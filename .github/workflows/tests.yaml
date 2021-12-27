@@ -20,8 +20,7 @@ jobs:
           - php-version: 7.3
           - php-version: 7.4
           - php-version: 8.0
-          - php-version: 8.0
-            coverage: 1
+            coverage: true
     steps:
       - uses: actions/checkout@v2
         with:
