@@ -9,7 +9,6 @@ jobs:
     name: Composer ${{ matrix.composer-version }}
     if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-20.04
-    strategy:
     steps:
       # Check if tag is valid
       - name: Check tag
