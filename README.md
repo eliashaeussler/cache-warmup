@@ -147,11 +147,9 @@ composer install
 ### Run linters
 
 ```bash
-# Composer normalization
-composer normalize
-
 # Linters
 composer lint
+composer lint:composer
 composer lint:php
 
 # Static code analysis

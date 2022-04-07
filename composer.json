@@ -49,8 +49,10 @@
   },
   "scripts": {
     "lint": [
+      "@lint:composer",
       "@lint:php"
     ],
+    "lint:composer": "@composer normalize --no-check-lock --no-update-lock",
     "lint:php": "php-cs-fixer fix",
     "sca": [
       "@sca:php"
