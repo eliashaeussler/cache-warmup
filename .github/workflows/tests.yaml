@@ -15,11 +15,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        php-version:
+          - "7.2"
+          - "7.3"
+          - "7.4"
+          - "8.0"
         include:
-          - php-version: "7.2"
-          - php-version: "7.3"
-          - php-version: "7.4"
-          - php-version: "8.0"
+          - php-version: "8.1"
             coverage: true
     steps:
       - uses: actions/checkout@v2
@@ -89,7 +91,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ["7.2", "7.3", "7.4", "8.0"]
+        php-version:
+          - "7.2"
+          - "7.3"
+          - "7.4"
+          - "8.0"
+          - "8.1"
     steps:
       - uses: actions/checkout@v2
         with:
