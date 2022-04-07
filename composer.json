@@ -14,8 +14,6 @@
   "homepage": "https://haeussler.dev",
   "require": {
     "php": ">= 7.1 < 8.1",
-    "ext-curl": "*",
-    "ext-dom": "*",
     "ext-filter": "*",
     "ext-libxml": "*",
     "ext-simplexml": "*",
