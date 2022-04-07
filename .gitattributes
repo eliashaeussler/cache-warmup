@@ -8,4 +8,3 @@
 /phpstan.neon             export-ignore
 /phpunit.xml              export-ignore
 /phpunit.coverage.xml     export-ignore
-/sonar-project.properties export-ignore
