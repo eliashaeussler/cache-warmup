@@ -74,6 +74,13 @@ jobs:
           coverageLocations: |
             ${{ github.workspace }}/.build/coverage/clover.xml:clover
         if: ${{ matrix.coverage }}
+      - name: codecov report
+        uses: codecov/codecov-action@v2
+        with:
+          directory: .build/coverage
+          fail_ci_if_error: true
+          verbose: true
+        if: ${{ matrix.coverage }}
 
   # Job: Run unit tests with lowest installed dependency versions
   tests-lowest:
