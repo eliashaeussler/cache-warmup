@@ -42,7 +42,7 @@ use Symfony\Component\Console\Tester\CommandTester;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-class CacheWarmupCommandTest extends TestCase
+final class CacheWarmupCommandTest extends TestCase
 {
     use RequestProphecyTrait;
 

@@ -36,7 +36,7 @@ use Psr\Http\Message\UriInterface;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-class XmlParser
+final class XmlParser
 {
     public const ELEMENT_SITEMAPINDEX = 'sitemapindex';
     public const ELEMENT_URLSET = 'urlset';
@@ -44,22 +44,22 @@ class XmlParser
     /**
      * @var Sitemap
      */
-    protected $sitemap;
+    private $sitemap;
 
     /**
      * @var ClientInterface
      */
-    protected $client;
+    private $client;
 
     /**
      * @var Sitemap[]
      */
-    protected $parsedSitemaps = [];
+    private $parsedSitemaps = [];
 
     /**
      * @var UriInterface[]
      */
-    protected $parsedUrls = [];
+    private $parsedUrls = [];
 
     public function __construct(Sitemap $sitemap, ClientInterface $client = null)
     {
@@ -111,7 +111,7 @@ class XmlParser
         return $this->parsedUrls;
     }
 
-    protected function parseSitemap(\SimpleXMLElement $xml): ?Sitemap
+    private function parseSitemap(\SimpleXMLElement $xml): ?Sitemap
     {
         if (!isset($xml->loc)) {
             return null;
@@ -123,7 +123,7 @@ class XmlParser
         return new Sitemap($sitemapUri);
     }
 
-    protected function parseUrl(\SimpleXMLElement $xml): ?UriInterface
+    private function parseUrl(\SimpleXMLElement $xml): ?UriInterface
     {
         if (!isset($xml->loc)) {
             return null;

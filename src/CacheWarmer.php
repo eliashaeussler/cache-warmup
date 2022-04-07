@@ -37,31 +37,29 @@ use Psr\Http\Message\UriInterface;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-class CacheWarmer
+final class CacheWarmer
 {
     /**
      * @var UriInterface[]
      */
-    protected $urls = [];
+    private $urls = [];
 
     /**
      * @var Sitemap[]
      */
-    protected $sitemaps = [];
+    private $sitemaps = [];
 
     /**
      * @var int
      */
-    protected $limit = 0;
+    private $limit;
 
     /**
      * @var ClientInterface
      */
-    protected $client;
+    private $client;
 
     /**
-     * CacheWarmupService constructor.
-     *
      * @param string[]|Sitemap[]|string|Sitemap|null $sitemaps
      */
     public function __construct($sitemaps = null, int $limit = 0, ClientInterface $client = null)
@@ -125,7 +123,7 @@ class CacheWarmer
         return $this;
     }
 
-    protected function addSitemap(Sitemap $sitemap): self
+    private function addSitemap(Sitemap $sitemap): self
     {
         if (!\in_array($sitemap, $this->sitemaps, true)) {
             $this->sitemaps[] = $sitemap;
@@ -143,7 +141,7 @@ class CacheWarmer
         return $this;
     }
 
-    protected function exceededLimit(): bool
+    private function exceededLimit(): bool
     {
         return $this->limit > 0 && \count($this->urls) >= $this->limit;
     }
@@ -176,7 +174,7 @@ class CacheWarmer
         return $this;
     }
 
-    protected function validateSitemapUrl(string $url): void
+    private function validateSitemapUrl(string $url): void
     {
         if ('' === trim($url)) {
             throw new \InvalidArgumentException('Sitemap URL must not be empty.', 1604055264);

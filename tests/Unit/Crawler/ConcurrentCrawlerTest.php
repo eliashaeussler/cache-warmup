@@ -35,7 +35,7 @@ use PHPUnit\Framework\TestCase;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-class ConcurrentCrawlerTest extends TestCase
+final class ConcurrentCrawlerTest extends TestCase
 {
     use CrawlerResultProcessorTrait;
 
