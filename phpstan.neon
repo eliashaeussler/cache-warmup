@@ -1,5 +1,6 @@
 includes:
     - vendor/jangregor/phpstan-prophecy/extension.neon
+    - vendor/phpstan/phpstan-phpunit/extension.neon
 parameters:
     level: 6
     paths:
