@@ -37,7 +37,7 @@ use Psr\Http\Message\UriInterface;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-class CacheWarmerTest extends TestCase
+final class CacheWarmerTest extends TestCase
 {
     use RequestProphecyTrait;
     use CrawlerResultProcessorTrait;

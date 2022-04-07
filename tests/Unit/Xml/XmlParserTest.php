@@ -37,7 +37,7 @@ use Psr\Http\Client\ClientInterface;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-class XmlParserTest extends TestCase
+final class XmlParserTest extends TestCase
 {
     use RequestProphecyTrait;
 

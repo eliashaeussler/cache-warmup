@@ -31,7 +31,7 @@ use Psr\Http\Message\UriInterface;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-class CrawlingState
+final class CrawlingState
 {
     public const SUCCESSFUL = 0;
     public const FAILED = 1;
@@ -39,17 +39,17 @@ class CrawlingState
     /**
      * @var UriInterface
      */
-    protected $uri;
+    private $uri;
 
     /**
      * @var int
      */
-    protected $state = self::SUCCESSFUL;
+    private $state = self::SUCCESSFUL;
 
     /**
      * @var array<string, mixed>
      */
-    protected $data = [];
+    private $data = [];
 
     /**
      * @param array<string, mixed> $data
@@ -106,7 +106,7 @@ class CrawlingState
         return $this->state === $state;
     }
 
-    protected function validateState(): void
+    private function validateState(): void
     {
         $supportedStates = [self::SUCCESSFUL, self::FAILED];
         if (!\in_array($this->state, $supportedStates, true)) {

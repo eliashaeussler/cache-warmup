@@ -31,6 +31,8 @@ use Psr\Http\Message\UriInterface;
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
+ *
+ * @internal
  */
 class DummyCrawler implements CrawlerInterface
 {
