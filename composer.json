@@ -48,8 +48,16 @@
     "sort-packages": true
   },
   "scripts": {
-    "lint": "php-cs-fixer fix",
-    "sca": "phpstan analyse -c phpstan.neon",
+    "lint": [
+      "@lint:composer",
+      "@lint:php"
+    ],
+    "lint:composer": "@composer normalize --no-check-lock --no-update-lock",
+    "lint:php": "php-cs-fixer fix",
+    "sca": [
+      "@sca:php"
+    ],
+    "sca:php": "phpstan analyse -c phpstan.neon",
     "test": "phpunit -c phpunit.xml",
     "test:coverage": "@php -d pcov.enabled=1 -d pcov.directory=src -d memory_limit=-1 vendor/bin/phpunit -c phpunit.coverage.xml"
   }
