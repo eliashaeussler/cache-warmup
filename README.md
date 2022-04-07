@@ -4,9 +4,11 @@
 
 # Cache warmup
 
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=eliashaeussler_cache-warmup&metric=coverage)](https://sonarcloud.io/dashboard?id=eliashaeussler_cache-warmup)
+[![Coverage](https://codecov.io/gh/eliashaeussler/cache-warmup/branch/develop/graph/badge.svg?token=SAYQJPAHYS)](https://codecov.io/gh/eliashaeussler/cache-warmup)
+[![Maintainability](https://api.codeclimate.com/v1/badges/20217c57aa1fc511f8bc/maintainability)](https://codeclimate.com/github/eliashaeussler/cache-warmup/maintainability)
 [![Tests](https://github.com/eliashaeussler/cache-warmup/actions/workflows/tests.yaml/badge.svg)](https://github.com/eliashaeussler/cache-warmup/actions/workflows/tests.yaml)
 [![CGL](https://github.com/eliashaeussler/cache-warmup/actions/workflows/cgl.yaml/badge.svg)](https://github.com/eliashaeussler/cache-warmup/actions/workflows/cgl.yaml)
+[![Docker deploy](https://github.com/eliashaeussler/cache-warmup/actions/workflows/docker.yaml/badge.svg)](https://github.com/eliashaeussler/cache-warmup/actions/workflows/docker.yaml)
 [![Latest Stable Version](http://poser.pugx.org/eliashaeussler/cache-warmup/v)](https://packagist.org/packages/eliashaeussler/cache-warmup)
 [![Total Downloads](http://poser.pugx.org/eliashaeussler/cache-warmup/downloads)](https://packagist.org/packages/eliashaeussler/cache-warmup)
 [![Docker](https://img.shields.io/docker/v/eliashaeussler/cache-warmup?label=docker&sort=semver)](https://hub.docker.com/r/eliashaeussler/cache-warmup)
@@ -177,3 +179,5 @@ composer test -- --coverage-text
 ## :star: License
 
 This project is licensed under [GNU General Public License 3.0 (or later)](LICENSE).
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Feliashaeussler%2Fcache-warmup.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Feliashaeussler%2Fcache-warmup?ref=badge_large)
