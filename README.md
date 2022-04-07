@@ -150,11 +150,13 @@ composer install
 # Composer normalization
 composer normalize
 
-# PHP-CS Fixer
+# Linters
 composer lint
+composer lint:php
 
-# PHPStan
+# Static code analysis
 composer sca
+composer sca:php
 ```
 
 ### Run tests

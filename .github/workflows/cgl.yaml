@@ -30,8 +30,8 @@ jobs:
       - name: Lint composer.json
         run: composer normalize --dry-run
       - name: Lint PHP
-        run: composer lint -- --dry-run
+        run: composer lint:php -- --dry-run
 
       # SCA
       - name: SCA PHP
-        run: composer sca -- --error-format github
+        run: composer sca:php -- --error-format github
