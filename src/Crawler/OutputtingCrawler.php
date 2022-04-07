@@ -62,7 +62,7 @@ class OutputtingCrawler extends ConcurrentCrawler implements VerboseCrawlerInter
     public function crawl(array $urls): void
     {
         $this->assureOutputIsAvailable();
-        $this->startProgressBar(count($urls));
+        $this->startProgressBar(\count($urls));
         parent::crawl($urls);
         $this->progress->finish();
         $this->output->writeln('');

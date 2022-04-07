@@ -22,12 +22,19 @@ declare(strict_types=1);
  */
 
 $finder = \PhpCsFixer\Finder::create()
-    ->in([__DIR__.'/src', __DIR__.'/tests']);
-
+    ->in([
+        __DIR__.'/src',
+        __DIR__.'/tests',
+    ])
+;
 $config = new \PhpCsFixer\Config();
 
-return $config->setRules([
-    '@PSR2' => true,
-    '@Symfony' => true,
-])
-    ->setFinder($finder);
+return $config
+    ->setRules([
+        '@PSR2' => true,
+        '@Symfony' => true,
+        'native_function_invocation' => true,
+    ])
+    ->setFinder($finder)
+    ->setRiskyAllowed(true)
+;

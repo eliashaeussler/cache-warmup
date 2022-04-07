@@ -92,9 +92,9 @@ class OutputtingCrawlerTest extends TestCase
     public static function assertStringMatchesRegularExpression(): void
     {
         if (method_exists(static::class, 'assertMatchesRegularExpression')) {
-            static::assertMatchesRegularExpression(...func_get_args());
+            static::assertMatchesRegularExpression(...\func_get_args());
         } else {
-            static::assertRegExp(...func_get_args());
+            static::assertRegExp(...\func_get_args());
         }
     }
 }

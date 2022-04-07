@@ -194,7 +194,7 @@ class CacheWarmupCommand extends Command
         $isVerboseCrawler = $crawler instanceof VerboseCrawlerInterface;
 
         // Start crawling
-        $urlCount = count($cacheWarmer->getUrls());
+        $urlCount = \count($cacheWarmer->getUrls());
         $output->write(sprintf('Crawling URL%s... ', 1 === $urlCount ? '' : 's'), $isVerboseCrawler);
         $cacheWarmer->run($crawler);
         if (!$isVerboseCrawler) {
@@ -217,7 +217,7 @@ class CacheWarmupCommand extends Command
 
         // Print crawler results
         if ([] !== $successfulUrls) {
-            $countSuccessfulUrls = count($successfulUrls);
+            $countSuccessfulUrls = \count($successfulUrls);
             $io->success(
                 sprintf(
                     'Successfully warmed up caches for %d URL%s.',
@@ -227,7 +227,7 @@ class CacheWarmupCommand extends Command
             );
         }
         if ([] !== $failedUrls) {
-            $countFailedUrls = count($failedUrls);
+            $countFailedUrls = \count($failedUrls);
             $io->error(
                 sprintf(
                     'Failed to warm up caches for %d URL%s.',
@@ -244,12 +244,12 @@ class CacheWarmupCommand extends Command
     {
         $crawler = $input->getOption('crawler');
 
-        if (is_string($crawler)) {
+        if (\is_string($crawler)) {
             // Use crawler specified by --crawler option
             if (!class_exists($crawler)) {
                 throw new RuntimeException('The specified crawler class does not exist.', 1604261816);
             }
-            if (!in_array(CrawlerInterface::class, class_implements($crawler) ?: [])) {
+            if (!\in_array(CrawlerInterface::class, class_implements($crawler) ?: [])) {
                 throw new RuntimeException('The specified crawler is not valid.', 1604261885);
             }
             /** @var CrawlerInterface $crawler */

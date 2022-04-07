@@ -94,7 +94,7 @@ trait RequestProphecyTrait
 
     protected function closeStream(): void
     {
-        if (is_resource($this->stream)) {
+        if (\is_resource($this->stream)) {
             fclose($this->stream);
         }
     }

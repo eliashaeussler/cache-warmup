@@ -109,7 +109,7 @@ class CrawlingState
     protected function validateState(): void
     {
         $supportedStates = [self::SUCCESSFUL, self::FAILED];
-        if (!in_array($this->state, $supportedStates, true)) {
+        if (!\in_array($this->state, $supportedStates, true)) {
             throw new \InvalidArgumentException(sprintf('The given crawling state is not supported, use one of "%s" instead.', implode('", "', $supportedStates)), 1604334815);
         }
     }
