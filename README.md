@@ -11,6 +11,7 @@
 [![Total Downloads](http://poser.pugx.org/eliashaeussler/cache-warmup/downloads)](https://packagist.org/packages/eliashaeussler/cache-warmup)
 [![Docker](https://img.shields.io/docker/v/eliashaeussler/cache-warmup?label=docker&sort=semver)](https://hub.docker.com/r/eliashaeussler/cache-warmup)
 [![License](http://poser.pugx.org/eliashaeussler/cache-warmup/license)](LICENSE)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Feliashaeussler%2Fcache-warmup.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Feliashaeussler%2Fcache-warmup?ref=badge_shield)
 
 :package:&nbsp;[Packagist](https://packagist.org/packages/eliashaeussler/cache-warmup) |
 :floppy_disk:&nbsp;[Repository](https://github.com/eliashaeussler/cache-warmup) |
@@ -177,3 +178,6 @@ composer test -- --coverage-text
 ## :star: License
 
 This project is licensed under [GNU General Public License 3.0 (or later)](LICENSE).
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Feliashaeussler%2Fcache-warmup.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Feliashaeussler%2Fcache-warmup?ref=badge_large)
