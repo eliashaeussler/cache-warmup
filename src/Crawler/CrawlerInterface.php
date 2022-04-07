@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-namespace EliasHaeussler\CacheWarmup\Crawler;
-
 /*
  * This file is part of the Composer package "eliashaeussler/cache-warmup".
  *
- * Copyright (C) 2020 Elias Häußler <elias@haeussler.dev>
+ * Copyright (C) 2022 Elias Häußler <elias@haeussler.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +20,8 @@ namespace EliasHaeussler\CacheWarmup\Crawler;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+
+namespace EliasHaeussler\CacheWarmup\Crawler;
 
 use EliasHaeussler\CacheWarmup\CrawlingState;
 use Psr\Http\Message\UriInterface;

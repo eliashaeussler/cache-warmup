@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-namespace EliasHaeussler\CacheWarmup;
-
 /*
  * This file is part of the Composer package "eliashaeussler/cache-warmup".
  *
- * Copyright (C) 2020 Elias Häußler <elias@haeussler.dev>
+ * Copyright (C) 2022 Elias Häußler <elias@haeussler.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +20,8 @@ namespace EliasHaeussler\CacheWarmup;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+
+namespace EliasHaeussler\CacheWarmup;
 
 use EliasHaeussler\CacheWarmup\Crawler\ConcurrentCrawler;
 use EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface;
@@ -95,14 +95,14 @@ class CacheWarmer
         }
 
         // Force array of sitemaps to be parsed
-        if (!is_array($sitemaps)) {
+        if (!\is_array($sitemaps)) {
             $sitemaps = [$sitemaps];
         }
 
         // Validate and parse given sitemaps
         foreach ($sitemaps as $sitemap) {
             // Parse sitemap URL to valid sitemap object
-            if (is_string($sitemap)) {
+            if (\is_string($sitemap)) {
                 $this->validateSitemapUrl($sitemap);
                 $sitemap = new Sitemap(new Uri($sitemap));
             }
@@ -118,7 +118,7 @@ class CacheWarmer
                     $this->addUrl($parsedUrl);
                 }
             } else {
-                throw new \InvalidArgumentException(sprintf('Sitemaps must be of type string or %s, %s given.', Sitemap::class, gettype($sitemap)), 1604055096);
+                throw new \InvalidArgumentException(sprintf('Sitemaps must be of type string or %s, %s given.', Sitemap::class, \gettype($sitemap)), 1604055096);
             }
         }
 
@@ -127,7 +127,7 @@ class CacheWarmer
 
     protected function addSitemap(Sitemap $sitemap): self
     {
-        if (!in_array($sitemap, $this->sitemaps, true)) {
+        if (!\in_array($sitemap, $this->sitemaps, true)) {
             $this->sitemaps[] = $sitemap;
         }
 
@@ -136,7 +136,7 @@ class CacheWarmer
 
     public function addUrl(UriInterface $url): self
     {
-        if (!$this->exceededLimit() && !in_array($url, $this->urls, true)) {
+        if (!$this->exceededLimit() && !\in_array($url, $this->urls, true)) {
             $this->urls[] = $url;
         }
 
@@ -145,7 +145,7 @@ class CacheWarmer
 
     protected function exceededLimit(): bool
     {
-        return $this->limit > 0 && count($this->urls) >= $this->limit;
+        return $this->limit > 0 && \count($this->urls) >= $this->limit;
     }
 
     /**

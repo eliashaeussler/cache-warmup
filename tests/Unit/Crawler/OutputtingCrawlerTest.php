@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler;
-
 /*
  * This file is part of the Composer package "eliashaeussler/cache-warmup".
  *
- * Copyright (C) 2020 Elias Häußler <elias@haeussler.dev>
+ * Copyright (C) 2022 Elias Häußler <elias@haeussler.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +20,8 @@ namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+
+namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler;
 
 use EliasHaeussler\CacheWarmup\Crawler\OutputtingCrawler;
 use EliasHaeussler\CacheWarmup\Exception\MissingArgumentException;
@@ -92,9 +92,9 @@ class OutputtingCrawlerTest extends TestCase
     public static function assertStringMatchesRegularExpression(): void
     {
         if (method_exists(static::class, 'assertMatchesRegularExpression')) {
-            static::assertMatchesRegularExpression(...func_get_args());
+            static::assertMatchesRegularExpression(...\func_get_args());
         } else {
-            static::assertRegExp(...func_get_args());
+            static::assertRegExp(...\func_get_args());
         }
     }
 }

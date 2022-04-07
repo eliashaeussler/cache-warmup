@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-namespace EliasHaeussler\CacheWarmup\Command;
-
 /*
  * This file is part of the Composer package "eliashaeussler/cache-warmup".
  *
- * Copyright (C) 2020 Elias Häußler <elias@heussler.dev>
+ * Copyright (C) 2022 Elias Häußler <elias@haeussler.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +20,8 @@ namespace EliasHaeussler\CacheWarmup\Command;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+
+namespace EliasHaeussler\CacheWarmup\Command;
 
 use EliasHaeussler\CacheWarmup\CacheWarmer;
 use EliasHaeussler\CacheWarmup\Crawler\ConcurrentCrawler;
@@ -194,7 +194,7 @@ class CacheWarmupCommand extends Command
         $isVerboseCrawler = $crawler instanceof VerboseCrawlerInterface;
 
         // Start crawling
-        $urlCount = count($cacheWarmer->getUrls());
+        $urlCount = \count($cacheWarmer->getUrls());
         $output->write(sprintf('Crawling URL%s... ', 1 === $urlCount ? '' : 's'), $isVerboseCrawler);
         $cacheWarmer->run($crawler);
         if (!$isVerboseCrawler) {
@@ -217,7 +217,7 @@ class CacheWarmupCommand extends Command
 
         // Print crawler results
         if ([] !== $successfulUrls) {
-            $countSuccessfulUrls = count($successfulUrls);
+            $countSuccessfulUrls = \count($successfulUrls);
             $io->success(
                 sprintf(
                     'Successfully warmed up caches for %d URL%s.',
@@ -227,7 +227,7 @@ class CacheWarmupCommand extends Command
             );
         }
         if ([] !== $failedUrls) {
-            $countFailedUrls = count($failedUrls);
+            $countFailedUrls = \count($failedUrls);
             $io->error(
                 sprintf(
                     'Failed to warm up caches for %d URL%s.',
@@ -244,14 +244,15 @@ class CacheWarmupCommand extends Command
     {
         $crawler = $input->getOption('crawler');
 
-        if (is_string($crawler)) {
+        if (\is_string($crawler)) {
             // Use crawler specified by --crawler option
             if (!class_exists($crawler)) {
                 throw new RuntimeException('The specified crawler class does not exist.', 1604261816);
             }
-            if (!in_array(CrawlerInterface::class, class_implements($crawler) ?: [])) {
+            if (!\in_array(CrawlerInterface::class, class_implements($crawler) ?: [])) {
                 throw new RuntimeException('The specified crawler is not valid.', 1604261885);
             }
+            /** @var CrawlerInterface $crawler */
             $crawler = new $crawler();
         } elseif ($output->isVerbose() || $input->getOption('progress')) {
             // Use default verbose crawler

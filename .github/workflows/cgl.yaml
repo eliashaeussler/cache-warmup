@@ -20,18 +20,28 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.0
-          tools: composer:v2
+          tools: composer:v2, composer-require-checker, composer-unused
+
+      # Validation
+      - name: Validate composer.json
+        run: composer validate --no-check-lock
 
       # Install dependencies
       - name: Install Composer dependencies
-        run: composer install --no-progress
+        run: composer update --no-progress
+
+      # Check Composer dependencies
+      - name: Check dependencies
+        run: composer-require-checker check
+      - name: Check for unused dependencies
+        run: composer-unused
 
       # Linting
       - name: Lint composer.json
-        run: composer normalize --dry-run
+        run: composer lint:composer -- --dry-run
       - name: Lint PHP
-        run: composer lint -- --dry-run
+        run: composer lint:php -- --dry-run
 
       # SCA
       - name: SCA PHP
-        run: composer sca -- --error-format github
+        run: composer sca:php -- --error-format github
