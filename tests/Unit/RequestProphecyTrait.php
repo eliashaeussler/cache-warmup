@@ -61,6 +61,8 @@ trait RequestProphecyTrait
             $fixtureFile = realpath(__DIR__.'/../'.$absolutePath);
         }
 
+        self::assertIsString($fixtureFile);
+
         $this->openStream($fixtureFile);
         /* @noinspection PhpParamsInspection */
         /* @noinspection PhpUndefinedMethodInspection */
@@ -80,7 +82,14 @@ trait RequestProphecyTrait
     protected function openStream(string $file): void
     {
         $this->closeStream();
-        $this->stream = new Stream(fopen($file, 'r'));
+
+        self::assertFileExists($file);
+
+        $resource = fopen($file, 'r');
+
+        self::assertIsResource($resource);
+
+        $this->stream = new Stream($resource);
     }
 
     protected function closeStream(): void

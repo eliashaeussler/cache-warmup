@@ -252,6 +252,7 @@ class CacheWarmupCommand extends Command
             if (!in_array(CrawlerInterface::class, class_implements($crawler) ?: [])) {
                 throw new RuntimeException('The specified crawler is not valid.', 1604261885);
             }
+            /** @var CrawlerInterface $crawler */
             $crawler = new $crawler();
         } elseif ($output->isVerbose() || $input->getOption('progress')) {
             // Use default verbose crawler
