@@ -1,5 +1,6 @@
 /composer.lock
 /Dockerfile
+/phar/keys.asc
 /vendor
 /.php-cs-fixer.cache
 /.phpunit.result.cache
