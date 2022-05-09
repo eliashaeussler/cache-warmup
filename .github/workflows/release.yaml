@@ -67,6 +67,8 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: phar
+      - name: Make PHAR executable
+        run: chmod +x .build/cache-warmup.phar
 
       # Generate metadata
       - name: Generate image metadata
@@ -117,6 +119,8 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: phar
+      - name: Make PHAR executable
+        run: chmod +x .build/cache-warmup.phar
 
       # Create release
       - name: Create release
