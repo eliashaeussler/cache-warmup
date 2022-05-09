@@ -77,7 +77,7 @@ jobs:
             ${{ github.workspace }}/.build/coverage/clover.xml:clover
         if: ${{ matrix.coverage }}
       - name: codecov report
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           directory: .build/coverage
           fail_ci_if_error: true
