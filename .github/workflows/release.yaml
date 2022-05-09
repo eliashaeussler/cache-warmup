@@ -51,6 +51,10 @@ jobs:
     runs-on: ubuntu-20.04
     needs: phar
     steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
       # Check if tag is valid
       - name: Check tag
         run: |
@@ -90,6 +94,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
+          context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
 
