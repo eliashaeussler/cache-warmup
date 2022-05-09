@@ -31,6 +31,8 @@ jobs:
       # Compile PHAR
       - name: Install box
         run: composer global require --dev --no-progress humbug/box
+      - name: Install Composer dependencies
+        run: composer update --no-progress
       - name: Compile PHAR
         run: box compile --with-docker
 
