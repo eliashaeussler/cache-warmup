@@ -35,8 +35,23 @@ possible to write custom crawlers that take care of cache warmup.
 
 ## :fire: Installation
 
+### Composer
+
 ```bash
 composer require eliashaeussler/cache-warmup
+```
+
+### Phar
+
+Head over to <https://github.com/eliashaeussler/cache-warmup/releases/latest> and
+download the latest `cache-warmup.phar` file.
+
+Run `chmod +x cache-warmup.phar` to make it executable.
+
+### PHIVE
+
+```bash
+phive install eliashaeussler/cache-warmup
 ```
 
 ## :zap: Usage
