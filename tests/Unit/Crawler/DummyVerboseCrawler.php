@@ -31,6 +31,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author Elias Häußler <e.haeussler@familie-redlich.de>
  * @license GPL-3.0-or-later
+ *
+ * @internal
  */
 class DummyVerboseCrawler extends DummyCrawler implements VerboseCrawlerInterface
 {

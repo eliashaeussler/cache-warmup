@@ -29,7 +29,7 @@ namespace EliasHaeussler\CacheWarmup\Exception;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-class MissingArgumentException extends \Exception
+final class MissingArgumentException extends \Exception
 {
     public static function create(string $argumentName): self
     {

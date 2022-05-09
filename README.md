@@ -8,7 +8,7 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/20217c57aa1fc511f8bc/maintainability)](https://codeclimate.com/github/eliashaeussler/cache-warmup/maintainability)
 [![Tests](https://github.com/eliashaeussler/cache-warmup/actions/workflows/tests.yaml/badge.svg)](https://github.com/eliashaeussler/cache-warmup/actions/workflows/tests.yaml)
 [![CGL](https://github.com/eliashaeussler/cache-warmup/actions/workflows/cgl.yaml/badge.svg)](https://github.com/eliashaeussler/cache-warmup/actions/workflows/cgl.yaml)
-[![Docker deploy](https://github.com/eliashaeussler/cache-warmup/actions/workflows/docker.yaml/badge.svg)](https://github.com/eliashaeussler/cache-warmup/actions/workflows/docker.yaml)
+[![Release](https://github.com/eliashaeussler/cache-warmup/actions/workflows/release.yaml/badge.svg)](https://github.com/eliashaeussler/cache-warmup/actions/workflows/release.yaml)
 [![Latest Stable Version](http://poser.pugx.org/eliashaeussler/cache-warmup/v)](https://packagist.org/packages/eliashaeussler/cache-warmup)
 [![Total Downloads](http://poser.pugx.org/eliashaeussler/cache-warmup/downloads)](https://packagist.org/packages/eliashaeussler/cache-warmup)
 [![Docker](https://img.shields.io/docker/v/eliashaeussler/cache-warmup?label=docker&sort=semver)](https://hub.docker.com/r/eliashaeussler/cache-warmup)

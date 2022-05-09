@@ -47,7 +47,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @author Elias Häußler <elias@heussler.dev>
  * @license GPL-3.0-or-later
  */
-class CacheWarmupCommand extends Command
+final class CacheWarmupCommand extends Command
 {
     protected static $defaultName = 'cache-warmup';
 

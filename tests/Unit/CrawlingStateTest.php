@@ -33,7 +33,7 @@ use PHPUnit\Framework\TestCase;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-class CrawlingStateTest extends TestCase
+final class CrawlingStateTest extends TestCase
 {
     /**
      * @test

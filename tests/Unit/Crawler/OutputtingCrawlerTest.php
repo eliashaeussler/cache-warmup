@@ -35,7 +35,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-class OutputtingCrawlerTest extends TestCase
+final class OutputtingCrawlerTest extends TestCase
 {
     /**
      * @var BufferedOutput
