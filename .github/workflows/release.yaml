@@ -112,6 +112,10 @@ jobs:
     runs-on: ubuntu-20.04
     needs: phar
     steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
       # Check if tag is valid
       - name: Check tag
         run: |
