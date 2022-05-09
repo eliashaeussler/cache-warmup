@@ -1,4 +1,5 @@
 /composer.lock
+/Dockerfile
 /vendor
 /.php-cs-fixer.cache
 /.phpunit.result.cache
