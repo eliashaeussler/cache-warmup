@@ -41,10 +41,10 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 EOM;
 
 $finder = \PhpCsFixer\Finder::create()
-    ->in([
-        __DIR__.'/src',
-        __DIR__.'/tests',
-    ])
+    ->files()
+    ->in(__DIR__)
+    ->name('*.php')
+    ->ignoreVCSignored(true)
 ;
 $config = new \PhpCsFixer\Config();
 
