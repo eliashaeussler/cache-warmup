@@ -127,6 +127,14 @@ jobs:
       - name: Make PHAR executable
         run: chmod +x .build/cache-warmup.phar
 
+      # Sign PHAR file
+      - name: Sign PHAR file
+        run: |
+          gpg --batch --output phar/keys.asc --passphrase "${{ secrets.PHAR_GPG_PASSPHRASE }}" --yes --decrypt phar/keys.asc.gpg
+          gpg --batch --import phar/keys.asc
+          gpg --armor --local-user "${{ secrets.PHAR_GPG_LOCAL_USER }}" --output .build/cache-warmup.phar.asc --passphrase "${{ secrets.PHAR_GPG_PASSPHRASE }}" --pinentry-mode loopback --yes --detach-sig .build/cache-warmup.phar
+          rm phar/keys.asc
+
       # Create release
       - name: Create release
         id: create-release
@@ -135,3 +143,4 @@ jobs:
           generate_release_notes: true
           files: |
             .build/cache-warmup.phar
+            .build/cache-warmup.phar.asc
