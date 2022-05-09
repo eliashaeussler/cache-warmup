@@ -132,12 +132,13 @@ jobs:
         run: chmod +x .build/cache-warmup.phar
 
       # Sign PHAR file
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v4
+        with:
+          gpg_private_key: ${{ secrets.PHAR_GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.PHAR_GPG_PASSPHRASE }}
       - name: Sign PHAR file
-        run: |
-          gpg --batch --output phar/keys.asc --passphrase "${{ secrets.PHAR_GPG_PASSPHRASE }}" --yes --decrypt phar/keys.asc.gpg
-          gpg --batch --import phar/keys.asc
-          gpg --armor --local-user "${{ secrets.PHAR_GPG_LOCAL_USER }}" --output .build/cache-warmup.phar.asc --passphrase "${{ secrets.PHAR_GPG_PASSPHRASE }}" --pinentry-mode loopback --yes --detach-sig .build/cache-warmup.phar
-          rm phar/keys.asc
+        run: gpg --armor --output .build/cache-warmup.phar.asc --yes --detach-sig .build/cache-warmup.phar
 
       # Create release
       - name: Create release
