@@ -6,6 +6,7 @@ on:
   schedule:
     # Run every day at 02:23
     - cron: '23 2 * * *'
+  workflow_dispatch:
 
 jobs:
   phar:
@@ -82,7 +83,7 @@ jobs:
           tags: |
             type=raw,value=latest,enable=${{ github.event_name != 'workflow_dispatch' }}
             type=semver,pattern={{version}}
-            type=ref,enable=${{ github.event_name == 'workflow_dispatch' }}
+            type=raw,value=${{ github.ref_name }},enable=${{ github.event_name == 'workflow_dispatch' }}
 
       # Prepare build
       - name: Set up QEMU
