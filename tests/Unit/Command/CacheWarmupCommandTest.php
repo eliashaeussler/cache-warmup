@@ -101,9 +101,9 @@ final class CacheWarmupCommandTest extends TestCase
         $this->commandTester->execute([], ['verbosity' => OutputInterface::VERBOSITY_VERY_VERBOSE]);
 
         $output = $this->commandTester->getDisplay();
-        static::assertStringContainsString('* https://www.example.com/sitemap.xml', $output);
-        static::assertStringContainsString('* https://www.example.com/', $output);
-        static::assertStringContainsString('* https://www.example.com/foo', $output);
+        self::assertStringContainsString('* https://www.example.com/sitemap.xml', $output);
+        self::assertStringContainsString('* https://www.example.com/', $output);
+        self::assertStringContainsString('* https://www.example.com/foo', $output);
     }
 
     /**
@@ -126,9 +126,9 @@ final class CacheWarmupCommandTest extends TestCase
         );
 
         $output = $this->commandTester->getDisplay();
-        static::assertStringContainsString('* https://www.example.com/sitemap.xml', $output);
-        static::assertStringContainsString('* https://www.example.com/', $output);
-        static::assertStringContainsString('* https://www.example.com/foo', $output);
+        self::assertStringContainsString('* https://www.example.com/sitemap.xml', $output);
+        self::assertStringContainsString('* https://www.example.com/', $output);
+        self::assertStringContainsString('* https://www.example.com/foo', $output);
     }
 
     /**
@@ -152,9 +152,9 @@ final class CacheWarmupCommandTest extends TestCase
         );
 
         $output = $this->commandTester->getDisplay();
-        static::assertStringContainsString('* https://www.example.com/sitemap.xml', $output);
-        static::assertStringContainsString('* https://www.example.com/', $output);
-        static::assertStringNotContainsString('* https://www.example.com/foo', $output);
+        self::assertStringContainsString('* https://www.example.com/sitemap.xml', $output);
+        self::assertStringContainsString('* https://www.example.com/', $output);
+        self::assertStringNotContainsString('* https://www.example.com/foo', $output);
     }
 
     /**
@@ -179,8 +179,8 @@ final class CacheWarmupCommandTest extends TestCase
         );
 
         $output = $this->commandTester->getDisplay();
-        static::assertStringContainsString('* https://www.example.com/', $output);
-        static::assertStringContainsString('* https://www.example.com/foo', $output);
+        self::assertStringContainsString('* https://www.example.com/', $output);
+        self::assertStringContainsString('* https://www.example.com/foo', $output);
     }
 
     /**
@@ -198,11 +198,11 @@ final class CacheWarmupCommandTest extends TestCase
         ]);
 
         $output = $this->commandTester->getDisplay();
-        static::assertStringContainsString('Parsing sitemaps... Done', $output);
-        static::assertStringContainsString('Crawling URLs... Done', $output);
-        static::assertStringNotContainsString('* https://www.example.com/sitemap.xml', $output);
-        static::assertStringNotContainsString('* https://www.example.com/', $output);
-        static::assertStringNotContainsString('* https://www.example.com/foo', $output);
+        self::assertStringContainsString('Parsing sitemaps... Done', $output);
+        self::assertStringContainsString('Crawling URLs... Done', $output);
+        self::assertStringNotContainsString('* https://www.example.com/sitemap.xml', $output);
+        self::assertStringNotContainsString('* https://www.example.com/', $output);
+        self::assertStringNotContainsString('* https://www.example.com/foo', $output);
     }
 
     /**
@@ -265,7 +265,7 @@ final class CacheWarmupCommandTest extends TestCase
             new Uri('https://www.example.com/foo'),
         ];
 
-        static::assertEquals($expected, DummyCrawler::$crawledUrls);
+        self::assertEquals($expected, DummyCrawler::$crawledUrls);
     }
 
     /**
@@ -283,7 +283,7 @@ final class CacheWarmupCommandTest extends TestCase
             '--crawler' => DummyVerboseCrawler::class,
         ]);
 
-        static::assertSame($this->commandTester->getOutput(), DummyVerboseCrawler::$output);
+        self::assertSame($this->commandTester->getOutput(), DummyVerboseCrawler::$output);
     }
 
     /**

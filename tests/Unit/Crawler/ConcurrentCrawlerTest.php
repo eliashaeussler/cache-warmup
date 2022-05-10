@@ -55,7 +55,7 @@ final class ConcurrentCrawlerTest extends TestCase
         $subject->crawl($urls);
 
         $processedUrls = $this->getProcessedUrlsFromCrawler($subject);
-        static::assertTrue([] === array_diff($urls, $processedUrls));
+        self::assertTrue([] === array_diff($urls, $processedUrls));
     }
 
     /**
@@ -69,8 +69,8 @@ final class ConcurrentCrawlerTest extends TestCase
         $subject = new ConcurrentCrawler();
         $subject->crawl($urls);
 
-        static::assertSame($urls, $this->getProcessedUrlsFromCrawler($subject, CrawlingState::SUCCESSFUL));
-        static::assertSame([], $subject->getFailedUrls());
+        self::assertSame($urls, $this->getProcessedUrlsFromCrawler($subject, CrawlingState::SUCCESSFUL));
+        self::assertSame([], $subject->getFailedUrls());
     }
 
     /**
@@ -84,7 +84,7 @@ final class ConcurrentCrawlerTest extends TestCase
         $subject = new ConcurrentCrawler();
         $subject->crawl($urls);
 
-        static::assertSame($urls, $this->getProcessedUrlsFromCrawler($subject, CrawlingState::FAILED));
-        static::assertSame([], $subject->getSuccessfulUrls());
+        self::assertSame($urls, $this->getProcessedUrlsFromCrawler($subject, CrawlingState::FAILED));
+        self::assertSame([], $subject->getSuccessfulUrls());
     }
 }
