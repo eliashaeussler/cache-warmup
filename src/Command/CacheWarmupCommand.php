@@ -34,6 +34,7 @@ use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Client\ClientInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -155,15 +156,16 @@ final class CacheWarmupCommand extends Command
 
         // Get sitemaps from interactive user input
         $sitemaps = [];
+        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
         do {
             $question = new Question('Please enter the URL of a XML sitemap: ');
             $sitemap = $helper->ask($input, $output, $question);
-            if (null !== $sitemap) {
+            if (\is_string($sitemap)) {
                 $sitemaps[] = $sitemap;
                 $output->writeln(sprintf('<info>Sitemap added: %s</info>', $sitemap));
             }
-        } while (null !== $sitemap);
+        } while (\is_string($sitemap));
 
         // Throw exception if no sitemaps were added
         if ([] === $sitemaps && [] === $input->getOption('urls')) {
@@ -190,6 +192,7 @@ final class CacheWarmupCommand extends Command
         $output->write('Parsing sitemaps... ');
         $cacheWarmer = new CacheWarmer($sitemaps, $limit, $this->client);
         foreach ($urls as $url) {
+            \assert(\is_string($url));
             $cacheWarmer->addUrl(new Uri($url));
         }
         $output->writeln('<info>Done</info>');

@@ -31,6 +31,7 @@
     "phpspec/prophecy-phpunit": "^2.0",
     "phpstan/phpstan": "^1.2",
     "phpstan/phpstan-phpunit": "^1.1",
+    "phpstan/phpstan-symfony": "^1.1",
     "phpunit/phpunit": "^9.3"
   },
   "autoload": {

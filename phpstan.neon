@@ -1,9 +1,12 @@
 includes:
     - vendor/jangregor/phpstan-prophecy/extension.neon
     - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-symfony/extension.neon
 parameters:
-    level: 8
+    level: max
     paths:
         - src
         - tests
     treatPhpDocTypesAsCertain: false
+    symfony:
+        consoleApplicationLoader: tests/Build/console-application.php
