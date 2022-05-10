@@ -34,6 +34,7 @@ use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Client\ClientInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -49,6 +50,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 final class CacheWarmupCommand extends Command
 {
+    private const SUCCESSFUL = 0;
+    private const FAILED = 1;
+
     protected static $defaultName = 'cache-warmup';
 
     /**
@@ -95,6 +99,14 @@ final class CacheWarmupCommand extends Command
             'It\'s up to you to ensure the given crawler class is available and fully loaded.',
             'This can best be achieved by registering the class with Composer autoloader.',
             'Also make sure the crawler implements the <comment>'.CrawlerInterface::class.'</comment> interface.',
+            '',
+            '<info>Allow failures</info>',
+            '<info>==============</info>',
+            'If an URL fails to be crawled, this command exits with a non-zero exit code.',
+            'This is not always the desired behavior. Therefore, you can change this behavior ',
+            'by using the <comment>--allow-failures</comment> option:',
+            '',
+            '   <comment>bin/cache-warmup --allow-failures</comment>',
         ]));
 
         $this->addArgument(
@@ -127,6 +139,12 @@ final class CacheWarmupCommand extends Command
             InputOption::VALUE_OPTIONAL,
             'FQCN of the crawler to be used for cache warming'
         );
+        $this->addOption(
+            'allow-failures',
+            null,
+            InputOption::VALUE_NONE,
+            'Allow failures during URL crawling and exit with zero'
+        );
     }
 
     protected function interact(InputInterface $input, OutputInterface $output): void
@@ -138,15 +156,16 @@ final class CacheWarmupCommand extends Command
 
         // Get sitemaps from interactive user input
         $sitemaps = [];
+        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
         do {
             $question = new Question('Please enter the URL of a XML sitemap: ');
             $sitemap = $helper->ask($input, $output, $question);
-            if (null !== $sitemap) {
+            if (\is_string($sitemap)) {
                 $sitemaps[] = $sitemap;
                 $output->writeln(sprintf('<info>Sitemap added: %s</info>', $sitemap));
             }
-        } while (null !== $sitemap);
+        } while (\is_string($sitemap));
 
         // Throw exception if no sitemaps were added
         if ([] === $sitemaps && [] === $input->getOption('urls')) {
@@ -161,6 +180,7 @@ final class CacheWarmupCommand extends Command
         $sitemaps = $input->getArgument('sitemaps');
         $urls = $input->getOption('urls');
         $limit = (int) $input->getOption('limit');
+        $allowFailures = (bool) $input->getOption('allow-failures');
         $io = new SymfonyStyle($input, $output);
 
         // Throw exception if neither sitemaps nor URLs are defined
@@ -172,6 +192,7 @@ final class CacheWarmupCommand extends Command
         $output->write('Parsing sitemaps... ');
         $cacheWarmer = new CacheWarmer($sitemaps, $limit, $this->client);
         foreach ($urls as $url) {
+            \assert(\is_string($url));
             $cacheWarmer->addUrl(new Uri($url));
         }
         $output->writeln('<info>Done</info>');
@@ -235,9 +256,11 @@ final class CacheWarmupCommand extends Command
                     1 === $countFailedUrls ? '' : 's'
                 )
             );
+
+            return $allowFailures ? self::SUCCESSFUL : self::FAILED;
         }
 
-        return [] === $failedUrls ? 0 : 1;
+        return self::SUCCESSFUL;
     }
 
     protected function initializeCrawler(InputInterface $input, OutputInterface $output): CrawlerInterface

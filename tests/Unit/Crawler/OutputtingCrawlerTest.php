@@ -79,11 +79,11 @@ final class OutputtingCrawlerTest extends TestCase
         $this->subject->crawl([$uri1, $uri2]);
 
         $output = $this->output->fetch();
-        static::assertStringMatchesRegularExpression(
+        self::assertStringMatchesRegularExpression(
             sprintf('#^\s*\d/\d [^\s]+\s+\d+%% -- %s \((success|failed)\)$#m', preg_quote((string) $uri1)),
             $output
         );
-        static::assertStringMatchesRegularExpression(
+        self::assertStringMatchesRegularExpression(
             sprintf('#^\s*\d/\d [^\s]+\s+\d+%% -- %s \(failed\)$#m', preg_quote((string) $uri2)),
             $output
         );
@@ -92,9 +92,9 @@ final class OutputtingCrawlerTest extends TestCase
     public static function assertStringMatchesRegularExpression(): void
     {
         if (method_exists(static::class, 'assertMatchesRegularExpression')) {
-            static::assertMatchesRegularExpression(...\func_get_args());
+            self::assertMatchesRegularExpression(...\func_get_args());
         } else {
-            static::assertRegExp(...\func_get_args());
+            self::assertRegExp(...\func_get_args());
         }
     }
 }

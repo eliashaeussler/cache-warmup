@@ -54,12 +54,12 @@ final class CrawlingStateTest extends TestCase
         $data = ['foo' => 'baz'];
         $subject = CrawlingState::createSuccessful($uri, $data);
 
-        static::assertSame($uri, $subject->getUri());
-        static::assertSame($data, $subject->getData());
-        static::assertTrue($subject->isSuccessful());
-        static::assertTrue($subject->is(CrawlingState::SUCCESSFUL));
-        static::assertFalse($subject->isFailed());
-        static::assertFalse($subject->is(CrawlingState::FAILED));
+        self::assertSame($uri, $subject->getUri());
+        self::assertSame($data, $subject->getData());
+        self::assertTrue($subject->isSuccessful());
+        self::assertTrue($subject->is(CrawlingState::SUCCESSFUL));
+        self::assertFalse($subject->isFailed());
+        self::assertFalse($subject->is(CrawlingState::FAILED));
     }
 
     /**
@@ -71,11 +71,11 @@ final class CrawlingStateTest extends TestCase
         $data = ['foo' => 'baz'];
         $subject = CrawlingState::createFailed($uri, $data);
 
-        static::assertSame($uri, $subject->getUri());
-        static::assertSame($data, $subject->getData());
-        static::assertTrue($subject->isFailed());
-        static::assertTrue($subject->is(CrawlingState::FAILED));
-        static::assertFalse($subject->isSuccessful());
-        static::assertFalse($subject->is(CrawlingState::SUCCESSFUL));
+        self::assertSame($uri, $subject->getUri());
+        self::assertSame($data, $subject->getData());
+        self::assertTrue($subject->isFailed());
+        self::assertTrue($subject->is(CrawlingState::FAILED));
+        self::assertFalse($subject->isSuccessful());
+        self::assertFalse($subject->is(CrawlingState::SUCCESSFUL));
     }
 }

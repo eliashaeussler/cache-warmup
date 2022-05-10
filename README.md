@@ -61,7 +61,7 @@ phive install eliashaeussler/cache-warmup
 **General usage**
 
 ```bash
-./vendor/bin/cache-warmup [--urls...] [--limit] [--progress] [--crawler] [<sitemaps>...]
+./vendor/bin/cache-warmup [--urls...] [--limit] [--progress] [--crawler] [--allow-failures] [<sitemaps>...]
 ```
 
 **Extended usage**
@@ -79,6 +79,9 @@ phive install eliashaeussler/cache-warmup
 
 # Use custom crawler (must implement EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface)
 ./vendor/bin/cache-warmup "https://www.example.org/sitemap.xml" --crawler "Vendor\Crawler\MyCrawler"
+
+# Exit gracefully even if crawling of URLs failed
+./vendor/bin/cache-warmup "https://www.example.org/sitemap.xml" --allow-failures
 
 # Define URLs to be crawled
 ./vendor/bin/cache-warmup -u "https://www.example.org/" \

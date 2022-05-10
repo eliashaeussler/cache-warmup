@@ -43,7 +43,10 @@ EOM;
 $finder = \PhpCsFixer\Finder::create()
     ->files()
     ->in(__DIR__)
-    ->name('*.php')
+    ->name([
+        'cache-warmup',
+        '*.php',
+    ])
     ->ignoreVCSignored(true)
 ;
 $config = new \PhpCsFixer\Config();
