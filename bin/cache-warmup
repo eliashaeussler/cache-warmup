@@ -1,11 +1,12 @@
 #!/usr/bin/env php
 <?php
+
 declare(strict_types=1);
 
 /*
  * This file is part of the Composer package "eliashaeussler/cache-warmup".
  *
- * Copyright (C) 2020 Elias Häußler <elias@haeussler.dev>
+ * Copyright (C) 2022 Elias Häußler <elias@haeussler.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,16 +24,16 @@ declare(strict_types=1);
 
 // Check Composer autoloader
 $autoloadFile = null;
-foreach ([__DIR__ . '/../../../autoload.php', __DIR__ . '/../vendor/autoload.php', __DIR__ . '/vendor/autoload.php'] as $file) {
+foreach ([__DIR__.'/../../../autoload.php', __DIR__.'/../vendor/autoload.php', __DIR__.'/vendor/autoload.php'] as $file) {
     if (file_exists($file)) {
         $autoloadFile = $file;
         break;
     }
 }
-if ($autoloadFile === null) {
+if (null === $autoloadFile) {
     $message = 'Unable to determine path to Composer autoload file. Please set up your project using Composer.';
     fwrite(STDERR, $message);
-    die(1);
+    exit(1);
 }
 
 // Require Composer autoloader

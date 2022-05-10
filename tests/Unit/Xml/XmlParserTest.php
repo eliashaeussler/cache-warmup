@@ -28,6 +28,7 @@ use EliasHaeussler\CacheWarmup\Tests\Unit\RequestProphecyTrait;
 use EliasHaeussler\CacheWarmup\Xml\XmlParser;
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 
@@ -39,6 +40,7 @@ use Psr\Http\Client\ClientInterface;
  */
 final class XmlParserTest extends TestCase
 {
+    use ProphecyTrait;
     use RequestProphecyTrait;
 
     /**
@@ -66,8 +68,8 @@ final class XmlParserTest extends TestCase
         $expected = [
             new Sitemap(new Uri('https://www.example.org/sitemap_en.xml')),
         ];
-        static::assertEquals($expected, $this->subject->getParsedSitemaps());
-        static::assertSame([], $this->subject->getParsedUrls());
+        self::assertEquals($expected, $this->subject->getParsedSitemaps());
+        self::assertSame([], $this->subject->getParsedUrls());
     }
 
     /**
@@ -85,8 +87,8 @@ final class XmlParserTest extends TestCase
             new Uri('https://www.example.org/foo'),
             new Uri('https://www.example.org/baz'),
         ];
-        static::assertEquals($expected, $this->subject->getParsedUrls());
-        static::assertSame([], $this->subject->getParsedSitemaps());
+        self::assertEquals($expected, $this->subject->getParsedUrls());
+        self::assertSame([], $this->subject->getParsedSitemaps());
     }
 
     /**
@@ -102,8 +104,8 @@ final class XmlParserTest extends TestCase
         $expected = [
             new Sitemap(new Uri('https://www.example.org/sitemap_alt_2.xml')),
         ];
-        static::assertEquals($expected, $this->subject->getParsedSitemaps());
-        static::assertSame([], $this->subject->getParsedUrls());
+        self::assertEquals($expected, $this->subject->getParsedSitemaps());
+        self::assertSame([], $this->subject->getParsedUrls());
     }
 
     /**
@@ -120,8 +122,8 @@ final class XmlParserTest extends TestCase
             new Uri('https://www.example.org/foo'),
             new Uri('https://www.example.org/baz'),
         ];
-        static::assertEquals($expected, $this->subject->getParsedUrls());
-        static::assertSame([], $this->subject->getParsedSitemaps());
+        self::assertEquals($expected, $this->subject->getParsedUrls());
+        self::assertSame([], $this->subject->getParsedSitemaps());
     }
 
     /**
@@ -129,7 +131,7 @@ final class XmlParserTest extends TestCase
      */
     public function getParsedSitemapsReturnsEmptyArrayIfSitemapHasNotBeenCrawledYet(): void
     {
-        static::assertSame([], $this->subject->getParsedSitemaps());
+        self::assertSame([], $this->subject->getParsedSitemaps());
     }
 
     /**
@@ -137,7 +139,7 @@ final class XmlParserTest extends TestCase
      */
     public function getParsedSitemapsUrlsEmptyArrayIfSitemapHasNotBeenCrawledYet(): void
     {
-        static::assertSame([], $this->subject->getParsedUrls());
+        self::assertSame([], $this->subject->getParsedUrls());
     }
 
     protected function tearDown(): void

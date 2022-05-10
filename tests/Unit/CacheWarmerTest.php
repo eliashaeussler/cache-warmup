@@ -27,6 +27,7 @@ use EliasHaeussler\CacheWarmup\CacheWarmer;
 use EliasHaeussler\CacheWarmup\Sitemap;
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\UriInterface;
@@ -39,6 +40,7 @@ use Psr\Http\Message\UriInterface;
  */
 final class CacheWarmerTest extends TestCase
 {
+    use ProphecyTrait;
     use RequestProphecyTrait;
     use CrawlerResultProcessorTrait;
 
@@ -66,7 +68,7 @@ final class CacheWarmerTest extends TestCase
         }
         $crawler = $this->subject->run();
         $processedUrls = $this->getProcessedUrlsFromCrawler($crawler);
-        static::assertTrue([] === array_diff($urls, $processedUrls));
+        self::assertTrue([] === array_diff($urls, $processedUrls));
     }
 
     /**
@@ -116,11 +118,11 @@ final class CacheWarmerTest extends TestCase
 
         // Add sitemap (first time)
         $this->subject->addSitemaps('https://www.example.org/sitemap.xml');
-        static::assertEquals($expected, $this->subject->getUrls());
+        self::assertEquals($expected, $this->subject->getUrls());
 
         // Add sitemap (second time)
         $this->subject->addSitemaps('https://www.example.com/sitemap.xml');
-        static::assertEquals($expected, $this->subject->getUrls());
+        self::assertEquals($expected, $this->subject->getUrls());
     }
 
     /**
@@ -144,8 +146,8 @@ final class CacheWarmerTest extends TestCase
             $this->prophesizeSitemapRequest($fixture, $expectedUri);
         }
         $this->subject->addSitemaps($sitemaps);
-        static::assertEquals($expectedSitemaps, $this->subject->getSitemaps());
-        static::assertEquals($expectedUrls, $this->subject->getUrls());
+        self::assertEquals($expectedSitemaps, $this->subject->getSitemaps());
+        self::assertEquals($expectedUrls, $this->subject->getUrls());
     }
 
     /**
@@ -154,7 +156,7 @@ final class CacheWarmerTest extends TestCase
     public function addUrlAddsGivenUrlToListOfUrls(): void
     {
         $url = $this->getExpectedUri('https://www.example.org/sitemap.xml');
-        static::assertSame([$url], $this->subject->addUrl($url)->getUrls());
+        self::assertSame([$url], $this->subject->addUrl($url)->getUrls());
     }
 
     /**
@@ -163,7 +165,7 @@ final class CacheWarmerTest extends TestCase
     public function addUrlDoesNotAddAlreadyAvailableUrlToListOfUrls(): void
     {
         $url = $this->getExpectedUri('https://www.example.org/sitemap.xml');
-        static::assertSame([$url], $this->subject->addUrl($url)->addUrl($url)->getUrls());
+        self::assertSame([$url], $this->subject->addUrl($url)->addUrl($url)->getUrls());
     }
 
     /**
@@ -177,7 +179,7 @@ final class CacheWarmerTest extends TestCase
         $this->subject->setLimit(1);
         $this->subject->addUrl($url1)->addUrl($url2);
 
-        static::assertSame([$url1], $this->subject->getUrls());
+        self::assertSame([$url1], $this->subject->getUrls());
     }
 
     /**
@@ -185,8 +187,8 @@ final class CacheWarmerTest extends TestCase
      */
     public function getLimitReturnsUrlLimit(): void
     {
-        static::assertSame(0, $this->subject->getLimit());
-        static::assertSame(10, $this->subject->setLimit(10)->getLimit());
+        self::assertSame(0, $this->subject->getLimit());
+        self::assertSame(10, $this->subject->setLimit(10)->getLimit());
     }
 
     /**
@@ -195,7 +197,7 @@ final class CacheWarmerTest extends TestCase
     public function setLimitDefinesUrlLimit(): void
     {
         $this->subject->setLimit(10);
-        static::assertSame(10, $this->subject->getLimit());
+        self::assertSame(10, $this->subject->getLimit());
     }
 
     /**

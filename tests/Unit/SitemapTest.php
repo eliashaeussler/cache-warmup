@@ -42,6 +42,6 @@ final class SitemapTest extends TestCase
     {
         $uri = new Uri('https://foo.baz');
         $subject = new Sitemap($uri);
-        static::assertSame($uri, $subject->getUri());
+        self::assertSame($uri, $subject->getUri());
     }
 }
