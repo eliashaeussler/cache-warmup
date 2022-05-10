@@ -29,6 +29,7 @@ use EliasHaeussler\CacheWarmup\Tests\Unit\Crawler\DummyVerboseCrawler;
 use EliasHaeussler\CacheWarmup\Tests\Unit\RequestProphecyTrait;
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Symfony\Component\Console\Application;
@@ -44,6 +45,7 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 final class CacheWarmupCommandTest extends TestCase
 {
+    use ProphecyTrait;
     use RequestProphecyTrait;
 
     /**

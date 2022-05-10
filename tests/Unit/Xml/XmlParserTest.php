@@ -28,6 +28,7 @@ use EliasHaeussler\CacheWarmup\Tests\Unit\RequestProphecyTrait;
 use EliasHaeussler\CacheWarmup\Xml\XmlParser;
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 
@@ -39,6 +40,7 @@ use Psr\Http\Client\ClientInterface;
  */
 final class XmlParserTest extends TestCase
 {
+    use ProphecyTrait;
     use RequestProphecyTrait;
 
     /**

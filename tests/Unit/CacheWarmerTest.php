@@ -27,6 +27,7 @@ use EliasHaeussler\CacheWarmup\CacheWarmer;
 use EliasHaeussler\CacheWarmup\Sitemap;
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\UriInterface;
@@ -39,6 +40,7 @@ use Psr\Http\Message\UriInterface;
  */
 final class CacheWarmerTest extends TestCase
 {
+    use ProphecyTrait;
     use RequestProphecyTrait;
     use CrawlerResultProcessorTrait;
 
