@@ -6,6 +6,7 @@ on:
   schedule:
     # Run every day at 02:23
     - cron: '23 2 * * *'
+  workflow_dispatch:
 
 jobs:
   phar:
