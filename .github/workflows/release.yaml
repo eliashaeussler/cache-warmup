@@ -10,7 +10,6 @@ on:
 jobs:
   phar:
     name: Compile PHAR
-    if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -51,7 +50,6 @@ jobs:
 
   docker:
     name: Docker deploy
-    if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-20.04
     needs: phar
     steps:
@@ -108,7 +106,7 @@ jobs:
   # Job: Create release
   release:
     name: Create release
-    if: ${{ startsWith(github.ref, 'refs/tags/') && github.event_name != 'schedule' }}
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-20.04
     needs: phar
     steps:
