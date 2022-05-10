@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler;
 
 use EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface;
+use EliasHaeussler\CacheWarmup\CrawlingState;
 use Psr\Http\Message\UriInterface;
 
 /**
@@ -37,9 +38,14 @@ use Psr\Http\Message\UriInterface;
 class DummyCrawler implements CrawlerInterface
 {
     /**
-     * @var UriInterface[]
+     * @var list<UriInterface>
      */
     public static $crawledUrls = [];
+
+    /**
+     * @var bool
+     */
+    public static $simulateFailure = false;
 
     public function crawl(array $urls): void
     {
@@ -48,11 +54,36 @@ class DummyCrawler implements CrawlerInterface
 
     public function getSuccessfulUrls(): array
     {
+        if (!static::$simulateFailure) {
+            return $this->mapUrlsToCrawlingStates(static::$crawledUrls, CrawlingState::SUCCESSFUL);
+        }
+
         return [];
     }
 
     public function getFailedUrls(): array
     {
+        if (static::$simulateFailure) {
+            return $this->mapUrlsToCrawlingStates(static::$crawledUrls, CrawlingState::FAILED);
+        }
+
         return [];
+    }
+
+    /**
+     * @param list<UriInterface> $urls
+     *
+     * @return list<CrawlingState>
+     */
+    protected function mapUrlsToCrawlingStates(array $urls, int $state): array
+    {
+        return array_map(function (UriInterface $uri) use ($state): CrawlingState {
+            switch ($state) {
+                case CrawlingState::FAILED:
+                    return CrawlingState::createFailed($uri);
+                default:
+                    return CrawlingState::createSuccessful($uri);
+            }
+        }, $urls);
     }
 }

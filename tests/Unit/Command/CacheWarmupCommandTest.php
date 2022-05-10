@@ -262,10 +262,8 @@ final class CacheWarmupCommandTest extends TestCase
             new Uri('https://www.example.com/'),
             new Uri('https://www.example.com/foo'),
         ];
-        static::assertEquals($expected, DummyCrawler::$crawledUrls);
 
-        // Reset static variables
-        DummyCrawler::$crawledUrls = [];
+        static::assertEquals($expected, DummyCrawler::$crawledUrls);
     }
 
     /**
@@ -284,8 +282,40 @@ final class CacheWarmupCommandTest extends TestCase
         ]);
 
         static::assertSame($this->commandTester->getOutput(), DummyVerboseCrawler::$output);
+    }
 
-        // Reset static variables
+    /**
+     * @test
+     * @dataProvider executeFailsIfSitemapCannotBeCrawledDataProvider
+     */
+    public function executeFailsIfSitemapCannotBeCrawled(bool $allowFailures, int $expected): void
+    {
+        DummyCrawler::$simulateFailure = true;
+
+        $this->prophesizeSitemapRequest('valid_sitemap_3');
+        $exitCode = $this->commandTester->execute([
+            'sitemaps' => [
+                'https://www.example.com/sitemap.xml',
+            ],
+            '--allow-failures' => $allowFailures,
+        ]);
+
+        self::assertSame($expected, $exitCode);
+    }
+
+    /**
+     * @return \Generator<string, array{bool, int}>
+     */
+    public function executeFailsIfSitemapCannotBeCrawledDataProvider(): \Generator
+    {
+        yield 'with --allow-failures' => [true, 0];
+        yield 'without --allow-failures' => [false, 1];
+    }
+
+    protected function tearDown(): void
+    {
+        DummyCrawler::$crawledUrls = [];
+        DummyCrawler::$simulateFailure = false;
         DummyVerboseCrawler::$output = null;
     }
 }
