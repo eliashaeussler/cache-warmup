@@ -117,7 +117,7 @@ final class XmlParser
             return null;
         }
 
-        $sitemapUri = reset($xml->loc);
+        $sitemapUri = $xml->loc[0];
         $sitemapUri = new Uri((string) $sitemapUri);
 
         return new Sitemap($sitemapUri);
@@ -129,7 +129,7 @@ final class XmlParser
             return null;
         }
 
-        $uri = reset($xml->loc);
+        $uri = $xml->loc[0];
 
         return new Uri((string) $uri);
     }
