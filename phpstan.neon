@@ -5,6 +5,7 @@ includes:
 parameters:
     level: max
     paths:
+        - bin/cache-warmup
         - src
         - tests
     treatPhpDocTypesAsCertain: false
