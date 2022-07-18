@@ -65,6 +65,6 @@
     ],
     "sca:php": "phpstan analyse -c phpstan.neon",
     "test": "phpunit -c phpunit.xml",
-    "test:coverage": "@php -d pcov.enabled=1 -d pcov.directory=src -d memory_limit=-1 vendor/bin/phpunit -c phpunit.coverage.xml"
+    "test:coverage": "phpunit -c phpunit.coverage.xml"
   }
 }
