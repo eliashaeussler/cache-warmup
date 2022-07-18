@@ -44,5 +44,5 @@ unset($autoloadFile, $file);
 $command = new \EliasHaeussler\CacheWarmup\Command\CacheWarmupCommand();
 $application = new \Symfony\Component\Console\Application('Cache Warmup');
 $application->add($command);
-$application->setDefaultCommand($command->getName(), true);
+$application->setDefaultCommand('cache-warmup', true);
 $application->run();
