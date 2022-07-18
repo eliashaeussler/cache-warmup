@@ -151,44 +151,9 @@ services:
     command: [<options>]
 ```
 
-## :technologist: Development
+## :technologist: Contributing
 
-### Preparation
-
-```bash
-# Clone repository
-git clone https://github.com/eliashaeussler/cache-warmup.git
-cd cache-warmup
-
-# Install Composer dependencies
-composer install
-```
-
-### Run linters
-
-```bash
-# Linters
-composer lint
-composer lint:composer
-composer lint:php
-
-# Static code analysis
-composer sca
-composer sca:php
-```
-
-### Run tests
-
-Unit tests of this plugin can be executed using the provided Composer
-script `test`. You can pass all available arguments to PHPUnit.
-
-```bash
-# Run tests
-composer test
-
-# Run tests and print coverage result
-composer test -- --coverage-text
-```
+Please have a look at [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## :gem: Credits
 
