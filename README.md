@@ -54,6 +54,10 @@ Run `chmod +x cache-warmup.phar` to make it executable.
 phive install eliashaeussler/cache-warmup
 ```
 
+### Docker
+
+Please have a look at [`Usage with Docker`](#usage-with-docker).
+
 ## :zap: Usage
 
 ### Command-line usage
