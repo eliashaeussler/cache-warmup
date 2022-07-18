@@ -8,93 +8,14 @@ on:
       - '**'
 
 jobs:
-  # Job: Run unit tests
   tests:
-    name: PHP ${{ matrix.php-version }}
+    name: Tests (PHP ${{ matrix.php-version }} & ${{ matrix.preferred-install }} dependencies)
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        php-version:
-          - "7.3"
-          - "7.4"
-          - "8.0"
-        include:
-          - php-version: "8.1"
-            coverage: true
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      # Prepare environment
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-version }}
-          tools: composer:v2
-          coverage: pcov
-
-      # Define Composer cache
-      - name: Get Composer cache directory
-        id: composer-cache
-        run: |
-          echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - name: Define Composer cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: tests-php-${{ matrix.php-version }}
-          restore-keys: |
-            tests-php-
-
-      # Install dependencies
-      - name: Install Composer and dependencies
-        run: composer update --no-progress
-
-      # Run tests
-      - name: Build coverage directory
-        run: mkdir -p .build/coverage
-      - name: Run tests with coverage
-        run: composer test:coverage
-        if: ${{ matrix.coverage }}
-      - name: Run tests without coverage
-        run: composer test
-        if: ${{ !matrix.coverage }}
-
-      # Report coverage
-      - name: Fix coverage path
-        working-directory: .build/coverage
-        run: sed -i 's#/var/www/html#${{ github.workspace }}#g' clover.xml
-        if: ${{ matrix.coverage }}
-      - name: CodeClimate report
-        uses: paambaati/codeclimate-action@v3.0.0
-        env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-        with:
-          coverageLocations: |
-            ${{ github.workspace }}/.build/coverage/clover.xml:clover
-        if: ${{ matrix.coverage }}
-      - name: codecov report
-        uses: codecov/codecov-action@v3
-        with:
-          directory: .build/coverage
-          fail_ci_if_error: true
-          verbose: true
-        if: ${{ matrix.coverage }}
-
-  # Job: Run unit tests with lowest installed dependency versions
-  tests-lowest:
-    name: '[test-lowest] PHP ${{ matrix.php-version }}'
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        php-version:
-          - "7.3"
-          - "7.4"
-          - "8.0"
-          - "8.1"
+        php-version: ["7.3", "7.4", "8.0", "8.1"]
+        preferred-install: ["stable", "lowest"]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -117,16 +38,73 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: tests-lowest-php-${{ matrix.php-version }}
+          key: tests-php-${{ matrix.php-version }}-${{ matrix.preferred-install }}
           restore-keys: |
-            tests-lowest-php-
+            tests-php-${{ matrix.php-version }}-
+            tests-php-
 
       # Install dependencies
-      - name: Install Composer and dependencies
-        run: composer update --no-progress --prefer-lowest
+      - name: Install Composer dependencies
+        run: composer update --no-progress --prefer-${{ matrix.preferred-install }}
+
+      # Run tests
+      - name: Run tests
+        run: composer test
+
+  coverage:
+    name: Test coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      # Prepare environment
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.1
+          tools: composer:v2
+          coverage: pcov
+
+      # Define Composer cache
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Define Composer cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: tests-php-8.1-stable
+          restore-keys: |
+            tests-php-8.1-
+            tests-php-
+
+      # Install dependencies
+      - name: Install Composer dependencies
+        run: composer update --no-progress
 
       # Run tests
       - name: Build coverage directory
         run: mkdir -p .build/coverage
-      - name: Run tests
-        run: composer test
+      - name: Run tests with coverage
+        run: composer test:coverage
+
+      # Report coverage
+      - name: Fix coverage path
+        working-directory: .build/coverage
+        run: sed -i 's#/home/runner/work/cache-warmup/cache-warmup#${{ github.workspace }}#g' clover.xml
+      - name: CodeClimate report
+        uses: paambaati/codeclimate-action@v3.0.0
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          coverageLocations: |
+            ${{ github.workspace }}/.build/coverage/clover.xml:clover
+      - name: codecov report
+        uses: codecov/codecov-action@v3
+        with:
+          directory: .build/coverage
+          fail_ci_if_error: true
+          verbose: true
