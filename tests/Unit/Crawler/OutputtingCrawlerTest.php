@@ -25,12 +25,11 @@ namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler;
 
 use EliasHaeussler\CacheWarmup\Crawler\OutputtingCrawler;
 use EliasHaeussler\CacheWarmup\Exception\MissingArgumentException;
-
-use function func_get_args;
-
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Output\BufferedOutput;
+
+use function func_get_args;
 
 /**
  * OutputtingCrawlerTest.

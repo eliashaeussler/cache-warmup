@@ -26,14 +26,13 @@ namespace EliasHaeussler\CacheWarmup\Tests\Unit;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Stream;
-
-use function is_resource;
-
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\UriInterface;
+
+use function is_resource;
 
 /**
  * RequestProphecyTrait.

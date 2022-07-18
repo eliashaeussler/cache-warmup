@@ -23,26 +23,20 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup;
 
-use function count;
-
 use EliasHaeussler\CacheWarmup\Crawler\ConcurrentCrawler;
 use EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface;
 use EliasHaeussler\CacheWarmup\Xml\XmlParser;
-
-use function gettype;
-
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Uri;
-
-use function in_array;
-
 use InvalidArgumentException;
-
-use function is_array;
-use function is_string;
-
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\UriInterface;
+
+use function count;
+use function gettype;
+use function in_array;
+use function is_array;
+use function is_string;
 
 /**
  * CacheWarmer.
