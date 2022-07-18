@@ -25,6 +25,9 @@ namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler;
 
 use EliasHaeussler\CacheWarmup\Crawler\OutputtingCrawler;
 use EliasHaeussler\CacheWarmup\Exception\MissingArgumentException;
+
+use function func_get_args;
+
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -92,9 +95,9 @@ final class OutputtingCrawlerTest extends TestCase
     public static function assertStringMatchesRegularExpression(): void
     {
         if (method_exists(static::class, 'assertMatchesRegularExpression')) {
-            self::assertMatchesRegularExpression(...\func_get_args());
+            self::assertMatchesRegularExpression(...func_get_args());
         } else {
-            self::assertRegExp(...\func_get_args());
+            self::assertRegExp(...func_get_args());
         }
     }
 }

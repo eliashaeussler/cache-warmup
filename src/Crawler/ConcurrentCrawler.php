@@ -28,8 +28,10 @@ use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Psr7\Request;
+use Iterator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
+use Throwable;
 
 /**
  * ConcurrentCrawler.
@@ -90,7 +92,7 @@ class ConcurrentCrawler implements CrawlerInterface
         $this->successfulUrls[] = CrawlingState::createSuccessful($this->urls[$index], $data);
     }
 
-    public function onFailure(\Throwable $exception, int $index): void
+    public function onFailure(Throwable $exception, int $index): void
     {
         $data = [
             'exception' => $exception,
@@ -99,9 +101,9 @@ class ConcurrentCrawler implements CrawlerInterface
     }
 
     /**
-     * @return \Iterator<Request>
+     * @return Iterator<Request>
      */
-    protected function getRequests(): \Iterator
+    protected function getRequests(): Iterator
     {
         foreach ($this->urls as $url) {
             yield new Request('HEAD', $url);

@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Command;
 
+use function assert;
+use function count;
+
 use EliasHaeussler\CacheWarmup\CacheWarmer;
 use EliasHaeussler\CacheWarmup\Crawler\ConcurrentCrawler;
 use EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface;
@@ -31,6 +34,10 @@ use EliasHaeussler\CacheWarmup\Crawler\VerboseCrawlerInterface;
 use EliasHaeussler\CacheWarmup\CrawlingState;
 use EliasHaeussler\CacheWarmup\Sitemap;
 use GuzzleHttp\Psr7\Uri;
+
+use function in_array;
+use function is_string;
+
 use Psr\Http\Client\ClientInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
@@ -161,11 +168,11 @@ final class CacheWarmupCommand extends Command
         do {
             $question = new Question('Please enter the URL of a XML sitemap: ');
             $sitemap = $helper->ask($input, $output, $question);
-            if (\is_string($sitemap)) {
+            if (is_string($sitemap)) {
                 $sitemaps[] = $sitemap;
                 $output->writeln(sprintf('<info>Sitemap added: %s</info>', $sitemap));
             }
-        } while (\is_string($sitemap));
+        } while (is_string($sitemap));
 
         // Throw exception if no sitemaps were added
         if ([] === $sitemaps && [] === $input->getOption('urls')) {
@@ -192,7 +199,7 @@ final class CacheWarmupCommand extends Command
         $output->write('Parsing sitemaps... ');
         $cacheWarmer = new CacheWarmer($sitemaps, $limit, $this->client);
         foreach ($urls as $url) {
-            \assert(\is_string($url));
+            assert(is_string($url));
             $cacheWarmer->addUrl(new Uri($url));
         }
         $output->writeln('<info>Done</info>');
@@ -215,7 +222,7 @@ final class CacheWarmupCommand extends Command
         $isVerboseCrawler = $crawler instanceof VerboseCrawlerInterface;
 
         // Start crawling
-        $urlCount = \count($cacheWarmer->getUrls());
+        $urlCount = count($cacheWarmer->getUrls());
         $output->write(sprintf('Crawling URL%s... ', 1 === $urlCount ? '' : 's'), $isVerboseCrawler);
         $cacheWarmer->run($crawler);
         if (!$isVerboseCrawler) {
@@ -238,7 +245,7 @@ final class CacheWarmupCommand extends Command
 
         // Print crawler results
         if ([] !== $successfulUrls) {
-            $countSuccessfulUrls = \count($successfulUrls);
+            $countSuccessfulUrls = count($successfulUrls);
             $io->success(
                 sprintf(
                     'Successfully warmed up caches for %d URL%s.',
@@ -248,7 +255,7 @@ final class CacheWarmupCommand extends Command
             );
         }
         if ([] !== $failedUrls) {
-            $countFailedUrls = \count($failedUrls);
+            $countFailedUrls = count($failedUrls);
             $io->error(
                 sprintf(
                     'Failed to warm up caches for %d URL%s.',
@@ -267,12 +274,12 @@ final class CacheWarmupCommand extends Command
     {
         $crawler = $input->getOption('crawler');
 
-        if (\is_string($crawler)) {
+        if (is_string($crawler)) {
             // Use crawler specified by --crawler option
             if (!class_exists($crawler)) {
                 throw new RuntimeException('The specified crawler class does not exist.', 1604261816);
             }
-            if (!\in_array(CrawlerInterface::class, class_implements($crawler) ?: [])) {
+            if (!in_array(CrawlerInterface::class, class_implements($crawler) ?: [])) {
                 throw new RuntimeException('The specified crawler is not valid.', 1604261885);
             }
             /** @var CrawlerInterface $crawler */

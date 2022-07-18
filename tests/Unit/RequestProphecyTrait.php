@@ -26,6 +26,9 @@ namespace EliasHaeussler\CacheWarmup\Tests\Unit;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Stream;
+
+use function is_resource;
+
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Client\ClientExceptionInterface;
@@ -94,7 +97,7 @@ trait RequestProphecyTrait
 
     protected function closeStream(): void
     {
-        if (\is_resource($this->stream)) {
+        if (is_resource($this->stream)) {
             fclose($this->stream);
         }
     }

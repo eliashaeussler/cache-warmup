@@ -26,6 +26,7 @@ namespace EliasHaeussler\CacheWarmup\Tests\Unit;
 use EliasHaeussler\CacheWarmup\CacheWarmer;
 use EliasHaeussler\CacheWarmup\Sitemap;
 use GuzzleHttp\Psr7\Uri;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Client\ClientExceptionInterface;
@@ -76,7 +77,7 @@ final class CacheWarmerTest extends TestCase
      */
     public function addSitemapsThrowsExceptionIfGivenSitemapIsEmpty(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionCode(1604055264);
         $this->subject->addSitemaps('');
     }
@@ -86,7 +87,7 @@ final class CacheWarmerTest extends TestCase
      */
     public function addSitemapsThrowsExceptionIfGivenSitemapIsNotValid(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionCode(1604055334);
         $this->subject->addSitemaps(['foo']);
     }
@@ -96,7 +97,7 @@ final class CacheWarmerTest extends TestCase
      */
     public function addSitemapsThrowsExceptionIfInvalidSitemapsIsGiven(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionCode(1604055096);
 
         /* @phpstan-ignore-next-line */

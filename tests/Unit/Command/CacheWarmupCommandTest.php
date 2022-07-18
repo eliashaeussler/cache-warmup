@@ -27,6 +27,8 @@ use EliasHaeussler\CacheWarmup\Command\CacheWarmupCommand;
 use EliasHaeussler\CacheWarmup\Tests\Unit\Crawler\DummyCrawler;
 use EliasHaeussler\CacheWarmup\Tests\Unit\Crawler\DummyVerboseCrawler;
 use EliasHaeussler\CacheWarmup\Tests\Unit\RequestProphecyTrait;
+use Exception;
+use Generator;
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -241,7 +243,7 @@ final class CacheWarmupCommandTest extends TestCase
             'sitemaps' => [
                 'https://www.example.com/sitemap.xml',
             ],
-            '--crawler' => \Exception::class,
+            '--crawler' => Exception::class,
         ]);
     }
 
@@ -308,7 +310,7 @@ final class CacheWarmupCommandTest extends TestCase
     /**
      * @return \Generator<string, array{bool, int}>
      */
-    public function executeFailsIfSitemapCannotBeCrawledDataProvider(): \Generator
+    public function executeFailsIfSitemapCannotBeCrawledDataProvider(): Generator
     {
         yield 'with --allow-failures' => [true, 0];
         yield 'without --allow-failures' => [false, 1];

@@ -55,13 +55,13 @@ return $config
     ->setRules([
         '@PSR2' => true,
         '@Symfony' => true,
+        'global_namespace_import' => ['import_classes' => true, 'import_functions' => true],
         'header_comment' => [
             'header' => sprintf($header, date('Y')),
             'comment_type' => 'comment',
             'location' => 'after_declare_strict',
             'separate' => 'both',
         ],
-        'native_function_invocation' => true,
     ])
     ->setFinder($finder)
     ->setRiskyAllowed(true)

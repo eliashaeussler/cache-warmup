@@ -23,11 +23,24 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup;
 
+use function count;
+
 use EliasHaeussler\CacheWarmup\Crawler\ConcurrentCrawler;
 use EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface;
 use EliasHaeussler\CacheWarmup\Xml\XmlParser;
+
+use function gettype;
+
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Uri;
+
+use function in_array;
+
+use InvalidArgumentException;
+
+use function is_array;
+use function is_string;
+
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\UriInterface;
 
@@ -93,14 +106,14 @@ final class CacheWarmer
         }
 
         // Force array of sitemaps to be parsed
-        if (!\is_array($sitemaps)) {
+        if (!is_array($sitemaps)) {
             $sitemaps = [$sitemaps];
         }
 
         // Validate and parse given sitemaps
         foreach ($sitemaps as $sitemap) {
             // Parse sitemap URL to valid sitemap object
-            if (\is_string($sitemap)) {
+            if (is_string($sitemap)) {
                 $this->validateSitemapUrl($sitemap);
                 $sitemap = new Sitemap(new Uri($sitemap));
             }
@@ -116,7 +129,7 @@ final class CacheWarmer
                     $this->addUrl($parsedUrl);
                 }
             } else {
-                throw new \InvalidArgumentException(sprintf('Sitemaps must be of type string or %s, %s given.', Sitemap::class, \gettype($sitemap)), 1604055096);
+                throw new InvalidArgumentException(sprintf('Sitemaps must be of type string or %s, %s given.', Sitemap::class, gettype($sitemap)), 1604055096);
             }
         }
 
@@ -125,7 +138,7 @@ final class CacheWarmer
 
     private function addSitemap(Sitemap $sitemap): self
     {
-        if (!\in_array($sitemap, $this->sitemaps, true)) {
+        if (!in_array($sitemap, $this->sitemaps, true)) {
             $this->sitemaps[] = $sitemap;
         }
 
@@ -134,7 +147,7 @@ final class CacheWarmer
 
     public function addUrl(UriInterface $url): self
     {
-        if (!$this->exceededLimit() && !\in_array($url, $this->urls, true)) {
+        if (!$this->exceededLimit() && !in_array($url, $this->urls, true)) {
             $this->urls[] = $url;
         }
 
@@ -143,7 +156,7 @@ final class CacheWarmer
 
     private function exceededLimit(): bool
     {
-        return $this->limit > 0 && \count($this->urls) >= $this->limit;
+        return $this->limit > 0 && count($this->urls) >= $this->limit;
     }
 
     /**
@@ -177,10 +190,10 @@ final class CacheWarmer
     private function validateSitemapUrl(string $url): void
     {
         if ('' === trim($url)) {
-            throw new \InvalidArgumentException('Sitemap URL must not be empty.', 1604055264);
+            throw new InvalidArgumentException('Sitemap URL must not be empty.', 1604055264);
         }
         if (false === filter_var($url, FILTER_VALIDATE_URL)) {
-            throw new \InvalidArgumentException('Sitemap must be a valid URL.', 1604055334);
+            throw new InvalidArgumentException('Sitemap must be a valid URL.', 1604055334);
         }
     }
 }
