@@ -23,10 +23,13 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Crawler;
 
+use function count;
+
 use EliasHaeussler\CacheWarmup\Exception\MissingArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 
 /**
  * OutputtingCrawler.
@@ -62,7 +65,7 @@ class OutputtingCrawler extends ConcurrentCrawler implements VerboseCrawlerInter
     public function crawl(array $urls): void
     {
         $this->assureOutputIsAvailable();
-        $this->startProgressBar(\count($urls));
+        $this->startProgressBar(count($urls));
         parent::crawl($urls);
         $this->progress->finish();
         $this->output->writeln('');
@@ -77,7 +80,7 @@ class OutputtingCrawler extends ConcurrentCrawler implements VerboseCrawlerInter
         parent::onSuccess($response, $index);
     }
 
-    public function onFailure(\Throwable $exception, int $index): void
+    public function onFailure(Throwable $exception, int $index): void
     {
         $this->progress->setMessage((string) $this->urls[$index], 'url');
         $this->progress->setMessage('(<error>failed</error>)', 'state');

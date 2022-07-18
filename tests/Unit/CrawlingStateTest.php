@@ -25,6 +25,7 @@ namespace EliasHaeussler\CacheWarmup\Tests\Unit;
 
 use EliasHaeussler\CacheWarmup\CrawlingState;
 use GuzzleHttp\Psr7\Uri;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -40,7 +41,7 @@ final class CrawlingStateTest extends TestCase
      */
     public function constructorThrowsExceptionIfInvalidCrawlingStateIsGiven(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionCode(1604334815);
         new CrawlingState(new Uri(''), -1);
     }

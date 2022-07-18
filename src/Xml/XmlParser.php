@@ -29,6 +29,7 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\UriInterface;
+use SimpleXMLElement;
 
 /**
  * XmlParser.
@@ -72,7 +73,7 @@ final class XmlParser
         // Fetch XML source
         $request = new Request('GET', $this->sitemap->getUri());
         $response = $this->client->sendRequest($request);
-        $xml = new \SimpleXMLElement($response->getBody()->getContents(), LIBXML_NOBLANKS);
+        $xml = new SimpleXMLElement($response->getBody()->getContents(), LIBXML_NOBLANKS);
 
         // Parse XML
         switch ($xml->getName()) {
@@ -111,7 +112,7 @@ final class XmlParser
         return $this->parsedUrls;
     }
 
-    private function parseSitemap(\SimpleXMLElement $xml): ?Sitemap
+    private function parseSitemap(SimpleXMLElement $xml): ?Sitemap
     {
         if (!isset($xml->loc)) {
             return null;
@@ -123,7 +124,7 @@ final class XmlParser
         return new Sitemap($sitemapUri);
     }
 
-    private function parseUrl(\SimpleXMLElement $xml): ?UriInterface
+    private function parseUrl(SimpleXMLElement $xml): ?UriInterface
     {
         if (!isset($xml->loc)) {
             return null;

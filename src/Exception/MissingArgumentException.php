@@ -23,13 +23,15 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Exception;
 
+use Exception;
+
 /**
  * MissingArgumentException.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class MissingArgumentException extends \Exception
+final class MissingArgumentException extends Exception
 {
     public static function create(string $argumentName): self
     {
