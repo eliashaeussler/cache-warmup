@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup;
 
-use function in_array;
-
 use InvalidArgumentException;
 use Psr\Http\Message\UriInterface;
+
+use function in_array;
 
 /**
  * CrawlingState.

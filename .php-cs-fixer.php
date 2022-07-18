@@ -62,6 +62,7 @@ return $config
             'location' => 'after_declare_strict',
             'separate' => 'both',
         ],
+        'ordered_imports' => ['imports_order' => ['const', 'class', 'function']],
     ])
     ->setFinder($finder)
     ->setRiskyAllowed(true)

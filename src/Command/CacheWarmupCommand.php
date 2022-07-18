@@ -23,9 +23,6 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Command;
 
-use function assert;
-use function count;
-
 use EliasHaeussler\CacheWarmup\CacheWarmer;
 use EliasHaeussler\CacheWarmup\Crawler\ConcurrentCrawler;
 use EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface;
@@ -34,10 +31,6 @@ use EliasHaeussler\CacheWarmup\Crawler\VerboseCrawlerInterface;
 use EliasHaeussler\CacheWarmup\CrawlingState;
 use EliasHaeussler\CacheWarmup\Sitemap;
 use GuzzleHttp\Psr7\Uri;
-
-use function in_array;
-use function is_string;
-
 use Psr\Http\Client\ClientInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
@@ -48,6 +41,11 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
+
+use function assert;
+use function count;
+use function in_array;
+use function is_string;
 
 /**
  * CacheWarmupCommand.

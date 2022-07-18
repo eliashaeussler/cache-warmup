@@ -23,13 +23,13 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Crawler;
 
-use function count;
-
 use EliasHaeussler\CacheWarmup\Exception\MissingArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
+
+use function count;
 
 /**
  * OutputtingCrawler.
