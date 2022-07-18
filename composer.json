@@ -64,8 +64,8 @@
 		"lint:composer:fix": "@composer normalize --no-check-lock --no-update-lock",
 		"lint:editorconfig": "ec",
 		"lint:editorconfig:fix": "@lint:editorconfig --fix",
-		"lint:php": "php-cs-fixer fix",
-		"lint:php:fix": "@lint:php --dry-run",
+		"lint:php": "@lint:php:fix --dry-run",
+		"lint:php:fix": "php-cs-fixer fix",
 		"sca": [
 			"@sca:php"
 		],
