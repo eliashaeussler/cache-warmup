@@ -23,49 +23,33 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit;
 
-use EliasHaeussler\CacheWarmup\Exception;
-use EliasHaeussler\CacheWarmup\Sitemap;
-use GuzzleHttp\Psr7;
-use PHPUnit\Framework;
+use EliasHaeussler\CacheWarmup\Result;
+use Psr\Http\Message;
 
 /**
- * SitemapTest.
+ * CacheWarmupResultProcessorTrait.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class SitemapTest extends Framework\TestCase
+trait CacheWarmupResultProcessorTrait
 {
     /**
-     * @test
+     * @return list<Message\UriInterface>
      */
-    public function constructorThrowsExceptionIfGivenUriIsEmpty(): void
-    {
-        $this->expectException(Exception\InvalidSitemapException::class);
-        $this->expectExceptionCode(1604055264);
+    protected function getProcessedUrlsFromCacheWarmupResult(
+        Result\CacheWarmupResult $result,
+        Result\CrawlingState $state = null,
+    ): array {
+        $urls = [];
+        $crawlingResults = array_merge($result->getSuccessful(), $result->getFailed());
 
-        new Sitemap(new Psr7\Uri(''));
-    }
+        foreach ($crawlingResults as $crawlingResult) {
+            if (null === $state || $crawlingResult->is($state)) {
+                $urls[] = $crawlingResult->getUri();
+            }
+        }
 
-    /**
-     * @test
-     */
-    public function constructorThrowsExceptionIfGivenUriIsNotValid(): void
-    {
-        $this->expectException(Exception\InvalidSitemapException::class);
-        $this->expectExceptionCode(1604055334);
-
-        new Sitemap(new Psr7\Uri('foo'));
-    }
-
-    /**
-     * @test
-     */
-    public function constructorAssignsUriCorrectly(): void
-    {
-        $uri = new Psr7\Uri('https://foo.baz');
-        $subject = new Sitemap($uri);
-
-        self::assertSame($uri, $subject->getUri());
+        return $urls;
     }
 }

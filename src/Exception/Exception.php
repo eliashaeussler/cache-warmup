@@ -21,27 +21,14 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler;
-
-use EliasHaeussler\CacheWarmup\Crawler;
-use Symfony\Component\Console\Output;
+namespace EliasHaeussler\CacheWarmup\Exception;
 
 /**
- * DummyVerboseCrawler.
+ * Exception.
  *
- * @author Elias Häußler <e.haeussler@familie-redlich.de>
+ * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
- *
- * @internal
  */
-final class DummyVerboseCrawler extends DummyCrawler implements Crawler\VerboseCrawlerInterface
+abstract class Exception extends \Exception
 {
-    public static ?Output\OutputInterface $output = null;
-
-    public function setOutput(Output\OutputInterface $output): Crawler\VerboseCrawlerInterface
-    {
-        self::$output = $output;
-
-        return $this;
-    }
 }

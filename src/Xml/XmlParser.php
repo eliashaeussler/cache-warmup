@@ -23,12 +23,12 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Xml;
 
+use EliasHaeussler\CacheWarmup\Result;
 use EliasHaeussler\CacheWarmup\Sitemap;
-use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Uri;
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\UriInterface;
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Psr7;
+use Psr\Http\Client;
+use Psr\Http\Message;
 use SimpleXMLElement;
 
 /**
@@ -39,39 +39,20 @@ use SimpleXMLElement;
  */
 final class XmlParser
 {
-    public const ELEMENT_SITEMAPINDEX = 'sitemapindex';
-    public const ELEMENT_URLSET = 'urlset';
+    private const ELEMENT_SITEMAPINDEX = 'sitemapindex';
+    private const ELEMENT_URLSET = 'urlset';
 
-    /**
-     * @var Sitemap
-     */
-    private $sitemap;
-
-    /**
-     * @var ClientInterface
-     */
-    private $client;
-
-    /**
-     * @var Sitemap[]
-     */
-    private $parsedSitemaps = [];
-
-    /**
-     * @var UriInterface[]
-     */
-    private $parsedUrls = [];
-
-    public function __construct(Sitemap $sitemap, ClientInterface $client = null)
-    {
-        $this->sitemap = $sitemap;
-        $this->client = $client ?? new Client();
+    public function __construct(
+        private readonly Client\ClientInterface $client = new GuzzleClient(),
+    ) {
     }
 
-    public function parse(): void
+    public function parse(Sitemap $sitemap): Result\ParserResult
     {
+        $result = new Result\ParserResult();
+
         // Fetch XML source
-        $request = new Request('GET', $this->sitemap->getUri());
+        $request = new Psr7\Request('GET', $sitemap->getUri());
         $response = $this->client->sendRequest($request);
         $xml = new SimpleXMLElement($response->getBody()->getContents(), LIBXML_NOBLANKS);
 
@@ -81,35 +62,21 @@ final class XmlParser
                 foreach ($xml->sitemap as $sitemap) {
                     $parsedSitemap = $this->parseSitemap($sitemap);
                     if ($parsedSitemap instanceof Sitemap) {
-                        $this->parsedSitemaps[] = $parsedSitemap;
+                        $result->addSitemap($parsedSitemap);
                     }
                 }
                 break;
             case self::ELEMENT_URLSET:
                 foreach ($xml->url as $url) {
                     $parsedUrl = $this->parseUrl($url);
-                    if ($parsedUrl instanceof UriInterface) {
-                        $this->parsedUrls[] = $parsedUrl;
+                    if ($parsedUrl instanceof Message\UriInterface) {
+                        $result->addUrl($parsedUrl);
                     }
                 }
                 break;
         }
-    }
 
-    /**
-     * @return Sitemap[]
-     */
-    public function getParsedSitemaps(): array
-    {
-        return $this->parsedSitemaps;
-    }
-
-    /**
-     * @return UriInterface[]
-     */
-    public function getParsedUrls(): array
-    {
-        return $this->parsedUrls;
+        return $result;
     }
 
     private function parseSitemap(SimpleXMLElement $xml): ?Sitemap
@@ -119,12 +86,12 @@ final class XmlParser
         }
 
         $sitemapUri = $xml->loc[0];
-        $sitemapUri = new Uri((string) $sitemapUri);
+        $sitemapUri = new Psr7\Uri((string) $sitemapUri);
 
         return new Sitemap($sitemapUri);
     }
 
-    private function parseUrl(SimpleXMLElement $xml): ?UriInterface
+    private function parseUrl(SimpleXMLElement $xml): ?Message\UriInterface
     {
         if (!isset($xml->loc)) {
             return null;
@@ -132,6 +99,6 @@ final class XmlParser
 
         $uri = $xml->loc[0];
 
-        return new Uri((string) $uri);
+        return new Psr7\Uri((string) $uri);
     }
 }

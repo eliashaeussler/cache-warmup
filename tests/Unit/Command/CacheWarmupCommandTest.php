@@ -50,19 +50,17 @@ final class CacheWarmupCommandTest extends TestCase
     use ProphecyTrait;
     use RequestProphecyTrait;
 
-    /**
-     * @var CommandTester
-     */
-    protected $commandTester;
+    private CommandTester $commandTester;
 
     protected function setUp(): void
     {
-        $command = new CacheWarmupCommand();
+        $this->clientProphecy = $this->prophesize(ClientInterface::class);
+
+        $command = new CacheWarmupCommand($this->clientProphecy->reveal());
         $application = new Application();
         $application->add($command);
-        $this->commandTester = new CommandTester($application->find('cache-warmup'));
-        $this->clientProphecy = $this->prophesize(ClientInterface::class);
-        $command->setClient($this->clientProphecy->reveal());
+
+        $this->commandTester = new CommandTester($command);
     }
 
     /**
@@ -96,13 +94,16 @@ final class CacheWarmupCommandTest extends TestCase
     public function executeUsesSitemapUrlsFromInteractiveUserInputIfSitemapsArgumentIsNotGiven(): void
     {
         $this->prophesizeSitemapRequest('valid_sitemap_3');
+
         $this->commandTester->setInputs([
             'https://www.example.com/sitemap.xml',
             null,
         ]);
+
         $this->commandTester->execute([], ['verbosity' => OutputInterface::VERBOSITY_VERY_VERBOSE]);
 
         $output = $this->commandTester->getDisplay();
+
         self::assertStringContainsString('* https://www.example.com/sitemap.xml', $output);
         self::assertStringContainsString('* https://www.example.com/', $output);
         self::assertStringContainsString('* https://www.example.com/foo', $output);
@@ -116,6 +117,7 @@ final class CacheWarmupCommandTest extends TestCase
     public function executeCrawlsUrlsFromGivenSitemaps(): void
     {
         $this->prophesizeSitemapRequest('valid_sitemap_3');
+
         $this->commandTester->execute(
             [
                 'sitemaps' => [
@@ -128,6 +130,7 @@ final class CacheWarmupCommandTest extends TestCase
         );
 
         $output = $this->commandTester->getDisplay();
+
         self::assertStringContainsString('* https://www.example.com/sitemap.xml', $output);
         self::assertStringContainsString('* https://www.example.com/', $output);
         self::assertStringContainsString('* https://www.example.com/foo', $output);
@@ -141,6 +144,7 @@ final class CacheWarmupCommandTest extends TestCase
     public function executeLimitsCrawlingIfLimitOptionIsSet(): void
     {
         $this->prophesizeSitemapRequest('valid_sitemap_3');
+
         $this->commandTester->execute(
             [
                 'sitemaps' => [
@@ -154,6 +158,7 @@ final class CacheWarmupCommandTest extends TestCase
         );
 
         $output = $this->commandTester->getDisplay();
+
         self::assertStringContainsString('* https://www.example.com/sitemap.xml', $output);
         self::assertStringContainsString('* https://www.example.com/', $output);
         self::assertStringNotContainsString('* https://www.example.com/foo', $output);
@@ -161,13 +166,11 @@ final class CacheWarmupCommandTest extends TestCase
 
     /**
      * @test
-     *
-     * @throws ClientExceptionInterface
      */
     public function executeCrawlsAdditionalUrls(): void
     {
-        $this->prophesizeSitemapRequest('valid_sitemap_3');
         $this->commandTester->setInputs([null]);
+
         $this->commandTester->execute(
             [
                 '--urls' => [
@@ -181,6 +184,7 @@ final class CacheWarmupCommandTest extends TestCase
         );
 
         $output = $this->commandTester->getDisplay();
+
         self::assertStringContainsString('* https://www.example.com/', $output);
         self::assertStringContainsString('* https://www.example.com/foo', $output);
     }
@@ -193,6 +197,7 @@ final class CacheWarmupCommandTest extends TestCase
     public function executeHidesVerboseOutputIfVerbosityIsNormal(): void
     {
         $this->prophesizeSitemapRequest('valid_sitemap_3');
+
         $this->commandTester->execute([
             'sitemaps' => [
                 'https://www.example.com/sitemap.xml',
@@ -200,6 +205,7 @@ final class CacheWarmupCommandTest extends TestCase
         ]);
 
         $output = $this->commandTester->getDisplay();
+
         self::assertStringContainsString('Parsing sitemaps... Done', $output);
         self::assertStringContainsString('Crawling URLs... Done', $output);
         self::assertStringNotContainsString('* https://www.example.com/sitemap.xml', $output);
@@ -209,13 +215,9 @@ final class CacheWarmupCommandTest extends TestCase
 
     /**
      * @test
-     *
-     * @throws ClientExceptionInterface
      */
     public function executeThrowsExceptionIfGivenCrawlerClassDoesNotExist(): void
     {
-        $this->prophesizeSitemapRequest('valid_sitemap_3');
-
         $this->expectException(RuntimeException::class);
         $this->expectExceptionCode(1604261816);
 
@@ -229,13 +231,9 @@ final class CacheWarmupCommandTest extends TestCase
 
     /**
      * @test
-     *
-     * @throws ClientExceptionInterface
      */
     public function executeThrowsExceptionIfGivenCrawlerClassIsNotValid(): void
     {
-        $this->prophesizeSitemapRequest('valid_sitemap_3');
-
         $this->expectException(RuntimeException::class);
         $this->expectExceptionCode(1604261885);
 
@@ -255,6 +253,7 @@ final class CacheWarmupCommandTest extends TestCase
     public function executeUsesCustomCrawler(): void
     {
         $this->prophesizeSitemapRequest('valid_sitemap_3');
+
         $this->commandTester->execute([
             'sitemaps' => [
                 'https://www.example.com/sitemap.xml',
@@ -341,6 +340,7 @@ final class CacheWarmupCommandTest extends TestCase
     public function executeAppliesOutputToVerboseCrawler(): void
     {
         $this->prophesizeSitemapRequest('valid_sitemap_3');
+
         $this->commandTester->execute([
             'sitemaps' => [
                 'https://www.example.com/sitemap.xml',
@@ -360,6 +360,7 @@ final class CacheWarmupCommandTest extends TestCase
         DummyCrawler::$simulateFailure = true;
 
         $this->prophesizeSitemapRequest('valid_sitemap_3');
+
         $exitCode = $this->commandTester->execute([
             'sitemaps' => [
                 'https://www.example.com/sitemap.xml',

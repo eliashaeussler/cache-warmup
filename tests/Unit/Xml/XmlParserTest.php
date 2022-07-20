@@ -24,13 +24,12 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Xml;
 
 use EliasHaeussler\CacheWarmup\Sitemap;
-use EliasHaeussler\CacheWarmup\Tests\Unit\RequestProphecyTrait;
-use EliasHaeussler\CacheWarmup\Xml\XmlParser;
-use GuzzleHttp\Psr7\Uri;
-use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Psr\Http\Client\ClientExceptionInterface;
-use Psr\Http\Client\ClientInterface;
+use EliasHaeussler\CacheWarmup\Tests;
+use EliasHaeussler\CacheWarmup\Xml;
+use GuzzleHttp\Psr7;
+use PHPUnit\Framework;
+use Prophecy\PhpUnit;
+use Psr\Http\Client;
 
 /**
  * XmlParserTest.
@@ -38,112 +37,94 @@ use Psr\Http\Client\ClientInterface;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class XmlParserTest extends TestCase
+final class XmlParserTest extends Framework\TestCase
 {
-    use ProphecyTrait;
-    use RequestProphecyTrait;
+    use PhpUnit\ProphecyTrait;
+    use Tests\Unit\RequestProphecyTrait;
 
-    /**
-     * @var XmlParser
-     */
-    protected $subject;
+    private Sitemap $sitemap;
+    private Xml\XmlParser $subject;
 
     protected function setUp(): void
     {
-        $sitemap = new Sitemap(new Uri('https://www.example.org/sitemap.xml'));
-        $this->clientProphecy = $this->prophesize(ClientInterface::class);
-        $this->subject = new XmlParser($sitemap, $this->clientProphecy->reveal());
+        $this->sitemap = new Sitemap(new Psr7\Uri('https://www.example.org/sitemap.xml'));
+        $this->clientProphecy = $this->prophesize(Client\ClientInterface::class);
+        $this->subject = new Xml\XmlParser($this->clientProphecy->reveal());
     }
 
     /**
      * @test
-     *
-     * @throws ClientExceptionInterface
      */
     public function parseParsesSitemapIndex(): void
     {
         $this->prophesizeSitemapRequest('valid_sitemap_1');
-        $this->subject->parse();
+
+        $result = $this->subject->parse($this->sitemap);
 
         $expected = [
-            new Sitemap(new Uri('https://www.example.org/sitemap_en.xml')),
+            new Sitemap(new Psr7\Uri('https://www.example.org/sitemap_en.xml')),
         ];
-        self::assertEquals($expected, $this->subject->getParsedSitemaps());
-        self::assertSame([], $this->subject->getParsedUrls());
+
+        self::assertEquals($expected, $result->getSitemaps());
+        self::assertSame([], $result->getUrls());
     }
 
     /**
      * @test
-     *
-     * @throws ClientExceptionInterface
      */
     public function parseParsesSitemapUrlSet(): void
     {
         $this->prophesizeSitemapRequest('valid_sitemap_2');
-        $this->subject->parse();
+
+        $result = $this->subject->parse($this->sitemap);
 
         $expected = [
-            new Uri('https://www.example.org/'),
-            new Uri('https://www.example.org/foo'),
-            new Uri('https://www.example.org/baz'),
+            new Psr7\Uri('https://www.example.org/'),
+            new Psr7\Uri('https://www.example.org/foo'),
+            new Psr7\Uri('https://www.example.org/baz'),
         ];
-        self::assertEquals($expected, $this->subject->getParsedUrls());
-        self::assertSame([], $this->subject->getParsedSitemaps());
+
+        self::assertEquals($expected, $result->getUrls());
+        self::assertSame([], $result->getSitemaps());
     }
 
     /**
      * @test
-     *
-     * @throws ClientExceptionInterface
      */
     public function parseParsesSitemapIndexAndSkipsInvalidSitemaps(): void
     {
         $this->prophesizeSitemapRequest('invalid_sitemap_1');
-        $this->subject->parse();
+
+        $result = $this->subject->parse($this->sitemap);
 
         $expected = [
-            new Sitemap(new Uri('https://www.example.org/sitemap_alt_2.xml')),
+            new Sitemap(new Psr7\Uri('https://www.example.org/sitemap_alt_2.xml')),
         ];
-        self::assertEquals($expected, $this->subject->getParsedSitemaps());
-        self::assertSame([], $this->subject->getParsedUrls());
+
+        self::assertEquals($expected, $result->getSitemaps());
+        self::assertSame([], $result->getUrls());
     }
 
     /**
      * @test
-     *
-     * @throws ClientExceptionInterface
      */
     public function parseParsesSitemapUrlSetAndSkipsInvalidUrls(): void
     {
         $this->prophesizeSitemapRequest('invalid_sitemap_2');
-        $this->subject->parse();
+
+        $result = $this->subject->parse($this->sitemap);
 
         $expected = [
-            new Uri('https://www.example.org/foo'),
-            new Uri('https://www.example.org/baz'),
+            new Psr7\Uri('https://www.example.org/foo'),
+            new Psr7\Uri('https://www.example.org/baz'),
         ];
-        self::assertEquals($expected, $this->subject->getParsedUrls());
-        self::assertSame([], $this->subject->getParsedSitemaps());
-    }
 
-    /**
-     * @test
-     */
-    public function getParsedSitemapsReturnsEmptyArrayIfSitemapHasNotBeenCrawledYet(): void
-    {
-        self::assertSame([], $this->subject->getParsedSitemaps());
-    }
-
-    /**
-     * @test
-     */
-    public function getParsedSitemapsUrlsEmptyArrayIfSitemapHasNotBeenCrawledYet(): void
-    {
-        self::assertSame([], $this->subject->getParsedUrls());
+        self::assertEquals($expected, $result->getUrls());
+        self::assertSame([], $result->getSitemaps());
     }
 
     protected function tearDown(): void
     {
-        $this->closeStream();
+        $this->closeStreams();
     }
 }

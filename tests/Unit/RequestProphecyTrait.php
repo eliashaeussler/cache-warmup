@@ -23,16 +23,11 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit;
 
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Psr7\Stream;
+use GuzzleHttp\Psr7;
 use Prophecy\Argument;
-use Prophecy\Prophecy\ObjectProphecy;
-use Psr\Http\Client\ClientExceptionInterface;
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\UriInterface;
-
-use function is_resource;
+use Prophecy\Prophecy;
+use Psr\Http\Client;
+use Psr\Http\Message;
 
 /**
  * RequestProphecyTrait.
@@ -43,34 +38,31 @@ use function is_resource;
 trait RequestProphecyTrait
 {
     /**
-     * @var ObjectProphecy|ClientInterface
+     * @var Prophecy\ObjectProphecy|Client\ClientInterface
      */
-    protected $clientProphecy;
+    protected Prophecy\ObjectProphecy $clientProphecy;
 
     /**
-     * @var Stream|resource|null
+     * @var array<string, Psr7\Stream>
      */
-    protected $stream;
+    protected array $streams = [];
 
     /**
-     * @throws ClientExceptionInterface
+     * @throws Client\ClientExceptionInterface
      */
-    protected function prophesizeSitemapRequest(string $fixture, UriInterface $expectedUri = null): void
+    protected function prophesizeSitemapRequest(string $fixture, Message\UriInterface $expectedUri = null): void
     {
-        $absolutePath = 'Fixtures/'.$fixture.'.xml';
-        $fixtureFile = realpath(__DIR__.'/'.$absolutePath);
-        if (!$fixtureFile) {
-            $fixtureFile = realpath(__DIR__.'/../'.$absolutePath);
-        }
+        $fixtureFile = __DIR__.'/Fixtures/'.$fixture.'.xml';
 
-        self::assertIsString($fixtureFile);
+        self::assertFileExists($fixtureFile);
 
-        $this->openStream($fixtureFile);
+        $stream = $this->openStream($fixtureFile);
+
         /* @noinspection PhpParamsInspection */
         /* @noinspection PhpUndefinedMethodInspection */
         $this->clientProphecy
             ->sendRequest(
-                Argument::that(function (Request $request) use ($expectedUri) {
+                Argument::that(function (Psr7\Request $request) use ($expectedUri) {
                     if (null === $expectedUri) {
                         return true;
                     }
@@ -78,12 +70,16 @@ trait RequestProphecyTrait
                     return (string) $request->getUri() === (string) $expectedUri;
                 })
             )
-            ->willReturn(new Response(200, [], $this->stream));
+            ->willReturn(new Psr7\Response(200, body: $stream))
+            ->shouldBeCalled()
+        ;
     }
 
-    protected function openStream(string $file): void
+    protected function openStream(string $file): Psr7\Stream
     {
-        $this->closeStream();
+        if (isset($this->streams[$file])) {
+            return $this->streams[$file];
+        }
 
         self::assertFileExists($file);
 
@@ -91,13 +87,16 @@ trait RequestProphecyTrait
 
         self::assertIsResource($resource);
 
-        $this->stream = new Stream($resource);
+        $stream = new Psr7\Stream($resource);
+        $this->streams[$file] = $stream;
+
+        return $stream;
     }
 
-    protected function closeStream(): void
+    protected function closeStreams(): void
     {
-        if (is_resource($this->stream)) {
-            fclose($this->stream);
+        foreach ($this->streams as $stream) {
+            $stream->close();
         }
     }
 }

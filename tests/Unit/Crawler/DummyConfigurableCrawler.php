@@ -23,7 +23,8 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler;
 
-use EliasHaeussler\CacheWarmup\Crawler\AbstractConfigurableCrawler;
+use EliasHaeussler\CacheWarmup\Crawler;
+use EliasHaeussler\CacheWarmup\Result;
 
 /**
  * DummyConfigurableCrawler.
@@ -32,28 +33,18 @@ use EliasHaeussler\CacheWarmup\Crawler\AbstractConfigurableCrawler;
  * @license GPL-3.0-or-later
  *
  * @internal
- * @extends AbstractConfigurableCrawler<array{foo: string, bar: int}>
+ * @extends Crawler\AbstractConfigurableCrawler<array{foo: string, bar: int}>
  */
-final class DummyConfigurableCrawler extends AbstractConfigurableCrawler
+final class DummyConfigurableCrawler extends Crawler\AbstractConfigurableCrawler
 {
-    protected static $defaultOptions = [
+    protected static array $defaultOptions = [
         'foo' => 'hello world',
         'bar' => 42,
     ];
 
-    public function crawl(array $urls): void
+    public function crawl(array $urls): Result\CacheWarmupResult
     {
-        // Intentionally left blank.
-    }
-
-    public function getSuccessfulUrls(): array
-    {
-        return [];
-    }
-
-    public function getFailedUrls(): array
-    {
-        return [];
+        return new Result\CacheWarmupResult();
     }
 
     /**

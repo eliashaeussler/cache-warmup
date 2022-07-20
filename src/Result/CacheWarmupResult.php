@@ -21,51 +21,50 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Tests\Unit;
-
-use EliasHaeussler\CacheWarmup\Exception;
-use EliasHaeussler\CacheWarmup\Sitemap;
-use GuzzleHttp\Psr7;
-use PHPUnit\Framework;
+namespace EliasHaeussler\CacheWarmup\Result;
 
 /**
- * SitemapTest.
+ * CacheWarmupResult.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class SitemapTest extends Framework\TestCase
+final class CacheWarmupResult
 {
     /**
-     * @test
+     * @var list<CrawlingResult>
      */
-    public function constructorThrowsExceptionIfGivenUriIsEmpty(): void
-    {
-        $this->expectException(Exception\InvalidSitemapException::class);
-        $this->expectExceptionCode(1604055264);
+    private array $successful = [];
 
-        new Sitemap(new Psr7\Uri(''));
+    /**
+     * @var list<CrawlingResult>
+     */
+    private array $failed = [];
+
+    public function addResult(CrawlingResult $result): self
+    {
+        if ($result->isSuccessful()) {
+            $this->successful[] = $result;
+        } elseif ($result->isFailed()) {
+            $this->failed[] = $result;
+        }
+
+        return $this;
     }
 
     /**
-     * @test
+     * @return list<CrawlingResult>
      */
-    public function constructorThrowsExceptionIfGivenUriIsNotValid(): void
+    public function getSuccessful(): array
     {
-        $this->expectException(Exception\InvalidSitemapException::class);
-        $this->expectExceptionCode(1604055334);
-
-        new Sitemap(new Psr7\Uri('foo'));
+        return $this->successful;
     }
 
     /**
-     * @test
+     * @return list<CrawlingResult>
      */
-    public function constructorAssignsUriCorrectly(): void
+    public function getFailed(): array
     {
-        $uri = new Psr7\Uri('https://foo.baz');
-        $subject = new Sitemap($uri);
-
-        self::assertSame($uri, $subject->getUri());
+        return $this->failed;
     }
 }

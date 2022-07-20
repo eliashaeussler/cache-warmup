@@ -23,7 +23,10 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup;
 
-use Psr\Http\Message\UriInterface;
+use Psr\Http\Message;
+
+use function filter_var;
+use function trim;
 
 /**
  * Sitemap.
@@ -34,17 +37,32 @@ use Psr\Http\Message\UriInterface;
 class Sitemap
 {
     /**
-     * @var UriInterface
+     * @throws Exception\InvalidSitemapException
      */
-    protected $uri;
-
-    public function __construct(UriInterface $uri)
-    {
-        $this->uri = $uri;
+    public function __construct(
+        protected Message\UriInterface $uri,
+    ) {
+        $this->validate();
     }
 
-    public function getUri(): UriInterface
+    public function getUri(): Message\UriInterface
     {
         return $this->uri;
+    }
+
+    /**
+     * @throws Exception\InvalidSitemapException
+     */
+    private function validate(): void
+    {
+        $url = (string) $this->uri;
+
+        if ('' === trim($url)) {
+            throw Exception\InvalidSitemapException::forEmptyUrl();
+        }
+
+        if (false === filter_var($url, FILTER_VALIDATE_URL)) {
+            throw Exception\InvalidSitemapException::forInvalidUrl();
+        }
     }
 }

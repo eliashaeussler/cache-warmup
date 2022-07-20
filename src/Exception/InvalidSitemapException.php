@@ -21,51 +21,35 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Tests\Unit;
+namespace EliasHaeussler\CacheWarmup\Exception;
 
-use EliasHaeussler\CacheWarmup\Exception;
 use EliasHaeussler\CacheWarmup\Sitemap;
-use GuzzleHttp\Psr7;
-use PHPUnit\Framework;
+
+use function get_debug_type;
 
 /**
- * SitemapTest.
+ * InvalidSitemapException.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class SitemapTest extends Framework\TestCase
+final class InvalidSitemapException extends Exception
 {
-    /**
-     * @test
-     */
-    public function constructorThrowsExceptionIfGivenUriIsEmpty(): void
+    public static function forInvalidType(mixed $sitemap): self
     {
-        $this->expectException(Exception\InvalidSitemapException::class);
-        $this->expectExceptionCode(1604055264);
-
-        new Sitemap(new Psr7\Uri(''));
+        return new self(
+            sprintf('Sitemaps must be of type string or %s, %s given.', Sitemap::class, get_debug_type($sitemap)),
+            1604055096
+        );
     }
 
-    /**
-     * @test
-     */
-    public function constructorThrowsExceptionIfGivenUriIsNotValid(): void
+    public static function forEmptyUrl(): self
     {
-        $this->expectException(Exception\InvalidSitemapException::class);
-        $this->expectExceptionCode(1604055334);
-
-        new Sitemap(new Psr7\Uri('foo'));
+        return new self('Sitemap URL must not be empty.', 1604055264);
     }
 
-    /**
-     * @test
-     */
-    public function constructorAssignsUriCorrectly(): void
+    public static function forInvalidUrl(): self
     {
-        $uri = new Psr7\Uri('https://foo.baz');
-        $subject = new Sitemap($uri);
-
-        self::assertSame($uri, $subject->getUri());
+        return new self('Sitemap must be a valid URL.', 1604055334);
     }
 }
