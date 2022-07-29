@@ -65,7 +65,14 @@ Please have a look at [`Usage with Docker`](#usage-with-docker).
 **General usage**
 
 ```bash
-./vendor/bin/cache-warmup [--urls...] [--limit] [--progress] [--crawler] [--allow-failures] [<sitemaps>...]
+./vendor/bin/cache-warmup \
+  [--urls...] \
+  [--limit] \
+  [--progress] \
+  [--crawler] \
+  [--crawler-options] \
+  [--allow-failures] \
+  [<sitemaps>...]
 ```
 
 **Extended usage**
@@ -83,6 +90,9 @@ Please have a look at [`Usage with Docker`](#usage-with-docker).
 
 # Use custom crawler (must implement EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface)
 ./vendor/bin/cache-warmup "https://www.example.org/sitemap.xml" --crawler "Vendor\Crawler\MyCrawler"
+
+# Provide crawler options (only used for configurable crawlers)
+./vendor/bin/cache-warmup "https://www.example.org/sitemap.xml" --crawler-options '{"concurrency": 3}'
 
 # Exit gracefully even if crawling of URLs failed
 ./vendor/bin/cache-warmup "https://www.example.org/sitemap.xml" --allow-failures
@@ -118,6 +128,7 @@ $cacheWarmer->setLimit(50);
 
 // Use custom crawler (must implement EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface)
 $crawler = new \Vendor\Crawler\MyCrawler();
+$crawler->setOptions(['concurrency' => 3]);
 $cacheWarmer->run($crawler);
 
 // Define URLs to be crawled
