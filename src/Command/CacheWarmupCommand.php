@@ -25,6 +25,7 @@ namespace EliasHaeussler\CacheWarmup\Command;
 
 use EliasHaeussler\CacheWarmup\CacheWarmer;
 use EliasHaeussler\CacheWarmup\Crawler\ConcurrentCrawler;
+use EliasHaeussler\CacheWarmup\Crawler\ConfigurableCrawlerInterface;
 use EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface;
 use EliasHaeussler\CacheWarmup\Crawler\OutputtingCrawler;
 use EliasHaeussler\CacheWarmup\Crawler\VerboseCrawlerInterface;
@@ -45,7 +46,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use function assert;
 use function count;
 use function in_array;
+use function is_array;
 use function is_string;
+use function json_decode;
 
 /**
  * CacheWarmupCommand.
@@ -64,6 +67,11 @@ final class CacheWarmupCommand extends Command
      * @var ClientInterface|null
      */
     protected $client;
+
+    /**
+     * @var SymfonyStyle
+     */
+    private $io;
 
     protected function configure(): void
     {
@@ -105,6 +113,13 @@ final class CacheWarmupCommand extends Command
             'This can best be achieved by registering the class with Composer autoloader.',
             'Also make sure the crawler implements the <comment>'.CrawlerInterface::class.'</comment> interface.',
             '',
+            '<info>Crawler options</info>',
+            '<info>===============</info>',
+            'For crawlers implementing the <comment>'.ConfigurableCrawlerInterface::class.'</comment> interface,',
+            'it is possible to pass a JSON-encoded array of crawler options by using the <comment>--crawler-options</comment> option:',
+            '',
+            '   <comment>bin/cache-warmup --crawler-options \'{"concurrency": 3}\'</comment>',
+            '',
             '<info>Allow failures</info>',
             '<info>==============</info>',
             'If an URL fails to be crawled, this command exits with a non-zero exit code.',
@@ -145,11 +160,22 @@ final class CacheWarmupCommand extends Command
             'FQCN of the crawler to be used for cache warming'
         );
         $this->addOption(
+            'crawler-options',
+            null,
+            InputOption::VALUE_OPTIONAL,
+            'Additional config for configurable crawlers'
+        );
+        $this->addOption(
             'allow-failures',
             null,
             InputOption::VALUE_NONE,
             'Allow failures during URL crawling and exit with zero'
         );
+    }
+
+    protected function initialize(InputInterface $input, OutputInterface $output): void
+    {
+        $this->io = new SymfonyStyle($input, $output);
     }
 
     protected function interact(InputInterface $input, OutputInterface $output): void
@@ -186,12 +212,15 @@ final class CacheWarmupCommand extends Command
         $urls = $input->getOption('urls');
         $limit = (int) $input->getOption('limit');
         $allowFailures = (bool) $input->getOption('allow-failures');
-        $io = new SymfonyStyle($input, $output);
 
         // Throw exception if neither sitemaps nor URLs are defined
         if ([] === $sitemaps && [] === $urls) {
             throw new RuntimeException('Neither sitemaps nor URLs are defined.', 1604261236);
         }
+
+        // Initialize crawler
+        $crawler = $this->initializeCrawler($input, $output);
+        $isVerboseCrawler = $crawler instanceof VerboseCrawlerInterface;
 
         // Initialize cache warmer
         $output->write('Parsing sitemaps... ');
@@ -205,19 +234,15 @@ final class CacheWarmupCommand extends Command
         // Print parsed sitemaps
         if ($output->isVeryVerbose()) {
             $decoratedSitemaps = array_map([$this, 'decorateSitemap'], $cacheWarmer->getSitemaps());
-            $io->section('The following sitemaps were processed:');
-            $io->listing($decoratedSitemaps);
+            $this->io->section('The following sitemaps were processed:');
+            $this->io->listing($decoratedSitemaps);
         }
 
         // Print parsed URLs
         if ($output->isVeryVerbose()) {
-            $io->section('The following URLs will be crawled:');
-            $io->listing($cacheWarmer->getUrls());
+            $this->io->section('The following URLs will be crawled:');
+            $this->io->listing($cacheWarmer->getUrls());
         }
-
-        // Initialize crawler
-        $crawler = $this->initializeCrawler($input, $output);
-        $isVerboseCrawler = $crawler instanceof VerboseCrawlerInterface;
 
         // Start crawling
         $urlCount = count($cacheWarmer->getUrls());
@@ -232,19 +257,19 @@ final class CacheWarmupCommand extends Command
         $failedUrls = $crawler->getFailedUrls();
         if ($output->isVerbose()) {
             if ([] !== $successfulUrls) {
-                $io->section('The following URLs were successfully crawled:');
-                $io->listing($this->decorateCrawledUrls($successfulUrls));
+                $this->io->section('The following URLs were successfully crawled:');
+                $this->io->listing($this->decorateCrawledUrls($successfulUrls));
             }
             if ([] !== $failedUrls) {
-                $io->section('The following URLs failed during crawling:');
-                $io->listing($this->decorateCrawledUrls($failedUrls));
+                $this->io->section('The following URLs failed during crawling:');
+                $this->io->listing($this->decorateCrawledUrls($failedUrls));
             }
         }
 
         // Print crawler results
         if ([] !== $successfulUrls) {
             $countSuccessfulUrls = count($successfulUrls);
-            $io->success(
+            $this->io->success(
                 sprintf(
                     'Successfully warmed up caches for %d URL%s.',
                     $countSuccessfulUrls,
@@ -254,7 +279,7 @@ final class CacheWarmupCommand extends Command
         }
         if ([] !== $failedUrls) {
             $countFailedUrls = count($failedUrls);
-            $io->error(
+            $this->io->error(
                 sprintf(
                     'Failed to warm up caches for %d URL%s.',
                     $countFailedUrls,
@@ -271,6 +296,7 @@ final class CacheWarmupCommand extends Command
     protected function initializeCrawler(InputInterface $input, OutputInterface $output): CrawlerInterface
     {
         $crawler = $input->getOption('crawler');
+        $crawlerOptions = $input->getOption('crawler-options');
 
         if (is_string($crawler)) {
             // Use crawler specified by --crawler option
@@ -287,14 +313,68 @@ final class CacheWarmupCommand extends Command
             $crawler = new OutputtingCrawler();
         } else {
             // Use default crawler
-            return new ConcurrentCrawler();
+            $crawler = new ConcurrentCrawler();
         }
 
         if ($crawler instanceof VerboseCrawlerInterface) {
             $crawler->setOutput($output);
         }
 
+        if ($crawler instanceof ConfigurableCrawlerInterface) {
+            $crawlerOptions = $this->parseCrawlerOptions($crawlerOptions);
+            $crawler->setOptions($crawlerOptions);
+
+            if ($output->isVerbose() && [] !== $crawlerOptions) {
+                $this->io->section('Using custom crawler options:');
+                $this->io->listing($this->decorateCrawlerOptions($crawlerOptions));
+            }
+        } elseif (null !== $crawlerOptions) {
+            $this->io->warning('You passed crawler options for a non-configurable crawler.');
+        }
+
         return $crawler;
+    }
+
+    /**
+     * @param mixed $crawlerOptions
+     *
+     * @return array<string, mixed>
+     */
+    protected function parseCrawlerOptions($crawlerOptions): array
+    {
+        if (null === $crawlerOptions) {
+            return [];
+        }
+
+        if (is_array($crawlerOptions)) {
+            return $crawlerOptions;
+        }
+
+        if (is_string($crawlerOptions)) {
+            $crawlerOptions = json_decode($crawlerOptions, true);
+        }
+
+        if (!is_array($crawlerOptions)) {
+            throw new RuntimeException('The given crawler options are invalid. Please pass crawler options as JSON-encoded array.', 1659120649);
+        }
+
+        return $crawlerOptions;
+    }
+
+    /**
+     * @param array<string, mixed> $crawlerOptions
+     *
+     * @return list<string>
+     */
+    private function decorateCrawlerOptions(array $crawlerOptions): array
+    {
+        $decoratedCrawlerOptions = [];
+
+        foreach ($crawlerOptions as $name => $value) {
+            $decoratedCrawlerOptions[] = '<info>'.$name.'</info>: '.$value;
+        }
+
+        return $decoratedCrawlerOptions;
     }
 
     protected function decorateSitemap(Sitemap $sitemap): string

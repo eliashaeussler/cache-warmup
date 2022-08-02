@@ -272,6 +272,69 @@ final class CacheWarmupCommandTest extends TestCase
 
     /**
      * @test
+     */
+    public function executeThrowsExceptionIfCrawlerOptionsAreInvalid(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionCode(1659120649);
+        $this->expectExceptionMessage('The given crawler options are invalid. Please pass crawler options as JSON-encoded array.');
+
+        $this->commandTester->execute([
+            'sitemaps' => [
+                'https://www.example.com/sitemap.xml',
+            ],
+            '--crawler-options' => 'foo',
+        ]);
+    }
+
+    /**
+     * @test
+     * @dataProvider executeUsesCrawlerOptionsDataProvider
+     *
+     * @param array{concurrency: int}|string $crawlerOptions
+     */
+    public function executeUsesCrawlerOptions($crawlerOptions): void
+    {
+        $this->prophesizeSitemapRequest('valid_sitemap_3');
+        $this->commandTester->execute(
+            [
+                'sitemaps' => [
+                    'https://www.example.com/sitemap.xml',
+                ],
+                '--crawler-options' => $crawlerOptions,
+            ],
+            [
+                'verbosity' => OutputInterface::VERBOSITY_VERBOSE,
+            ]
+        );
+
+        $output = $this->commandTester->getDisplay();
+
+        self::assertStringContainsString('Using custom crawler options:', $output);
+        self::assertStringContainsString('* concurrency: 3', $output);
+    }
+
+    /**
+     * @test
+     */
+    public function executeShowsWarningIfCrawlerOptionsArePassedToNonConfigurableCrawler(): void
+    {
+        $this->prophesizeSitemapRequest('valid_sitemap_3');
+        $this->commandTester->execute([
+            'sitemaps' => [
+                'https://www.example.com/sitemap.xml',
+            ],
+            '--crawler' => DummyCrawler::class,
+            '--crawler-options' => ['foo' => 'bar'],
+        ]);
+
+        $output = $this->commandTester->getDisplay();
+
+        self::assertStringContainsString('You passed crawler options for a non-configurable crawler.', $output);
+    }
+
+    /**
+     * @test
      *
      * @throws ClientExceptionInterface
      */
@@ -305,6 +368,15 @@ final class CacheWarmupCommandTest extends TestCase
         ]);
 
         self::assertSame($expected, $exitCode);
+    }
+
+    /**
+     * @return Generator<string, array{array{concurrency: int}|string}>
+     */
+    public function executeUsesCrawlerOptionsDataProvider(): Generator
+    {
+        yield 'array' => [['concurrency' => 3]];
+        yield 'json string' => ['{"concurrency": 3}'];
     }
 
     /**

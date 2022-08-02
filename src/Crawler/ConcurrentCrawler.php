@@ -38,9 +38,21 @@ use Throwable;
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
+ *
+ * @extends AbstractConfigurableCrawler<array{
+ *     concurrency: int,
+ *     request_method: string,
+ *     request_headers: array<string, string>
+ * }>
  */
-class ConcurrentCrawler implements CrawlerInterface
+class ConcurrentCrawler extends AbstractConfigurableCrawler
 {
+    protected static $defaultOptions = [
+        'concurrency' => 5,
+        'request_method' => 'HEAD',
+        'request_headers' => [],
+    ];
+
     /**
      * @var ClientInterface
      */
@@ -61,8 +73,9 @@ class ConcurrentCrawler implements CrawlerInterface
      */
     protected $failedUrls = [];
 
-    public function __construct()
+    public function __construct(array $options = [])
     {
+        parent::__construct($options);
         $this->client = $this->initializeClient();
     }
 
@@ -74,7 +87,7 @@ class ConcurrentCrawler implements CrawlerInterface
 
         // Create request pool
         $pool = new Pool($this->client, $this->getRequests(), [
-            'concurrency' => 5,
+            'concurrency' => $this->options['concurrency'],
             'fulfilled' => [$this, 'onSuccess'],
             'rejected' => [$this, 'onFailure'],
         ]);
@@ -106,7 +119,7 @@ class ConcurrentCrawler implements CrawlerInterface
     protected function getRequests(): Iterator
     {
         foreach ($this->urls as $url) {
-            yield new Request('HEAD', $url);
+            yield new Request($this->options['request_method'], $url, $this->options['request_headers']);
         }
     }
 
