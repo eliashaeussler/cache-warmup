@@ -329,7 +329,7 @@ final class CacheWarmupCommand extends Command
                 $this->io->listing($this->decorateCrawlerOptions($crawlerOptions));
             }
         } elseif (null !== $crawlerOptions) {
-            $this->io->warning('You\'ve passed crawler options to a non-configurable crawler.');
+            $this->io->warning('You passed crawler options for a non-configurable crawler.');
         }
 
         return $crawler;

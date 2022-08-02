@@ -330,7 +330,7 @@ final class CacheWarmupCommandTest extends TestCase
 
         $output = $this->commandTester->getDisplay();
 
-        self::assertStringContainsString('You\'ve passed crawler options to a non-configurable crawler.', $output);
+        self::assertStringContainsString('You passed crawler options for a non-configurable crawler.', $output);
     }
 
     /**
