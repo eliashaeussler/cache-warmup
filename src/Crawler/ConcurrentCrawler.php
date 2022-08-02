@@ -39,13 +39,18 @@ use Throwable;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  *
- * @extends AbstractConfigurableCrawler<array{concurrency: int, request_method: string}>
+ * @extends AbstractConfigurableCrawler<array{
+ *     concurrency: int,
+ *     request_method: string,
+ *     request_headers: array<string, string>
+ * }>
  */
 class ConcurrentCrawler extends AbstractConfigurableCrawler
 {
     protected static $defaultOptions = [
         'concurrency' => 5,
         'request_method' => 'HEAD',
+        'request_headers' => [],
     ];
 
     /**
@@ -114,7 +119,7 @@ class ConcurrentCrawler extends AbstractConfigurableCrawler
     protected function getRequests(): Iterator
     {
         foreach ($this->urls as $url) {
-            yield new Request($this->options['request_method'], $url);
+            yield new Request($this->options['request_method'], $url, $this->options['request_headers']);
         }
     }
 
