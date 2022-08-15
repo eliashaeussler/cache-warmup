@@ -137,13 +137,13 @@ final class CacheWarmupCommand extends Command
         $this->addOption(
             'urls',
             'u',
-            InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
+            InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
             'Custom additional URLs to be used for cache warming'
         );
         $this->addOption(
             'limit',
             'l',
-            InputOption::VALUE_OPTIONAL,
+            InputOption::VALUE_REQUIRED,
             'Limit the number of URLs to be processed',
             '0'
         );
@@ -156,13 +156,13 @@ final class CacheWarmupCommand extends Command
         $this->addOption(
             'crawler',
             'c',
-            InputOption::VALUE_OPTIONAL,
+            InputOption::VALUE_REQUIRED,
             'FQCN of the crawler to be used for cache warming'
         );
         $this->addOption(
             'crawler-options',
             null,
-            InputOption::VALUE_OPTIONAL,
+            InputOption::VALUE_REQUIRED,
             'Additional config for configurable crawlers'
         );
         $this->addOption(
