@@ -11,3 +11,15 @@ updates:
     labels:
       - dependencies
     open-pull-requests-limit: 10
+
+  - package-ecosystem: composer
+    directory: '/'
+    schedule:
+      interval: weekly
+      day: friday
+    commit-message:
+      prefix: '[TASK]'
+    labels:
+      - dependencies
+    open-pull-requests-limit: 10
+    versioning-strategy: widen
