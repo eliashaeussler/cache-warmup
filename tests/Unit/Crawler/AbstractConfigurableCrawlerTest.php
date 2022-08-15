@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler;
 
-use EliasHaeussler\CacheWarmup\Exception\InvalidCrawlerOptionException;
-use PHPUnit\Framework\TestCase;
+use EliasHaeussler\CacheWarmup\Exception;
+use PHPUnit\Framework;
 
 use function get_class;
 
@@ -34,12 +34,9 @@ use function get_class;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class AbstractConfigurableCrawlerTest extends TestCase
+final class AbstractConfigurableCrawlerTest extends Framework\TestCase
 {
-    /**
-     * @var DummyConfigurableCrawler
-     */
-    private $subject;
+    private DummyConfigurableCrawler$subject;
 
     protected function setUp(): void
     {
@@ -64,7 +61,7 @@ final class AbstractConfigurableCrawlerTest extends TestCase
      */
     public function setOptionsThrowsExceptionIfInvalidOptionsAreGiven(): void
     {
-        $this->expectException(InvalidCrawlerOptionException::class);
+        $this->expectException(Exception\InvalidCrawlerOptionException::class);
         $this->expectExceptionCode(1659206995);
         $this->expectExceptionMessage(
             'The crawler options "dummy", "blub" are invalid or not supported by crawler "'.get_class($this->subject).'".'

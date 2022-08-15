@@ -24,24 +24,13 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Command;
 
 use EliasHaeussler\CacheWarmup\CacheWarmer;
-use EliasHaeussler\CacheWarmup\Crawler\ConcurrentCrawler;
-use EliasHaeussler\CacheWarmup\Crawler\ConfigurableCrawlerInterface;
-use EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface;
-use EliasHaeussler\CacheWarmup\Crawler\OutputtingCrawler;
-use EliasHaeussler\CacheWarmup\Crawler\VerboseCrawlerInterface;
-use EliasHaeussler\CacheWarmup\CrawlingState;
+use EliasHaeussler\CacheWarmup\Crawler;
+use EliasHaeussler\CacheWarmup\Result;
 use EliasHaeussler\CacheWarmup\Sitemap;
-use GuzzleHttp\Psr7\Uri;
-use Psr\Http\Client\ClientInterface;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Exception\RuntimeException;
-use Symfony\Component\Console\Helper\QuestionHelper;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Console\Style\SymfonyStyle;
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Psr7;
+use Psr\Http\Client;
+use Symfony\Component\Console;
 
 use function assert;
 use function count;
@@ -49,6 +38,7 @@ use function in_array;
 use function is_array;
 use function is_string;
 use function json_decode;
+use function sprintf;
 
 /**
  * CacheWarmupCommand.
@@ -56,22 +46,18 @@ use function json_decode;
  * @author Elias Häußler <elias@heussler.dev>
  * @license GPL-3.0-or-later
  */
-final class CacheWarmupCommand extends Command
+final class CacheWarmupCommand extends Console\Command\Command
 {
     private const SUCCESSFUL = 0;
     private const FAILED = 1;
 
-    protected static $defaultName = 'cache-warmup';
+    private Console\Style\SymfonyStyle $io;
 
-    /**
-     * @var ClientInterface|null
-     */
-    protected $client;
-
-    /**
-     * @var SymfonyStyle
-     */
-    private $io;
+    public function __construct(
+        private readonly Client\ClientInterface $client = new GuzzleClient(),
+    ) {
+        parent::__construct('cache-warmup');
+    }
 
     protected function configure(): void
     {
@@ -111,11 +97,11 @@ final class CacheWarmupCommand extends Command
             '',
             'It\'s up to you to ensure the given crawler class is available and fully loaded.',
             'This can best be achieved by registering the class with Composer autoloader.',
-            'Also make sure the crawler implements the <comment>'.CrawlerInterface::class.'</comment> interface.',
+            'Also make sure the crawler implements the <comment>'.Crawler\CrawlerInterface::class.'</comment> interface.',
             '',
             '<info>Crawler options</info>',
             '<info>===============</info>',
-            'For crawlers implementing the <comment>'.ConfigurableCrawlerInterface::class.'</comment> interface,',
+            'For crawlers implementing the <comment>'.Crawler\ConfigurableCrawlerInterface::class.'</comment> interface,',
             'it is possible to pass a JSON-encoded array of crawler options by using the <comment>--crawler-options</comment> option:',
             '',
             '   <comment>%command.full_name% --crawler-options \'{"concurrency": 3}\'</comment>',
@@ -131,54 +117,54 @@ final class CacheWarmupCommand extends Command
 
         $this->addArgument(
             'sitemaps',
-            InputArgument::OPTIONAL | InputArgument::IS_ARRAY,
+            Console\Input\InputArgument::OPTIONAL | Console\Input\InputArgument::IS_ARRAY,
             'URLs of XML sitemaps to be used for cache warming'
         );
         $this->addOption(
             'urls',
             'u',
-            InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+            Console\Input\InputOption::VALUE_REQUIRED | Console\Input\InputOption::VALUE_IS_ARRAY,
             'Custom additional URLs to be used for cache warming'
         );
         $this->addOption(
             'limit',
             'l',
-            InputOption::VALUE_REQUIRED,
+            Console\Input\InputOption::VALUE_REQUIRED,
             'Limit the number of URLs to be processed',
             '0'
         );
         $this->addOption(
             'progress',
             'p',
-            InputOption::VALUE_NONE,
+            Console\Input\InputOption::VALUE_NONE,
             'Show progress bar during cache warmup'
         );
         $this->addOption(
             'crawler',
             'c',
-            InputOption::VALUE_REQUIRED,
+            Console\Input\InputOption::VALUE_REQUIRED,
             'FQCN of the crawler to be used for cache warming'
         );
         $this->addOption(
             'crawler-options',
             'o',
-            InputOption::VALUE_REQUIRED,
+            Console\Input\InputOption::VALUE_REQUIRED,
             'Additional config for configurable crawlers'
         );
         $this->addOption(
             'allow-failures',
             null,
-            InputOption::VALUE_NONE,
+            Console\Input\InputOption::VALUE_NONE,
             'Allow failures during URL crawling and exit with zero'
         );
     }
 
-    protected function initialize(InputInterface $input, OutputInterface $output): void
+    protected function initialize(Console\Input\InputInterface $input, Console\Output\OutputInterface $output): void
     {
-        $this->io = new SymfonyStyle($input, $output);
+        $this->io = new Console\Style\SymfonyStyle($input, $output);
     }
 
-    protected function interact(InputInterface $input, OutputInterface $output): void
+    protected function interact(Console\Input\InputInterface $input, Console\Output\OutputInterface $output): void
     {
         // Early return if sitemaps or URLs are already specified
         if ([] !== $input->getArgument('sitemaps') || [] !== $input->getOption('urls')) {
@@ -187,10 +173,10 @@ final class CacheWarmupCommand extends Command
 
         // Get sitemaps from interactive user input
         $sitemaps = [];
-        /** @var QuestionHelper $helper */
+        /** @var Console\Helper\QuestionHelper $helper */
         $helper = $this->getHelper('question');
         do {
-            $question = new Question('Please enter the URL of a XML sitemap: ');
+            $question = new Console\Question\Question('Please enter the URL of a XML sitemap: ');
             $sitemap = $helper->ask($input, $output, $question);
             if (is_string($sitemap)) {
                 $sitemaps[] = $sitemap;
@@ -200,13 +186,13 @@ final class CacheWarmupCommand extends Command
 
         // Throw exception if no sitemaps were added
         if ([] === $sitemaps && [] === $input->getOption('urls')) {
-            throw new RuntimeException('You must enter at least one sitemap URL.', 1604258903);
+            throw new Console\Exception\RuntimeException('You must enter at least one sitemap URL.', 1604258903);
         }
 
         $input->setArgument('sitemaps', $sitemaps);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(Console\Input\InputInterface $input, Console\Output\OutputInterface $output): int
     {
         $sitemaps = $input->getArgument('sitemaps');
         $urls = $input->getOption('urls');
@@ -215,19 +201,20 @@ final class CacheWarmupCommand extends Command
 
         // Throw exception if neither sitemaps nor URLs are defined
         if ([] === $sitemaps && [] === $urls) {
-            throw new RuntimeException('Neither sitemaps nor URLs are defined.', 1604261236);
+            throw new Console\Exception\RuntimeException('Neither sitemaps nor URLs are defined.', 1604261236);
         }
 
         // Initialize crawler
         $crawler = $this->initializeCrawler($input, $output);
-        $isVerboseCrawler = $crawler instanceof VerboseCrawlerInterface;
+        $isVerboseCrawler = $crawler instanceof Crawler\VerboseCrawlerInterface;
 
         // Initialize cache warmer
         $output->write('Parsing sitemaps... ');
-        $cacheWarmer = new CacheWarmer($sitemaps, $limit, $this->client);
+        $cacheWarmer = new CacheWarmer($limit, $this->client, $crawler);
+        $cacheWarmer->addSitemaps($sitemaps);
         foreach ($urls as $url) {
             assert(is_string($url));
-            $cacheWarmer->addUrl(new Uri($url));
+            $cacheWarmer->addUrl(new Psr7\Uri($url));
         }
         $output->writeln('<info>Done</info>');
 
@@ -247,15 +234,27 @@ final class CacheWarmupCommand extends Command
         // Start crawling
         $urlCount = count($cacheWarmer->getUrls());
         $output->write(sprintf('Crawling URL%s... ', 1 === $urlCount ? '' : 's'), $isVerboseCrawler);
-        $cacheWarmer->run($crawler);
+        $result = $cacheWarmer->run();
         if (!$isVerboseCrawler) {
             $output->writeln('<info>Done</info>');
         }
 
+        $this->printResult($result);
+
+        if ([] !== $result->getFailed() && !$allowFailures) {
+            return self::FAILED;
+        }
+
+        return self::SUCCESSFUL;
+    }
+
+    private function printResult(Result\CacheWarmupResult $result): void
+    {
+        $successfulUrls = $result->getSuccessful();
+        $failedUrls = $result->getFailed();
+
         // Print crawler statistics
-        $successfulUrls = $crawler->getSuccessfulUrls();
-        $failedUrls = $crawler->getFailedUrls();
-        if ($output->isVerbose()) {
+        if ($this->io->isVeryVerbose()) {
             if ([] !== $successfulUrls) {
                 $this->io->section('The following URLs were successfully crawled:');
                 $this->io->listing($this->decorateCrawledUrls($successfulUrls));
@@ -277,6 +276,7 @@ final class CacheWarmupCommand extends Command
                 )
             );
         }
+
         if ([] !== $failedUrls) {
             $countFailedUrls = count($failedUrls);
             $this->io->error(
@@ -286,41 +286,41 @@ final class CacheWarmupCommand extends Command
                     1 === $countFailedUrls ? '' : 's'
                 )
             );
-
-            return $allowFailures ? self::SUCCESSFUL : self::FAILED;
         }
-
-        return self::SUCCESSFUL;
     }
 
-    protected function initializeCrawler(InputInterface $input, OutputInterface $output): CrawlerInterface
-    {
+    private function initializeCrawler(
+        Console\Input\InputInterface $input,
+        Console\Output\OutputInterface $output,
+    ): Crawler\CrawlerInterface {
         $crawler = $input->getOption('crawler');
         $crawlerOptions = $input->getOption('crawler-options');
 
         if (is_string($crawler)) {
             // Use crawler specified by --crawler option
             if (!class_exists($crawler)) {
-                throw new RuntimeException('The specified crawler class does not exist.', 1604261816);
+                throw new Console\Exception\RuntimeException('The specified crawler class does not exist.', 1604261816);
             }
-            if (!in_array(CrawlerInterface::class, class_implements($crawler) ?: [])) {
-                throw new RuntimeException('The specified crawler is not valid.', 1604261885);
+
+            if (!in_array(Crawler\CrawlerInterface::class, class_implements($crawler) ?: [])) {
+                throw new Console\Exception\RuntimeException('The specified crawler is not valid.', 1604261885);
             }
-            /** @var CrawlerInterface $crawler */
+
+            /** @var Crawler\CrawlerInterface $crawler */
             $crawler = new $crawler();
         } elseif ($output->isVerbose() || $input->getOption('progress')) {
             // Use default verbose crawler
-            $crawler = new OutputtingCrawler();
+            $crawler = new Crawler\OutputtingCrawler();
         } else {
             // Use default crawler
-            $crawler = new ConcurrentCrawler();
+            $crawler = new Crawler\ConcurrentCrawler();
         }
 
-        if ($crawler instanceof VerboseCrawlerInterface) {
+        if ($crawler instanceof Crawler\VerboseCrawlerInterface) {
             $crawler->setOutput($output);
         }
 
-        if ($crawler instanceof ConfigurableCrawlerInterface) {
+        if ($crawler instanceof Crawler\ConfigurableCrawlerInterface) {
             $crawlerOptions = $this->parseCrawlerOptions($crawlerOptions);
             $crawler->setOptions($crawlerOptions);
 
@@ -336,11 +336,9 @@ final class CacheWarmupCommand extends Command
     }
 
     /**
-     * @param mixed $crawlerOptions
-     *
      * @return array<string, mixed>
      */
-    protected function parseCrawlerOptions($crawlerOptions): array
+    private function parseCrawlerOptions(mixed $crawlerOptions): array
     {
         if (null === $crawlerOptions) {
             return [];
@@ -355,7 +353,7 @@ final class CacheWarmupCommand extends Command
         }
 
         if (!is_array($crawlerOptions)) {
-            throw new RuntimeException('The given crawler options are invalid. Please pass crawler options as JSON-encoded array.', 1659120649);
+            throw new Console\Exception\RuntimeException('The given crawler options are invalid. Please pass crawler options as JSON-encoded array.', 1659120649);
         }
 
         return $crawlerOptions;
@@ -377,30 +375,24 @@ final class CacheWarmupCommand extends Command
         return $decoratedCrawlerOptions;
     }
 
-    protected function decorateSitemap(Sitemap $sitemap): string
+    private function decorateSitemap(Sitemap $sitemap): string
     {
         return (string) $sitemap->getUri();
     }
 
     /**
-     * @param CrawlingState[] $crawledUrls
+     * @param list<Result\CrawlingResult> $crawledUrls
      *
-     * @return string[]
+     * @return list<string>
      */
-    protected function decorateCrawledUrls(array $crawledUrls): array
+    private function decorateCrawledUrls(array $crawledUrls): array
     {
         $urls = [];
+
         foreach ($crawledUrls as $crawlingState) {
             $urls[] = (string) $crawlingState->getUri();
         }
 
         return $urls;
-    }
-
-    public function setClient(?ClientInterface $client): self
-    {
-        $this->client = $client;
-
-        return $this;
     }
 }

@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Crawler;
 
-use EliasHaeussler\CacheWarmup\CrawlingState;
-use Psr\Http\Message\UriInterface;
+use EliasHaeussler\CacheWarmup\Result;
+use Psr\Http\Message;
 
 /**
  * CrawlerInterface.
@@ -35,17 +35,7 @@ use Psr\Http\Message\UriInterface;
 interface CrawlerInterface
 {
     /**
-     * @param UriInterface[] $urls
+     * @param list<Message\UriInterface> $urls
      */
-    public function crawl(array $urls): void;
-
-    /**
-     * @return CrawlingState[]
-     */
-    public function getSuccessfulUrls(): array;
-
-    /**
-     * @return CrawlingState[]
-     */
-    public function getFailedUrls(): array;
+    public function crawl(array $urls): Result\CacheWarmupResult;
 }

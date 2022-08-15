@@ -21,51 +21,52 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Tests\Unit;
+namespace EliasHaeussler\CacheWarmup\Tests\Unit\Result;
 
-use EliasHaeussler\CacheWarmup\Exception;
-use EliasHaeussler\CacheWarmup\Sitemap;
+use EliasHaeussler\CacheWarmup\Result;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
 
 /**
- * SitemapTest.
+ * CacheWarmupResultTest.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class SitemapTest extends Framework\TestCase
+final class CacheWarmupResultTest extends Framework\TestCase
 {
-    /**
-     * @test
-     */
-    public function constructorThrowsExceptionIfGivenUriIsEmpty(): void
-    {
-        $this->expectException(Exception\InvalidSitemapException::class);
-        $this->expectExceptionCode(1604055264);
+    private Result\CacheWarmupResult $subject;
 
-        new Sitemap(new Psr7\Uri(''));
+    protected function setUp(): void
+    {
+        $this->subject = new Result\CacheWarmupResult();
     }
 
     /**
      * @test
      */
-    public function constructorThrowsExceptionIfGivenUriIsNotValid(): void
+    public function addResultAddsSuccessfulResult(): void
     {
-        $this->expectException(Exception\InvalidSitemapException::class);
-        $this->expectExceptionCode(1604055334);
+        $result = Result\CrawlingResult::createSuccessful(new Psr7\Uri('https://www.example.com'));
 
-        new Sitemap(new Psr7\Uri('foo'));
+        self::assertSame([], $this->subject->getSuccessful());
+
+        $this->subject->addResult($result);
+
+        self::assertSame([$result], $this->subject->getSuccessful());
     }
 
     /**
      * @test
      */
-    public function constructorAssignsUriCorrectly(): void
+    public function addResultAddsFailedResult(): void
     {
-        $uri = new Psr7\Uri('https://foo.baz');
-        $subject = new Sitemap($uri);
+        $result = Result\CrawlingResult::createFailed(new Psr7\Uri('https://www.example.com'));
 
-        self::assertSame($uri, $subject->getUri());
+        self::assertSame([], $this->subject->getFailed());
+
+        $this->subject->addResult($result);
+
+        self::assertSame([$result], $this->subject->getFailed());
     }
 }

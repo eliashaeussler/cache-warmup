@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Crawler;
 
-use EliasHaeussler\CacheWarmup\Exception\InvalidCrawlerOptionException;
+use EliasHaeussler\CacheWarmup\Exception;
 
 use function array_diff_key;
 
@@ -40,12 +40,12 @@ abstract class AbstractConfigurableCrawler implements ConfigurableCrawlerInterfa
     /**
      * @var TOptions
      */
-    protected static $defaultOptions = [];
+    protected static array $defaultOptions = [];
 
     /**
      * @var TOptions
      */
-    protected $options = [];
+    protected array $options = [];
 
     /**
      * @param array<string, mixed> $options
@@ -63,7 +63,7 @@ abstract class AbstractConfigurableCrawler implements ConfigurableCrawlerInterfa
         $invalidOptions = array_diff_key($options, static::$defaultOptions);
 
         if ([] !== $invalidOptions) {
-            throw InvalidCrawlerOptionException::createForAll($this, array_keys($invalidOptions));
+            throw Exception\InvalidCrawlerOptionException::createForAll($this, array_keys($invalidOptions));
         }
 
         $this->options = array_merge(

@@ -23,14 +23,13 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Crawler;
 
-use EliasHaeussler\CacheWarmup\CrawlingState;
+use EliasHaeussler\CacheWarmup\Result;
+use Generator;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Pool;
-use GuzzleHttp\Psr7\Request;
-use Iterator;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\UriInterface;
+use GuzzleHttp\Psr7;
+use Psr\Http\Message;
 use Throwable;
 
 /**
@@ -47,100 +46,71 @@ use Throwable;
  */
 class ConcurrentCrawler extends AbstractConfigurableCrawler
 {
-    protected static $defaultOptions = [
+    protected static array $defaultOptions = [
         'concurrency' => 5,
         'request_method' => 'HEAD',
         'request_headers' => [],
     ];
 
-    /**
-     * @var ClientInterface
-     */
-    protected $client;
-
-    /**
-     * @var UriInterface[]
-     */
-    protected $urls;
-
-    /**
-     * @var CrawlingState[]
-     */
-    protected $successfulUrls = [];
-
-    /**
-     * @var CrawlingState[]
-     */
-    protected $failedUrls = [];
-
-    public function __construct(array $options = [])
-    {
+    public function __construct(
+        array $options = [],
+        protected readonly ClientInterface $client = new Client(),
+    ) {
         parent::__construct($options);
-        $this->client = $this->initializeClient();
     }
 
-    public function crawl(array $urls): void
+    public function crawl(array $urls): Result\CacheWarmupResult
     {
-        $this->urls = array_values($urls);
-        $this->successfulUrls = [];
-        $this->failedUrls = [];
+        $result = new Result\CacheWarmupResult();
+        $urls = array_values($urls);
 
         // Create request pool
-        $pool = new Pool($this->client, $this->getRequests(), [
+        $pool = new Pool($this->client, $this->buildRequests($urls), [
             'concurrency' => $this->options['concurrency'],
-            'fulfilled' => [$this, 'onSuccess'],
-            'rejected' => [$this, 'onFailure'],
+            'fulfilled' => function (Message\ResponseInterface $response, int $index) use ($result, $urls) {
+                $state = $this->onSuccess($response, $urls[$index]);
+                $result->addResult($state);
+            },
+            'rejected' => function (Throwable $exception, int $index) use ($result, $urls) {
+                $state = $this->onFailure($exception, $urls[$index]);
+                $result->addResult($state);
+            },
         ]);
 
         // Start crawling
         $promise = $pool->promise();
         $promise->wait();
+
+        return $result;
     }
 
-    public function onSuccess(ResponseInterface $response, int $index): void
+    public function onSuccess(Message\ResponseInterface $response, Message\UriInterface $url): Result\CrawlingResult
     {
         $data = [
             'response' => $response,
         ];
-        $this->successfulUrls[] = CrawlingState::createSuccessful($this->urls[$index], $data);
+
+        return Result\CrawlingResult::createSuccessful($url, $data);
     }
 
-    public function onFailure(Throwable $exception, int $index): void
+    public function onFailure(Throwable $exception, Message\UriInterface $url): Result\CrawlingResult
     {
         $data = [
             'exception' => $exception,
         ];
-        $this->failedUrls[] = CrawlingState::createFailed($this->urls[$index], $data);
+
+        return Result\CrawlingResult::createFailed($url, $data);
     }
 
     /**
-     * @return Iterator<Request>
+     * @param list<Message\UriInterface> $urls
+     *
+     * @return Generator<Message\RequestInterface>
      */
-    protected function getRequests(): Iterator
+    protected function buildRequests(array $urls): Generator
     {
-        foreach ($this->urls as $url) {
-            yield new Request($this->options['request_method'], $url, $this->options['request_headers']);
+        foreach ($urls as $url) {
+            yield new Psr7\Request($this->options['request_method'], $url, $this->options['request_headers']);
         }
-    }
-
-    protected function initializeClient(): ClientInterface
-    {
-        return new Client();
-    }
-
-    /**
-     * @return CrawlingState[]
-     */
-    public function getSuccessfulUrls(): array
-    {
-        return $this->successfulUrls;
-    }
-
-    /**
-     * @return CrawlingState[]
-     */
-    public function getFailedUrls(): array
-    {
-        return $this->failedUrls;
     }
 }

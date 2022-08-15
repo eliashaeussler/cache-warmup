@@ -21,46 +21,35 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Tests\Unit;
+namespace EliasHaeussler\CacheWarmup\Tests\Unit\Result;
 
-use EliasHaeussler\CacheWarmup\CrawlingState;
-use GuzzleHttp\Psr7\Uri;
-use InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
+use EliasHaeussler\CacheWarmup\Result;
+use GuzzleHttp\Psr7;
+use PHPUnit\Framework;
 
 /**
- * CrawlingStateTest.
+ * CrawlingResultTest.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class CrawlingStateTest extends TestCase
+final class CrawlingResultTest extends Framework\TestCase
 {
-    /**
-     * @test
-     */
-    public function constructorThrowsExceptionIfInvalidCrawlingStateIsGiven(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionCode(1604334815);
-        new CrawlingState(new Uri(''), -1);
-    }
-
     /**
      * @test
      */
     public function createSuccessfulReturnsSuccessfulCrawlingStateForGivenUri(): void
     {
-        $uri = new Uri('https://www.example.org/');
+        $uri = new Psr7\Uri('https://www.example.org/');
         $data = ['foo' => 'baz'];
-        $subject = CrawlingState::createSuccessful($uri, $data);
+        $subject = Result\CrawlingResult::createSuccessful($uri, $data);
 
         self::assertSame($uri, $subject->getUri());
         self::assertSame($data, $subject->getData());
         self::assertTrue($subject->isSuccessful());
-        self::assertTrue($subject->is(CrawlingState::SUCCESSFUL));
+        self::assertTrue($subject->is(Result\CrawlingState::Successful));
         self::assertFalse($subject->isFailed());
-        self::assertFalse($subject->is(CrawlingState::FAILED));
+        self::assertFalse($subject->is(Result\CrawlingState::Failed));
     }
 
     /**
@@ -68,15 +57,15 @@ final class CrawlingStateTest extends TestCase
      */
     public function createFailedReturnsFailedCrawlingStateForGivenUri(): void
     {
-        $uri = new Uri('https://www.example.org/');
+        $uri = new Psr7\Uri('https://www.example.org/');
         $data = ['foo' => 'baz'];
-        $subject = CrawlingState::createFailed($uri, $data);
+        $subject = Result\CrawlingResult::createFailed($uri, $data);
 
         self::assertSame($uri, $subject->getUri());
         self::assertSame($data, $subject->getData());
         self::assertTrue($subject->isFailed());
-        self::assertTrue($subject->is(CrawlingState::FAILED));
+        self::assertTrue($subject->is(Result\CrawlingState::Failed));
         self::assertFalse($subject->isSuccessful());
-        self::assertFalse($subject->is(CrawlingState::SUCCESSFUL));
+        self::assertFalse($subject->is(Result\CrawlingState::Successful));
     }
 }

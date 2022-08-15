@@ -66,11 +66,11 @@ Please have a look at [`Usage with Docker`](#usage-with-docker).
 
 ```bash
 ./vendor/bin/cache-warmup \
-  [--urls...] \
-  [--limit] \
+  [--urls=URLS...] \
+  [--limit=LIMIT] \
   [--progress] \
-  [--crawler] \
-  [--crawler-options] \
+  [--crawler=CRAWLER] \
+  [--crawler-options=CRAWLER-OPTIONS] \
   [--allow-failures] \
   [<sitemaps>...]
 ```
@@ -113,28 +113,46 @@ For more detailed information run `./vendor/bin/cache-warmup --help`.
 // Instantiate and run cache warmer
 $cacheWarmer = new \EliasHaeussler\CacheWarmup\CacheWarmer();
 $cacheWarmer->addSitemaps('https://www.example.org/sitemap.xml');
-$crawler = $cacheWarmer->run();
+$result = $cacheWarmer->run();
 
 // Get successful and failed URLs
-$successfulUrls = $crawler->getSuccessfulUrls();
-$failedUrls = $crawler->getFailedUrls();
+$successfulUrls = $result->getSuccessful();
+$failedUrls = $result->getFailed();
 ```
 
 **Extended usage**
 
 ```php
 // Limit number of pages to be crawled
-$cacheWarmer->setLimit(50);
+$limit = 50;
+
+// Use custom client
+$client = new \GuzzleHttp\Client([
+    // ...
+]);
 
 // Use custom crawler (must implement EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface)
 $crawler = new \Vendor\Crawler\MyCrawler();
 $crawler->setOptions(['concurrency' => 3]);
-$cacheWarmer->run($crawler);
+
+// Instantiate cache warmer
+$cacheWarmer = new \EliasHaeussler\CacheWarmup\CacheWarmer($limit, $client, $crawler);
+
+// Define sitemaps to be crawled
+$cacheWarmer->addSitemaps('https://www.example.org/sitemap.xml');
+$cacheWarmer->addSitemaps('https://www.example.org/de/sitemap.xml');
 
 // Define URLs to be crawled
 $cacheWarmer->addUrl(new \GuzzleHttp\Psr7\Uri('https://www.example.org/'));
 $cacheWarmer->addUrl(new \GuzzleHttp\Psr7\Uri('https://www.example.org/foo'));
 $cacheWarmer->addUrl(new \GuzzleHttp\Psr7\Uri('https://www.example.org/baz'));
+
+// Run cache warmer
+$result = $cacheWarmer->run();
+
+// Get successful and failed URLs
+$successfulUrls = $result->getSuccessful();
+$failedUrls = $result->getFailed();
 ```
 
 ### Usage with Docker

@@ -23,13 +23,11 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler;
 
-use EliasHaeussler\CacheWarmup\Crawler\OutputtingCrawler;
-use EliasHaeussler\CacheWarmup\Exception\MissingArgumentException;
-use GuzzleHttp\Psr7\Uri;
-use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Output\BufferedOutput;
-
-use function func_get_args;
+use EliasHaeussler\CacheWarmup\Crawler;
+use EliasHaeussler\CacheWarmup\Exception;
+use GuzzleHttp\Psr7;
+use PHPUnit\Framework;
+use Symfony\Component\Console;
 
 /**
  * OutputtingCrawlerTest.
@@ -37,22 +35,15 @@ use function func_get_args;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class OutputtingCrawlerTest extends TestCase
+final class OutputtingCrawlerTest extends Framework\TestCase
 {
-    /**
-     * @var BufferedOutput
-     */
-    protected $output;
-
-    /**
-     * @var OutputtingCrawler
-     */
-    protected $subject;
+    private Console\Output\BufferedOutput $output;
+    private Crawler\OutputtingCrawler$subject;
 
     protected function setUp(): void
     {
-        $this->output = new BufferedOutput();
-        $this->subject = new OutputtingCrawler();
+        $this->output = new Console\Output\BufferedOutput();
+        $this->subject = new Crawler\OutputtingCrawler();
         $this->subject->setOutput($this->output);
     }
 
@@ -61,9 +52,9 @@ final class OutputtingCrawlerTest extends TestCase
      */
     public function crawlThrowsExceptionIfOutputIsNotSet(): void
     {
-        $subject = new OutputtingCrawler();
+        $subject = new Crawler\OutputtingCrawler();
 
-        $this->expectException(MissingArgumentException::class);
+        $this->expectException(Exception\MissingArgumentException::class);
         $this->expectExceptionCode(1619635638);
 
         $subject->crawl([]);
@@ -71,32 +62,21 @@ final class OutputtingCrawlerTest extends TestCase
 
     /**
      * @test
-     *
-     * @throws MissingArgumentException
      */
     public function crawlCreatesProgressBarAndWritesCrawlingStateToOutput(): void
     {
-        $uri1 = new Uri('https://www.example.org');
-        $uri2 = new Uri('https://www.foo.baz');
+        $uri1 = new Psr7\Uri('https://www.example.org');
+        $uri2 = new Psr7\Uri('https://www.foo.baz');
         $this->subject->crawl([$uri1, $uri2]);
 
         $output = $this->output->fetch();
-        self::assertStringMatchesRegularExpression(
+        self::assertMatchesRegularExpression(
             sprintf('#^\s*\d/\d [^\s]+\s+\d+%% -- %s \((success|failed)\)$#m', preg_quote((string) $uri1)),
             $output
         );
-        self::assertStringMatchesRegularExpression(
+        self::assertMatchesRegularExpression(
             sprintf('#^\s*\d/\d [^\s]+\s+\d+%% -- %s \(failed\)$#m', preg_quote((string) $uri2)),
             $output
         );
-    }
-
-    public static function assertStringMatchesRegularExpression(): void
-    {
-        if (method_exists(static::class, 'assertMatchesRegularExpression')) {
-            self::assertMatchesRegularExpression(...func_get_args());
-        } else {
-            self::assertRegExp(...func_get_args());
-        }
     }
 }

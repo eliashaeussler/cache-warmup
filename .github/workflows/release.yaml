@@ -29,16 +29,16 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.4
-          tools: composer:v2
+          php-version: 8.1
+          tools: composer:v2,phive
 
       # Compile PHAR
       - name: Install box
-        run: composer global require --dev --no-progress humbug/box
+        run: phive install --trust-gpg-keys 2DF45277AEF09A2F humbug/box
       - name: Install Composer dependencies
         run: composer update --no-progress
       - name: Compile PHAR
-        run: box compile --with-docker
+        run: ./tools/box compile --with-docker
 
       # Upload compiled PHAR as artifact
       - name: Upload artifact

@@ -23,12 +23,15 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Crawler;
 
-use EliasHaeussler\CacheWarmup\Exception\MissingArgumentException;
-use Psr\Http\Message\ResponseInterface;
-use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Output\OutputInterface;
+use EliasHaeussler\CacheWarmup\Exception;
+use EliasHaeussler\CacheWarmup\Result;
+use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
+use Psr\Http\Message;
+use Symfony\Component\Console;
 use Throwable;
 
+use function assert;
 use function count;
 
 /**
@@ -41,55 +44,60 @@ class OutputtingCrawler extends ConcurrentCrawler implements VerboseCrawlerInter
 {
     protected const PROGRESS_BAR_FORMAT = ' %current%/%max% [%bar%] %percent:3s%% -- %url% %state%';
 
-    /**
-     * @var OutputInterface
-     */
-    protected $output;
+    protected ?Console\Output\OutputInterface $output = null;
+    protected ?Console\Helper\ProgressBar $progress = null;
 
-    /**
-     * @var ProgressBar
-     */
-    protected $progress;
-
-    public function __construct(array $options = [])
-    {
-        parent::__construct($options);
-        ProgressBar::setFormatDefinition('cache-warmup', self::PROGRESS_BAR_FORMAT);
+    public function __construct(
+        array $options = [],
+        ClientInterface $client = new Client(),
+    ) {
+        parent::__construct($options, $client);
+        Console\Helper\ProgressBar::setFormatDefinition('cache-warmup', self::PROGRESS_BAR_FORMAT);
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * @throws MissingArgumentException
+     * @throws Exception\MissingArgumentException
      */
-    public function crawl(array $urls): void
+    public function crawl(array $urls): Result\CacheWarmupResult
     {
-        $this->assureOutputIsAvailable();
+        if (null === $this->output) {
+            throw Exception\MissingArgumentException::create('output');
+        }
+
         $this->startProgressBar(count($urls));
-        parent::crawl($urls);
-        $this->progress->finish();
-        $this->output->writeln('');
+
+        $result = parent::crawl($urls);
+
+        $this->finishProgressBar();
+
+        return $result;
     }
 
-    public function onSuccess(ResponseInterface $response, int $index): void
+    public function onSuccess(Message\ResponseInterface $response, Message\UriInterface $url): Result\CrawlingResult
     {
-        $this->progress->setMessage((string) $this->urls[$index], 'url');
+        assert($this->progress instanceof Console\Helper\ProgressBar);
+
+        $this->progress->setMessage((string) $url, 'url');
         $this->progress->setMessage('(<info>success</info>)', 'state');
         $this->progress->advance();
         $this->progress->display();
-        parent::onSuccess($response, $index);
+
+        return parent::onSuccess($response, $url);
     }
 
-    public function onFailure(Throwable $exception, int $index): void
+    public function onFailure(Throwable $exception, Message\UriInterface $url): Result\CrawlingResult
     {
-        $this->progress->setMessage((string) $this->urls[$index], 'url');
+        assert($this->progress instanceof Console\Helper\ProgressBar);
+
+        $this->progress->setMessage((string) $url, 'url');
         $this->progress->setMessage('(<error>failed</error>)', 'state');
         $this->progress->advance();
         $this->progress->display();
-        parent::onFailure($exception, $index);
+
+        return parent::onFailure($exception, $url);
     }
 
-    public function setOutput(OutputInterface $output): VerboseCrawlerInterface
+    public function setOutput(Console\Output\OutputInterface $output): VerboseCrawlerInterface
     {
         $this->output = $output;
 
@@ -98,20 +106,21 @@ class OutputtingCrawler extends ConcurrentCrawler implements VerboseCrawlerInter
 
     protected function startProgressBar(int $max): void
     {
-        $this->progress = new ProgressBar($this->output, $max);
+        assert($this->output instanceof Console\Output\OutputInterface);
+
+        $this->progress = new Console\Helper\ProgressBar($this->output, $max);
         $this->progress->setFormat('cache-warmup');
         $this->progress->setOverwrite(false);
         $this->progress->setMessage('', 'url');
         $this->progress->setMessage('', 'state');
     }
 
-    /**
-     * @throws MissingArgumentException
-     */
-    protected function assureOutputIsAvailable(): void
+    protected function finishProgressBar(): void
     {
-        if (null === $this->output) {
-            throw MissingArgumentException::create('output');
-        }
+        assert($this->progress instanceof Console\Helper\ProgressBar);
+        assert($this->output instanceof Console\Output\OutputInterface);
+
+        $this->progress->finish();
+        $this->output->writeln('');
     }
 }

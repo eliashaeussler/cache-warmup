@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Exception;
 
-use Exception;
-
 /**
  * MissingArgumentException.
  *

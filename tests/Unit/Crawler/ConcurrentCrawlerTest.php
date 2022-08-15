@@ -23,11 +23,11 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler;
 
-use EliasHaeussler\CacheWarmup\Crawler\ConcurrentCrawler;
-use EliasHaeussler\CacheWarmup\CrawlingState;
-use EliasHaeussler\CacheWarmup\Tests\Unit\CrawlerResultProcessorTrait;
-use GuzzleHttp\Psr7\Uri;
-use PHPUnit\Framework\TestCase;
+use EliasHaeussler\CacheWarmup\Crawler;
+use EliasHaeussler\CacheWarmup\Result;
+use EliasHaeussler\CacheWarmup\Tests;
+use GuzzleHttp\Psr7;
+use PHPUnit\Framework;
 
 /**
  * ConcurrentCrawlerTest.
@@ -35,27 +35,28 @@ use PHPUnit\Framework\TestCase;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class ConcurrentCrawlerTest extends TestCase
+final class ConcurrentCrawlerTest extends Framework\TestCase
 {
-    use CrawlerResultProcessorTrait;
+    use Tests\Unit\CacheWarmupResultProcessorTrait;
 
     /**
      * @test
      */
     public function crawlSendsRequestToAllGivenUrls(): void
     {
+        $subject = new Crawler\ConcurrentCrawler();
         $urls = [
-            new Uri('https://www.example.org'),
-            new Uri('https://www.example.com'),
-            new Uri('https://www.example.net'),
-            new Uri('https://www.example.edu'),
-            new Uri('https://www.beispiel.de'),
+            new Psr7\Uri('https://www.example.org'),
+            new Psr7\Uri('https://www.example.com'),
+            new Psr7\Uri('https://www.example.net'),
+            new Psr7\Uri('https://www.example.edu'),
+            new Psr7\Uri('https://www.beispiel.de'),
         ];
-        $subject = new ConcurrentCrawler();
-        $subject->crawl($urls);
 
-        $processedUrls = $this->getProcessedUrlsFromCrawler($subject);
-        self::assertTrue([] === array_diff($urls, $processedUrls));
+        $result = $subject->crawl($urls);
+        $processedUrls = $this->getProcessedUrlsFromCacheWarmupResult($result);
+
+        self::assertSame([], array_diff($urls, $processedUrls));
     }
 
     /**
@@ -63,14 +64,15 @@ final class ConcurrentCrawlerTest extends TestCase
      */
     public function crawlHandlesSuccessfulRequestsOfAllGivenUrls(): void
     {
+        $subject = new Crawler\ConcurrentCrawler();
         $urls = [
-            new Uri('https://www.example.org'),
+            new Psr7\Uri('https://www.example.org'),
         ];
-        $subject = new ConcurrentCrawler();
-        $subject->crawl($urls);
 
-        self::assertSame($urls, $this->getProcessedUrlsFromCrawler($subject, CrawlingState::SUCCESSFUL));
-        self::assertSame([], $subject->getFailedUrls());
+        $result = $subject->crawl($urls);
+
+        self::assertSame($urls, $this->getProcessedUrlsFromCacheWarmupResult($result, Result\CrawlingState::Successful));
+        self::assertSame([], $result->getFailed());
     }
 
     /**
@@ -78,13 +80,14 @@ final class ConcurrentCrawlerTest extends TestCase
      */
     public function crawlHandlesFailedRequestsOfAllGivenUrls(): void
     {
+        $subject = new Crawler\ConcurrentCrawler();
         $urls = [
-            new Uri('https://www.foo.baz'),
+            new Psr7\Uri('https://www.foo.baz'),
         ];
-        $subject = new ConcurrentCrawler();
-        $subject->crawl($urls);
 
-        self::assertSame($urls, $this->getProcessedUrlsFromCrawler($subject, CrawlingState::FAILED));
-        self::assertSame([], $subject->getSuccessfulUrls());
+        $result = $subject->crawl($urls);
+
+        self::assertSame($urls, $this->getProcessedUrlsFromCacheWarmupResult($result, Result\CrawlingState::Failed));
+        self::assertSame([], $result->getSuccessful());
     }
 }

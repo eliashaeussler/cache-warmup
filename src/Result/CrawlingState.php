@@ -21,34 +21,16 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Tests\Unit;
-
-use EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface;
-use EliasHaeussler\CacheWarmup\CrawlingState;
-use Psr\Http\Message\UriInterface;
+namespace EliasHaeussler\CacheWarmup\Result;
 
 /**
- * CrawlerResultProcessorTrait.
+ * CrawlingState.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-trait CrawlerResultProcessorTrait
+enum CrawlingState
 {
-    /**
-     * @return UriInterface[]
-     */
-    protected function getProcessedUrlsFromCrawler(CrawlerInterface $crawler, int $state = null): array
-    {
-        $urls = [];
-        $crawledUrls = array_merge($crawler->getSuccessfulUrls(), $crawler->getFailedUrls());
-        /** @var CrawlingState $crawlingState */
-        foreach ($crawledUrls as $crawlingState) {
-            if (null === $state || $crawlingState->is($state)) {
-                $urls[] = $crawlingState->getUri();
-            }
-        }
-
-        return $urls;
-    }
+    case Successful;
+    case Failed;
 }

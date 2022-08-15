@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler;
 
-use EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface;
-use EliasHaeussler\CacheWarmup\CrawlingState;
+use EliasHaeussler\CacheWarmup\Crawler;
+use EliasHaeussler\CacheWarmup\Result;
 use Psr\Http\Message\UriInterface;
 
 /**
@@ -35,55 +35,41 @@ use Psr\Http\Message\UriInterface;
  *
  * @internal
  */
-class DummyCrawler implements CrawlerInterface
+class DummyCrawler implements Crawler\CrawlerInterface
 {
     /**
      * @var list<UriInterface>
      */
-    public static $crawledUrls = [];
+    public static array $crawledUrls = [];
+    public static bool $simulateFailure = false;
 
-    /**
-     * @var bool
-     */
-    public static $simulateFailure = false;
-
-    public function crawl(array $urls): void
+    public function crawl(array $urls): Result\CacheWarmupResult
     {
         static::$crawledUrls = $urls;
-    }
 
-    public function getSuccessfulUrls(): array
-    {
-        if (!static::$simulateFailure) {
-            return $this->mapUrlsToCrawlingStates(static::$crawledUrls, CrawlingState::SUCCESSFUL);
+        $result = new Result\CacheWarmupResult();
+        $urls = $this->mapUrlsToCrawlingResults(
+            static::$crawledUrls,
+            static::$simulateFailure ? Result\CrawlingState::Failed : Result\CrawlingState::Successful,
+        );
+
+        foreach ($urls as $crawlingResult) {
+            $result->addResult($crawlingResult);
         }
 
-        return [];
-    }
-
-    public function getFailedUrls(): array
-    {
-        if (static::$simulateFailure) {
-            return $this->mapUrlsToCrawlingStates(static::$crawledUrls, CrawlingState::FAILED);
-        }
-
-        return [];
+        return $result;
     }
 
     /**
      * @param list<UriInterface> $urls
      *
-     * @return list<CrawlingState>
+     * @return list<Result\CrawlingResult>
      */
-    protected function mapUrlsToCrawlingStates(array $urls, int $state): array
+    protected function mapUrlsToCrawlingResults(array $urls, Result\CrawlingState $state): array
     {
-        return array_map(function (UriInterface $uri) use ($state): CrawlingState {
-            switch ($state) {
-                case CrawlingState::FAILED:
-                    return CrawlingState::createFailed($uri);
-                default:
-                    return CrawlingState::createSuccessful($uri);
-            }
+        return array_map(fn (UriInterface $uri): Result\CrawlingResult => match ($state) {
+            Result\CrawlingState::Failed => Result\CrawlingResult::createFailed($uri),
+            default => Result\CrawlingResult::createSuccessful($uri),
         }, $urls);
     }
 }
