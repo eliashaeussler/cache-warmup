@@ -66,11 +66,11 @@ Please have a look at [`Usage with Docker`](#usage-with-docker).
 
 ```bash
 ./vendor/bin/cache-warmup \
-  [--urls...] \
-  [--limit] \
+  [--urls=URLS...] \
+  [--limit=LIMIT] \
   [--progress] \
-  [--crawler] \
-  [--crawler-options] \
+  [--crawler=CRAWLER] \
+  [--crawler-options=CRAWLER-OPTIONS] \
   [--allow-failures] \
   [<sitemaps>...]
 ```
