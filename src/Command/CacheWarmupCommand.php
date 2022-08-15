@@ -161,7 +161,7 @@ final class CacheWarmupCommand extends Command
         );
         $this->addOption(
             'crawler-options',
-            null,
+            'o',
             InputOption::VALUE_REQUIRED,
             'Additional config for configurable crawlers'
         );
