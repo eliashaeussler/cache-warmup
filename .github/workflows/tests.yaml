@@ -9,13 +9,13 @@ on:
 
 jobs:
   tests:
-    name: Tests (PHP ${{ matrix.php-version }} & ${{ matrix.preferred-install }} dependencies)
+    name: Tests (PHP ${{ matrix.php-version }} & ${{ matrix.dependencies }} dependencies)
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         php-version: ["7.3", "7.4", "8.0", "8.1"]
-        preferred-install: ["stable", "lowest"]
+        dependencies: ["stable", "lowest"]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -29,23 +29,11 @@ jobs:
           tools: composer:v2
           coverage: none
 
-      # Define Composer cache
-      - name: Get Composer cache directory
-        id: composer-cache
-        run: |
-          echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - name: Define Composer cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: tests-php-${{ matrix.php-version }}-${{ matrix.preferred-install }}
-          restore-keys: |
-            tests-php-${{ matrix.php-version }}-
-            tests-php-
-
       # Install dependencies
       - name: Install Composer dependencies
-        run: composer update --no-progress --prefer-${{ matrix.preferred-install }}
+        uses: ramsey/composer-install@v2
+        with:
+          dependency-versions: ${{ matrix.dependencies }}
 
       # Run tests
       - name: Run tests
@@ -67,23 +55,9 @@ jobs:
           tools: composer:v2
           coverage: pcov
 
-      # Define Composer cache
-      - name: Get Composer cache directory
-        id: composer-cache
-        run: |
-          echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - name: Define Composer cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: tests-php-8.1-stable
-          restore-keys: |
-            tests-php-8.1-
-            tests-php-
-
       # Install dependencies
       - name: Install Composer dependencies
-        run: composer update --no-progress
+        uses: ramsey/composer-install@v2
 
       # Run tests
       - name: Build coverage directory
