@@ -39,6 +39,7 @@ use function in_array;
 use function is_array;
 use function is_string;
 use function json_decode;
+use function json_encode;
 use function sprintf;
 
 /**
@@ -333,7 +334,8 @@ final class CacheWarmupCommand extends Console\Command\Command
 
             if ($output->isVerbose() && [] !== $crawlerOptions) {
                 $this->io->section('Using custom crawler options:');
-                $this->io->listing($this->decorateCrawlerOptions($crawlerOptions));
+                $this->io->writeln(json_encode($crawlerOptions, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
+                $this->io->newLine();
             }
         } elseif (null !== $crawlerOptions) {
             $this->io->warning('You passed crawler options for a non-configurable crawler.');
@@ -364,22 +366,6 @@ final class CacheWarmupCommand extends Console\Command\Command
         }
 
         return $crawlerOptions;
-    }
-
-    /**
-     * @param array<string, mixed> $crawlerOptions
-     *
-     * @return list<string>
-     */
-    private function decorateCrawlerOptions(array $crawlerOptions): array
-    {
-        $decoratedCrawlerOptions = [];
-
-        foreach ($crawlerOptions as $name => $value) {
-            $decoratedCrawlerOptions[] = '<info>'.$name.'</info>: '.$value;
-        }
-
-        return $decoratedCrawlerOptions;
     }
 
     private function decorateSitemap(Sitemap\Sitemap $sitemap): string
