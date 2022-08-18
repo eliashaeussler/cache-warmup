@@ -24,21 +24,21 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler;
 
 use EliasHaeussler\CacheWarmup\Crawler;
-use Symfony\Component\Console\Output;
+use Symfony\Component\Console;
 
 /**
  * DummyVerboseCrawler.
  *
- * @author Elias Häußler <e.haeussler@familie-redlich.de>
+ * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  *
  * @internal
  */
 final class DummyVerboseCrawler extends DummyCrawler implements Crawler\VerboseCrawlerInterface
 {
-    public static ?Output\OutputInterface $output = null;
+    public static ?Console\Output\OutputInterface $output = null;
 
-    public function setOutput(Output\OutputInterface $output): Crawler\VerboseCrawlerInterface
+    public function setOutput(Console\Output\OutputInterface $output): Crawler\VerboseCrawlerInterface
     {
         self::$output = $output;
 

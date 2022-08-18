@@ -23,21 +23,15 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Command;
 
-use EliasHaeussler\CacheWarmup\Command\CacheWarmupCommand;
-use EliasHaeussler\CacheWarmup\Tests\Unit\Crawler\DummyCrawler;
-use EliasHaeussler\CacheWarmup\Tests\Unit\Crawler\DummyVerboseCrawler;
-use EliasHaeussler\CacheWarmup\Tests\Unit\RequestProphecyTrait;
-use Exception;
+use EliasHaeussler\CacheWarmup\Command;
+use EliasHaeussler\CacheWarmup\Exception;
+use EliasHaeussler\CacheWarmup\Sitemap;
+use EliasHaeussler\CacheWarmup\Tests;
 use Generator;
-use GuzzleHttp\Psr7\Uri;
-use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Psr\Http\Client\ClientExceptionInterface;
-use Psr\Http\Client\ClientInterface;
-use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Exception\RuntimeException;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Tester\CommandTester;
+use PHPUnit\Framework;
+use Prophecy\PhpUnit;
+use Psr\Http\Client;
+use Symfony\Component\Console;
 
 /**
  * CacheWarmupCommandTest.
@@ -45,22 +39,22 @@ use Symfony\Component\Console\Tester\CommandTester;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class CacheWarmupCommandTest extends TestCase
+final class CacheWarmupCommandTest extends Framework\TestCase
 {
-    use ProphecyTrait;
-    use RequestProphecyTrait;
+    use PhpUnit\ProphecyTrait;
+    use Tests\Unit\RequestProphecyTrait;
 
-    private CommandTester $commandTester;
+    private Console\Tester\CommandTester $commandTester;
 
     protected function setUp(): void
     {
-        $this->clientProphecy = $this->prophesize(ClientInterface::class);
+        $this->clientProphecy = $this->prophesize(Client\ClientInterface::class);
 
-        $command = new CacheWarmupCommand($this->clientProphecy->reveal());
-        $application = new Application();
+        $command = new Command\CacheWarmupCommand($this->clientProphecy->reveal());
+        $application = new Console\Application();
         $application->add($command);
 
-        $this->commandTester = new CommandTester($command);
+        $this->commandTester = new Console\Tester\CommandTester($command);
     }
 
     /**
@@ -68,7 +62,7 @@ final class CacheWarmupCommandTest extends TestCase
      */
     public function interactThrowsExceptionIfNeitherArgumentNorInteractiveInputProvidesSitemaps(): void
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(Console\Exception\RuntimeException::class);
         $this->expectExceptionCode(1604258903);
 
         $this->commandTester->setInputs([null]);
@@ -80,7 +74,7 @@ final class CacheWarmupCommandTest extends TestCase
      */
     public function executeThrowsExceptionIfNoSitemapsAreGivenAndInteractiveModeIsDisabled(): void
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(Console\Exception\RuntimeException::class);
         $this->expectExceptionCode(1604261236);
 
         $this->commandTester->execute([], ['interactive' => false]);
@@ -88,8 +82,6 @@ final class CacheWarmupCommandTest extends TestCase
 
     /**
      * @test
-     *
-     * @throws ClientExceptionInterface
      */
     public function executeUsesSitemapUrlsFromInteractiveUserInputIfSitemapsArgumentIsNotGiven(): void
     {
@@ -100,7 +92,7 @@ final class CacheWarmupCommandTest extends TestCase
             null,
         ]);
 
-        $this->commandTester->execute([], ['verbosity' => OutputInterface::VERBOSITY_VERY_VERBOSE]);
+        $this->commandTester->execute([], ['verbosity' => Console\Output\OutputInterface::VERBOSITY_VERY_VERBOSE]);
 
         $output = $this->commandTester->getDisplay();
 
@@ -111,8 +103,6 @@ final class CacheWarmupCommandTest extends TestCase
 
     /**
      * @test
-     *
-     * @throws ClientExceptionInterface
      */
     public function executeCrawlsUrlsFromGivenSitemaps(): void
     {
@@ -125,7 +115,7 @@ final class CacheWarmupCommandTest extends TestCase
                 ],
             ],
             [
-                'verbosity' => OutputInterface::VERBOSITY_VERY_VERBOSE,
+                'verbosity' => Console\Output\OutputInterface::VERBOSITY_VERY_VERBOSE,
             ]
         );
 
@@ -138,8 +128,6 @@ final class CacheWarmupCommandTest extends TestCase
 
     /**
      * @test
-     *
-     * @throws ClientExceptionInterface
      */
     public function executeLimitsCrawlingIfLimitOptionIsSet(): void
     {
@@ -153,7 +141,7 @@ final class CacheWarmupCommandTest extends TestCase
                 '--limit' => 1,
             ],
             [
-                'verbosity' => OutputInterface::VERBOSITY_VERY_VERBOSE,
+                'verbosity' => Console\Output\OutputInterface::VERBOSITY_VERY_VERBOSE,
             ]
         );
 
@@ -179,7 +167,7 @@ final class CacheWarmupCommandTest extends TestCase
                 ],
             ],
             [
-                'verbosity' => OutputInterface::VERBOSITY_VERY_VERBOSE,
+                'verbosity' => Console\Output\OutputInterface::VERBOSITY_VERY_VERBOSE,
             ]
         );
 
@@ -191,8 +179,6 @@ final class CacheWarmupCommandTest extends TestCase
 
     /**
      * @test
-     *
-     * @throws ClientExceptionInterface
      */
     public function executeHidesVerboseOutputIfVerbosityIsNormal(): void
     {
@@ -218,7 +204,7 @@ final class CacheWarmupCommandTest extends TestCase
      */
     public function executeThrowsExceptionIfGivenCrawlerClassDoesNotExist(): void
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(Console\Exception\RuntimeException::class);
         $this->expectExceptionCode(1604261816);
 
         $this->commandTester->execute([
@@ -234,21 +220,19 @@ final class CacheWarmupCommandTest extends TestCase
      */
     public function executeThrowsExceptionIfGivenCrawlerClassIsNotValid(): void
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(Console\Exception\RuntimeException::class);
         $this->expectExceptionCode(1604261885);
 
         $this->commandTester->execute([
             'sitemaps' => [
                 'https://www.example.com/sitemap.xml',
             ],
-            '--crawler' => Exception::class,
+            '--crawler' => self::class,
         ]);
     }
 
     /**
      * @test
-     *
-     * @throws ClientExceptionInterface
      */
     public function executeUsesCustomCrawler(): void
     {
@@ -258,15 +242,15 @@ final class CacheWarmupCommandTest extends TestCase
             'sitemaps' => [
                 'https://www.example.com/sitemap.xml',
             ],
-            '--crawler' => DummyCrawler::class,
+            '--crawler' => Tests\Unit\Crawler\DummyCrawler::class,
         ]);
 
         $expected = [
-            new Uri('https://www.example.com/'),
-            new Uri('https://www.example.com/foo'),
+            new Sitemap\Url('https://www.example.com/'),
+            new Sitemap\Url('https://www.example.com/foo'),
         ];
 
-        self::assertEquals($expected, DummyCrawler::$crawledUrls);
+        self::assertEquals($expected, Tests\Unit\Crawler\DummyCrawler::$crawledUrls);
     }
 
     /**
@@ -274,7 +258,7 @@ final class CacheWarmupCommandTest extends TestCase
      */
     public function executeThrowsExceptionIfCrawlerOptionsAreInvalid(): void
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(Console\Exception\RuntimeException::class);
         $this->expectExceptionCode(1659120649);
         $this->expectExceptionMessage('The given crawler options are invalid. Please pass crawler options as JSON-encoded array.');
 
@@ -303,7 +287,7 @@ final class CacheWarmupCommandTest extends TestCase
                 '--crawler-options' => $crawlerOptions,
             ],
             [
-                'verbosity' => OutputInterface::VERBOSITY_VERBOSE,
+                'verbosity' => Console\Output\OutputInterface::VERBOSITY_VERBOSE,
             ]
         );
 
@@ -323,7 +307,7 @@ final class CacheWarmupCommandTest extends TestCase
             'sitemaps' => [
                 'https://www.example.com/sitemap.xml',
             ],
-            '--crawler' => DummyCrawler::class,
+            '--crawler' => Tests\Unit\Crawler\DummyCrawler::class,
             '--crawler-options' => ['foo' => 'bar'],
         ]);
 
@@ -334,8 +318,6 @@ final class CacheWarmupCommandTest extends TestCase
 
     /**
      * @test
-     *
-     * @throws ClientExceptionInterface
      */
     public function executeAppliesOutputToVerboseCrawler(): void
     {
@@ -345,10 +327,10 @@ final class CacheWarmupCommandTest extends TestCase
             'sitemaps' => [
                 'https://www.example.com/sitemap.xml',
             ],
-            '--crawler' => DummyVerboseCrawler::class,
+            '--crawler' => Tests\Unit\Crawler\DummyVerboseCrawler::class,
         ]);
 
-        self::assertSame($this->commandTester->getOutput(), DummyVerboseCrawler::$output);
+        self::assertSame($this->commandTester->getOutput(), Tests\Unit\Crawler\DummyVerboseCrawler::$output);
     }
 
     /**
@@ -357,7 +339,7 @@ final class CacheWarmupCommandTest extends TestCase
      */
     public function executeFailsIfSitemapCannotBeCrawled(bool $allowFailures, int $expected): void
     {
-        DummyCrawler::$simulateFailure = true;
+        Tests\Unit\Crawler\DummyCrawler::$simulateFailure = true;
 
         $this->prophesizeSitemapRequest('valid_sitemap_3');
 
@@ -368,7 +350,48 @@ final class CacheWarmupCommandTest extends TestCase
             '--allow-failures' => $allowFailures,
         ]);
 
+        $output = $this->commandTester->getDisplay();
+
         self::assertSame($expected, $exitCode);
+        self::assertStringContainsString('Failed to warm up caches for 1 URL.', $output);
+    }
+
+    /**
+     * @test
+     */
+    public function executePrintsSitemapsThatCouldNotBeParsed(): void
+    {
+        $this->prophesizeSitemapRequest('invalid_sitemap_1');
+
+        $exitCode = $this->commandTester->execute([
+            'sitemaps' => [
+                'https://www.example.com/sitemap.xml',
+            ],
+            '--allow-failures' => true,
+        ]);
+
+        $output = $this->commandTester->getDisplay();
+
+        self::assertSame(0, $exitCode);
+        self::assertStringContainsString('The following sitemaps could not be parsed:', $output);
+    }
+
+    /**
+     * @test
+     */
+    public function executeFailsIfSitemapCannotBeParsed(): void
+    {
+        $this->prophesizeSitemapRequest('invalid_sitemap_1');
+
+        $this->expectException(Exception\InvalidSitemapException::class);
+        $this->expectExceptionCode(1660668799);
+        $this->expectExceptionMessage('The sitemap "https://www.example.com/sitemap.xml" is invalid and cannot be parsed.');
+
+        $this->commandTester->execute([
+            'sitemaps' => [
+                'https://www.example.com/sitemap.xml',
+            ],
+        ]);
     }
 
     /**
@@ -391,8 +414,8 @@ final class CacheWarmupCommandTest extends TestCase
 
     protected function tearDown(): void
     {
-        DummyCrawler::$crawledUrls = [];
-        DummyCrawler::$simulateFailure = false;
-        DummyVerboseCrawler::$output = null;
+        Tests\Unit\Crawler\DummyCrawler::$crawledUrls = [];
+        Tests\Unit\Crawler\DummyCrawler::$simulateFailure = false;
+        Tests\Unit\Crawler\DummyVerboseCrawler::$output = null;
     }
 }

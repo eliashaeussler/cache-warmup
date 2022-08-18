@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Exception;
 
-use EliasHaeussler\CacheWarmup\Exception\InvalidCrawlerOptionException;
-use EliasHaeussler\CacheWarmup\Tests\Unit\Crawler\DummyConfigurableCrawler;
-use PHPUnit\Framework\TestCase;
+use EliasHaeussler\CacheWarmup\Exception;
+use EliasHaeussler\CacheWarmup\Tests;
+use PHPUnit\Framework;
 
 use function get_class;
 
@@ -35,17 +35,17 @@ use function get_class;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class InvalidCrawlerOptionExceptionTest extends TestCase
+final class InvalidCrawlerOptionExceptionTest extends Framework\TestCase
 {
     /**
      * @test
      */
     public function createReturnsExceptionForGivenCrawlerAndOption(): void
     {
-        $crawler = new DummyConfigurableCrawler();
-        $actual = InvalidCrawlerOptionException::create($crawler, 'foo');
+        $crawler = new Tests\Unit\Crawler\DummyConfigurableCrawler();
+        $actual = Exception\InvalidCrawlerOptionException::create($crawler, 'foo');
 
-        self::assertInstanceOf(InvalidCrawlerOptionException::class, $actual);
+        self::assertInstanceOf(Exception\InvalidCrawlerOptionException::class, $actual);
         self::assertSame(1659120894, $actual->getCode());
         self::assertSame(
             'The crawler option "foo" is invalid or not supported by crawler "'.get_class($crawler).'".',
@@ -58,10 +58,10 @@ final class InvalidCrawlerOptionExceptionTest extends TestCase
      */
     public function createForAllReturnsExceptionForGivenCrawlerAndOptionIfOnlyOneOptionIsGiven(): void
     {
-        $crawler = new DummyConfigurableCrawler();
-        $actual = InvalidCrawlerOptionException::createForAll($crawler, ['foo']);
+        $crawler = new Tests\Unit\Crawler\DummyConfigurableCrawler();
+        $actual = Exception\InvalidCrawlerOptionException::createForAll($crawler, ['foo']);
 
-        self::assertInstanceOf(InvalidCrawlerOptionException::class, $actual);
+        self::assertInstanceOf(Exception\InvalidCrawlerOptionException::class, $actual);
         self::assertSame(1659120894, $actual->getCode());
         self::assertSame(
             'The crawler option "foo" is invalid or not supported by crawler "'.get_class($crawler).'".',
@@ -74,15 +74,15 @@ final class InvalidCrawlerOptionExceptionTest extends TestCase
      */
     public function createForAllReturnsExceptionForGivenCrawlerAndOptions(): void
     {
-        $crawler = new DummyConfigurableCrawler();
+        $crawler = new Tests\Unit\Crawler\DummyConfigurableCrawler();
         $options = [
             'foo',
             'bar',
         ];
 
-        $actual = InvalidCrawlerOptionException::createForAll($crawler, $options);
+        $actual = Exception\InvalidCrawlerOptionException::createForAll($crawler, $options);
 
-        self::assertInstanceOf(InvalidCrawlerOptionException::class, $actual);
+        self::assertInstanceOf(Exception\InvalidCrawlerOptionException::class, $actual);
         self::assertSame(1659206995, $actual->getCode());
         self::assertSame(
             'The crawler options "foo", "bar" are invalid or not supported by crawler "'.get_class($crawler).'".',

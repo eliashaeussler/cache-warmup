@@ -26,10 +26,10 @@ namespace EliasHaeussler\CacheWarmup;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7;
 use Psr\Http\Client;
-use Psr\Http\Message;
 
+use function array_key_exists;
+use function array_values;
 use function count;
-use function in_array;
 use function is_array;
 use function is_string;
 
@@ -44,34 +44,41 @@ final class CacheWarmer
     private readonly Xml\XmlParser $parser;
 
     /**
-     * @var list<Message\UriInterface>
+     * @var array<string, Sitemap\Url>
      */
     private array $urls = [];
 
     /**
-     * @var list<Sitemap>
+     * @var array<string, Sitemap\Sitemap>
      */
     private array $sitemaps = [];
+
+    /**
+     * @var list<Sitemap\Sitemap>
+     */
+    private array $failedSitemaps = [];
 
     public function __construct(
         private readonly int $limit = 0,
         private readonly Client\ClientInterface $client = new GuzzleClient(),
         private readonly Crawler\CrawlerInterface $crawler = new Crawler\ConcurrentCrawler(),
+        private readonly bool $strict = true,
     ) {
         $this->parser = new Xml\XmlParser($this->client);
     }
 
     public function run(): Result\CacheWarmupResult
     {
-        return $this->crawler->crawl($this->urls);
+        return $this->crawler->crawl($this->getUrls());
     }
 
     /**
-     * @param list<string|Sitemap>|string|Sitemap $sitemaps
+     * @param list<string|Sitemap\Sitemap>|string|Sitemap\Sitemap $sitemaps
      *
      * @throws Exception\InvalidSitemapException
+     * @throws Exception\InvalidUrlException
      */
-    public function addSitemaps(array|string|Sitemap $sitemaps): self
+    public function addSitemaps(array|string|Sitemap\Sitemap $sitemaps): self
     {
         // Early return if no more URLs should be added
         if ($this->exceededLimit()) {
@@ -87,17 +94,29 @@ final class CacheWarmer
         foreach ($sitemaps as $sitemap) {
             // Parse sitemap URL to valid sitemap object
             if (is_string($sitemap)) {
-                $sitemap = new Sitemap(new Psr7\Uri($sitemap));
+                $sitemap = new Sitemap\Sitemap(new Psr7\Uri($sitemap));
             }
 
             // Throw exception if sitemap is invalid
-            if (!($sitemap instanceof Sitemap)) {
+            if (!($sitemap instanceof Sitemap\Sitemap)) {
                 throw Exception\InvalidSitemapException::forInvalidType($sitemap);
             }
 
             // Parse sitemap object
+            try {
+                $result = $this->parser->parse($sitemap);
+            } catch (Exception\InvalidSitemapException|Exception\InvalidUrlException $exception) {
+                // Exit early if running in strict mode
+                if ($this->strict) {
+                    throw $exception;
+                }
+
+                $this->failedSitemaps[] = $sitemap;
+
+                continue;
+            }
+
             $this->addSitemap($sitemap);
-            $result = $this->parser->parse($sitemap);
 
             foreach ($result->getSitemaps() as $parsedSitemap) {
                 $this->addSitemaps($parsedSitemap);
@@ -111,19 +130,23 @@ final class CacheWarmer
         return $this;
     }
 
-    private function addSitemap(Sitemap $sitemap): self
+    private function addSitemap(Sitemap\Sitemap $sitemap): self
     {
-        if (!in_array($sitemap, $this->sitemaps, true)) {
-            $this->sitemaps[] = $sitemap;
+        if (!array_key_exists((string) $sitemap, $this->sitemaps)) {
+            $this->sitemaps[(string) $sitemap] = $sitemap;
         }
 
         return $this;
     }
 
-    public function addUrl(Message\UriInterface $url): self
+    public function addUrl(string|Sitemap\Url $url): self
     {
-        if (!$this->exceededLimit() && !in_array($url, $this->urls, true)) {
-            $this->urls[] = $url;
+        if (is_string($url)) {
+            $url = new Sitemap\Url($url);
+        }
+
+        if (!$this->exceededLimit() && !array_key_exists((string) $url, $this->urls)) {
+            $this->urls[(string) $url] = $url;
         }
 
         return $this;
@@ -135,19 +158,27 @@ final class CacheWarmer
     }
 
     /**
-     * @return list<Message\UriInterface>
+     * @return list<Sitemap\Url>
      */
     public function getUrls(): array
     {
-        return $this->urls;
+        return array_values($this->urls);
     }
 
     /**
-     * @return list<Sitemap>
+     * @return list<Sitemap\Sitemap>
      */
     public function getSitemaps(): array
     {
-        return $this->sitemaps;
+        return array_values($this->sitemaps);
+    }
+
+    /**
+     * @return list<Sitemap\Sitemap>
+     */
+    public function getFailedSitemaps(): array
+    {
+        return $this->failedSitemaps;
     }
 
     public function getLimit(): int

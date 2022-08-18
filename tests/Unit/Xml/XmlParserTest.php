@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Xml;
 
+use DateTimeImmutable;
+use EliasHaeussler\CacheWarmup\Exception\InvalidSitemapException;
+use EliasHaeussler\CacheWarmup\Exception\InvalidUrlException;
 use EliasHaeussler\CacheWarmup\Sitemap;
 use EliasHaeussler\CacheWarmup\Tests;
 use EliasHaeussler\CacheWarmup\Xml;
@@ -42,12 +45,12 @@ final class XmlParserTest extends Framework\TestCase
     use PhpUnit\ProphecyTrait;
     use Tests\Unit\RequestProphecyTrait;
 
-    private Sitemap $sitemap;
+    private Sitemap\Sitemap $sitemap;
     private Xml\XmlParser $subject;
 
     protected function setUp(): void
     {
-        $this->sitemap = new Sitemap(new Psr7\Uri('https://www.example.org/sitemap.xml'));
+        $this->sitemap = new Sitemap\Sitemap(new Psr7\Uri('https://www.example.org/sitemap.xml'));
         $this->clientProphecy = $this->prophesize(Client\ClientInterface::class);
         $this->subject = new Xml\XmlParser($this->clientProphecy->reveal());
     }
@@ -57,12 +60,15 @@ final class XmlParserTest extends Framework\TestCase
      */
     public function parseParsesSitemapIndex(): void
     {
-        $this->prophesizeSitemapRequest('valid_sitemap_1');
+        $this->prophesizeSitemapRequest('valid_sitemap_4');
 
         $result = $this->subject->parse($this->sitemap);
 
         $expected = [
-            new Sitemap(new Psr7\Uri('https://www.example.org/sitemap_en.xml')),
+            new Sitemap\Sitemap(
+                uri: new Psr7\Uri('https://www.example.org/sitemap_en.xml'),
+                lastModificationDate: new DateTimeImmutable('2022-08-17T13:18:06+02:00'),
+            ),
         ];
 
         self::assertEquals($expected, $result->getSitemaps());
@@ -74,14 +80,29 @@ final class XmlParserTest extends Framework\TestCase
      */
     public function parseParsesSitemapUrlSet(): void
     {
-        $this->prophesizeSitemapRequest('valid_sitemap_2');
+        $this->prophesizeSitemapRequest('valid_sitemap_5');
 
         $result = $this->subject->parse($this->sitemap);
 
         $expected = [
-            new Psr7\Uri('https://www.example.org/'),
-            new Psr7\Uri('https://www.example.org/foo'),
-            new Psr7\Uri('https://www.example.org/baz'),
+            new Sitemap\Url(
+                uri: 'https://www.example.org/',
+                priority: 0.8,
+                lastModificationDate: new DateTimeImmutable('2022-05-02T12:14:44+02:00'),
+                changeFrequency: Sitemap\ChangeFrequency::Yearly,
+            ),
+            new Sitemap\Url(
+                uri: 'https://www.example.org/foo',
+                priority: 0.5,
+                lastModificationDate: new DateTimeImmutable('2021-06-07T20:01:25+02:00'),
+                changeFrequency: Sitemap\ChangeFrequency::Monthly,
+            ),
+            new Sitemap\Url(
+                uri: 'https://www.example.org/baz',
+                priority: 0.5,
+                lastModificationDate: new DateTimeImmutable('2021-05-28T11:54:00+02:00'),
+                changeFrequency: Sitemap\ChangeFrequency::Hourly,
+            ),
         ];
 
         self::assertEquals($expected, $result->getUrls());
@@ -91,36 +112,29 @@ final class XmlParserTest extends Framework\TestCase
     /**
      * @test
      */
-    public function parseParsesSitemapIndexAndSkipsInvalidSitemaps(): void
+    public function parseThrowsExceptionOnInvalidSitemapIndex(): void
     {
         $this->prophesizeSitemapRequest('invalid_sitemap_1');
 
-        $result = $this->subject->parse($this->sitemap);
+        $this->expectException(InvalidSitemapException::class);
+        $this->expectExceptionCode(1660668799);
+        $this->expectExceptionMessage('The sitemap "https://www.example.org/sitemap.xml" is invalid and cannot be parsed.');
 
-        $expected = [
-            new Sitemap(new Psr7\Uri('https://www.example.org/sitemap_alt_2.xml')),
-        ];
-
-        self::assertEquals($expected, $result->getSitemaps());
-        self::assertSame([], $result->getUrls());
+        $this->subject->parse($this->sitemap);
     }
 
     /**
      * @test
      */
-    public function parseParsesSitemapUrlSetAndSkipsInvalidUrls(): void
+    public function parseThrowsExceptionOnInvalidSitemapUrl(): void
     {
         $this->prophesizeSitemapRequest('invalid_sitemap_2');
 
-        $result = $this->subject->parse($this->sitemap);
+        $this->expectException(InvalidUrlException::class);
+        $this->expectExceptionCode(1604055334);
+        $this->expectExceptionMessage('The given URL "foo" is not valid.');
 
-        $expected = [
-            new Psr7\Uri('https://www.example.org/foo'),
-            new Psr7\Uri('https://www.example.org/baz'),
-        ];
-
-        self::assertEquals($expected, $result->getUrls());
-        self::assertSame([], $result->getSitemaps());
+        $this->subject->parse($this->sitemap);
     }
 
     protected function tearDown(): void

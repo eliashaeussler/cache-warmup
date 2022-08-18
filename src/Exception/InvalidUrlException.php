@@ -21,48 +21,28 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup;
+namespace EliasHaeussler\CacheWarmup\Exception;
 
-use Psr\Http\Message;
-
-use function filter_var;
-use function trim;
+use function sprintf;
 
 /**
- * Sitemap.
+ * InvalidUrlException.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-class Sitemap
+final class InvalidUrlException extends Exception
 {
-    /**
-     * @throws Exception\InvalidSitemapException
-     */
-    public function __construct(
-        protected Message\UriInterface $uri,
-    ) {
-        $this->validate();
+    public static function create(string $url): self
+    {
+        return new self(
+            sprintf('The given URL "%s" is not valid.', $url),
+            1604055334
+        );
     }
 
-    public function getUri(): Message\UriInterface
+    public static function forEmptyUrl(): self
     {
-        return $this->uri;
-    }
-
-    /**
-     * @throws Exception\InvalidSitemapException
-     */
-    private function validate(): void
-    {
-        $url = (string) $this->uri;
-
-        if ('' === trim($url)) {
-            throw Exception\InvalidSitemapException::forEmptyUrl();
-        }
-
-        if (false === filter_var($url, FILTER_VALIDATE_URL)) {
-            throw Exception\InvalidSitemapException::forInvalidUrl();
-        }
+        return new self('The given URL must not be empty.', 1604055264);
     }
 }

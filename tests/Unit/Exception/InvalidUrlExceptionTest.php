@@ -21,46 +21,40 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Result;
+namespace EliasHaeussler\CacheWarmup\Tests\Unit\Exception;
 
-use EliasHaeussler\CacheWarmup\Sitemap;
-use Symfony\Component\Serializer;
+use EliasHaeussler\CacheWarmup\Exception;
+use PHPUnit\Framework;
 
 /**
- * ParserResult.
+ * InvalidUrlExceptionTest.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
- *
- * @internal
  */
-final class ParserResult
+final class InvalidUrlExceptionTest extends Framework\TestCase
 {
     /**
-     * @param list<Sitemap\Sitemap> $sitemaps
-     * @param list<Sitemap\Url>     $urls
+     * @test
      */
-    public function __construct(
-        #[Serializer\Annotation\SerializedName('sitemap')]
-        private readonly array $sitemaps = [],
-        #[Serializer\Annotation\SerializedName('url')]
-        private readonly array $urls = [],
-    ) {
+    public function createReturnsExceptionForGivenUrl(): void
+    {
+        $actual = Exception\InvalidUrlException::create('foo');
+
+        self::assertInstanceOf(Exception\InvalidUrlException::class, $actual);
+        self::assertSame(1604055334, $actual->getCode());
+        self::assertSame('The given URL "foo" is not valid.', $actual->getMessage());
     }
 
     /**
-     * @return list<Sitemap\Sitemap>
+     * @test
      */
-    public function getSitemaps(): array
+    public function forEmptyUrlReturnsExceptionIfUrlIsEmpty(): void
     {
-        return $this->sitemaps;
-    }
+        $actual = Exception\InvalidUrlException::forEmptyUrl();
 
-    /**
-     * @return list<Sitemap\Url>
-     */
-    public function getUrls(): array
-    {
-        return $this->urls;
+        self::assertInstanceOf(Exception\InvalidUrlException::class, $actual);
+        self::assertSame(1604055264, $actual->getCode());
+        self::assertSame('The given URL must not be empty.', $actual->getMessage());
     }
 }
