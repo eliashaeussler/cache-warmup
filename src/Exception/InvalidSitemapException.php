@@ -24,8 +24,10 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Exception;
 
 use EliasHaeussler\CacheWarmup\Sitemap;
+use Throwable;
 
 use function get_debug_type;
+use function sprintf;
 
 /**
  * InvalidSitemapException.
@@ -35,21 +37,20 @@ use function get_debug_type;
  */
 final class InvalidSitemapException extends Exception
 {
-    public static function forInvalidType(mixed $sitemap): self
+    public static function create(Sitemap\Sitemap $sitemap, Throwable $previous = null): self
     {
         return new self(
-            sprintf('Sitemaps must be of type string or %s, %s given.', Sitemap::class, get_debug_type($sitemap)),
-            1604055096
+            sprintf('The sitemap "%s" is invalid and cannot be parsed.', $sitemap->getUri()),
+            1660668799,
+            $previous
         );
     }
 
-    public static function forEmptyUrl(): self
+    public static function forInvalidType(mixed $sitemap): self
     {
-        return new self('Sitemap URL must not be empty.', 1604055264);
-    }
-
-    public static function forInvalidUrl(): self
-    {
-        return new self('Sitemap must be a valid URL.', 1604055334);
+        return new self(
+            sprintf('Sitemaps must be of type string or %s, %s given.', Sitemap\Sitemap::class, get_debug_type($sitemap)),
+            1604055096
+        );
     }
 }

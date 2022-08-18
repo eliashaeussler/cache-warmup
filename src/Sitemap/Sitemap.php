@@ -21,51 +21,48 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Tests\Unit;
+namespace EliasHaeussler\CacheWarmup\Sitemap;
 
+use DateTimeInterface;
 use EliasHaeussler\CacheWarmup\Exception;
-use EliasHaeussler\CacheWarmup\Sitemap;
-use GuzzleHttp\Psr7;
-use PHPUnit\Framework;
+use Psr\Http\Message;
+use Stringable;
+use Symfony\Component\Serializer;
 
 /**
- * SitemapTest.
+ * Sitemap.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class SitemapTest extends Framework\TestCase
+class Sitemap implements Stringable
 {
-    /**
-     * @test
-     */
-    public function constructorThrowsExceptionIfGivenUriIsEmpty(): void
-    {
-        $this->expectException(Exception\InvalidSitemapException::class);
-        $this->expectExceptionCode(1604055264);
+    use UriValidationTrait;
 
-        new Sitemap(new Psr7\Uri(''));
+    /**
+     * @throws Exception\InvalidUrlException
+     */
+    public function __construct(
+        #[Serializer\Annotation\SerializedName('loc')]
+        protected Message\UriInterface $uri,
+        #[Serializer\Annotation\SerializedName('lastmod')]
+        protected ?DateTimeInterface $lastModificationDate = null,
+    ) {
+        $this->validateUri();
     }
 
-    /**
-     * @test
-     */
-    public function constructorThrowsExceptionIfGivenUriIsNotValid(): void
+    public function getUri(): Message\UriInterface
     {
-        $this->expectException(Exception\InvalidSitemapException::class);
-        $this->expectExceptionCode(1604055334);
-
-        new Sitemap(new Psr7\Uri('foo'));
+        return $this->uri;
     }
 
-    /**
-     * @test
-     */
-    public function constructorAssignsUriCorrectly(): void
+    public function getLastModificationDate(): ?DateTimeInterface
     {
-        $uri = new Psr7\Uri('https://foo.baz');
-        $subject = new Sitemap($uri);
+        return $this->lastModificationDate;
+    }
 
-        self::assertSame($uri, $subject->getUri());
+    public function __toString(): string
+    {
+        return (string) $this->getUri();
     }
 }

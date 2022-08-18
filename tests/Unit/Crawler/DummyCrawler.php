@@ -25,7 +25,7 @@ namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler;
 
 use EliasHaeussler\CacheWarmup\Crawler;
 use EliasHaeussler\CacheWarmup\Result;
-use Psr\Http\Message\UriInterface;
+use Psr\Http\Message;
 
 /**
  * DummyCrawler.
@@ -38,7 +38,7 @@ use Psr\Http\Message\UriInterface;
 class DummyCrawler implements Crawler\CrawlerInterface
 {
     /**
-     * @var list<UriInterface>
+     * @var list<Message\UriInterface>
      */
     public static array $crawledUrls = [];
     public static bool $simulateFailure = false;
@@ -61,13 +61,13 @@ class DummyCrawler implements Crawler\CrawlerInterface
     }
 
     /**
-     * @param list<UriInterface> $urls
+     * @param list<Message\UriInterface> $urls
      *
      * @return list<Result\CrawlingResult>
      */
     protected function mapUrlsToCrawlingResults(array $urls, Result\CrawlingState $state): array
     {
-        return array_map(fn (UriInterface $uri): Result\CrawlingResult => match ($state) {
+        return array_map(fn (Message\UriInterface $uri): Result\CrawlingResult => match ($state) {
             Result\CrawlingState::Failed => Result\CrawlingResult::createFailed($uri),
             default => Result\CrawlingResult::createSuccessful($uri),
         }, $urls);

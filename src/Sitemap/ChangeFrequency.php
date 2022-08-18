@@ -21,46 +21,21 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Result;
-
-use EliasHaeussler\CacheWarmup\Sitemap;
-use Symfony\Component\Serializer;
+namespace EliasHaeussler\CacheWarmup\Sitemap;
 
 /**
- * ParserResult.
+ * ChangeFrequency.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
- *
- * @internal
  */
-final class ParserResult
+enum ChangeFrequency: string
 {
-    /**
-     * @param list<Sitemap\Sitemap> $sitemaps
-     * @param list<Sitemap\Url>     $urls
-     */
-    public function __construct(
-        #[Serializer\Annotation\SerializedName('sitemap')]
-        private readonly array $sitemaps = [],
-        #[Serializer\Annotation\SerializedName('url')]
-        private readonly array $urls = [],
-    ) {
-    }
-
-    /**
-     * @return list<Sitemap\Sitemap>
-     */
-    public function getSitemaps(): array
-    {
-        return $this->sitemaps;
-    }
-
-    /**
-     * @return list<Sitemap\Url>
-     */
-    public function getUrls(): array
-    {
-        return $this->urls;
-    }
+    case Always = 'always';
+    case Hourly = 'hourly';
+    case Daily = 'daily';
+    case Weekly = 'weekly';
+    case Monthly = 'monthly';
+    case Yearly = 'yearly';
+    case Never = 'never';
 }

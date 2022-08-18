@@ -23,13 +23,17 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Xml;
 
+use DateTimeInterface;
+use Doctrine\Common\Annotations;
+use EliasHaeussler\CacheWarmup\Exception;
+use EliasHaeussler\CacheWarmup\Normalizer;
 use EliasHaeussler\CacheWarmup\Result;
 use EliasHaeussler\CacheWarmup\Sitemap;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7;
 use Psr\Http\Client;
-use Psr\Http\Message;
-use SimpleXMLElement;
+use Symfony\Component\PropertyInfo;
+use Symfony\Component\Serializer;
 
 /**
  * XmlParser.
@@ -39,66 +43,49 @@ use SimpleXMLElement;
  */
 final class XmlParser
 {
-    private const ELEMENT_SITEMAPINDEX = 'sitemapindex';
-    private const ELEMENT_URLSET = 'urlset';
-
     public function __construct(
         private readonly Client\ClientInterface $client = new GuzzleClient(),
     ) {
     }
 
-    public function parse(Sitemap $sitemap): Result\ParserResult
+    /**
+     * @throws Exception\InvalidSitemapException
+     * @throws Exception\InvalidUrlException
+     */
+    public function parse(Sitemap\Sitemap $sitemap): Result\ParserResult
     {
-        $result = new Result\ParserResult();
-
         // Fetch XML source
         $request = new Psr7\Request('GET', $sitemap->getUri());
         $response = $this->client->sendRequest($request);
-        $xml = new SimpleXMLElement($response->getBody()->getContents(), LIBXML_NOBLANKS);
+        $body = (string) $response->getBody();
 
-        // Parse XML
-        switch ($xml->getName()) {
-            case self::ELEMENT_SITEMAPINDEX:
-                foreach ($xml->sitemap as $sitemap) {
-                    $parsedSitemap = $this->parseSitemap($sitemap);
-                    if ($parsedSitemap instanceof Sitemap) {
-                        $result->addSitemap($parsedSitemap);
-                    }
-                }
-                break;
-            case self::ELEMENT_URLSET:
-                foreach ($xml->url as $url) {
-                    $parsedUrl = $this->parseUrl($url);
-                    if ($parsedUrl instanceof Message\UriInterface) {
-                        $result->addUrl($parsedUrl);
-                    }
-                }
-                break;
+        // Deserialize XML
+        $serializer = new Serializer\Serializer(
+            [
+                // @todo check order --> should not denormalize to Sitemap\Url
+                new Normalizer\UriDenormalizer(),
+                new Serializer\Normalizer\ArrayDenormalizer(),
+                new Serializer\Normalizer\DateTimeNormalizer([
+                    Serializer\Normalizer\DateTimeNormalizer::FORMAT_KEY => DateTimeInterface::W3C,
+                ]),
+                new Serializer\Normalizer\BackedEnumNormalizer(),
+                new Serializer\Normalizer\ObjectNormalizer(
+                    $classMetadataFactory = new Serializer\Mapping\Factory\ClassMetadataFactory(
+                        new Serializer\Mapping\Loader\AnnotationLoader(new Annotations\AnnotationReader())
+                    ),
+                    nameConverter: new Serializer\NameConverter\MetadataAwareNameConverter($classMetadataFactory),
+                    propertyTypeExtractor: new PropertyInfo\Extractor\PhpDocExtractor(),
+                ),
+            ],
+            [
+                new Serializer\Encoder\XmlEncoder(),
+            ],
+        );
+
+        try {
+            return $serializer->deserialize($body, Result\ParserResult::class, 'xml');
+        } catch (Serializer\Exception\ExceptionInterface $exception) {
+            throw Exception\InvalidSitemapException::create($sitemap, $exception);
         }
-
-        return $result;
-    }
-
-    private function parseSitemap(SimpleXMLElement $xml): ?Sitemap
-    {
-        if (!isset($xml->loc)) {
-            return null;
-        }
-
-        $sitemapUri = $xml->loc[0];
-        $sitemapUri = new Psr7\Uri((string) $sitemapUri);
-
-        return new Sitemap($sitemapUri);
-    }
-
-    private function parseUrl(SimpleXMLElement $xml): ?Message\UriInterface
-    {
-        if (!isset($xml->loc)) {
-            return null;
-        }
-
-        $uri = $xml->loc[0];
-
-        return new Psr7\Uri((string) $uri);
     }
 }

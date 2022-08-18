@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://www.example.org/</loc>
+        <priority>0.8</priority>
+        <lastmod>2022-05-02T12:14:44+02:00</lastmod>
+        <changefreq>yearly</changefreq>
+    </url>
+    <url>
+        <loc>https://www.example.org/foo</loc>
+        <priority>0.5</priority>
+        <lastmod>2021-06-07T20:01:25+02:00</lastmod>
+        <changefreq>monthly</changefreq>
+    </url>
+    <url>
+        <loc>https://www.example.org/baz</loc>
+        <priority>0.5</priority>
+        <lastmod>2021-05-28T11:54:00+02:00</lastmod>
+        <changefreq>hourly</changefreq>
+    </url>
+</urlset>

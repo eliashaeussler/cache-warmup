@@ -32,6 +32,7 @@ use GuzzleHttp\Psr7;
 use Psr\Http\Client;
 use Symfony\Component\Console;
 
+use function array_map;
 use function assert;
 use function count;
 use function in_array;
@@ -108,9 +109,9 @@ final class CacheWarmupCommand extends Console\Command\Command
             '',
             '<info>Allow failures</info>',
             '<info>==============</info>',
-            'If an URL fails to be crawled, this command exits with a non-zero exit code.',
-            'This is not always the desired behavior. Therefore, you can change this behavior ',
-            'by using the <comment>--allow-failures</comment> option:',
+            'If a sitemap cannot be parsed or an URL fails to be crawled, this command normally exits ',
+            'with a non-zero exit code. This is not always the desired behavior. Therefore, you can change ',
+            'this behavior by using the <comment>--allow-failures</comment> option:',
             '',
             '   <comment>%command.full_name% --allow-failures</comment>',
         ]));
@@ -177,12 +178,13 @@ final class CacheWarmupCommand extends Console\Command\Command
         $helper = $this->getHelper('question');
         do {
             $question = new Console\Question\Question('Please enter the URL of a XML sitemap: ');
+            $question->setValidator($this->validateSitemap(...));
             $sitemap = $helper->ask($input, $output, $question);
-            if (is_string($sitemap)) {
+            if ($sitemap instanceof Sitemap\Sitemap) {
                 $sitemaps[] = $sitemap;
                 $output->writeln(sprintf('<info>Sitemap added: %s</info>', $sitemap));
             }
-        } while (is_string($sitemap));
+        } while ($sitemap instanceof Sitemap\Sitemap);
 
         // Throw exception if no sitemaps were added
         if ([] === $sitemaps && [] === $input->getOption('urls')) {
@@ -210,25 +212,30 @@ final class CacheWarmupCommand extends Console\Command\Command
 
         // Initialize cache warmer
         $output->write('Parsing sitemaps... ');
-        $cacheWarmer = new CacheWarmer($limit, $this->client, $crawler);
+        $cacheWarmer = new CacheWarmer($limit, $this->client, $crawler, !$allowFailures);
         $cacheWarmer->addSitemaps($sitemaps);
         foreach ($urls as $url) {
             assert(is_string($url));
-            $cacheWarmer->addUrl(new Psr7\Uri($url));
+            $cacheWarmer->addUrl($url);
         }
         $output->writeln('<info>Done</info>');
 
-        // Print parsed sitemaps
         if ($output->isVeryVerbose()) {
-            $decoratedSitemaps = array_map([$this, 'decorateSitemap'], $cacheWarmer->getSitemaps());
+            // Print parsed sitemaps
+            $decoratedSitemaps = array_map($this->decorateSitemap(...), $cacheWarmer->getSitemaps());
             $this->io->section('The following sitemaps were processed:');
             $this->io->listing($decoratedSitemaps);
-        }
 
-        // Print parsed URLs
-        if ($output->isVeryVerbose()) {
+            // Print parsed URLs
             $this->io->section('The following URLs will be crawled:');
             $this->io->listing($cacheWarmer->getUrls());
+        }
+
+        // Print failed sitemaps
+        if ([] !== ($failedSitemaps = $cacheWarmer->getFailedSitemaps())) {
+            $decoratedFailedSitemaps = array_map($this->decorateSitemap(...), $failedSitemaps);
+            $this->io->section('The following sitemaps could not be parsed:');
+            $this->io->listing($decoratedFailedSitemaps);
         }
 
         // Start crawling
@@ -241,7 +248,7 @@ final class CacheWarmupCommand extends Console\Command\Command
 
         $this->printResult($result);
 
-        if ([] !== $result->getFailed() && !$allowFailures) {
+        if ([] !== [...$result->getFailed(), ...$failedSitemaps] && !$allowFailures) {
             return self::FAILED;
         }
 
@@ -375,7 +382,7 @@ final class CacheWarmupCommand extends Console\Command\Command
         return $decoratedCrawlerOptions;
     }
 
-    private function decorateSitemap(Sitemap $sitemap): string
+    private function decorateSitemap(Sitemap\Sitemap $sitemap): string
     {
         return (string) $sitemap->getUri();
     }
@@ -394,5 +401,14 @@ final class CacheWarmupCommand extends Console\Command\Command
         }
 
         return $urls;
+    }
+
+    private function validateSitemap(?string $input): ?Sitemap\Sitemap
+    {
+        if (null === $input) {
+            return null;
+        }
+
+        return new Sitemap\Sitemap(new Psr7\Uri($input));
     }
 }

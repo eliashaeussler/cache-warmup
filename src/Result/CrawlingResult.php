@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Result;
 
-use Psr\Http\Message\UriInterface;
+use Psr\Http\Message;
 
 /**
  * CrawlingResult.
@@ -37,7 +37,7 @@ final class CrawlingResult
      * @param array<string, mixed> $data
      */
     private function __construct(
-        private readonly UriInterface $uri,
+        private readonly Message\UriInterface $uri,
         private readonly CrawlingState $state,
         private readonly array $data = [],
     ) {
@@ -46,7 +46,7 @@ final class CrawlingResult
     /**
      * @param array<string, mixed> $data
      */
-    public static function createSuccessful(UriInterface $uri, array $data = []): self
+    public static function createSuccessful(Message\UriInterface $uri, array $data = []): self
     {
         return new self($uri, CrawlingState::Successful, $data);
     }
@@ -54,12 +54,12 @@ final class CrawlingResult
     /**
      * @param array<string, mixed> $data
      */
-    public static function createFailed(UriInterface $uri, array $data = []): self
+    public static function createFailed(Message\UriInterface $uri, array $data = []): self
     {
         return new self($uri, CrawlingState::Failed, $data);
     }
 
-    public function getUri(): UriInterface
+    public function getUri(): Message\UriInterface
     {
         return $this->uri;
     }

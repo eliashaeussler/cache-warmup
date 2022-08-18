@@ -59,7 +59,7 @@ final class CacheWarmerTest extends Framework\TestCase
      * @test
      * @dataProvider runCrawlsListOfUrlsDataProvider
      *
-     * @param list<Psr7\Uri> $urls
+     * @param list<string> $urls
      */
     public function runCrawlsListOfUrls(array $urls): void
     {
@@ -79,11 +79,44 @@ final class CacheWarmerTest extends Framework\TestCase
     public function addSitemapsThrowsExceptionIfInvalidSitemapsIsGiven(): void
     {
         $this->expectException(Exception\InvalidSitemapException::class);
-        $this->expectExceptionMessage(sprintf('Sitemaps must be of type string or %s, bool given.', Sitemap::class));
         $this->expectExceptionCode(1604055096);
+        $this->expectExceptionMessage(sprintf('Sitemaps must be of type string or %s, bool given.', Sitemap\Sitemap::class));
 
         /* @phpstan-ignore-next-line */
         $this->subject->addSitemaps([false]);
+    }
+
+    /**
+     * @test
+     */
+    public function addSitemapsThrowsExceptionIfGivenSitemapCannotBeParsedAndCacheWarmerIsRunningInStrictMode(): void
+    {
+        $this->prophesizeSitemapRequest('invalid_sitemap_1');
+
+        $sitemap = new Sitemap\Sitemap(new Psr7\Uri('https://www.example.com/sitemap.xml'));
+
+        $this->expectException(Exception\InvalidSitemapException::class);
+        $this->expectExceptionCode(1660668799);
+        $this->expectExceptionMessage('The sitemap "https://www.example.com/sitemap.xml" is invalid and cannot be parsed.');
+
+        $this->subject->addSitemaps([$sitemap]);
+    }
+
+    /**
+     * @test
+     */
+    public function addSitemapsIgnoresParserErrorsIfCacheWarmerIsNotRunningInStrictMode(): void
+    {
+        $subject = new CacheWarmer(client: $this->clientProphecy->reveal(), strict: false);
+        $sitemap = new Sitemap\Sitemap(new Psr7\Uri('https://www.example.com/sitemap.xml'));
+
+        $this->prophesizeSitemapRequest('invalid_sitemap_1');
+
+        $subject->addSitemaps([$sitemap]);
+
+        self::assertSame([$sitemap], $subject->getFailedSitemaps());
+        self::assertSame([], $subject->getSitemaps());
+        self::assertSame([], $subject->getUrls());
     }
 
     /**
@@ -93,7 +126,7 @@ final class CacheWarmerTest extends Framework\TestCase
     {
         $subject = new CacheWarmer(limit: 1, client: $this->clientProphecy->reveal());
         $expected = [
-            new Psr7\Uri('https://www.example.org/'),
+            new Sitemap\Url('https://www.example.org/'),
         ];
 
         $this->prophesizeSitemapRequest('valid_sitemap_2');
@@ -111,13 +144,13 @@ final class CacheWarmerTest extends Framework\TestCase
      * @test
      * @dataProvider addSitemapsAddsAndParsesGivenSitemapsDataProvider
      *
-     * @param list<string|Sitemap>|string|Sitemap      $sitemaps
-     * @param list<Sitemap>                            $expectedSitemaps
-     * @param list<Message\UriInterface>               $expectedUrls
-     * @param array<string, Message\UriInterface|null> $prophesizedRequests
+     * @param list<string|Sitemap\Sitemap>|string|Sitemap\Sitemap $sitemaps
+     * @param list<Sitemap\Sitemap>                               $expectedSitemaps
+     * @param list<Sitemap\Url>                                   $expectedUrls
+     * @param array<string, Message\UriInterface|null>            $prophesizedRequests
      */
     public function addSitemapsAddsAndParsesGivenSitemaps(
-        array|string|Sitemap $sitemaps,
+        array|string|Sitemap\Sitemap $sitemaps,
         array $expectedSitemaps,
         array $expectedUrls,
         array $prophesizedRequests = [],
@@ -137,7 +170,7 @@ final class CacheWarmerTest extends Framework\TestCase
      */
     public function addUrlAddsGivenUrlToListOfUrls(): void
     {
-        $url = $this->getExpectedUri('https://www.example.org/sitemap.xml');
+        $url = new Sitemap\Url('https://www.example.org/sitemap.xml');
 
         self::assertSame([$url], $this->subject->addUrl($url)->getUrls());
     }
@@ -147,7 +180,7 @@ final class CacheWarmerTest extends Framework\TestCase
      */
     public function addUrlDoesNotAddAlreadyAvailableUrlToListOfUrls(): void
     {
-        $url = $this->getExpectedUri('https://www.example.org/sitemap.xml');
+        $url = new Sitemap\Url('https://www.example.org/sitemap.xml');
 
         self::assertSame([$url], $this->subject->addUrl($url)->addUrl($url)->getUrls());
     }
@@ -157,8 +190,8 @@ final class CacheWarmerTest extends Framework\TestCase
      */
     public function addUrlDoesNotAddUrlIfLimitWasExceeded(): void
     {
-        $url1 = $this->getExpectedUri('https://www.example.org/sitemap.xml');
-        $url2 = $this->getExpectedUri('https://www.example.com/sitemap.xml');
+        $url1 = new Sitemap\Url('https://www.example.org/sitemap.xml');
+        $url2 = new Sitemap\Url('https://www.example.com/sitemap.xml');
 
         $subject = new CacheWarmer(limit: 1, client: $this->clientProphecy->reveal());
         $subject->addUrl($url1)->addUrl($url2);
@@ -175,7 +208,7 @@ final class CacheWarmerTest extends Framework\TestCase
     }
 
     /**
-     * @return Generator<string, array{array<int, Psr7\Uri>}>
+     * @return Generator<string, array{array<int, string>}>
      */
     public function runCrawlsListOfUrlsDataProvider(): Generator
     {
@@ -184,14 +217,14 @@ final class CacheWarmerTest extends Framework\TestCase
         ];
         yield 'multiple urls' => [
             [
-                $this->getExpectedUri('https://www.example.org'),
-                $this->getExpectedUri('https://www.example.com'),
+                'https://www.example.org',
+                'https://www.example.com',
             ],
         ];
     }
 
     /**
-     * @return Generator<string, array{0: list<string|Sitemap>|string|Sitemap, 1: list<Sitemap>, list<Message\UriInterface>, 2?: array<string, Message\UriInterface|null>}>
+     * @return Generator<string, array{0: list<string|Sitemap\Sitemap>|string|Sitemap\Sitemap, 1: list<Sitemap\Sitemap>, list<Sitemap\Url>, 2?: array<string, Message\UriInterface|null>}>
      */
     public function addSitemapsAddsAndParsesGivenSitemapsDataProvider(): Generator
     {
@@ -203,26 +236,26 @@ final class CacheWarmerTest extends Framework\TestCase
         yield 'one sitemap url' => [
             'https://www.example.org/sitemap.xml',
             [
-                new Sitemap(new Psr7\Uri('https://www.example.org/sitemap.xml')),
+                new Sitemap\Sitemap(new Psr7\Uri('https://www.example.org/sitemap.xml')),
             ],
             [
-                new Psr7\Uri('https://www.example.org/'),
-                new Psr7\Uri('https://www.example.org/foo'),
-                new Psr7\Uri('https://www.example.org/baz'),
+                new Sitemap\Url('https://www.example.org/'),
+                new Sitemap\Url('https://www.example.org/foo'),
+                new Sitemap\Url('https://www.example.org/baz'),
             ],
             [
                 'valid_sitemap_2' => null,
             ],
         ];
         yield 'one sitemap object' => [
-            new Sitemap(new Psr7\Uri('https://www.example.org/sitemap.xml')),
+            new Sitemap\Sitemap(new Psr7\Uri('https://www.example.org/sitemap.xml')),
             [
-                new Sitemap(new Psr7\Uri('https://www.example.org/sitemap.xml')),
+                new Sitemap\Sitemap(new Psr7\Uri('https://www.example.org/sitemap.xml')),
             ],
             [
-                new Psr7\Uri('https://www.example.org/'),
-                new Psr7\Uri('https://www.example.org/foo'),
-                new Psr7\Uri('https://www.example.org/baz'),
+                new Sitemap\Url('https://www.example.org/'),
+                new Sitemap\Url('https://www.example.org/foo'),
+                new Sitemap\Url('https://www.example.org/baz'),
             ],
             [
                 'valid_sitemap_2' => null,
@@ -234,15 +267,15 @@ final class CacheWarmerTest extends Framework\TestCase
                 'https://www.example.com/sitemap.xml',
             ],
             [
-                new Sitemap($this->getExpectedUri('https://www.example.org/sitemap.xml')),
-                new Sitemap($this->getExpectedUri('https://www.example.com/sitemap.xml')),
+                new Sitemap\Sitemap($this->getExpectedUri('https://www.example.org/sitemap.xml')),
+                new Sitemap\Sitemap($this->getExpectedUri('https://www.example.com/sitemap.xml')),
             ],
             [
-                new Psr7\Uri('https://www.example.org/'),
-                new Psr7\Uri('https://www.example.org/foo'),
-                new Psr7\Uri('https://www.example.org/baz'),
-                new Psr7\Uri('https://www.example.com/'),
-                new Psr7\Uri('https://www.example.com/foo'),
+                new Sitemap\Url('https://www.example.org/'),
+                new Sitemap\Url('https://www.example.org/foo'),
+                new Sitemap\Url('https://www.example.org/baz'),
+                new Sitemap\Url('https://www.example.com/'),
+                new Sitemap\Url('https://www.example.com/foo'),
             ],
             [
                 'valid_sitemap_2' => new Psr7\Uri('https://www.example.org/sitemap.xml'),
@@ -251,19 +284,19 @@ final class CacheWarmerTest extends Framework\TestCase
         ];
         yield 'multiple sitemap objects' => [
             [
-                new Sitemap($this->getExpectedUri('https://www.example.org/sitemap.xml')),
-                new Sitemap($this->getExpectedUri('https://www.example.com/sitemap.xml')),
+                new Sitemap\Sitemap($this->getExpectedUri('https://www.example.org/sitemap.xml')),
+                new Sitemap\Sitemap($this->getExpectedUri('https://www.example.com/sitemap.xml')),
             ],
             [
-                new Sitemap($this->getExpectedUri('https://www.example.org/sitemap.xml')),
-                new Sitemap($this->getExpectedUri('https://www.example.com/sitemap.xml')),
+                new Sitemap\Sitemap($this->getExpectedUri('https://www.example.org/sitemap.xml')),
+                new Sitemap\Sitemap($this->getExpectedUri('https://www.example.com/sitemap.xml')),
             ],
             [
-                new Psr7\Uri('https://www.example.org/'),
-                new Psr7\Uri('https://www.example.org/foo'),
-                new Psr7\Uri('https://www.example.org/baz'),
-                new Psr7\Uri('https://www.example.com/'),
-                new Psr7\Uri('https://www.example.com/foo'),
+                new Sitemap\Url('https://www.example.org/'),
+                new Sitemap\Url('https://www.example.org/foo'),
+                new Sitemap\Url('https://www.example.org/baz'),
+                new Sitemap\Url('https://www.example.com/'),
+                new Sitemap\Url('https://www.example.com/foo'),
             ],
             [
                 'valid_sitemap_2' => new Psr7\Uri('https://www.example.org/sitemap.xml'),
@@ -272,20 +305,20 @@ final class CacheWarmerTest extends Framework\TestCase
         ];
         yield 'mix of sitemap url set and sitemap index' => [
             [
-                new Sitemap($this->getExpectedUri('https://www.example.org/sitemap.xml')),
-                new Sitemap($this->getExpectedUri('https://www.example.com/sitemap.xml')),
+                new Sitemap\Sitemap($this->getExpectedUri('https://www.example.org/sitemap.xml')),
+                new Sitemap\Sitemap($this->getExpectedUri('https://www.example.com/sitemap.xml')),
             ],
             [
-                new Sitemap($this->getExpectedUri('https://www.example.org/sitemap.xml')),
-                new Sitemap($this->getExpectedUri('https://www.example.com/sitemap.xml')),
-                new Sitemap($this->getExpectedUri('https://www.example.org/sitemap_en.xml')),
+                new Sitemap\Sitemap($this->getExpectedUri('https://www.example.org/sitemap.xml')),
+                new Sitemap\Sitemap($this->getExpectedUri('https://www.example.com/sitemap.xml')),
+                new Sitemap\Sitemap($this->getExpectedUri('https://www.example.org/sitemap_en.xml')),
             ],
             [
-                new Psr7\Uri('https://www.example.org/'),
-                new Psr7\Uri('https://www.example.org/foo'),
-                new Psr7\Uri('https://www.example.org/baz'),
-                new Psr7\Uri('https://www.example.com/'),
-                new Psr7\Uri('https://www.example.com/foo'),
+                new Sitemap\Url('https://www.example.org/'),
+                new Sitemap\Url('https://www.example.org/foo'),
+                new Sitemap\Url('https://www.example.org/baz'),
+                new Sitemap\Url('https://www.example.com/'),
+                new Sitemap\Url('https://www.example.com/foo'),
             ],
             [
                 'valid_sitemap_2' => new Psr7\Uri('https://www.example.org/sitemap.xml'),

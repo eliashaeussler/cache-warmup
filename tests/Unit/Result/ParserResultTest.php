@@ -40,62 +40,43 @@ final class ParserResultTest extends Framework\TestCase
 
     protected function setUp(): void
     {
-        $this->subject = new Result\ParserResult();
+        $sitemaps = [
+            new Sitemap\Sitemap(new Psr7\Uri('https://www.example.com/')),
+            new Sitemap\Sitemap(new Psr7\Uri('https://www.example.org/')),
+        ];
+        $urls = [
+            new Sitemap\Url('https://www.example.com/'),
+            new Sitemap\Url('https://www.example.org/'),
+        ];
+
+        $this->subject = new Result\ParserResult($sitemaps, $urls);
     }
 
     /**
      * @test
      */
-    public function addAddsSitemapToResult(): void
+    public function getSitemapsReturnsSitemaps(): void
     {
-        $sitemap = new Sitemap(new Psr7\Uri('https://www.example.com'));
-
-        self::assertSame([], $this->subject->getSitemaps());
-
-        $this->subject->add($sitemap);
-
-        self::assertSame([$sitemap], $this->subject->getSitemaps());
+        self::assertEquals(
+            [
+                new Sitemap\Sitemap(new Psr7\Uri('https://www.example.com/')),
+                new Sitemap\Sitemap(new Psr7\Uri('https://www.example.org/')),
+            ],
+            $this->subject->getSitemaps()
+        );
     }
 
     /**
      * @test
      */
-    public function addAddsUrlToResult(): void
+    public function getUrlsReturnsUrls(): void
     {
-        $url = new Psr7\Uri('https://www.example.com');
-
-        self::assertSame([], $this->subject->getUrls());
-
-        $this->subject->add($url);
-
-        self::assertSame([$url], $this->subject->getUrls());
-    }
-
-    /**
-     * @test
-     */
-    public function addSitemapAddsSitemapToResult(): void
-    {
-        $sitemap = new Sitemap(new Psr7\Uri('https://www.example.com'));
-
-        self::assertSame([], $this->subject->getSitemaps());
-
-        $this->subject->addSitemap($sitemap);
-
-        self::assertSame([$sitemap], $this->subject->getSitemaps());
-    }
-
-    /**
-     * @test
-     */
-    public function addUrlAddsUrlToResult(): void
-    {
-        $url = new Psr7\Uri('https://www.example.com');
-
-        self::assertSame([], $this->subject->getUrls());
-
-        $this->subject->addUrl($url);
-
-        self::assertSame([$url], $this->subject->getUrls());
+        self::assertEquals(
+            [
+                new Sitemap\Url('https://www.example.com/'),
+                new Sitemap\Url('https://www.example.org/'),
+            ],
+            $this->subject->getUrls()
+        );
     }
 }

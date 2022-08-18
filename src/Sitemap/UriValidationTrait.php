@@ -21,46 +21,34 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Result;
+namespace EliasHaeussler\CacheWarmup\Sitemap;
 
-use EliasHaeussler\CacheWarmup\Sitemap;
-use Symfony\Component\Serializer;
+use EliasHaeussler\CacheWarmup\Exception;
+use Psr\Http\Message;
 
 /**
- * ParserResult.
+ * UriValidationTrait.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
- *
- * @internal
  */
-final class ParserResult
+trait UriValidationTrait
 {
-    /**
-     * @param list<Sitemap\Sitemap> $sitemaps
-     * @param list<Sitemap\Url>     $urls
-     */
-    public function __construct(
-        #[Serializer\Annotation\SerializedName('sitemap')]
-        private readonly array $sitemaps = [],
-        #[Serializer\Annotation\SerializedName('url')]
-        private readonly array $urls = [],
-    ) {
-    }
+    abstract protected function getUri(): Message\UriInterface;
 
     /**
-     * @return list<Sitemap\Sitemap>
+     * @throws Exception\InvalidUrlException
      */
-    public function getSitemaps(): array
+    protected function validateUri(): void
     {
-        return $this->sitemaps;
-    }
+        $url = (string) $this->getUri();
 
-    /**
-     * @return list<Sitemap\Url>
-     */
-    public function getUrls(): array
-    {
-        return $this->urls;
+        if ('' === trim($url)) {
+            throw Exception\InvalidUrlException::forEmptyUrl();
+        }
+
+        if (false === filter_var($url, FILTER_VALIDATE_URL)) {
+            throw Exception\InvalidUrlException::create($url);
+        }
     }
 }

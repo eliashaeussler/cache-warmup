@@ -143,9 +143,9 @@ $cacheWarmer->addSitemaps('https://www.example.org/sitemap.xml');
 $cacheWarmer->addSitemaps('https://www.example.org/de/sitemap.xml');
 
 // Define URLs to be crawled
-$cacheWarmer->addUrl(new \GuzzleHttp\Psr7\Uri('https://www.example.org/'));
-$cacheWarmer->addUrl(new \GuzzleHttp\Psr7\Uri('https://www.example.org/foo'));
-$cacheWarmer->addUrl(new \GuzzleHttp\Psr7\Uri('https://www.example.org/baz'));
+$cacheWarmer->addUrl('https://www.example.org/');
+$cacheWarmer->addUrl('https://www.example.org/foo');
+$cacheWarmer->addUrl('https://www.example.org/baz');
 
 // Run cache warmer
 $result = $cacheWarmer->run();
