@@ -135,8 +135,11 @@ $client = new \GuzzleHttp\Client([
 $crawler = new \Vendor\Crawler\MyCrawler();
 $crawler->setOptions(['concurrency' => 3]);
 
+// Enable strict mode (throws exception if XML parsing fails)
+$strict = true;
+
 // Instantiate cache warmer
-$cacheWarmer = new \EliasHaeussler\CacheWarmup\CacheWarmer($limit, $client, $crawler);
+$cacheWarmer = new \EliasHaeussler\CacheWarmup\CacheWarmer($limit, $client, $crawler, $strict);
 
 // Define sitemaps to be crawled
 $cacheWarmer->addSitemaps('https://www.example.org/sitemap.xml');
