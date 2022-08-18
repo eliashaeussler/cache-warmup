@@ -276,7 +276,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
      *
      * @param array{concurrency: int}|string $crawlerOptions
      */
-    public function executeUsesCrawlerOptions($crawlerOptions): void
+    public function executeUsesCrawlerOptions(array|string $crawlerOptions): void
     {
         $this->prophesizeSitemapRequest('valid_sitemap_3');
         $this->commandTester->execute(
@@ -294,7 +294,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         $output = $this->commandTester->getDisplay();
 
         self::assertStringContainsString('Using custom crawler options:', $output);
-        self::assertStringContainsString('* concurrency: 3', $output);
+        self::assertStringContainsString('"concurrency": 3', $output);
     }
 
     /**
