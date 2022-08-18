@@ -62,7 +62,6 @@ final class XmlParser
         // Deserialize XML
         $serializer = new Serializer\Serializer(
             [
-                // @todo check order --> should not denormalize to Sitemap\Url
                 new Normalizer\UriDenormalizer(),
                 new Serializer\Normalizer\ArrayDenormalizer(),
                 new Serializer\Normalizer\DateTimeNormalizer([
