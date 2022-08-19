@@ -28,7 +28,7 @@ jobs:
 
       # Install dependencies
       - name: Install Composer dependencies
-        run: composer update --no-progress
+        uses: ramsey/composer-install@v2
 
       # Check Composer dependencies
       - name: Check dependencies
