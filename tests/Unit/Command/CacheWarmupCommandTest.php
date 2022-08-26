@@ -202,6 +202,49 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     /**
      * @test
      */
+    public function executeHidesVerboseOutputIfNoProgressOptionIsSet(): void
+    {
+        $this->prophesizeSitemapRequest('valid_sitemap_3');
+
+        $this->commandTester->execute(
+            [
+                'sitemaps' => [
+                    'https://www.example.com/sitemap.xml',
+                ],
+                '--no-progress' => true,
+            ],
+            [
+                'verbosity' => Console\Output\OutputInterface::VERBOSITY_VERBOSE,
+            ]
+        );
+
+        $output = $this->commandTester->getDisplay();
+
+        self::assertStringNotContainsString('100%', $output);
+    }
+
+    /**
+     * @test
+     */
+    public function executeShowsVerboseOutputIfProgressOptionIsSet(): void
+    {
+        $this->prophesizeSitemapRequest('valid_sitemap_3');
+
+        $this->commandTester->execute([
+            'sitemaps' => [
+                'https://www.example.com/sitemap.xml',
+            ],
+            '--progress' => true,
+        ]);
+
+        $output = $this->commandTester->getDisplay();
+
+        self::assertStringContainsString('100%', $output);
+    }
+
+    /**
+     * @test
+     */
     public function executeThrowsExceptionIfGivenCrawlerClassDoesNotExist(): void
     {
         $this->expectException(Console\Exception\RuntimeException::class);

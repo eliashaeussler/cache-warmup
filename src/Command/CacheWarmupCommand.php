@@ -138,7 +138,7 @@ final class CacheWarmupCommand extends Console\Command\Command
         $this->addOption(
             'progress',
             'p',
-            Console\Input\InputOption::VALUE_NONE,
+            Console\Input\InputOption::VALUE_NEGATABLE,
             'Show progress bar during cache warmup'
         );
         $this->addOption(
@@ -316,7 +316,7 @@ final class CacheWarmupCommand extends Console\Command\Command
 
             /** @var Crawler\CrawlerInterface $crawler */
             $crawler = new $crawler();
-        } elseif ($output->isVerbose() || $input->getOption('progress')) {
+        } elseif ($this->isProgressBarEnabled($output, $input)) {
             // Use default verbose crawler
             $crawler = new Crawler\OutputtingCrawler();
         } else {
@@ -342,6 +342,17 @@ final class CacheWarmupCommand extends Console\Command\Command
         }
 
         return $crawler;
+    }
+
+    private function isProgressBarEnabled(
+        Console\Output\OutputInterface $output,
+        Console\Input\InputInterface $input,
+        ): bool {
+        if (false === $input->getOption('progress')) {
+            return false;
+        }
+
+        return $output->isVerbose() || $input->getOption('progress');
     }
 
     /**
