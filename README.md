@@ -64,16 +64,19 @@ Please have a look at [`Usage with Docker`](#usage-with-docker).
 
 **General usage**
 
-```bash
+```
 ./vendor/bin/cache-warmup \
-  [--urls=URLS...] \
-  [--limit=LIMIT] \
-  [--[no-]progress] \
-  [--crawler=CRAWLER] \
-  [--crawler-options=CRAWLER-OPTIONS] \
+  [-u|--urls=URLS...] \
+  [-l|--limit=LIMIT] \
+  [-p|--progress|--no-progress] \
+  [-c|--crawler=CRAWLER] \
+  [-o|--crawler-options=CRAWLER-OPTIONS] \
   [--allow-failures] \
   [<sitemaps>...]
 ```
+
+:bulb: Run `./vendor/bin/cache-warmup --help` to see all available input
+options and arguments.
 
 **Extended usage**
 
@@ -86,7 +89,7 @@ Please have a look at [`Usage with Docker`](#usage-with-docker).
 
 # Show or hide progress bar (progress bar is shown by default with increased verbosity)
 ./vendor/bin/cache-warmup "https://www.example.org/sitemap.xml" --[no-]progress
-./vendor/bin/cache-warmup "https://www.example.org/sitemap.xml" -v
+./vendor/bin/cache-warmup "https://www.example.org/sitemap.xml" --verbose
 
 # Use custom crawler (must implement EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface)
 ./vendor/bin/cache-warmup "https://www.example.org/sitemap.xml" --crawler "Vendor\Crawler\MyCrawler"
