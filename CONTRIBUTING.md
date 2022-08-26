@@ -7,7 +7,7 @@ all steps below.
 ## Requirements
 
 - Composer
-- PHP >= 7.3
+- PHP >= 8.1
 
 ## Preparation
 
