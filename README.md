@@ -68,7 +68,7 @@ Please have a look at [`Usage with Docker`](#usage-with-docker).
 ./vendor/bin/cache-warmup \
   [--urls=URLS...] \
   [--limit=LIMIT] \
-  [--progress] \
+  [--[no-]progress] \
   [--crawler=CRAWLER] \
   [--crawler-options=CRAWLER-OPTIONS] \
   [--allow-failures] \
@@ -84,8 +84,8 @@ Please have a look at [`Usage with Docker`](#usage-with-docker).
 # Limit number of pages to be crawled
 ./vendor/bin/cache-warmup "https://www.example.org/sitemap.xml" --limit 50
 
-# Show progress bar (can also be achieved by increasing verbosity)
-./vendor/bin/cache-warmup "https://www.example.org/sitemap.xml" --progress
+# Show or hide progress bar (progress bar is shown by default with increased verbosity)
+./vendor/bin/cache-warmup "https://www.example.org/sitemap.xml" --[no-]progress
 ./vendor/bin/cache-warmup "https://www.example.org/sitemap.xml" -v
 
 # Use custom crawler (must implement EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface)
