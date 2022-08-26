@@ -115,6 +115,7 @@ final class CacheWarmupCommand extends Console\Command\Command
             'this behavior by using the <comment>--allow-failures</comment> option:',
             '',
             '   <comment>%command.full_name% --allow-failures</comment>',
+            '',
         ]));
 
         $this->addArgument(
@@ -263,6 +264,8 @@ final class CacheWarmupCommand extends Console\Command\Command
 
         // Print crawler statistics
         if ($this->io->isVeryVerbose()) {
+            $this->io->newLine();
+
             if ([] !== $successfulUrls) {
                 $this->io->section('The following URLs were successfully crawled:');
                 $this->io->listing($this->decorateCrawledUrls($successfulUrls));
@@ -347,7 +350,7 @@ final class CacheWarmupCommand extends Console\Command\Command
     private function isProgressBarEnabled(
         Console\Output\OutputInterface $output,
         Console\Input\InputInterface $input,
-        ): bool {
+    ): bool {
         if (false === $input->getOption('progress')) {
             return false;
         }
