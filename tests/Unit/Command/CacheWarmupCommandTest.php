@@ -315,6 +315,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
     /**
      * @test
+     *
      * @dataProvider executeUsesCrawlerOptionsDataProvider
      *
      * @param array{concurrency: int}|string $crawlerOptions
@@ -378,6 +379,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
     /**
      * @test
+     *
      * @dataProvider executeFailsIfSitemapCannotBeCrawledDataProvider
      */
     public function executeFailsIfSitemapCannotBeCrawled(bool $allowFailures, int $expected): void

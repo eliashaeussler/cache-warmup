@@ -61,6 +61,7 @@ final class UriDenormalizerTest extends Framework\TestCase
 
     /**
      * @test
+     *
      * @dataProvider denormalizeReturnsDenormalizedUriDataProvider
      *
      * @param class-string<Message\UriInterface> $type
@@ -80,6 +81,7 @@ final class UriDenormalizerTest extends Framework\TestCase
 
     /**
      * @test
+     *
      * @dataProvider supportsDenormalizationChecksIfGivenTypeIsSupportedDataProvider
      *
      * @param class-string<Message\UriInterface> $type

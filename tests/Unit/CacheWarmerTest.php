@@ -57,6 +57,7 @@ final class CacheWarmerTest extends Framework\TestCase
 
     /**
      * @test
+     *
      * @dataProvider runCrawlsListOfUrlsDataProvider
      *
      * @param list<string> $urls
@@ -142,6 +143,7 @@ final class CacheWarmerTest extends Framework\TestCase
 
     /**
      * @test
+     *
      * @dataProvider addSitemapsAddsAndParsesGivenSitemapsDataProvider
      *
      * @param list<string|Sitemap\Sitemap>|string|Sitemap\Sitemap $sitemaps
