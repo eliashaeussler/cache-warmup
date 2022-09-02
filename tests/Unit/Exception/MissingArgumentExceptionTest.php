@@ -39,6 +39,7 @@ final class MissingArgumentExceptionTest extends Framework\TestCase
 {
     /**
      * @test
+     *
      * @dataProvider createReturnsExceptionForGivenArgumentNameDataProvider
      */
     public function createReturnsExceptionForGivenArgumentName(string $argumentName, string $expected): void

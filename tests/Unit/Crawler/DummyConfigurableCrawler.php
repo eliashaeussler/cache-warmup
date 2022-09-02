@@ -33,6 +33,7 @@ use EliasHaeussler\CacheWarmup\Result;
  * @license GPL-3.0-or-later
  *
  * @internal
+ *
  * @extends Crawler\AbstractConfigurableCrawler<array{foo: string, bar: int}>
  */
 final class DummyConfigurableCrawler extends Crawler\AbstractConfigurableCrawler
