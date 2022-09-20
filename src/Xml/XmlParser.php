@@ -67,7 +67,7 @@ final class XmlParser
                 new Serializer\Normalizer\DateTimeNormalizer([
                     Serializer\Normalizer\DateTimeNormalizer::FORMAT_KEY => DateTimeInterface::W3C,
                 ]),
-                new Serializer\Normalizer\BackedEnumNormalizer(),
+                new Normalizer\ChangeFrequencyNormalizer(),
                 new Serializer\Normalizer\ObjectNormalizer(
                     $classMetadataFactory = new Serializer\Mapping\Factory\ClassMetadataFactory(
                         new Serializer\Mapping\Loader\AnnotationLoader(new Annotations\AnnotationReader())
