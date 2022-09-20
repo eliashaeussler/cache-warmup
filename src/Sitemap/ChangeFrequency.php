@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Sitemap;
 
+use function strtolower;
+
 /**
  * ChangeFrequency.
  *
@@ -38,4 +40,9 @@ enum ChangeFrequency: string
     case Monthly = 'monthly';
     case Yearly = 'yearly';
     case Never = 'never';
+
+    public static function fromCaseInsensitive(string $changeFrequency): self
+    {
+        return self::from(strtolower($changeFrequency));
+    }
 }
