@@ -32,6 +32,8 @@ body:
         - Phar
         - PHIVE
         - Docker
+    validations:
+      required: true
   - type: input
     id: operating-system
     attributes:
