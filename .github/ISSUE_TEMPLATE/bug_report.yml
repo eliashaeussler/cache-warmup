@@ -29,6 +29,8 @@ body:
       description: On which platform did the error occur?
       options:
         - label: Composer
+        - label: Phar
+        - label: PHIVE
         - label: Docker
   - type: input
     id: operating-system
