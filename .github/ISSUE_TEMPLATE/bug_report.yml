@@ -22,16 +22,16 @@ body:
       placeholder: 'e.g. 0.6.3'
     validations:
       required: true
-  - type: checkboxes
+  - type: dropdown
     id: application
     attributes:
       label: Application
       description: On which platform did the error occur?
       options:
-        - label: Composer
-        - label: Phar
-        - label: PHIVE
-        - label: Docker
+        - Composer
+        - Phar
+        - PHIVE
+        - Docker
   - type: input
     id: operating-system
     attributes:
