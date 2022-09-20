@@ -1,7 +1,6 @@
 {
     "compactors": [
-        "KevinGH\\Box\\Compactor\\Json",
-        "KevinGH\\Box\\Compactor\\Php"
+        "KevinGH\\Box\\Compactor\\Json"
     ],
     "compression": "GZ",
     "output": ".build/cache-warmup.phar"
