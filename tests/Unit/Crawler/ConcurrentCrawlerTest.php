@@ -26,6 +26,8 @@ namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler;
 use EliasHaeussler\CacheWarmup\Crawler;
 use EliasHaeussler\CacheWarmup\Result;
 use EliasHaeussler\CacheWarmup\Tests;
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
 
@@ -38,6 +40,52 @@ use PHPUnit\Framework;
 final class ConcurrentCrawlerTest extends Framework\TestCase
 {
     use Tests\Unit\CacheWarmupResultProcessorTrait;
+
+    private bool $handlerPassed;
+    private Crawler\ConcurrentCrawler $subject;
+
+    protected function setUp(): void
+    {
+        $this->handlerPassed = false;
+        $this->subject = new Crawler\ConcurrentCrawler([
+            'client_config' => [
+                'handler' => $this->createMockHandler(),
+            ],
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function constructorInstantiatesClientWithGivenClientConfig(): void
+    {
+        self::assertFalse($this->handlerPassed);
+
+        $this->subject->crawl([new Psr7\Uri('https://www.example.org')]);
+
+        self::assertTrue($this->handlerPassed);
+    }
+
+    /**
+     * @test
+     */
+    public function constructorIgnoresGivenClientConfigIfInstantiatedClientIsPassed(): void
+    {
+        $this->subject = new Crawler\ConcurrentCrawler(
+            [
+                'client_config' => [
+                    'handler' => $this->createMockHandler(),
+                ],
+            ],
+            new Client(),
+        );
+
+        self::assertFalse($this->handlerPassed);
+
+        $this->subject->crawl([new Psr7\Uri('https://www.example.org')]);
+
+        self::assertFalse($this->handlerPassed);
+    }
 
     /**
      * @test
@@ -89,5 +137,13 @@ final class ConcurrentCrawlerTest extends Framework\TestCase
 
         self::assertSame($urls, $this->getProcessedUrlsFromCacheWarmupResult($result, Result\CrawlingState::Failed));
         self::assertSame([], $result->getSuccessful());
+    }
+
+    private function createMockHandler(): Handler\MockHandler
+    {
+        return new Handler\MockHandler(
+            [new Psr7\Response()],
+            fn () => $this->handlerPassed = true,
+        );
     }
 }
