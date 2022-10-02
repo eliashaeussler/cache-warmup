@@ -32,6 +32,7 @@ use EliasHaeussler\CacheWarmup\Crawler\AbstractConfigurableCrawler;
  * @license GPL-3.0-or-later
  *
  * @internal
+ *
  * @extends AbstractConfigurableCrawler<array{foo: string, bar: int}>
  */
 final class DummyConfigurableCrawler extends AbstractConfigurableCrawler
