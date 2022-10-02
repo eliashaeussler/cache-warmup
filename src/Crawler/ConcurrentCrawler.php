@@ -42,7 +42,8 @@ use Throwable;
  * @extends AbstractConfigurableCrawler<array{
  *     concurrency: int,
  *     request_method: string,
- *     request_headers: array<string, string>
+ *     request_headers: array<string, string>,
+ *     client_config: array<string, mixed>
  * }>
  */
 class ConcurrentCrawler extends AbstractConfigurableCrawler
@@ -51,6 +52,7 @@ class ConcurrentCrawler extends AbstractConfigurableCrawler
         'concurrency' => 5,
         'request_method' => 'HEAD',
         'request_headers' => [],
+        'client_config' => [],
     ];
 
     /**
@@ -125,7 +127,7 @@ class ConcurrentCrawler extends AbstractConfigurableCrawler
 
     protected function initializeClient(): ClientInterface
     {
-        return new Client();
+        return new Client($this->options['client_config']);
     }
 
     /**

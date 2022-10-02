@@ -26,6 +26,8 @@ namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler;
 use EliasHaeussler\CacheWarmup\Crawler\ConcurrentCrawler;
 use EliasHaeussler\CacheWarmup\CrawlingState;
 use EliasHaeussler\CacheWarmup\Tests\Unit\CrawlerResultProcessorTrait;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
 
@@ -38,6 +40,38 @@ use PHPUnit\Framework\TestCase;
 final class ConcurrentCrawlerTest extends TestCase
 {
     use CrawlerResultProcessorTrait;
+
+    /**
+     * @var bool
+     */
+    private $handlerPassed;
+
+    /**
+     * @var ConcurrentCrawler
+     */
+    private $subject;
+
+    protected function setUp(): void
+    {
+        $this->handlerPassed = false;
+        $this->subject = new ConcurrentCrawler([
+            'client_config' => [
+                'handler' => $this->createMockHandler(),
+            ],
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function constructorInstantiatesClientWithGivenClientConfig(): void
+    {
+        self::assertFalse($this->handlerPassed);
+
+        $this->subject->crawl([new Uri('https://www.example.org')]);
+
+        self::assertTrue($this->handlerPassed);
+    }
 
     /**
      * @test
@@ -86,5 +120,15 @@ final class ConcurrentCrawlerTest extends TestCase
 
         self::assertSame($urls, $this->getProcessedUrlsFromCrawler($subject, CrawlingState::FAILED));
         self::assertSame([], $subject->getSuccessfulUrls());
+    }
+
+    private function createMockHandler(): MockHandler
+    {
+        return new MockHandler(
+            [new Response()],
+            function () {
+                $this->handlerPassed = true;
+            }
+        );
     }
 }
