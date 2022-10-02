@@ -25,7 +25,6 @@ namespace EliasHaeussler\CacheWarmup\Crawler;
 
 use EliasHaeussler\CacheWarmup\Exception;
 use EliasHaeussler\CacheWarmup\Result;
-use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use Psr\Http\Message;
 use Symfony\Component\Console;
@@ -49,7 +48,7 @@ class OutputtingCrawler extends ConcurrentCrawler implements VerboseCrawlerInter
 
     public function __construct(
         array $options = [],
-        ClientInterface $client = new Client(),
+        ClientInterface $client = null,
     ) {
         parent::__construct($options, $client);
         Console\Helper\ProgressBar::setFormatDefinition('cache-warmup', self::PROGRESS_BAR_FORMAT);

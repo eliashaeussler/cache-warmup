@@ -41,7 +41,8 @@ use Throwable;
  * @extends AbstractConfigurableCrawler<array{
  *     concurrency: int,
  *     request_method: string,
- *     request_headers: array<string, string>
+ *     request_headers: array<string, string>,
+ *     client_config: array<string, mixed>
  * }>
  */
 class ConcurrentCrawler extends AbstractConfigurableCrawler
@@ -50,13 +51,17 @@ class ConcurrentCrawler extends AbstractConfigurableCrawler
         'concurrency' => 5,
         'request_method' => 'HEAD',
         'request_headers' => [],
+        'client_config' => [],
     ];
+
+    protected readonly ClientInterface $client;
 
     public function __construct(
         array $options = [],
-        protected readonly ClientInterface $client = new Client(),
+        ClientInterface $client = null,
     ) {
         parent::__construct($options);
+        $this->client = null !== $client ? $client : new Client($this->options['client_config']);
     }
 
     public function crawl(array $urls): Result\CacheWarmupResult
