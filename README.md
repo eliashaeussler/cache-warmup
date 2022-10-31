@@ -45,7 +45,7 @@ composer require eliashaeussler/cache-warmup
 ### Phar
 
 Head over to <https://github.com/eliashaeussler/cache-warmup/releases/latest> and
-download the latest `cache-warmup.phar` file.
+download the latest [`cache-warmup.phar`](https://github.com/eliashaeussler/cache-warmup/releases/latest/download/cache-warmup.phar) file.
 
 Run `chmod +x cache-warmup.phar` to make it executable.
 
