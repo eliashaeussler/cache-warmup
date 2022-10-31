@@ -24,15 +24,12 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Xml;
 
 use DateTimeImmutable;
-use EliasHaeussler\CacheWarmup\Exception\InvalidSitemapException;
-use EliasHaeussler\CacheWarmup\Exception\InvalidUrlException;
+use EliasHaeussler\CacheWarmup\Exception;
 use EliasHaeussler\CacheWarmup\Sitemap;
 use EliasHaeussler\CacheWarmup\Tests;
 use EliasHaeussler\CacheWarmup\Xml;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
-use Prophecy\PhpUnit;
-use Psr\Http\Client;
 
 /**
  * XmlParserTest.
@@ -42,17 +39,16 @@ use Psr\Http\Client;
  */
 final class XmlParserTest extends Framework\TestCase
 {
-    use PhpUnit\ProphecyTrait;
-    use Tests\Unit\RequestProphecyTrait;
+    use Tests\Unit\ClientMockTrait;
 
     private Sitemap\Sitemap $sitemap;
     private Xml\XmlParser $subject;
 
     protected function setUp(): void
     {
+        $this->client = $this->createClient();
         $this->sitemap = new Sitemap\Sitemap(new Psr7\Uri('https://www.example.org/sitemap.xml'));
-        $this->clientProphecy = $this->prophesize(Client\ClientInterface::class);
-        $this->subject = new Xml\XmlParser($this->clientProphecy->reveal());
+        $this->subject = new Xml\XmlParser($this->client);
     }
 
     /**
@@ -60,7 +56,7 @@ final class XmlParserTest extends Framework\TestCase
      */
     public function parseParsesSitemapIndex(): void
     {
-        $this->prophesizeSitemapRequest('valid_sitemap_4');
+        $this->mockSitemapRequest('valid_sitemap_4');
 
         $result = $this->subject->parse($this->sitemap);
 
@@ -80,7 +76,7 @@ final class XmlParserTest extends Framework\TestCase
      */
     public function parseParsesSitemapUrlSet(): void
     {
-        $this->prophesizeSitemapRequest('valid_sitemap_5');
+        $this->mockSitemapRequest('valid_sitemap_5');
 
         $result = $this->subject->parse($this->sitemap);
 
@@ -114,9 +110,9 @@ final class XmlParserTest extends Framework\TestCase
      */
     public function parseThrowsExceptionOnInvalidSitemapIndex(): void
     {
-        $this->prophesizeSitemapRequest('invalid_sitemap_1');
+        $this->mockSitemapRequest('invalid_sitemap_1');
 
-        $this->expectException(InvalidSitemapException::class);
+        $this->expectException(Exception\InvalidSitemapException::class);
         $this->expectExceptionCode(1660668799);
         $this->expectExceptionMessage('The sitemap "https://www.example.org/sitemap.xml" is invalid and cannot be parsed.');
 
@@ -128,9 +124,9 @@ final class XmlParserTest extends Framework\TestCase
      */
     public function parseThrowsExceptionOnInvalidSitemapUrl(): void
     {
-        $this->prophesizeSitemapRequest('invalid_sitemap_2');
+        $this->mockSitemapRequest('invalid_sitemap_2');
 
-        $this->expectException(InvalidUrlException::class);
+        $this->expectException(Exception\InvalidUrlException::class);
         $this->expectExceptionCode(1604055334);
         $this->expectExceptionMessage('The given URL "foo" is not valid.');
 
