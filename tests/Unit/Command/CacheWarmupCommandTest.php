@@ -29,8 +29,6 @@ use EliasHaeussler\CacheWarmup\Sitemap;
 use EliasHaeussler\CacheWarmup\Tests;
 use Generator;
 use PHPUnit\Framework;
-use Prophecy\PhpUnit;
-use Psr\Http\Client;
 use Symfony\Component\Console;
 
 /**
@@ -41,16 +39,15 @@ use Symfony\Component\Console;
  */
 final class CacheWarmupCommandTest extends Framework\TestCase
 {
-    use PhpUnit\ProphecyTrait;
-    use Tests\Unit\RequestProphecyTrait;
+    use Tests\Unit\ClientMockTrait;
 
     private Console\Tester\CommandTester $commandTester;
 
     protected function setUp(): void
     {
-        $this->clientProphecy = $this->prophesize(Client\ClientInterface::class);
+        $this->client = $this->createClient();
 
-        $command = new Command\CacheWarmupCommand($this->clientProphecy->reveal());
+        $command = new Command\CacheWarmupCommand($this->client);
         $application = new Console\Application();
         $application->add($command);
 
@@ -85,7 +82,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
      */
     public function executeUsesSitemapUrlsFromInteractiveUserInputIfSitemapsArgumentIsNotGiven(): void
     {
-        $this->prophesizeSitemapRequest('valid_sitemap_3');
+        $this->mockSitemapRequest('valid_sitemap_3');
 
         $this->commandTester->setInputs([
             'https://www.example.com/sitemap.xml',
@@ -106,7 +103,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
      */
     public function executeCrawlsUrlsFromGivenSitemaps(): void
     {
-        $this->prophesizeSitemapRequest('valid_sitemap_3');
+        $this->mockSitemapRequest('valid_sitemap_3');
 
         $this->commandTester->execute(
             [
@@ -131,7 +128,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
      */
     public function executeLimitsCrawlingIfLimitOptionIsSet(): void
     {
-        $this->prophesizeSitemapRequest('valid_sitemap_3');
+        $this->mockSitemapRequest('valid_sitemap_3');
 
         $this->commandTester->execute(
             [
@@ -182,7 +179,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
      */
     public function executeHidesVerboseOutputIfVerbosityIsNormal(): void
     {
-        $this->prophesizeSitemapRequest('valid_sitemap_3');
+        $this->mockSitemapRequest('valid_sitemap_3');
 
         $this->commandTester->execute([
             'sitemaps' => [
@@ -204,7 +201,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
      */
     public function executeHidesVerboseOutputIfNoProgressOptionIsSet(): void
     {
-        $this->prophesizeSitemapRequest('valid_sitemap_3');
+        $this->mockSitemapRequest('valid_sitemap_3');
 
         $this->commandTester->execute(
             [
@@ -228,7 +225,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
      */
     public function executeShowsVerboseOutputIfProgressOptionIsSet(): void
     {
-        $this->prophesizeSitemapRequest('valid_sitemap_3');
+        $this->mockSitemapRequest('valid_sitemap_3');
 
         $this->commandTester->execute([
             'sitemaps' => [
@@ -279,7 +276,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
      */
     public function executeUsesCustomCrawler(): void
     {
-        $this->prophesizeSitemapRequest('valid_sitemap_3');
+        $this->mockSitemapRequest('valid_sitemap_3');
 
         $this->commandTester->execute([
             'sitemaps' => [
@@ -322,7 +319,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
      */
     public function executeUsesCrawlerOptions(array|string $crawlerOptions): void
     {
-        $this->prophesizeSitemapRequest('valid_sitemap_3');
+        $this->mockSitemapRequest('valid_sitemap_3');
         $this->commandTester->execute(
             [
                 'sitemaps' => [
@@ -346,7 +343,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
      */
     public function executeShowsWarningIfCrawlerOptionsArePassedToNonConfigurableCrawler(): void
     {
-        $this->prophesizeSitemapRequest('valid_sitemap_3');
+        $this->mockSitemapRequest('valid_sitemap_3');
         $this->commandTester->execute([
             'sitemaps' => [
                 'https://www.example.com/sitemap.xml',
@@ -365,7 +362,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
      */
     public function executeAppliesOutputToVerboseCrawler(): void
     {
-        $this->prophesizeSitemapRequest('valid_sitemap_3');
+        $this->mockSitemapRequest('valid_sitemap_3');
 
         $this->commandTester->execute([
             'sitemaps' => [
@@ -386,7 +383,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     {
         Tests\Unit\Crawler\DummyCrawler::$simulateFailure = true;
 
-        $this->prophesizeSitemapRequest('valid_sitemap_3');
+        $this->mockSitemapRequest('valid_sitemap_3');
 
         $exitCode = $this->commandTester->execute([
             'sitemaps' => [
@@ -406,7 +403,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
      */
     public function executePrintsSitemapsThatCouldNotBeParsed(): void
     {
-        $this->prophesizeSitemapRequest('invalid_sitemap_1');
+        $this->mockSitemapRequest('invalid_sitemap_1');
 
         $exitCode = $this->commandTester->execute([
             'sitemaps' => [
@@ -426,7 +423,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
      */
     public function executeFailsIfSitemapCannotBeParsed(): void
     {
-        $this->prophesizeSitemapRequest('invalid_sitemap_1');
+        $this->mockSitemapRequest('invalid_sitemap_1');
 
         $this->expectException(Exception\InvalidSitemapException::class);
         $this->expectExceptionCode(1660668799);

@@ -23,34 +23,27 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit;
 
+use GuzzleHttp\Handler;
 use GuzzleHttp\Psr7;
-use Prophecy\Argument;
-use Prophecy\Prophecy;
 use Psr\Http\Client;
-use Psr\Http\Message;
 
 /**
- * RequestProphecyTrait.
+ * ClientMockTrait.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-trait RequestProphecyTrait
+trait ClientMockTrait
 {
-    /**
-     * @var Prophecy\ObjectProphecy|Client\ClientInterface
-     */
-    protected Prophecy\ObjectProphecy $clientProphecy;
+    protected Handler\MockHandler $mockHandler;
+    protected Client\ClientInterface $client;
 
     /**
      * @var array<string, Psr7\Stream>
      */
     protected array $streams = [];
 
-    /**
-     * @throws Client\ClientExceptionInterface
-     */
-    protected function prophesizeSitemapRequest(string $fixture, Message\UriInterface $expectedUri = null): void
+    protected function mockSitemapRequest(string $fixture): void
     {
         $fixtureFile = __DIR__.'/Fixtures/'.$fixture.'.xml';
 
@@ -58,21 +51,14 @@ trait RequestProphecyTrait
 
         $stream = $this->openStream($fixtureFile);
 
-        /* @noinspection PhpParamsInspection */
-        /* @noinspection PhpUndefinedMethodInspection */
-        $this->clientProphecy
-            ->sendRequest(
-                Argument::that(function (Psr7\Request $request) use ($expectedUri) {
-                    if (null === $expectedUri) {
-                        return true;
-                    }
+        $this->mockHandler->append(new Psr7\Response(body: $stream));
+    }
 
-                    return (string) $request->getUri() === (string) $expectedUri;
-                })
-            )
-            ->willReturn(new Psr7\Response(200, body: $stream))
-            ->shouldBeCalled()
-        ;
+    protected function createClient(): Client\ClientInterface
+    {
+        $this->mockHandler = new Handler\MockHandler();
+
+        return new \GuzzleHttp\Client(['handler' => $this->mockHandler]);
     }
 
     protected function openStream(string $file): Psr7\Stream
