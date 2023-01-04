@@ -29,8 +29,6 @@ use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Output\BufferedOutput;
 
-use function func_get_args;
-
 /**
  * OutputtingCrawlerTest.
  *
@@ -91,12 +89,12 @@ final class OutputtingCrawlerTest extends TestCase
         );
     }
 
-    public static function assertStringMatchesRegularExpression(): void
+    public static function assertStringMatchesRegularExpression(string $pattern, string $string): void
     {
         if (method_exists(static::class, 'assertMatchesRegularExpression')) {
-            self::assertMatchesRegularExpression(...func_get_args());
+            self::assertMatchesRegularExpression($pattern, $string);
         } else {
-            self::assertRegExp(...func_get_args());
+            self::assertRegExp($pattern, $string);
         }
     }
 }
