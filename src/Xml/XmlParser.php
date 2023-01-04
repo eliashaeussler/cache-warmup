@@ -72,7 +72,12 @@ final class XmlParser
     {
         // Fetch XML source
         $request = new Request('GET', $this->sitemap->getUri());
-        $response = $this->client->sendRequest($request);
+        if ($this->client instanceof \GuzzleHttp\ClientInterface) {
+            // Make sure redirects and errors are properly handled when using a Guzzle client
+            $response = $this->client->send($request);
+        } else {
+            $response = $this->client->sendRequest($request);
+        }
         $xml = new SimpleXMLElement($response->getBody()->getContents(), LIBXML_NOBLANKS);
 
         // Parse XML
