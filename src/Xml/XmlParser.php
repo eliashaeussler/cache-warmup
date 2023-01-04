@@ -30,6 +30,7 @@ use EliasHaeussler\CacheWarmup\Normalizer;
 use EliasHaeussler\CacheWarmup\Result;
 use EliasHaeussler\CacheWarmup\Sitemap;
 use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7;
 use Psr\Http\Client;
 use Symfony\Component\PropertyInfo;
@@ -56,7 +57,12 @@ final class XmlParser
     {
         // Fetch XML source
         $request = new Psr7\Request('GET', $sitemap->getUri());
-        $response = $this->client->sendRequest($request);
+        if ($this->client instanceof ClientInterface) {
+            // Make sure redirects and errors are properly handled when using a Guzzle client
+            $response = $this->client->send($request);
+        } else {
+            $response = $this->client->sendRequest($request);
+        }
         $body = (string) $response->getBody();
 
         // Deserialize XML

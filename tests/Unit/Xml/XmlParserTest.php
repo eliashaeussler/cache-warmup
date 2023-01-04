@@ -108,6 +108,37 @@ final class XmlParserTest extends Framework\TestCase
     /**
      * @test
      */
+    public function parseFollowsRedirectsWhenUsingGuzzleClient(): void
+    {
+        $this->mockHandler->append(new Psr7\Response(301, ['Location' => 'https://www.example.org/sub/sitemap.xml']));
+
+        $this->mockSitemapRequest('valid_sitemap_5');
+
+        $result = $this->subject->parse($this->sitemap);
+
+        self::assertNotEmpty($result->getUrls());
+    }
+
+    /**
+     * @test
+     */
+    public function parseDoesNotFollowRedirectsWhenUsingOtherClient(): void
+    {
+        $client = new Tests\Unit\Fixtures\DummyClient();
+        $subject = new Xml\XmlParser($client);
+
+        $client->expectedResponse = new Psr7\Response(301, ['Location' => 'https://www.example.org/sub/sitemap.xml']);
+
+        $this->expectException(Exception\InvalidSitemapException::class);
+        $this->expectExceptionCode(1660668799);
+        $this->expectExceptionMessage('The sitemap "https://www.example.org/sitemap.xml" is invalid and cannot be parsed.');
+
+        $subject->parse($this->sitemap);
+    }
+
+    /**
+     * @test
+     */
     public function parseThrowsExceptionOnInvalidSitemapIndex(): void
     {
         $this->mockSitemapRequest('invalid_sitemap_1');
