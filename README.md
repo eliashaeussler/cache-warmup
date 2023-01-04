@@ -177,5 +177,3 @@ Please have a look at [`CONTRIBUTING.md`](CONTRIBUTING.md).
 ## :star: License
 
 This project is licensed under [GNU General Public License 3.0 (or later)](LICENSE).
-
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Feliashaeussler%2Fcache-warmup.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Feliashaeussler%2Fcache-warmup?ref=badge_large)
