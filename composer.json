@@ -23,7 +23,7 @@
 		"guzzlehttp/psr7": ">= 1.8 < 3.0",
 		"psr/http-client": "^1.0",
 		"psr/http-message": "^1.0",
-		"symfony/console": ">= 4.2.2 < 6.0"
+		"symfony/console": "^4.2.2 || ^5.0 || ^6.0"
 	},
 	"require-dev": {
 		"armin/editorconfig-cli": "^1.5",
