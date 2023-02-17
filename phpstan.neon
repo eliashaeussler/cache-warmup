@@ -1,12 +1,10 @@
 includes:
-    - vendor/phpstan/phpstan-phpunit/extension.neon
-    - vendor/phpstan/phpstan-symfony/extension.neon
+    - vendor/phpstan/phpstan/conf/bleedingEdge.neon
 parameters:
     level: max
     paths:
         - bin/cache-warmup
         - src
         - tests
-    treatPhpDocTypesAsCertain: false
     symfony:
         consoleApplicationLoader: tests/Build/console-application.php

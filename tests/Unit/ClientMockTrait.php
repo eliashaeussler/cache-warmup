@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit;
 
+use GuzzleHttp\Client;
 use GuzzleHttp\Handler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7;
-use Psr\Http\Client;
 
 /**
  * ClientMockTrait.
@@ -37,7 +37,7 @@ use Psr\Http\Client;
 trait ClientMockTrait
 {
     protected Handler\MockHandler $mockHandler;
-    protected Client\ClientInterface $client;
+    protected Client $client;
 
     /**
      * @var array<string, Psr7\Stream>
@@ -55,11 +55,11 @@ trait ClientMockTrait
         $this->mockHandler->append(new Psr7\Response(body: $stream));
     }
 
-    protected function createClient(): Client\ClientInterface
+    protected function createClient(): Client
     {
         $this->mockHandler = new Handler\MockHandler();
 
-        return new \GuzzleHttp\Client(['handler' => HandlerStack::create($this->mockHandler)]);
+        return new Client(['handler' => HandlerStack::create($this->mockHandler)]);
     }
 
     protected function openStream(string $file): Psr7\Stream

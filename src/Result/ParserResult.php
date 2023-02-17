@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Result;
 
 use EliasHaeussler\CacheWarmup\Sitemap;
-use Symfony\Component\Serializer;
 
 /**
  * ParserResult.
@@ -41,9 +40,7 @@ final class ParserResult
      * @param list<Sitemap\Url>     $urls
      */
     public function __construct(
-        #[Serializer\Annotation\SerializedName('sitemap')]
         private readonly array $sitemaps = [],
-        #[Serializer\Annotation\SerializedName('url')]
         private readonly array $urls = [],
     ) {
     }

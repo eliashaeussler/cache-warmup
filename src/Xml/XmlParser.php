@@ -23,18 +23,18 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Xml;
 
+use CuyZ\Valinor;
 use DateTimeInterface;
-use Doctrine\Common\Annotations;
 use EliasHaeussler\CacheWarmup\Exception;
-use EliasHaeussler\CacheWarmup\Normalizer;
+use EliasHaeussler\CacheWarmup\Mapper;
 use EliasHaeussler\CacheWarmup\Result;
 use EliasHaeussler\CacheWarmup\Sitemap;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7;
 use Psr\Http\Client;
-use Symfony\Component\PropertyInfo;
-use Symfony\Component\Serializer;
+use Psr\Http\Message;
+use Throwable;
 
 /**
  * XmlParser.
@@ -44,14 +44,18 @@ use Symfony\Component\Serializer;
  */
 final class XmlParser
 {
+    private readonly Valinor\Mapper\TreeMapper $mapper;
+
     public function __construct(
         private readonly Client\ClientInterface $client = new GuzzleClient(),
     ) {
+        $this->mapper = $this->createMapper();
     }
 
     /**
+     * @throws Client\ClientExceptionInterface
      * @throws Exception\InvalidSitemapException
-     * @throws Exception\InvalidUrlException
+     * @throws Exception\MalformedXmlException
      */
     public function parse(Sitemap\Sitemap $sitemap): Result\ParserResult
     {
@@ -65,32 +69,48 @@ final class XmlParser
         }
         $body = (string) $response->getBody();
 
-        // Deserialize XML
-        $serializer = new Serializer\Serializer(
-            [
-                new Normalizer\UriDenormalizer(),
-                new Serializer\Normalizer\ArrayDenormalizer(),
-                new Serializer\Normalizer\DateTimeNormalizer([
-                    Serializer\Normalizer\DateTimeNormalizer::FORMAT_KEY => DateTimeInterface::W3C,
-                ]),
-                new Normalizer\ChangeFrequencyNormalizer(),
-                new Serializer\Normalizer\ObjectNormalizer(
-                    $classMetadataFactory = new Serializer\Mapping\Factory\ClassMetadataFactory(
-                        new Serializer\Mapping\Loader\AnnotationLoader(new Annotations\AnnotationReader())
-                    ),
-                    nameConverter: new Serializer\NameConverter\MetadataAwareNameConverter($classMetadataFactory),
-                    propertyTypeExtractor: new PropertyInfo\Extractor\PhpDocExtractor(),
-                ),
-            ],
-            [
-                new Serializer\Encoder\XmlEncoder(),
-            ],
-        );
+        // Initialize XML source
+        $xml = Mapper\Source\XmlSource::fromXml($body)
+            ->asCollection('sitemap')
+            ->asCollection('url');
+        $source = Valinor\Mapper\Source\Source::iterable($xml)->map([
+            'sitemap' => 'sitemaps',
+            'sitemap.*.loc' => 'uri',
+            'sitemap.*.lastmod' => 'lastModificationDate',
+            'url' => 'urls',
+            'url.*.loc' => 'uri',
+            'url.*.lastmod' => 'lastModificationDate',
+            'url.*.changefreq' => 'changeFrequency',
+        ]);
 
+        // Map XML source
         try {
-            return $serializer->deserialize($body, Result\ParserResult::class, 'xml');
-        } catch (Serializer\Exception\ExceptionInterface $exception) {
-            throw Exception\InvalidSitemapException::create($sitemap, $exception);
+            return $this->mapper->map(Result\ParserResult::class, $source);
+        } catch (Valinor\Mapper\MappingError $error) {
+            throw Exception\InvalidSitemapException::create($sitemap, $error);
         }
+    }
+
+    private function createMapper(): Valinor\Mapper\TreeMapper
+    {
+        return (new Valinor\MapperBuilder())
+            ->registerConstructor(
+                Sitemap\ChangeFrequency::fromCaseInsensitive(...),
+            )
+            ->infer(Message\UriInterface::class, static fn () => Psr7\Uri::class)
+            ->enableFlexibleCasting()
+            ->allowSuperfluousKeys()
+            ->filterExceptions(
+                static function (Throwable $exception) {
+                    if ($exception instanceof Exception\InvalidUrlException) {
+                        return Valinor\Mapper\Tree\Message\MessageBuilder::from($exception);
+                    }
+
+                    throw $exception;
+                }
+            )
+            ->supportDateFormats(DateTimeInterface::W3C)
+            ->mapper()
+        ;
     }
 }

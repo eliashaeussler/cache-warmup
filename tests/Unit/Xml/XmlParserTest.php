@@ -31,6 +31,8 @@ use EliasHaeussler\CacheWarmup\Xml;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
 
+use function implode;
+
 /**
  * XmlParserTest.
  *
@@ -129,9 +131,8 @@ final class XmlParserTest extends Framework\TestCase
 
         $client->expectedResponse = new Psr7\Response(301, ['Location' => 'https://www.example.org/sub/sitemap.xml']);
 
-        $this->expectException(Exception\InvalidSitemapException::class);
-        $this->expectExceptionCode(1660668799);
-        $this->expectExceptionMessage('The sitemap "https://www.example.org/sitemap.xml" is invalid and cannot be parsed.');
+        $this->expectException(Exception\MalformedXmlException::class);
+        $this->expectExceptionCode(1670962571);
 
         $subject->parse($this->sitemap);
     }
@@ -145,7 +146,12 @@ final class XmlParserTest extends Framework\TestCase
 
         $this->expectException(Exception\InvalidSitemapException::class);
         $this->expectExceptionCode(1660668799);
-        $this->expectExceptionMessage('The sitemap "https://www.example.org/sitemap.xml" is invalid and cannot be parsed.');
+        $this->expectExceptionMessage(
+            implode(PHP_EOL, [
+                'The sitemap "https://www.example.org/sitemap.xml" is invalid and cannot be parsed due to the following errors:',
+                '  * The given URL must not be empty.',
+            ]),
+        );
 
         $this->subject->parse($this->sitemap);
     }
@@ -157,9 +163,14 @@ final class XmlParserTest extends Framework\TestCase
     {
         $this->mockSitemapRequest('invalid_sitemap_2');
 
-        $this->expectException(Exception\InvalidUrlException::class);
-        $this->expectExceptionCode(1604055334);
-        $this->expectExceptionMessage('The given URL "foo" is not valid.');
+        $this->expectException(Exception\InvalidSitemapException::class);
+        $this->expectExceptionCode(1660668799);
+        $this->expectExceptionMessage(
+            implode(PHP_EOL, [
+                'The sitemap "https://www.example.org/sitemap.xml" is invalid and cannot be parsed due to the following errors:',
+                '  * The given URL "foo" is not valid.',
+            ]),
+        );
 
         $this->subject->parse($this->sitemap);
     }

@@ -23,10 +23,12 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Exception;
 
+use CuyZ\Valinor;
 use EliasHaeussler\CacheWarmup\Sitemap;
-use Throwable;
 
+use function array_map;
 use function get_debug_type;
+use function implode;
 use function sprintf;
 
 /**
@@ -37,12 +39,18 @@ use function sprintf;
  */
 final class InvalidSitemapException extends Exception
 {
-    public static function create(Sitemap\Sitemap $sitemap, Throwable $previous = null): self
+    public static function create(Sitemap\Sitemap $sitemap, Valinor\Mapper\MappingError $error = null): self
     {
+        $suffix = '.';
+
+        if (null !== $error) {
+            $suffix = ' due to the following errors:'.PHP_EOL.self::formatError($error);
+        }
+
         return new self(
-            sprintf('The sitemap "%s" is invalid and cannot be parsed.', $sitemap->getUri()),
+            sprintf('The sitemap "%s" is invalid and cannot be parsed%s', $sitemap->getUri(), $suffix),
             1660668799,
-            $previous
+            $error,
         );
     }
 
@@ -51,6 +59,19 @@ final class InvalidSitemapException extends Exception
         return new self(
             sprintf('Sitemaps must be of type string or %s, %s given.', Sitemap\Sitemap::class, get_debug_type($sitemap)),
             1604055096
+        );
+    }
+
+    private static function formatError(Valinor\Mapper\MappingError $error): string
+    {
+        $messages = Valinor\Mapper\Tree\Message\Messages::flattenFromNode($error->node());
+
+        return implode(
+            PHP_EOL,
+            array_map(
+                static fn (Valinor\Mapper\Tree\Message\NodeMessage $message) => '  * '.$message->toString(),
+                $messages->toArray(),
+            ),
         );
     }
 }

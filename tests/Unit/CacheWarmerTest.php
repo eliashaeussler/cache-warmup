@@ -30,6 +30,7 @@ use Generator;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
 
+use function implode;
 use function sprintf;
 
 /**
@@ -94,7 +95,12 @@ final class CacheWarmerTest extends Framework\TestCase
 
         $this->expectException(Exception\InvalidSitemapException::class);
         $this->expectExceptionCode(1660668799);
-        $this->expectExceptionMessage('The sitemap "https://www.example.com/sitemap.xml" is invalid and cannot be parsed.');
+        $this->expectExceptionMessage(
+            implode(PHP_EOL, [
+                'The sitemap "https://www.example.com/sitemap.xml" is invalid and cannot be parsed due to the following errors:',
+                '  * The given URL must not be empty.',
+            ]),
+        );
 
         $this->subject->addSitemaps([$sitemap]);
     }
