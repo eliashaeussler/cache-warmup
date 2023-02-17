@@ -21,45 +21,28 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Sitemap;
+namespace EliasHaeussler\CacheWarmup\Exception;
 
-use DateTimeInterface;
-use EliasHaeussler\CacheWarmup\Exception;
-use Psr\Http\Message;
-use Stringable;
+use function mb_strimwidth;
+use function sprintf;
 
 /**
- * Sitemap.
+ * MalformedXmlException.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-class Sitemap implements Stringable
+final class MalformedXmlException extends Exception
 {
-    use UriValidationTrait;
-
-    /**
-     * @throws Exception\InvalidUrlException
-     */
-    public function __construct(
-        protected Message\UriInterface $uri,
-        protected ?DateTimeInterface $lastModificationDate = null,
-    ) {
-        $this->validateUri();
-    }
-
-    public function getUri(): Message\UriInterface
+    public static function create(string $input, string $error): self
     {
-        return $this->uri;
-    }
-
-    public function getLastModificationDate(): ?DateTimeInterface
-    {
-        return $this->lastModificationDate;
-    }
-
-    public function __toString(): string
-    {
-        return (string) $this->getUri();
+        return new self(
+            sprintf(
+                'The string "%s" does not contain valid XML: %s',
+                mb_strimwidth($input, 0, 100, '…'),
+                $error,
+            ),
+            1670962571
+        );
     }
 }

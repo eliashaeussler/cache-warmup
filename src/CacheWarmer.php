@@ -98,6 +98,7 @@ final class CacheWarmer
             }
 
             // Throw exception if sitemap is invalid
+            /* @phpstan-ignore-next-line */
             if (!($sitemap instanceof Sitemap\Sitemap)) {
                 throw Exception\InvalidSitemapException::forInvalidType($sitemap);
             }
@@ -105,7 +106,7 @@ final class CacheWarmer
             // Parse sitemap object
             try {
                 $result = $this->parser->parse($sitemap);
-            } catch (Exception\InvalidSitemapException|Exception\InvalidUrlException $exception) {
+            } catch (Client\ClientExceptionInterface|Exception\Exception $exception) {
                 // Exit early if running in strict mode
                 if ($this->strict) {
                     throw $exception;

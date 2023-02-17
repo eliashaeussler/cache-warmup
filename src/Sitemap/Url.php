@@ -27,7 +27,6 @@ use DateTimeInterface;
 use EliasHaeussler\CacheWarmup\Exception;
 use GuzzleHttp\Psr7;
 use Psr\Http\Message;
-use Symfony\Component\Serializer;
 
 /**
  * Url.
@@ -43,12 +42,9 @@ class Url extends Psr7\Uri
      * @throws Exception\InvalidUrlException
      */
     public function __construct(
-        #[Serializer\Annotation\SerializedName('loc')]
         protected string $uri,
         protected float $priority = 0.5,
-        #[Serializer\Annotation\SerializedName('lastmod')]
         protected ?DateTimeInterface $lastModificationDate = null,
-        #[Serializer\Annotation\SerializedName('changefreq')]
         protected ?ChangeFrequency $changeFrequency = null,
     ) {
         parent::__construct($uri);

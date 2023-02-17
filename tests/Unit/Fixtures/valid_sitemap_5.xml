@@ -16,6 +16,6 @@
         <loc>https://www.example.org/baz</loc>
         <priority>0.5</priority>
         <lastmod>2021-05-28T11:54:00+02:00</lastmod>
-        <changefreq>hourly</changefreq>
+        <changefreq>HOURLY</changefreq>
     </url>
 </urlset>

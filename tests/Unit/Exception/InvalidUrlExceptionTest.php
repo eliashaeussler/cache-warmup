@@ -41,7 +41,6 @@ final class InvalidUrlExceptionTest extends Framework\TestCase
     {
         $actual = Exception\InvalidUrlException::create('foo');
 
-        self::assertInstanceOf(Exception\InvalidUrlException::class, $actual);
         self::assertSame(1604055334, $actual->getCode());
         self::assertSame('The given URL "foo" is not valid.', $actual->getMessage());
     }
@@ -53,7 +52,6 @@ final class InvalidUrlExceptionTest extends Framework\TestCase
     {
         $actual = Exception\InvalidUrlException::forEmptyUrl();
 
-        self::assertInstanceOf(Exception\InvalidUrlException::class, $actual);
         self::assertSame(1604055264, $actual->getCode());
         self::assertSame('The given URL must not be empty.', $actual->getMessage());
     }

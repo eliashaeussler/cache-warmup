@@ -24,40 +24,24 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Exception;
 
 use EliasHaeussler\CacheWarmup\Exception;
-use Generator;
 use PHPUnit\Framework;
 
-use function sprintf;
-
 /**
- * MissingArgumentExceptionTest.
+ * MalformedXmlExceptionTest.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class MissingArgumentExceptionTest extends Framework\TestCase
+final class MalformedXmlExceptionTest extends Framework\TestCase
 {
     /**
      * @test
-     *
-     * @dataProvider createReturnsExceptionForGivenArgumentNameDataProvider
      */
-    public function createReturnsExceptionForGivenArgumentName(string $argumentName, string $expected): void
+    public function createReturnsExceptionForGivenInputString(): void
     {
-        $actual = Exception\MissingArgumentException::create($argumentName);
-        $expectedMessage = sprintf('Required argument "$%s" is missing.', $expected);
+        $actual = Exception\MalformedXmlException::create('foo', 'Invalid XML.');
 
-        self::assertInstanceOf(Exception\MissingArgumentException::class, $actual);
-        self::assertSame(1619635638, $actual->getCode());
-        self::assertSame($expectedMessage, $actual->getMessage());
-    }
-
-    /**
-     * @return Generator<string, array{string, string}>
-     */
-    public function createReturnsExceptionForGivenArgumentNameDataProvider(): Generator
-    {
-        yield 'name only' => ['foo', 'foo'];
-        yield 'name with dollar sign' => ['$foo', 'foo'];
+        self::assertSame(1670962571, $actual->getCode());
+        self::assertSame('The string "foo" does not contain valid XML: Invalid XML.', $actual->getMessage());
     }
 }

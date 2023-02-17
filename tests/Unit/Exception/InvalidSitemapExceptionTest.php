@@ -23,11 +23,13 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Exception;
 
+use CuyZ\Valinor;
 use EliasHaeussler\CacheWarmup\Exception;
 use EliasHaeussler\CacheWarmup\Sitemap;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
 
+use function implode;
 use function sprintf;
 
 /**
@@ -46,7 +48,6 @@ final class InvalidSitemapExceptionTest extends Framework\TestCase
         $sitemap = new Sitemap\Sitemap(new Psr7\Uri('https://www.example.com'));
         $actual = Exception\InvalidSitemapException::create($sitemap);
 
-        self::assertInstanceOf(Exception\InvalidSitemapException::class, $actual);
         self::assertSame(1660668799, $actual->getCode());
         self::assertSame(
             'The sitemap "https://www.example.com" is invalid and cannot be parsed.',
@@ -57,15 +58,47 @@ final class InvalidSitemapExceptionTest extends Framework\TestCase
     /**
      * @test
      */
+    public function createReturnsExceptionForGivenSitemapAndMappingError(): void
+    {
+        $sitemap = new Sitemap\Sitemap(new Psr7\Uri('https://www.example.com'));
+        $error = $this->createMappingError();
+        $actual = Exception\InvalidSitemapException::create($sitemap, $error);
+
+        self::assertSame(1660668799, $actual->getCode());
+        self::assertSame(
+            implode(PHP_EOL, [
+                'The sitemap "https://www.example.com" is invalid and cannot be parsed due to the following errors:',
+                '  * Cannot be empty and must be filled with a value matching type `string`.',
+            ]),
+            $actual->getMessage(),
+        );
+    }
+
+    /**
+     * @test
+     */
     public function forInvalidTypeReturnsExceptionForGivenSitemap(): void
     {
         $actual = Exception\InvalidSitemapException::forInvalidType(null);
 
-        self::assertInstanceOf(Exception\InvalidSitemapException::class, $actual);
         self::assertSame(1604055096, $actual->getCode());
         self::assertSame(
             sprintf('Sitemaps must be of type string or %s, null given.', Sitemap\Sitemap::class),
             $actual->getMessage()
         );
+    }
+
+    private function createMappingError(): Valinor\Mapper\MappingError
+    {
+        try {
+            (new Valinor\MapperBuilder())
+                ->mapper()
+                ->map('array{foo: string}', [])
+            ;
+        } catch (Valinor\Mapper\MappingError $error) {
+            return $error;
+        }
+
+        self::fail('Expected error was not thrown.');
     }
 }

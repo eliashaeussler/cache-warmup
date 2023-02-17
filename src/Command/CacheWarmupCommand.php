@@ -33,11 +33,11 @@ use Psr\Http\Client;
 use Symfony\Component\Console;
 
 use function array_map;
-use function assert;
+use function array_values;
 use function count;
-use function in_array;
 use function is_array;
 use function is_string;
+use function is_subclass_of;
 use function json_decode;
 use function json_encode;
 use function sprintf;
@@ -134,7 +134,7 @@ final class CacheWarmupCommand extends Console\Command\Command
             'l',
             Console\Input\InputOption::VALUE_REQUIRED,
             'Limit the number of URLs to be processed',
-            '0'
+            0
         );
         $this->addOption(
             'progress',
@@ -189,7 +189,7 @@ final class CacheWarmupCommand extends Console\Command\Command
         } while ($sitemap instanceof Sitemap\Sitemap);
 
         // Throw exception if no sitemaps were added
-        if ([] === $sitemaps && [] === $input->getOption('urls')) {
+        if ([] === $sitemaps) {
             throw new Console\Exception\RuntimeException('You must enter at least one sitemap URL.', 1604258903);
         }
 
@@ -201,7 +201,7 @@ final class CacheWarmupCommand extends Console\Command\Command
         $sitemaps = $input->getArgument('sitemaps');
         $urls = $input->getOption('urls');
         $limit = (int) $input->getOption('limit');
-        $allowFailures = (bool) $input->getOption('allow-failures');
+        $allowFailures = $input->getOption('allow-failures');
 
         // Throw exception if neither sitemaps nor URLs are defined
         if ([] === $sitemaps && [] === $urls) {
@@ -215,9 +215,8 @@ final class CacheWarmupCommand extends Console\Command\Command
         // Initialize cache warmer
         $output->write('Parsing sitemaps... ');
         $cacheWarmer = new CacheWarmer($limit, $this->client, $crawler, !$allowFailures);
-        $cacheWarmer->addSitemaps($sitemaps);
+        $cacheWarmer->addSitemaps(array_values($sitemaps));
         foreach ($urls as $url) {
-            assert(is_string($url));
             $cacheWarmer->addUrl($url);
         }
         $output->writeln('<info>Done</info>');
@@ -313,7 +312,7 @@ final class CacheWarmupCommand extends Console\Command\Command
                 throw new Console\Exception\RuntimeException('The specified crawler class does not exist.', 1604261816);
             }
 
-            if (!in_array(Crawler\CrawlerInterface::class, class_implements($crawler) ?: [])) {
+            if (!is_subclass_of($crawler, Crawler\CrawlerInterface::class)) {
                 throw new Console\Exception\RuntimeException('The specified crawler is not valid.', 1604261885);
             }
 
@@ -355,7 +354,7 @@ final class CacheWarmupCommand extends Console\Command\Command
             return false;
         }
 
-        return $output->isVerbose() || $input->getOption('progress');
+        return $output->isVerbose() || true === $input->getOption('progress');
     }
 
     /**
