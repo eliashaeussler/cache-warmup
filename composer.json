@@ -33,7 +33,7 @@
 		"phpstan/phpstan-phpunit": "^1.1",
 		"phpstan/phpstan-strict-rules": "^1.4",
 		"phpstan/phpstan-symfony": "^1.2.11",
-		"phpunit/phpunit": "^9.5"
+		"phpunit/phpunit": "^9.5 || ^10.0"
 	},
 	"autoload": {
 		"psr-4": {
