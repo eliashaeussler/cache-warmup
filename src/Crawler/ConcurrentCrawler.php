@@ -23,14 +23,10 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Crawler;
 
+use EliasHaeussler\CacheWarmup\Http;
 use EliasHaeussler\CacheWarmup\Result;
-use Generator;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Pool;
-use GuzzleHttp\Psr7;
-use Psr\Http\Message;
-use Throwable;
 
 /**
  * ConcurrentCrawler.
@@ -42,19 +38,23 @@ use Throwable;
  *     concurrency: int,
  *     request_method: string,
  *     request_headers: array<string, string>,
+ *     request_options: array<string, string>,
  *     client_config: array<string, mixed>
  * }>
  */
-class ConcurrentCrawler extends AbstractConfigurableCrawler
+final class ConcurrentCrawler extends AbstractConfigurableCrawler
 {
+    use ConcurrentCrawlerTrait;
+
     protected static array $defaultOptions = [
         'concurrency' => 5,
         'request_method' => 'HEAD',
         'request_headers' => [],
+        'request_options' => [],
         'client_config' => [],
     ];
 
-    protected readonly ClientInterface $client;
+    private readonly ClientInterface $client;
 
     public function __construct(
         array $options = [],
@@ -66,56 +66,11 @@ class ConcurrentCrawler extends AbstractConfigurableCrawler
 
     public function crawl(array $urls): Result\CacheWarmupResult
     {
-        $result = new Result\CacheWarmupResult();
-        $urls = array_values($urls);
-
-        // Create request pool
-        $pool = new Pool($this->client, $this->buildRequests($urls), [
-            'concurrency' => $this->options['concurrency'],
-            'fulfilled' => function (Message\ResponseInterface $response, int $index) use ($result, $urls) {
-                $state = $this->onSuccess($response, $urls[$index]);
-                $result->addResult($state);
-            },
-            'rejected' => function (Throwable $exception, int $index) use ($result, $urls) {
-                $state = $this->onFailure($exception, $urls[$index]);
-                $result->addResult($state);
-            },
-        ]);
+        $handler = new Http\Message\Handler\ResultCollectorHandler();
 
         // Start crawling
-        $promise = $pool->promise();
-        $promise->wait();
+        $this->createPool($urls, $this->client, [$handler])->promise()->wait();
 
-        return $result;
-    }
-
-    public function onSuccess(Message\ResponseInterface $response, Message\UriInterface $url): Result\CrawlingResult
-    {
-        $data = [
-            'response' => $response,
-        ];
-
-        return Result\CrawlingResult::createSuccessful($url, $data);
-    }
-
-    public function onFailure(Throwable $exception, Message\UriInterface $url): Result\CrawlingResult
-    {
-        $data = [
-            'exception' => $exception,
-        ];
-
-        return Result\CrawlingResult::createFailed($url, $data);
-    }
-
-    /**
-     * @param list<Message\UriInterface> $urls
-     *
-     * @return Generator<Message\RequestInterface>
-     */
-    protected function buildRequests(array $urls): Generator
-    {
-        foreach ($urls as $url) {
-            yield new Psr7\Request($this->options['request_method'], $url, $this->options['request_headers']);
-        }
+        return $handler->getResult();
     }
 }

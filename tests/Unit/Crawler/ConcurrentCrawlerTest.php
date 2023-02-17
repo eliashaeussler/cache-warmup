@@ -27,7 +27,6 @@ use EliasHaeussler\CacheWarmup\Crawler;
 use EliasHaeussler\CacheWarmup\Result;
 use EliasHaeussler\CacheWarmup\Tests;
 use GuzzleHttp\Client;
-use GuzzleHttp\Handler;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
 
@@ -40,18 +39,14 @@ use PHPUnit\Framework;
 final class ConcurrentCrawlerTest extends Framework\TestCase
 {
     use Tests\Unit\CacheWarmupResultProcessorTrait;
+    use Tests\Unit\ClientMockTrait;
 
-    private bool $handlerPassed;
     private Crawler\ConcurrentCrawler $subject;
 
     protected function setUp(): void
     {
-        $this->handlerPassed = false;
-        $this->subject = new Crawler\ConcurrentCrawler([
-            'client_config' => [
-                'handler' => $this->createMockHandler(),
-            ],
-        ]);
+        $this->client = $this->createClient();
+        $this->subject = new Crawler\ConcurrentCrawler(client: $this->client);
     }
 
     /**
@@ -59,11 +54,21 @@ final class ConcurrentCrawlerTest extends Framework\TestCase
      */
     public function constructorInstantiatesClientWithGivenClientConfig(): void
     {
-        self::assertFalse($this->handlerPassed);
+        $this->mockHandler->append(new Psr7\Response());
 
-        $this->subject->crawl([new Psr7\Uri('https://www.example.org')]);
+        $subject = new Crawler\ConcurrentCrawler(
+            [
+                'client_config' => [
+                    'handler' => $this->mockHandler,
+                ],
+            ],
+        );
 
-        self::assertTrue($this->handlerPassed);
+        self::assertNull($this->mockHandler->getLastRequest());
+
+        $subject->crawl([new Psr7\Uri('https://www.example.org')]);
+
+        self::assertNotNull($this->mockHandler->getLastRequest());
     }
 
     /**
@@ -71,20 +76,20 @@ final class ConcurrentCrawlerTest extends Framework\TestCase
      */
     public function constructorIgnoresGivenClientConfigIfInstantiatedClientIsPassed(): void
     {
-        $this->subject = new Crawler\ConcurrentCrawler(
+        $subject = new Crawler\ConcurrentCrawler(
             [
                 'client_config' => [
-                    'handler' => $this->createMockHandler(),
+                    'handler' => $this->mockHandler,
                 ],
             ],
             new Client(),
         );
 
-        self::assertFalse($this->handlerPassed);
+        self::assertNull($this->mockHandler->getLastRequest());
 
-        $this->subject->crawl([new Psr7\Uri('https://www.example.org')]);
+        $subject->crawl([new Psr7\Uri('https://www.example.org')]);
 
-        self::assertFalse($this->handlerPassed);
+        self::assertNull($this->mockHandler->getLastRequest());
     }
 
     /**
@@ -92,7 +97,14 @@ final class ConcurrentCrawlerTest extends Framework\TestCase
      */
     public function crawlSendsRequestToAllGivenUrls(): void
     {
-        $subject = new Crawler\ConcurrentCrawler();
+        $this->mockHandler->append(
+            new Psr7\Response(),
+            new Psr7\Response(),
+            new Psr7\Response(),
+            new Psr7\Response(),
+            new Psr7\Response(),
+        );
+
         $urls = [
             new Psr7\Uri('https://www.example.org'),
             new Psr7\Uri('https://www.example.com'),
@@ -101,7 +113,7 @@ final class ConcurrentCrawlerTest extends Framework\TestCase
             new Psr7\Uri('https://www.beispiel.de'),
         ];
 
-        $result = $subject->crawl($urls);
+        $result = $this->subject->crawl($urls);
         $processedUrls = $this->getProcessedUrlsFromCacheWarmupResult($result);
 
         self::assertSame([], array_diff($urls, $processedUrls));
@@ -112,12 +124,13 @@ final class ConcurrentCrawlerTest extends Framework\TestCase
      */
     public function crawlHandlesSuccessfulRequestsOfAllGivenUrls(): void
     {
-        $subject = new Crawler\ConcurrentCrawler();
+        $this->mockHandler->append(new Psr7\Response());
+
         $urls = [
             new Psr7\Uri('https://www.example.org'),
         ];
 
-        $result = $subject->crawl($urls);
+        $result = $this->subject->crawl($urls);
 
         self::assertSame($urls, $this->getProcessedUrlsFromCacheWarmupResult($result, Result\CrawlingState::Successful));
         self::assertSame([], $result->getFailed());
@@ -128,22 +141,15 @@ final class ConcurrentCrawlerTest extends Framework\TestCase
      */
     public function crawlHandlesFailedRequestsOfAllGivenUrls(): void
     {
-        $subject = new Crawler\ConcurrentCrawler();
+        $this->mockHandler->append(new Psr7\Response(404));
+
         $urls = [
             new Psr7\Uri('https://www.foo.baz'),
         ];
 
-        $result = $subject->crawl($urls);
+        $result = $this->subject->crawl($urls);
 
         self::assertSame($urls, $this->getProcessedUrlsFromCacheWarmupResult($result, Result\CrawlingState::Failed));
         self::assertSame([], $result->getSuccessful());
-    }
-
-    private function createMockHandler(): Handler\MockHandler
-    {
-        return new Handler\MockHandler(
-            [new Psr7\Response()],
-            fn () => $this->handlerPassed = true,
-        );
     }
 }

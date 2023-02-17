@@ -24,7 +24,9 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler;
 
 use EliasHaeussler\CacheWarmup\Crawler;
-use EliasHaeussler\CacheWarmup\Exception;
+use EliasHaeussler\CacheWarmup\Result;
+use EliasHaeussler\CacheWarmup\Tests;
+use GuzzleHttp\Client;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
 use Symfony\Component\Console;
@@ -37,45 +39,149 @@ use Symfony\Component\Console;
  */
 final class OutputtingCrawlerTest extends Framework\TestCase
 {
+    use Tests\Unit\CacheWarmupResultProcessorTrait;
+    use Tests\Unit\ClientMockTrait;
+
     private Console\Output\BufferedOutput $output;
-    private Crawler\OutputtingCrawler$subject;
+    private Crawler\OutputtingCrawler $subject;
 
     protected function setUp(): void
     {
+        $this->client = $this->createClient();
         $this->output = new Console\Output\BufferedOutput();
-        $this->subject = new Crawler\OutputtingCrawler();
+        $this->subject = new Crawler\OutputtingCrawler(client: $this->client);
         $this->subject->setOutput($this->output);
     }
 
     /**
      * @test
      */
-    public function crawlThrowsExceptionIfOutputIsNotSet(): void
+    public function constructorInstantiatesClientWithGivenClientConfig(): void
     {
-        $subject = new Crawler\OutputtingCrawler();
+        $this->mockHandler->append(new Psr7\Response());
 
-        $this->expectException(Exception\MissingArgumentException::class);
-        $this->expectExceptionCode(1619635638);
+        $subject = new Crawler\OutputtingCrawler(
+            [
+                'client_config' => [
+                    'handler' => $this->mockHandler,
+                ],
+            ],
+        );
+        $subject->setOutput($this->output);
 
-        $subject->crawl([]);
+        self::assertNull($this->mockHandler->getLastRequest());
+
+        $subject->crawl([new Psr7\Uri('https://www.example.org')]);
+
+        self::assertNotNull($this->mockHandler->getLastRequest());
     }
 
     /**
      * @test
      */
-    public function crawlCreatesProgressBarAndWritesCrawlingStateToOutput(): void
+    public function constructorIgnoresGivenClientConfigIfInstantiatedClientIsPassed(): void
     {
+        $subject = new Crawler\OutputtingCrawler(
+            [
+                'client_config' => [
+                    'handler' => $this->mockHandler,
+                ],
+            ],
+            new Client(),
+        );
+        $subject->setOutput($this->output);
+
+        self::assertNull($this->mockHandler->getLastRequest());
+
+        $subject->crawl([new Psr7\Uri('https://www.example.org')]);
+
+        self::assertNull($this->mockHandler->getLastRequest());
+    }
+
+    /**
+     * @test
+     */
+    public function crawlSendsRequestToAllGivenUrls(): void
+    {
+        $this->mockHandler->append(
+            new Psr7\Response(),
+            new Psr7\Response(),
+            new Psr7\Response(),
+            new Psr7\Response(),
+            new Psr7\Response(),
+        );
+
+        $urls = [
+            new Psr7\Uri('https://www.example.org'),
+            new Psr7\Uri('https://www.example.com'),
+            new Psr7\Uri('https://www.example.net'),
+            new Psr7\Uri('https://www.example.edu'),
+            new Psr7\Uri('https://www.beispiel.de'),
+        ];
+
+        $result = $this->subject->crawl($urls);
+        $processedUrls = $this->getProcessedUrlsFromCacheWarmupResult($result);
+
+        self::assertSame([], array_diff($urls, $processedUrls));
+    }
+
+    /**
+     * @test
+     */
+    public function crawlHandlesSuccessfulRequestsOfAllGivenUrls(): void
+    {
+        $this->mockHandler->append(new Psr7\Response());
+
+        $urls = [
+            new Psr7\Uri('https://www.example.org'),
+        ];
+
+        $result = $this->subject->crawl($urls);
+
+        self::assertSame($urls, $this->getProcessedUrlsFromCacheWarmupResult($result, Result\CrawlingState::Successful));
+        self::assertSame([], $result->getFailed());
+    }
+
+    /**
+     * @test
+     */
+    public function crawlHandlesFailedRequestsOfAllGivenUrls(): void
+    {
+        $this->mockHandler->append(new Psr7\Response(404));
+
+        $urls = [
+            new Psr7\Uri('https://www.foo.baz'),
+        ];
+
+        $result = $this->subject->crawl($urls);
+
+        self::assertSame($urls, $this->getProcessedUrlsFromCacheWarmupResult($result, Result\CrawlingState::Failed));
+        self::assertSame([], $result->getSuccessful());
+    }
+
+    /**
+     * @test
+     */
+    public function crawlWritesCrawlingStateAsProgressBarToOutput(): void
+    {
+        $this->mockHandler->append(
+            new Psr7\Response(),
+            new Psr7\Response(404),
+        );
+
         $uri1 = new Psr7\Uri('https://www.example.org');
         $uri2 = new Psr7\Uri('https://www.foo.baz');
+
         $this->subject->crawl([$uri1, $uri2]);
 
         $output = $this->output->fetch();
+
         self::assertMatchesRegularExpression(
-            sprintf('#^\s*\d/\d [^\s]+\s+\d+%% -- %s \((success|failed)\)$#m', preg_quote((string) $uri1)),
+            sprintf('#^\s*1/2 [^\s]+\s+\d+%% -- %s \(success\)$#m', preg_quote((string) $uri1)),
             $output
         );
         self::assertMatchesRegularExpression(
-            sprintf('#^\s*\d/\d [^\s]+\s+\d+%% -- %s \(failed\)$#m', preg_quote((string) $uri2)),
+            sprintf('#^\s*2/2 [^\s]+\s+\d+%% -- %s \(failed\)$#m', preg_quote((string) $uri2)),
             $output
         );
     }

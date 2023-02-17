@@ -38,10 +38,8 @@ final class DummyVerboseCrawler extends DummyCrawler implements Crawler\VerboseC
 {
     public static ?Console\Output\OutputInterface $output = null;
 
-    public function setOutput(Console\Output\OutputInterface $output): Crawler\VerboseCrawlerInterface
+    public function setOutput(Console\Output\OutputInterface $output): void
     {
         self::$output = $output;
-
-        return $this;
     }
 }
