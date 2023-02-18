@@ -26,8 +26,6 @@ namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler;
 use EliasHaeussler\CacheWarmup\Exception;
 use PHPUnit\Framework;
 
-use function get_class;
-
 /**
  * AbstractConfigurableCrawlerTest.
  *
@@ -64,7 +62,7 @@ final class AbstractConfigurableCrawlerTest extends Framework\TestCase
         $this->expectException(Exception\InvalidCrawlerOptionException::class);
         $this->expectExceptionCode(1659206995);
         $this->expectExceptionMessage(
-            'The crawler options "dummy", "blub" are invalid or not supported by crawler "'.get_class($this->subject).'".'
+            'The crawler options "dummy", "blub" are invalid or not supported by crawler "'.$this->subject::class.'".'
         );
 
         $this->subject->setOptions([

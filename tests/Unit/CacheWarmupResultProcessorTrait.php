@@ -42,7 +42,7 @@ trait CacheWarmupResultProcessorTrait
         Result\CrawlingState $state = null,
     ): array {
         $urls = [];
-        $crawlingResults = array_merge($result->getSuccessful(), $result->getFailed());
+        $crawlingResults = [...$result->getSuccessful(), ...$result->getFailed()];
 
         foreach ($crawlingResults as $crawlingResult) {
             if (null === $state || $crawlingResult->is($state)) {

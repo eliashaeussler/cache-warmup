@@ -61,7 +61,7 @@ final class ConcurrentCrawler extends AbstractConfigurableCrawler
         ClientInterface $client = null,
     ) {
         parent::__construct($options);
-        $this->client = null !== $client ? $client : new Client($this->options['client_config']);
+        $this->client = $client ?? new Client($this->options['client_config']);
     }
 
     public function crawl(array $urls): Result\CacheWarmupResult
