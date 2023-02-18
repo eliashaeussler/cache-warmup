@@ -27,62 +27,69 @@ use Psr\Http\Message;
 use Symfony\Component\Console;
 use Throwable;
 
+use function sprintf;
+
 /**
- * OutputtingProgressHandler.
+ * VerboseProgressHandler.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class OutputtingProgressHandler implements ResponseHandlerInterface
+final class VerboseProgressHandler implements ResponseHandlerInterface
 {
-    private const PROGRESS_BAR_FORMAT = ' %current%/%max% [%bar%] %percent:3s%% -- %url% %state%';
-
+    private readonly Console\Output\ConsoleSectionOutput $logSection;
+    private readonly Console\Output\ConsoleSectionOutput $progressBarSection;
     private readonly Console\Helper\ProgressBar $progressBar;
 
     public function __construct(
-        Console\Output\OutputInterface $output,
+        Console\Output\ConsoleOutputInterface $output,
         int $max,
     ) {
-        $this->progressBar = $this->createProgressBar($output, $max);
+        $this->logSection = $output->section();
+        $this->progressBarSection = $output->section();
+        $this->progressBar = $this->createProgressBar($max);
     }
 
     public function startProgressBar(): void
     {
-        $this->progressBar->setMessage('', 'url');
-        $this->progressBar->setMessage('', 'state');
+        $this->progressBarSection->writeln('');
         $this->progressBar->start();
     }
 
     public function finishProgressBar(): void
     {
         $this->progressBar->finish();
+        $this->progressBarSection->clear();
     }
 
     public function onSuccess(Message\ResponseInterface $response, Message\UriInterface $uri): void
     {
-        $this->progressBar->setMessage((string) $uri, 'url');
-        $this->progressBar->setMessage('(<info>success</info>)', 'state');
+        $this->logSection->writeln(sprintf('<success> SUCCESS </success> <href=%s>%s</>', $uri, $uri));
+
         $this->progressBar->advance();
         $this->progressBar->display();
     }
 
     public function onFailure(Throwable $exception, Message\UriInterface $uri): void
     {
-        $this->progressBar->setMessage((string) $uri, 'url');
-        $this->progressBar->setMessage('(<error>failed</error>)', 'state');
+        $this->logSection->writeln(sprintf('<failure> FAILURE </failure> <href=%s>%s</>', $uri, $uri));
+
         $this->progressBar->advance();
         $this->progressBar->display();
     }
 
-    private function createProgressBar(Console\Output\OutputInterface $output, int $max): Console\Helper\ProgressBar
+    private function createProgressBar(int $max): Console\Helper\ProgressBar
     {
-        Console\Helper\ProgressBar::setFormatDefinition('cache-warmup', self::PROGRESS_BAR_FORMAT);
+        $formatter = $this->progressBarSection->getFormatter();
+        $formatter->setStyle(
+            'success',
+            new Console\Formatter\OutputFormatterStyle('black', 'green'),
+        );
+        $formatter->setStyle(
+            'failure',
+            new Console\Formatter\OutputFormatterStyle('white', 'red'),
+        );
 
-        $progressBar = new Console\Helper\ProgressBar($output, $max);
-
-        $progressBar->setFormat('cache-warmup');
-        $progressBar->setOverwrite(false);
-
-        return $progressBar;
+        return new Console\Helper\ProgressBar($this->progressBarSection, $max);
     }
 }

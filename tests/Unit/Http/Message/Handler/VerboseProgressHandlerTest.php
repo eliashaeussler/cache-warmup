@@ -24,26 +24,26 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Http\Message\Handler;
 
 use EliasHaeussler\CacheWarmup\Http;
+use EliasHaeussler\CacheWarmup\Tests;
 use Exception;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
-use Symfony\Component\Console;
 
 /**
- * OutputtingProgressHandlerTest.
+ * VerboseProgressHandlerTest.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class OutputtingProgressHandlerTest extends Framework\TestCase
+final class VerboseProgressHandlerTest extends Framework\TestCase
 {
-    private Console\Output\BufferedOutput $output;
-    private Http\Message\Handler\OutputtingProgressHandler $subject;
+    private Tests\Unit\BufferedConsoleOutput $output;
+    private Http\Message\Handler\VerboseProgressHandler $subject;
 
     protected function setUp(): void
     {
-        $this->output = new Console\Output\BufferedOutput();
-        $this->subject = new Http\Message\Handler\OutputtingProgressHandler($this->output, 10);
+        $this->output = new Tests\Unit\BufferedConsoleOutput();
+        $this->subject = new Http\Message\Handler\VerboseProgressHandler($this->output, 10);
     }
 
     #[Framework\Attributes\Test]
@@ -51,7 +51,7 @@ final class OutputtingProgressHandlerTest extends Framework\TestCase
     {
         $this->subject->startProgressBar();
 
-        self::assertMatchesRegularExpression('#^\s*0/10 \S+\s+0% -- {2}$#m', $this->output->fetch());
+        self::assertMatchesRegularExpression('#^\s*0/10 \S+\s+0%$#m', $this->output->fetch());
     }
 
     #[Framework\Attributes\Test]
@@ -62,8 +62,7 @@ final class OutputtingProgressHandlerTest extends Framework\TestCase
 
         $output = $this->output->fetch();
 
-        self::assertMatchesRegularExpression('#^\s*0/10 \S+\s+0% -- {2}$#m', $output);
-        self::assertMatchesRegularExpression('#^\s*10/10 \S+\s+100% -- {2}$#m', $output);
+        self::assertMatchesRegularExpression('#^\s*10/10 \S+\s+100%$#m', $output);
     }
 
     #[Framework\Attributes\Test]
@@ -75,10 +74,10 @@ final class OutputtingProgressHandlerTest extends Framework\TestCase
         $this->subject->startProgressBar();
         $this->subject->onSuccess($response, $uri);
 
-        self::assertMatchesRegularExpression(
-            sprintf('#^\s*1/10 [^\s]+\s+10%% -- %s \(success\)$#m', preg_quote((string) $uri)),
-            $this->output->fetch(),
-        );
+        $output = $this->output->fetch();
+
+        self::assertStringContainsString(' SUCCESS  '.$uri, $output);
+        self::assertMatchesRegularExpression('#^\s*1/10 \S+\s+10%$#m', $output);
     }
 
     #[Framework\Attributes\Test]
@@ -90,9 +89,9 @@ final class OutputtingProgressHandlerTest extends Framework\TestCase
         $this->subject->startProgressBar();
         $this->subject->onFailure($exception, $uri);
 
-        self::assertMatchesRegularExpression(
-            sprintf('#^\s*1/10 [^\s]+\s+10%% -- %s \(failed\)$#m', preg_quote((string) $uri)),
-            $this->output->fetch(),
-        );
+        $output = $this->output->fetch();
+
+        self::assertStringContainsString(' FAILURE  '.$uri, $output);
+        self::assertMatchesRegularExpression('#^\s*1/10 \S+\s+10%$#m', $output);
     }
 }
