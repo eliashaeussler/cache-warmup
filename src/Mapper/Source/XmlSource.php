@@ -31,6 +31,8 @@ use Traversable;
 
 use function array_is_list;
 use function is_array;
+use function restore_error_handler;
+use function set_error_handler;
 
 /**
  * XmlSource.
@@ -55,10 +57,14 @@ final class XmlSource implements IteratorAggregate
      */
     public static function fromXml(string $xml): self
     {
+        set_error_handler(static fn (int $code, string $message) => self::handleParseError($xml, $message));
+
         try {
             $source = XmlToArray\XmlToArray::convert($xml);
         } catch (Throwable $exception) {
-            throw Exception\MalformedXmlException::create($xml, $exception->getMessage());
+            self::handleParseError($xml, $exception->getMessage());
+        } finally {
+            restore_error_handler();
         }
 
         return new self($source);
@@ -81,5 +87,13 @@ final class XmlSource implements IteratorAggregate
     public function getIterator(): Traversable
     {
         yield from $this->source;
+    }
+
+    /**
+     * @throws Exception\MalformedXmlException
+     */
+    private static function handleParseError(string $xml, string $message): never
+    {
+        throw Exception\MalformedXmlException::create($xml, $message);
     }
 }
