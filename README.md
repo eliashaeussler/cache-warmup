@@ -15,9 +15,9 @@
 [![Docker](https://img.shields.io/docker/v/eliashaeussler/cache-warmup?label=docker&sort=semver)](https://hub.docker.com/r/eliashaeussler/cache-warmup)
 [![License](http://poser.pugx.org/eliashaeussler/cache-warmup/license)](LICENSE)
 
-:package:&nbsp;[Packagist](https://packagist.org/packages/eliashaeussler/cache-warmup) |
-:floppy_disk:&nbsp;[Repository](https://github.com/eliashaeussler/cache-warmup) |
-:bug:&nbsp;[Issue tracker](https://github.com/eliashaeussler/cache-warmup/issues)
+📦&nbsp;[Packagist](https://packagist.org/packages/eliashaeussler/cache-warmup) |
+💾&nbsp;[Repository](https://github.com/eliashaeussler/cache-warmup) |
+🐛&nbsp;[Issue tracker](https://github.com/eliashaeussler/cache-warmup/issues)
 
 </div>
 
@@ -26,7 +26,7 @@ is performed by concurrently sending a simple `HEAD` request to those pages,
 either from the command-line or by using the provided PHP API. It is even
 possible to write custom crawlers that take care of cache warmup.
 
-## :rocket: Features
+## 🚀 Features
 
 * Warmup caches of pages located in XML sitemaps
 * Optionally warmup caches of single pages
@@ -34,7 +34,7 @@ possible to write custom crawlers that take care of cache warmup.
 * Additional Docker image
 * Interface for custom crawler implementations
 
-## :fire: Installation
+## 🔥 Installation
 
 ### Composer
 
@@ -59,59 +59,30 @@ phive install eliashaeussler/cache-warmup
 
 Please have a look at [`Usage with Docker`](#usage-with-docker).
 
-## :zap: Usage
+## ⚡ Usage
 
 ### Command-line usage
 
-**General usage**
-
-```
-./vendor/bin/cache-warmup \
-  [-u|--urls=URLS...] \
-  [-l|--limit=LIMIT] \
-  [-p|--progress|--no-progress] \
-  [-c|--crawler=CRAWLER] \
-  [-o|--crawler-options=CRAWLER-OPTIONS] \
-  [--allow-failures] \
-  [<sitemaps>...]
-```
-
-:bulb: Run `./vendor/bin/cache-warmup --help` to see all available input
-options and arguments.
-
-**Extended usage**
-
 ```bash
-# Warm up caches of specific sitemap
-./vendor/bin/cache-warmup "https://www.example.org/sitemap.xml"
-
-# Limit number of pages to be crawled
-./vendor/bin/cache-warmup "https://www.example.org/sitemap.xml" --limit 50
-
-# Show or hide progress bar (progress bar is shown by default with increased verbosity)
-./vendor/bin/cache-warmup "https://www.example.org/sitemap.xml" --[no-]progress
-./vendor/bin/cache-warmup "https://www.example.org/sitemap.xml" --verbose
-
-# Use custom crawler (must implement EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface)
-./vendor/bin/cache-warmup "https://www.example.org/sitemap.xml" --crawler "Vendor\Crawler\MyCrawler"
-
-# Provide crawler options (only used for configurable crawlers)
-./vendor/bin/cache-warmup "https://www.example.org/sitemap.xml" --crawler-options '{"concurrency": 3}'
-
-# Exit gracefully even if crawling of URLs failed
-./vendor/bin/cache-warmup "https://www.example.org/sitemap.xml" --allow-failures
-
-# Define URLs to be crawled
-./vendor/bin/cache-warmup -u "https://www.example.org/" \
-    -u "https://www.example.org/foo" \
-    -u "https://www.example.org/baz"
+vendor/bin/cache-warmup [options] [<sitemaps>...]
 ```
 
-For more detailed information run `./vendor/bin/cache-warmup --help`.
+The following input parameters are available:
+
+| Parameter                 | Description                                                                                                                                             |
+|---------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `sitemaps`                | URLs of XML sitemaps to be warmed up *(multiple values allowed)*                                                                                        |
+| `--urls`, `-u`            | Additional URLs to be warmed up *(multiple values allowed)*                                                                                             |
+| `--limit`, `-l`           | Limit the number of URLs to be processed *(default: 0)*                                                                                                 |
+| `--progress`, `-p`        | Show progress bar during cache warmup                                                                                                                   |
+| `--crawler`, `-c`         | FQCN of the crawler to use for cache warming (must implement [`EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface`](src/Crawler/CrawlerInterface.php)) |
+| `--crawler-options`, `-o` | JSON-encoded string of additional config for configurable crawlers                                                                                      |
+| `--allow-failures`        | Allow failures during URL crawling and exit with zero                                                                                                   |
+
+💡 Run `vendor/bin/cache-warmup --help` to see a detailed explanation of
+all available input parameters.
 
 ### Code usage
-
-**General usage**
 
 ```php
 // Instantiate and run cache warmer
@@ -124,81 +95,20 @@ $successfulUrls = $result->getSuccessful();
 $failedUrls = $result->getFailed();
 ```
 
-**Extended usage**
-
-```php
-// Limit number of pages to be crawled
-$limit = 50;
-
-// Use custom client
-$client = new \GuzzleHttp\Client([
-    // ...
-]);
-
-// Use custom crawler (must implement EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface)
-$crawler = new \Vendor\Crawler\MyCrawler();
-$crawler->setOptions(['concurrency' => 3]);
-
-// Enable strict mode (throws exception if XML parsing fails)
-$strict = true;
-
-// Instantiate cache warmer
-$cacheWarmer = new \EliasHaeussler\CacheWarmup\CacheWarmer($limit, $client, $crawler, $strict);
-
-// Define sitemaps to be crawled
-$cacheWarmer->addSitemaps('https://www.example.org/sitemap.xml');
-$cacheWarmer->addSitemaps('https://www.example.org/de/sitemap.xml');
-
-// Define URLs to be crawled
-$cacheWarmer->addUrl('https://www.example.org/');
-$cacheWarmer->addUrl('https://www.example.org/foo');
-$cacheWarmer->addUrl('https://www.example.org/baz');
-
-// Run cache warmer
-$result = $cacheWarmer->run();
-
-// Get successful and failed URLs
-$successfulUrls = $result->getSuccessful();
-$failedUrls = $result->getFailed();
-```
-
 ### Usage with Docker
 
-**General usage**
-
 ```bash
-docker run --rm -it eliashaeussler/cache-warmup <options>
+docker run --rm -it eliashaeussler/cache-warmup [options] [<sitemaps>...]
 ```
 
-**Extended usage**
-
-```bash
-# Use latest version
-docker run --rm -it eliashaeussler/cache-warmup:latest <options>
-
-# Use specific version
-docker run --rm -it eliashaeussler/cache-warmup:0.3.0 <options>
-```
-
-**Usage with docker-compose**
-
-```yaml
-version: '3.6'
-
-services:
-  cache-warmup:
-    image: eliashaeussler/cache-warmup
-    command: [<options>]
-```
-
-## :technologist: Contributing
+## 🧑‍💻 Contributing
 
 Please have a look at [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
-## :gem: Credits
+## 💎 Credits
 
 [Background vector created by photoroyalty - www.freepik.com](https://www.freepik.com/vectors/background)
 
-## :star: License
+## ⭐ License
 
 This project is licensed under [GNU General Public License 3.0 (or later)](LICENSE).

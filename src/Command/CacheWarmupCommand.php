@@ -84,6 +84,17 @@ final class CacheWarmupCommand extends Console\Command\Command
             '',
             '   <comment>%command.full_name% -u https://www.example.com/foo -u https://www.example.com/baz</comment>',
             '',
+            '<info>Progress bar</info>',
+            '<info>============</info>',
+            'You can track the cache warmup progress by using the <comment>--progress</comment> option:',
+            '',
+            '   <comment>%command.full_name% --progress</comment>',
+            '',
+            'This shows a compact progress bar, including current warmup failures.',
+            'For a more verbose output, add the <comment>--verbose</comment> option:',
+            '',
+            '   <comment>%command.full_name% --progress --verbose</comment>',
+            '',
             '<info>URL limit</info>',
             '<info>=========</info>',
             'The number of URLs to be crawled can be limited using the <comment>--limit</comment> option:',
@@ -139,7 +150,7 @@ final class CacheWarmupCommand extends Console\Command\Command
         $this->addOption(
             'progress',
             'p',
-            Console\Input\InputOption::VALUE_NEGATABLE,
+            Console\Input\InputOption::VALUE_NONE,
             'Show progress bar during cache warmup'
         );
         $this->addOption(
@@ -269,6 +280,8 @@ final class CacheWarmupCommand extends Console\Command\Command
                 $this->io->section('The following URLs were successfully crawled:');
                 $this->io->listing($this->decorateCrawledUrls($successfulUrls));
             }
+        }
+        if ($this->io->isVerbose()) {
             if ([] !== $failedUrls) {
                 $this->io->section('The following URLs failed during crawling:');
                 $this->io->listing($this->decorateCrawledUrls($failedUrls));
@@ -318,7 +331,7 @@ final class CacheWarmupCommand extends Console\Command\Command
 
             /** @var Crawler\CrawlerInterface $crawler */
             $crawler = new $crawler();
-        } elseif ($this->isProgressBarEnabled($output, $input)) {
+        } elseif ($input->getOption('progress')) {
             // Use default verbose crawler
             $crawler = new Crawler\OutputtingCrawler();
         } else {
@@ -344,17 +357,6 @@ final class CacheWarmupCommand extends Console\Command\Command
         }
 
         return $crawler;
-    }
-
-    private function isProgressBarEnabled(
-        Console\Output\OutputInterface $output,
-        Console\Input\InputInterface $input,
-    ): bool {
-        if (false === $input->getOption('progress')) {
-            return false;
-        }
-
-        return $output->isVerbose() || true === $input->getOption('progress');
     }
 
     /**

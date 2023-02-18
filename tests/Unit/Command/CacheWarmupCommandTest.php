@@ -165,27 +165,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
-    public function executeHidesVerboseOutputIfVerbosityIsNormal(): void
-    {
-        $this->mockSitemapRequest('valid_sitemap_3');
-
-        $this->commandTester->execute([
-            'sitemaps' => [
-                'https://www.example.com/sitemap.xml',
-            ],
-        ]);
-
-        $output = $this->commandTester->getDisplay();
-
-        self::assertStringContainsString('Parsing sitemaps... Done', $output);
-        self::assertStringContainsString('Crawling URLs... Done', $output);
-        self::assertStringNotContainsString('* https://www.example.com/sitemap.xml', $output);
-        self::assertStringNotContainsString('* https://www.example.com/', $output);
-        self::assertStringNotContainsString('* https://www.example.com/foo', $output);
-    }
-
-    #[Framework\Attributes\Test]
-    public function executeHidesVerboseOutputIfNoProgressOptionIsSet(): void
+    public function executeDoesNotShowProgressBarIfProgressOptionIsNotSet(): void
     {
         $this->mockSitemapRequest('valid_sitemap_3');
 
@@ -194,7 +174,6 @@ final class CacheWarmupCommandTest extends Framework\TestCase
                 'sitemaps' => [
                     'https://www.example.com/sitemap.xml',
                 ],
-                '--no-progress' => true,
             ],
             [
                 'verbosity' => Console\Output\OutputInterface::VERBOSITY_VERBOSE,
@@ -207,7 +186,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
-    public function executeShowsVerboseOutputIfProgressOptionIsSet(): void
+    public function executeShowsCompactProgressBarIfProgressOptionIsSetAndOutputIsNormal(): void
     {
         $this->mockSitemapRequest('valid_sitemap_3');
 
@@ -220,6 +199,31 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         $output = $this->commandTester->getDisplay();
 
+        self::assertStringNotContainsString(' SUCCESS ', $output);
+        self::assertStringContainsString('100%', $output);
+    }
+
+    #[Framework\Attributes\Test]
+    public function executeShowsVerboseProgressBarIfProgressOptionIsSetAndOutputIsVerbose(): void
+    {
+        $this->mockSitemapRequest('valid_sitemap_3');
+
+        $this->commandTester->execute(
+            [
+                'sitemaps' => [
+                    'https://www.example.com/sitemap.xml',
+                ],
+                '--progress' => true,
+            ],
+            [
+                'verbosity' => Console\Output\OutputInterface::VERBOSITY_VERBOSE,
+                'capture_stderr_separately' => true,
+            ]
+        );
+
+        $output = $this->commandTester->getDisplay();
+
+        self::assertStringContainsString(' SUCCESS ', $output);
         self::assertStringContainsString('100%', $output);
     }
 

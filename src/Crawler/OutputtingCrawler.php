@@ -72,19 +72,23 @@ final class OutputtingCrawler extends AbstractConfigurableCrawler implements Ver
 
     public function crawl(array $urls): Result\CacheWarmupResult
     {
-        // Create response handlers
-        $progressBarHandler = new Http\Message\Handler\OutputtingProgressHandler($this->output, count($urls));
+        $numberOfUrls = count($urls);
         $resultHandler = new Http\Message\Handler\ResultCollectorHandler();
 
-        // Start progress bar
-        $progressBarHandler->startProgressBar();
+        // Create progress response handler (depends on the available output)
+        if ($this->output instanceof Console\Output\ConsoleOutputInterface && $this->output->isVerbose()) {
+            $progressBarHandler = new Http\Message\Handler\VerboseProgressHandler($this->output, $numberOfUrls);
+        } else {
+            $progressBarHandler = new Http\Message\Handler\CompactProgressHandler($this->output, $numberOfUrls);
+        }
+
+        // Create request pool
+        $pool = $this->createPool($urls, $this->client, [$resultHandler, $progressBarHandler]);
 
         // Start crawling
-        $this->createPool($urls, $this->client, [$resultHandler, $progressBarHandler])->promise()->wait();
-
-        // Finish progress bar
+        $progressBarHandler->startProgressBar();
+        $pool->promise()->wait();
         $progressBarHandler->finishProgressBar();
-        $this->output->writeln('');
 
         return $resultHandler->getResult();
     }

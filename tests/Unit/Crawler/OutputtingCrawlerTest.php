@@ -164,13 +164,7 @@ final class OutputtingCrawlerTest extends Framework\TestCase
 
         $output = $this->output->fetch();
 
-        self::assertMatchesRegularExpression(
-            sprintf('#^\s*1/2 [^\s]+\s+\d+%% -- %s \(success\)$#m', preg_quote((string) $uri1)),
-            $output
-        );
-        self::assertMatchesRegularExpression(
-            sprintf('#^\s*2/2 [^\s]+\s+\d+%% -- %s \(failed\)$#m', preg_quote((string) $uri2)),
-            $output
-        );
+        self::assertMatchesRegularExpression('#^\s*1/2 \S+\s+\d+% -- no failures$#m', $output);
+        self::assertMatchesRegularExpression('#^\s*2/2 \S+\s+\d+% -- 1 failure$#m', $output);
     }
 }
