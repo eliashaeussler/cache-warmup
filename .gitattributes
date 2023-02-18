@@ -11,3 +11,4 @@
 /phpstan.neon             export-ignore
 /phpunit.xml              export-ignore
 /phpunit.coverage.xml     export-ignore
+/rector.php               export-ignore
