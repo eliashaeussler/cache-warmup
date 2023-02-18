@@ -37,7 +37,7 @@ final class OutputtingProgressHandler implements ResponseHandlerInterface
 {
     private const PROGRESS_BAR_FORMAT = ' %current%/%max% [%bar%] %percent:3s%% -- %url% %state%';
 
-    private Console\Helper\ProgressBar $progressBar;
+    private readonly Console\Helper\ProgressBar $progressBar;
 
     public function __construct(
         Console\Output\OutputInterface $output,

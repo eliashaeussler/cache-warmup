@@ -27,7 +27,6 @@ use EliasHaeussler\CacheWarmup\Crawler;
 use RuntimeException;
 
 use function count;
-use function get_class;
 use function implode;
 use function sprintf;
 
@@ -42,7 +41,7 @@ final class InvalidCrawlerOptionException extends RuntimeException
     public static function create(Crawler\ConfigurableCrawlerInterface $crawler, string $option): self
     {
         return new self(
-            sprintf('The crawler option "%s" is invalid or not supported by crawler "%s".', $option, get_class($crawler)),
+            sprintf('The crawler option "%s" is invalid or not supported by crawler "%s".', $option, $crawler::class),
             1659120894
         );
     }
@@ -60,7 +59,7 @@ final class InvalidCrawlerOptionException extends RuntimeException
             sprintf(
                 'The crawler options "%s" are invalid or not supported by crawler "%s".',
                 implode('", "', $options),
-                get_class($crawler)
+                $crawler::class
             ),
             1659206995
         );

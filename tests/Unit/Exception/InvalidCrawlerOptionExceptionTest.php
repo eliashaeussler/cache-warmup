@@ -27,8 +27,6 @@ use EliasHaeussler\CacheWarmup\Exception;
 use EliasHaeussler\CacheWarmup\Tests;
 use PHPUnit\Framework;
 
-use function get_class;
-
 /**
  * InvalidCrawlerOptionExceptionTest.
  *
@@ -47,7 +45,7 @@ final class InvalidCrawlerOptionExceptionTest extends Framework\TestCase
 
         self::assertSame(1659120894, $actual->getCode());
         self::assertSame(
-            'The crawler option "foo" is invalid or not supported by crawler "'.get_class($crawler).'".',
+            'The crawler option "foo" is invalid or not supported by crawler "'.$crawler::class.'".',
             $actual->getMessage()
         );
     }
@@ -62,7 +60,7 @@ final class InvalidCrawlerOptionExceptionTest extends Framework\TestCase
 
         self::assertSame(1659120894, $actual->getCode());
         self::assertSame(
-            'The crawler option "foo" is invalid or not supported by crawler "'.get_class($crawler).'".',
+            'The crawler option "foo" is invalid or not supported by crawler "'.$crawler::class.'".',
             $actual->getMessage()
         );
     }
@@ -82,7 +80,7 @@ final class InvalidCrawlerOptionExceptionTest extends Framework\TestCase
 
         self::assertSame(1659206995, $actual->getCode());
         self::assertSame(
-            'The crawler options "foo", "bar" are invalid or not supported by crawler "'.get_class($crawler).'".',
+            'The crawler options "foo", "bar" are invalid or not supported by crawler "'.$crawler::class.'".',
             $actual->getMessage()
         );
     }

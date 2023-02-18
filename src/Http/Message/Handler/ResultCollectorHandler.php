@@ -35,7 +35,7 @@ use Throwable;
  */
 final class ResultCollectorHandler implements ResponseHandlerInterface
 {
-    private Result\CacheWarmupResult $result;
+    private readonly Result\CacheWarmupResult $result;
 
     public function __construct()
     {

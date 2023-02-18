@@ -66,7 +66,7 @@ final class OutputtingCrawler extends AbstractConfigurableCrawler implements Ver
     ) {
         parent::__construct($options);
 
-        $this->client = null !== $client ? $client : new Client($this->options['client_config']);
+        $this->client = $client ?? new Client($this->options['client_config']);
         $this->output = new Console\Output\ConsoleOutput();
     }
 
