@@ -56,9 +56,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         $this->commandTester = new Console\Tester\CommandTester($command);
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function interactThrowsExceptionIfNeitherArgumentNorInteractiveInputProvidesSitemaps(): void
     {
         $this->expectException(Console\Exception\RuntimeException::class);
@@ -68,9 +66,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         $this->commandTester->execute([]);
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function executeThrowsExceptionIfNoSitemapsAreGivenAndInteractiveModeIsDisabled(): void
     {
         $this->expectException(Console\Exception\RuntimeException::class);
@@ -79,9 +75,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         $this->commandTester->execute([], ['interactive' => false]);
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function executeUsesSitemapUrlsFromInteractiveUserInputIfSitemapsArgumentIsNotGiven(): void
     {
         $this->mockSitemapRequest('valid_sitemap_3');
@@ -100,9 +94,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         self::assertStringContainsString('* https://www.example.com/foo', $output);
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function executeCrawlsUrlsFromGivenSitemaps(): void
     {
         $this->mockSitemapRequest('valid_sitemap_3');
@@ -125,9 +117,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         self::assertStringContainsString('* https://www.example.com/foo', $output);
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function executeLimitsCrawlingIfLimitOptionIsSet(): void
     {
         $this->mockSitemapRequest('valid_sitemap_3');
@@ -151,9 +141,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         self::assertStringNotContainsString('* https://www.example.com/foo', $output);
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function executeCrawlsAdditionalUrls(): void
     {
         $this->commandTester->setInputs([null]);
@@ -176,9 +164,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         self::assertStringContainsString('* https://www.example.com/foo', $output);
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function executeHidesVerboseOutputIfVerbosityIsNormal(): void
     {
         $this->mockSitemapRequest('valid_sitemap_3');
@@ -198,9 +184,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         self::assertStringNotContainsString('* https://www.example.com/foo', $output);
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function executeHidesVerboseOutputIfNoProgressOptionIsSet(): void
     {
         $this->mockSitemapRequest('valid_sitemap_3');
@@ -222,9 +206,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         self::assertStringNotContainsString('100%', $output);
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function executeShowsVerboseOutputIfProgressOptionIsSet(): void
     {
         $this->mockSitemapRequest('valid_sitemap_3');
@@ -241,9 +223,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         self::assertStringContainsString('100%', $output);
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function executeThrowsExceptionIfGivenCrawlerClassDoesNotExist(): void
     {
         $this->expectException(Console\Exception\RuntimeException::class);
@@ -257,9 +237,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function executeThrowsExceptionIfGivenCrawlerClassIsNotValid(): void
     {
         $this->expectException(Console\Exception\RuntimeException::class);
@@ -273,9 +251,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function executeUsesCustomCrawler(): void
     {
         $this->mockSitemapRequest('valid_sitemap_3');
@@ -295,9 +271,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         self::assertEquals($expected, Tests\Unit\Crawler\DummyCrawler::$crawledUrls);
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function executeThrowsExceptionIfCrawlerOptionsAreInvalid(): void
     {
         $this->expectException(Console\Exception\RuntimeException::class);
@@ -313,12 +287,10 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     }
 
     /**
-     * @test
-     *
-     * @dataProvider executeUsesCrawlerOptionsDataProvider
-     *
      * @param array{concurrency: int}|string $crawlerOptions
      */
+    #[Framework\Attributes\Test]
+    #[Framework\Attributes\DataProvider('executeUsesCrawlerOptionsDataProvider')]
     public function executeUsesCrawlerOptions(array|string $crawlerOptions): void
     {
         $this->mockSitemapRequest('valid_sitemap_3');
@@ -340,9 +312,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         self::assertStringContainsString('"concurrency": 3', $output);
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function executeShowsWarningIfCrawlerOptionsArePassedToNonConfigurableCrawler(): void
     {
         $this->mockSitemapRequest('valid_sitemap_3');
@@ -359,9 +329,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         self::assertStringContainsString('You passed crawler options for a non-configurable crawler.', $output);
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function executeAppliesOutputToVerboseCrawler(): void
     {
         $this->mockSitemapRequest('valid_sitemap_3');
@@ -376,11 +344,8 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         self::assertSame($this->commandTester->getOutput(), Tests\Unit\Crawler\DummyVerboseCrawler::$output);
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider executeFailsIfSitemapCannotBeCrawledDataProvider
-     */
+    #[Framework\Attributes\Test]
+    #[Framework\Attributes\DataProvider('executeFailsIfSitemapCannotBeCrawledDataProvider')]
     public function executeFailsIfSitemapCannotBeCrawled(bool $allowFailures, int $expected): void
     {
         Tests\Unit\Crawler\DummyCrawler::$simulateFailure = true;
@@ -400,9 +365,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         self::assertStringContainsString('Failed to warm up caches for 1 URL.', $output);
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function executePrintsSitemapsThatCouldNotBeParsed(): void
     {
         $this->mockSitemapRequest('invalid_sitemap_1');
@@ -420,9 +383,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         self::assertStringContainsString('The following sitemaps could not be parsed:', $output);
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function executeFailsIfSitemapCannotBeParsed(): void
     {
         $this->mockSitemapRequest('invalid_sitemap_1');
@@ -446,16 +407,16 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     /**
      * @return Generator<string, array{array{concurrency: int}|string}>
      */
-    public function executeUsesCrawlerOptionsDataProvider(): Generator
+    public static function executeUsesCrawlerOptionsDataProvider(): Generator
     {
         yield 'array' => [['concurrency' => 3]];
         yield 'json string' => ['{"concurrency": 3}'];
     }
 
     /**
-     * @return \Generator<string, array{bool, int}>
+     * @return Generator<string, array{bool, int}>
      */
-    public function executeFailsIfSitemapCannotBeCrawledDataProvider(): Generator
+    public static function executeFailsIfSitemapCannotBeCrawledDataProvider(): Generator
     {
         yield 'with --allow-failures' => [true, 0];
         yield 'without --allow-failures' => [false, 1];

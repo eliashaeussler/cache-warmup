@@ -39,9 +39,7 @@ use function iterator_to_array;
  */
 final class XmlSourceTest extends Framework\TestCase
 {
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function fromXmlThrowsExceptionIfGivenXmlIsMalformed(): void
     {
         $this->expectException(Exception\MalformedXmlException::class);
@@ -51,9 +49,7 @@ final class XmlSourceTest extends Framework\TestCase
         Mapper\Source\XmlSource::fromXml('foo');
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function fromXmlConvertsXmlToArray(): void
     {
         $subject = Mapper\Source\XmlSource::fromXml($this->readFixtureFile('valid_sitemap_5'));
@@ -84,9 +80,7 @@ final class XmlSourceTest extends Framework\TestCase
         self::assertSame($expected, iterator_to_array($subject));
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function asCollectionConvertsSingleItemNodesToCollections(): void
     {
         $subject = Mapper\Source\XmlSource::fromXml($this->readFixtureFile('valid_sitemap_1'));

@@ -37,9 +37,7 @@ use PHPUnit\Framework;
  */
 final class SitemapTest extends Framework\TestCase
 {
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function constructorThrowsExceptionIfGivenUriIsEmpty(): void
     {
         $this->expectException(Exception\InvalidUrlException::class);
@@ -49,9 +47,7 @@ final class SitemapTest extends Framework\TestCase
         new Sitemap\Sitemap(new Psr7\Uri(''));
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function constructorThrowsExceptionIfGivenUriIsNotValid(): void
     {
         $this->expectException(Exception\InvalidUrlException::class);
@@ -61,9 +57,7 @@ final class SitemapTest extends Framework\TestCase
         new Sitemap\Sitemap(new Psr7\Uri('foo'));
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function constructorAssignsUriCorrectly(): void
     {
         $uri = new Psr7\Uri('https://foo.baz');
@@ -72,9 +66,7 @@ final class SitemapTest extends Framework\TestCase
         self::assertSame($uri, $subject->getUri());
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function constructorAssignsLastModificationDateCorrectly(): void
     {
         $uri = new Psr7\Uri('https://foo.baz');
@@ -84,9 +76,7 @@ final class SitemapTest extends Framework\TestCase
         self::assertSame($lastModificationDate, $subject->getLastModificationDate());
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function stringRepresentationReturnsUri(): void
     {
         $uri = new Psr7\Uri('https://foo.baz');

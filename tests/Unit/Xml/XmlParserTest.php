@@ -53,9 +53,7 @@ final class XmlParserTest extends Framework\TestCase
         $this->subject = new Xml\XmlParser($this->client);
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function parseParsesSitemapIndex(): void
     {
         $this->mockSitemapRequest('valid_sitemap_4');
@@ -73,9 +71,7 @@ final class XmlParserTest extends Framework\TestCase
         self::assertSame([], $result->getUrls());
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function parseParsesSitemapUrlSet(): void
     {
         $this->mockSitemapRequest('valid_sitemap_5');
@@ -107,9 +103,7 @@ final class XmlParserTest extends Framework\TestCase
         self::assertSame([], $result->getSitemaps());
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function parseFollowsRedirectsWhenUsingGuzzleClient(): void
     {
         $this->mockHandler->append(new Psr7\Response(301, ['Location' => 'https://www.example.org/sub/sitemap.xml']));
@@ -121,9 +115,7 @@ final class XmlParserTest extends Framework\TestCase
         self::assertNotEmpty($result->getUrls());
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function parseDoesNotFollowRedirectsWhenUsingOtherClient(): void
     {
         $client = new Tests\Unit\Fixtures\DummyClient();
@@ -137,9 +129,7 @@ final class XmlParserTest extends Framework\TestCase
         $subject->parse($this->sitemap);
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function parseThrowsExceptionOnInvalidSitemapIndex(): void
     {
         $this->mockSitemapRequest('invalid_sitemap_1');
@@ -156,9 +146,7 @@ final class XmlParserTest extends Framework\TestCase
         $this->subject->parse($this->sitemap);
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function parseThrowsExceptionOnInvalidSitemapUrl(): void
     {
         $this->mockSitemapRequest('invalid_sitemap_2');

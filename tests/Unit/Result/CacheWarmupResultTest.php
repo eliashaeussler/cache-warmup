@@ -42,9 +42,7 @@ final class CacheWarmupResultTest extends Framework\TestCase
         $this->subject = new Result\CacheWarmupResult();
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function addResultAddsSuccessfulResult(): void
     {
         $result = Result\CrawlingResult::createSuccessful(new Psr7\Uri('https://www.example.com'));
@@ -56,9 +54,7 @@ final class CacheWarmupResultTest extends Framework\TestCase
         self::assertSame([$result], $this->subject->getSuccessful());
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function addResultAddsFailedResult(): void
     {
         $result = Result\CrawlingResult::createFailed(new Psr7\Uri('https://www.example.com'));

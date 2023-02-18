@@ -40,9 +40,7 @@ use function sprintf;
  */
 final class InvalidSitemapExceptionTest extends Framework\TestCase
 {
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function createReturnsExceptionForGivenSitemap(): void
     {
         $sitemap = new Sitemap\Sitemap(new Psr7\Uri('https://www.example.com'));
@@ -55,9 +53,7 @@ final class InvalidSitemapExceptionTest extends Framework\TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function createReturnsExceptionForGivenSitemapAndMappingError(): void
     {
         $sitemap = new Sitemap\Sitemap(new Psr7\Uri('https://www.example.com'));
@@ -74,9 +70,7 @@ final class InvalidSitemapExceptionTest extends Framework\TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function forInvalidTypeReturnsExceptionForGivenSitemap(): void
     {
         $actual = Exception\InvalidSitemapException::forInvalidType(null);

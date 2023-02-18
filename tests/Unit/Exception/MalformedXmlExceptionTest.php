@@ -34,9 +34,7 @@ use PHPUnit\Framework;
  */
 final class MalformedXmlExceptionTest extends Framework\TestCase
 {
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function createReturnsExceptionForGivenInputString(): void
     {
         $actual = Exception\MalformedXmlException::create('foo', 'Invalid XML.');

@@ -44,9 +44,7 @@ final class ResultCollectorHandlerTest extends Framework\TestCase
         $this->subject = new Http\Message\Handler\ResultCollectorHandler();
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function onSuccessAddsSuccessfulCrawlingResult(): void
     {
         $response = new Psr7\Response();
@@ -63,9 +61,7 @@ final class ResultCollectorHandlerTest extends Framework\TestCase
         self::assertSame([], $this->subject->getResult()->getFailed());
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function onFailureAddsFailedCrawlingResult(): void
     {
         $exception = new Exception('foo');
