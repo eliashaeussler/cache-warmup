@@ -33,5 +33,5 @@ use Symfony\Component\Console;
  */
 interface VerboseCrawlerInterface extends CrawlerInterface
 {
-    public function setOutput(Console\Output\OutputInterface $output): self;
+    public function setOutput(Console\Output\OutputInterface $output): void;
 }

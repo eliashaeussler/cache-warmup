@@ -23,14 +23,12 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Crawler;
 
-use EliasHaeussler\CacheWarmup\Exception;
+use EliasHaeussler\CacheWarmup\Http;
 use EliasHaeussler\CacheWarmup\Result;
+use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
-use Psr\Http\Message;
 use Symfony\Component\Console;
-use Throwable;
 
-use function assert;
 use function count;
 
 /**
@@ -38,88 +36,61 @@ use function count;
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
+ *
+ * @extends AbstractConfigurableCrawler<array{
+ *     concurrency: int,
+ *     request_method: string,
+ *     request_headers: array<string, string>,
+ *     request_options: array<string, string>,
+ *     client_config: array<string, mixed>
+ * }>
  */
-class OutputtingCrawler extends ConcurrentCrawler implements VerboseCrawlerInterface
+final class OutputtingCrawler extends AbstractConfigurableCrawler implements VerboseCrawlerInterface
 {
-    protected const PROGRESS_BAR_FORMAT = ' %current%/%max% [%bar%] %percent:3s%% -- %url% %state%';
+    use ConcurrentCrawlerTrait;
 
-    protected ?Console\Output\OutputInterface $output = null;
-    protected ?Console\Helper\ProgressBar $progress = null;
+    protected static array $defaultOptions = [
+        'concurrency' => 5,
+        'request_method' => 'HEAD',
+        'request_headers' => [],
+        'request_options' => [],
+        'client_config' => [],
+    ];
+
+    private readonly ClientInterface $client;
+    private Console\Output\OutputInterface $output;
 
     public function __construct(
         array $options = [],
         ClientInterface $client = null,
     ) {
-        parent::__construct($options, $client);
-        Console\Helper\ProgressBar::setFormatDefinition('cache-warmup', self::PROGRESS_BAR_FORMAT);
+        parent::__construct($options);
+
+        $this->client = null !== $client ? $client : new Client($this->options['client_config']);
+        $this->output = new Console\Output\ConsoleOutput();
     }
 
-    /**
-     * @throws Exception\MissingArgumentException
-     */
     public function crawl(array $urls): Result\CacheWarmupResult
     {
-        if (null === $this->output) {
-            throw Exception\MissingArgumentException::create('output');
-        }
+        // Create response handlers
+        $progressBarHandler = new Http\Message\Handler\OutputtingProgressHandler($this->output, count($urls));
+        $resultHandler = new Http\Message\Handler\ResultCollectorHandler();
 
-        $this->startProgressBar(count($urls));
+        // Start progress bar
+        $progressBarHandler->startProgressBar();
 
-        $result = parent::crawl($urls);
+        // Start crawling
+        $this->createPool($urls, $this->client, [$resultHandler, $progressBarHandler])->promise()->wait();
 
-        $this->finishProgressBar();
+        // Finish progress bar
+        $progressBarHandler->finishProgressBar();
+        $this->output->writeln('');
 
-        return $result;
+        return $resultHandler->getResult();
     }
 
-    public function onSuccess(Message\ResponseInterface $response, Message\UriInterface $url): Result\CrawlingResult
-    {
-        assert($this->progress instanceof Console\Helper\ProgressBar);
-
-        $this->progress->setMessage((string) $url, 'url');
-        $this->progress->setMessage('(<info>success</info>)', 'state');
-        $this->progress->advance();
-        $this->progress->display();
-
-        return parent::onSuccess($response, $url);
-    }
-
-    public function onFailure(Throwable $exception, Message\UriInterface $url): Result\CrawlingResult
-    {
-        assert($this->progress instanceof Console\Helper\ProgressBar);
-
-        $this->progress->setMessage((string) $url, 'url');
-        $this->progress->setMessage('(<error>failed</error>)', 'state');
-        $this->progress->advance();
-        $this->progress->display();
-
-        return parent::onFailure($exception, $url);
-    }
-
-    public function setOutput(Console\Output\OutputInterface $output): VerboseCrawlerInterface
+    public function setOutput(Console\Output\OutputInterface $output): void
     {
         $this->output = $output;
-
-        return $this;
-    }
-
-    protected function startProgressBar(int $max): void
-    {
-        assert($this->output instanceof Console\Output\OutputInterface);
-
-        $this->progress = new Console\Helper\ProgressBar($this->output, $max);
-        $this->progress->setFormat('cache-warmup');
-        $this->progress->setOverwrite(false);
-        $this->progress->setMessage('', 'url');
-        $this->progress->setMessage('', 'state');
-    }
-
-    protected function finishProgressBar(): void
-    {
-        assert($this->progress instanceof Console\Helper\ProgressBar);
-        assert($this->output instanceof Console\Output\OutputInterface);
-
-        $this->progress->finish();
-        $this->output->writeln('');
     }
 }

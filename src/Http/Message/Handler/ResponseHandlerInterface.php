@@ -21,21 +21,20 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Exception;
+namespace EliasHaeussler\CacheWarmup\Http\Message\Handler;
+
+use Psr\Http\Message;
+use Throwable;
 
 /**
- * MissingArgumentException.
+ * ResponseHandlerInterface.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class MissingArgumentException extends Exception
+interface ResponseHandlerInterface
 {
-    public static function create(string $argumentName): self
-    {
-        return new self(
-            sprintf('Required argument "$%s" is missing.', ltrim($argumentName, '$')),
-            1619635638
-        );
-    }
+    public function onSuccess(Message\ResponseInterface $response, Message\UriInterface $uri): void;
+
+    public function onFailure(Throwable $exception, Message\UriInterface $uri): void;
 }
