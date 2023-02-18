@@ -49,9 +49,7 @@ final class ConcurrentCrawlerTest extends Framework\TestCase
         $this->subject = new Crawler\ConcurrentCrawler(client: $this->client);
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function constructorInstantiatesClientWithGivenClientConfig(): void
     {
         $this->mockHandler->append(new Psr7\Response());
@@ -71,9 +69,7 @@ final class ConcurrentCrawlerTest extends Framework\TestCase
         self::assertNotNull($this->mockHandler->getLastRequest());
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function constructorIgnoresGivenClientConfigIfInstantiatedClientIsPassed(): void
     {
         $subject = new Crawler\ConcurrentCrawler(
@@ -92,9 +88,7 @@ final class ConcurrentCrawlerTest extends Framework\TestCase
         self::assertNull($this->mockHandler->getLastRequest());
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function crawlSendsRequestToAllGivenUrls(): void
     {
         $this->mockHandler->append(
@@ -119,9 +113,7 @@ final class ConcurrentCrawlerTest extends Framework\TestCase
         self::assertSame([], array_diff($urls, $processedUrls));
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function crawlHandlesSuccessfulRequestsOfAllGivenUrls(): void
     {
         $this->mockHandler->append(new Psr7\Response());
@@ -136,9 +128,7 @@ final class ConcurrentCrawlerTest extends Framework\TestCase
         self::assertSame([], $result->getFailed());
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function crawlHandlesFailedRequestsOfAllGivenUrls(): void
     {
         $this->mockHandler->append(new Psr7\Response(404));

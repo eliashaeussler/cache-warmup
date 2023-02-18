@@ -41,9 +41,7 @@ final class AbstractConfigurableCrawlerTest extends Framework\TestCase
         $this->subject = new DummyConfigurableCrawler();
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function defaultOptionsAreUsedOnInitialObject(): void
     {
         $expected = [
@@ -54,9 +52,7 @@ final class AbstractConfigurableCrawlerTest extends Framework\TestCase
         self::assertSame($expected, $this->subject->getOptions());
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function setOptionsThrowsExceptionIfInvalidOptionsAreGiven(): void
     {
         $this->expectException(Exception\InvalidCrawlerOptionException::class);
@@ -72,9 +68,7 @@ final class AbstractConfigurableCrawlerTest extends Framework\TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function setOptionsMergesGivenOptionsWithDefaultOptions(): void
     {
         $this->subject->setOptions([

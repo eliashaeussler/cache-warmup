@@ -46,9 +46,7 @@ final class RequestPoolFactoryTest extends Framework\TestCase
         $this->client = $this->createClient();
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function createReturnsObjectForGivenRequests(): void
     {
         $visitedUrls = [];
@@ -83,9 +81,7 @@ final class RequestPoolFactoryTest extends Framework\TestCase
         self::assertSame($expected, $visitedUrls);
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function forEachReturnsObjectForEachGivenRequest(): void
     {
         $visitedUrls = [];

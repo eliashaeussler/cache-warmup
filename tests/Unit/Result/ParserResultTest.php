@@ -52,9 +52,7 @@ final class ParserResultTest extends Framework\TestCase
         $this->subject = new Result\ParserResult($sitemaps, $urls);
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function getSitemapsReturnsSitemaps(): void
     {
         self::assertEquals(
@@ -66,9 +64,7 @@ final class ParserResultTest extends Framework\TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function getUrlsReturnsUrls(): void
     {
         self::assertEquals(

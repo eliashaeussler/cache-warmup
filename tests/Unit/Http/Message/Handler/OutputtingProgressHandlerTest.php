@@ -46,9 +46,7 @@ final class OutputtingProgressHandlerTest extends Framework\TestCase
         $this->subject = new Http\Message\Handler\OutputtingProgressHandler($this->output, 10);
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function startProgressBarStartsProgressBar(): void
     {
         $this->subject->startProgressBar();
@@ -56,9 +54,7 @@ final class OutputtingProgressHandlerTest extends Framework\TestCase
         self::assertMatchesRegularExpression('#^\s*0/10 \S+\s+0% -- {2}$#m', $this->output->fetch());
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function finishProgressBarFinishesProgressBar(): void
     {
         $this->subject->startProgressBar();
@@ -70,9 +66,7 @@ final class OutputtingProgressHandlerTest extends Framework\TestCase
         self::assertMatchesRegularExpression('#^\s*10/10 \S+\s+100% -- {2}$#m', $output);
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function onSuccessPrintsSuccessfulUrlAndAdvancesProgressBarByOneStep(): void
     {
         $response = new Psr7\Response();
@@ -87,9 +81,7 @@ final class OutputtingProgressHandlerTest extends Framework\TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function onFailurePrintsFailedUrlAndAdvancesProgressBarByOneStep(): void
     {
         $exception = new Exception('foo');

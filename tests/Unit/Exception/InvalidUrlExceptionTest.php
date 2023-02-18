@@ -34,9 +34,7 @@ use PHPUnit\Framework;
  */
 final class InvalidUrlExceptionTest extends Framework\TestCase
 {
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function createReturnsExceptionForGivenUrl(): void
     {
         $actual = Exception\InvalidUrlException::create('foo');
@@ -45,9 +43,7 @@ final class InvalidUrlExceptionTest extends Framework\TestCase
         self::assertSame('The given URL "foo" is not valid.', $actual->getMessage());
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function forEmptyUrlReturnsExceptionIfUrlIsEmpty(): void
     {
         $actual = Exception\InvalidUrlException::forEmptyUrl();

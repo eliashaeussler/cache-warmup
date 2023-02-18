@@ -35,9 +35,7 @@ use PHPUnit\Framework;
  */
 final class InvalidCrawlerOptionExceptionTest extends Framework\TestCase
 {
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function createReturnsExceptionForGivenCrawlerAndOption(): void
     {
         $crawler = new Tests\Unit\Crawler\DummyConfigurableCrawler();
@@ -50,9 +48,7 @@ final class InvalidCrawlerOptionExceptionTest extends Framework\TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function createForAllReturnsExceptionForGivenCrawlerAndOptionIfOnlyOneOptionIsGiven(): void
     {
         $crawler = new Tests\Unit\Crawler\DummyConfigurableCrawler();
@@ -65,9 +61,7 @@ final class InvalidCrawlerOptionExceptionTest extends Framework\TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function createForAllReturnsExceptionForGivenCrawlerAndOptions(): void
     {
         $crawler = new Tests\Unit\Crawler\DummyConfigurableCrawler();

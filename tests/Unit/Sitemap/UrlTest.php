@@ -36,9 +36,7 @@ use PHPUnit\Framework;
  */
 final class UrlTest extends Framework\TestCase
 {
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function constructorThrowsExceptionIfGivenUriIsEmpty(): void
     {
         $this->expectException(Exception\InvalidUrlException::class);
@@ -48,9 +46,7 @@ final class UrlTest extends Framework\TestCase
         new Sitemap\Url('');
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function constructorThrowsExceptionIfGivenUriIsNotValid(): void
     {
         $this->expectException(Exception\InvalidUrlException::class);
@@ -60,9 +56,7 @@ final class UrlTest extends Framework\TestCase
         new Sitemap\Url('foo');
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function constructorAssignsUriCorrectly(): void
     {
         $subject = new Sitemap\Url('https://foo.baz');
@@ -70,9 +64,7 @@ final class UrlTest extends Framework\TestCase
         self::assertSame($subject, $subject->getUri());
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function constructorAssignsPriorityCorrectly(): void
     {
         $priority = 0.8;
@@ -81,9 +73,7 @@ final class UrlTest extends Framework\TestCase
         self::assertSame($priority, $subject->getPriority());
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function constructorAssignsLastModificationDateCorrectly(): void
     {
         $lastModificationDate = (new DateTimeImmutable())->modify('- 1 day');
@@ -92,9 +82,7 @@ final class UrlTest extends Framework\TestCase
         self::assertSame($lastModificationDate, $subject->getLastModificationDate());
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function constructorAssignsChangeFrequencyCorrectly(): void
     {
         $changeFrequency = Sitemap\ChangeFrequency::Hourly;

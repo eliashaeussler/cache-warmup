@@ -53,12 +53,10 @@ final class CacheWarmerTest extends Framework\TestCase
     }
 
     /**
-     * @test
-     *
-     * @dataProvider runCrawlsListOfUrlsDataProvider
-     *
      * @param list<string> $urls
      */
+    #[Framework\Attributes\Test]
+    #[Framework\Attributes\DataProvider('runCrawlsListOfUrlsDataProvider')]
     public function runCrawlsListOfUrls(array $urls): void
     {
         foreach ($urls as $url) {
@@ -71,9 +69,7 @@ final class CacheWarmerTest extends Framework\TestCase
         self::assertSame([], array_diff($urls, $processedUrls));
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function addSitemapsThrowsExceptionIfInvalidSitemapsIsGiven(): void
     {
         $this->expectException(Exception\InvalidSitemapException::class);
@@ -84,9 +80,7 @@ final class CacheWarmerTest extends Framework\TestCase
         $this->subject->addSitemaps([false]);
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function addSitemapsThrowsExceptionIfGivenSitemapCannotBeParsedAndCacheWarmerIsRunningInStrictMode(): void
     {
         $this->mockSitemapRequest('invalid_sitemap_1');
@@ -105,9 +99,7 @@ final class CacheWarmerTest extends Framework\TestCase
         $this->subject->addSitemaps([$sitemap]);
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function addSitemapsIgnoresParserErrorsIfCacheWarmerIsNotRunningInStrictMode(): void
     {
         $subject = new CacheWarmer(client: $this->client, strict: false);
@@ -122,9 +114,7 @@ final class CacheWarmerTest extends Framework\TestCase
         self::assertSame([], $subject->getUrls());
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function addSitemapsIgnoresSitemapsIfLimitWasExceeded(): void
     {
         $subject = new CacheWarmer(limit: 1, client: $this->client);
@@ -144,15 +134,13 @@ final class CacheWarmerTest extends Framework\TestCase
     }
 
     /**
-     * @test
-     *
-     * @dataProvider addSitemapsAddsAndParsesGivenSitemapsDataProvider
-     *
      * @param list<string|Sitemap\Sitemap>|string|Sitemap\Sitemap $sitemaps
      * @param list<Sitemap\Sitemap>                               $expectedSitemaps
      * @param list<Sitemap\Url>                                   $expectedUrls
      * @param list<string>                                        $prophesizedRequests
      */
+    #[Framework\Attributes\Test]
+    #[Framework\Attributes\DataProvider('addSitemapsAddsAndParsesGivenSitemapsDataProvider')]
     public function addSitemapsAddsAndParsesGivenSitemaps(
         array|string|Sitemap\Sitemap $sitemaps,
         array $expectedSitemaps,
@@ -169,9 +157,7 @@ final class CacheWarmerTest extends Framework\TestCase
         self::assertEquals($expectedUrls, $this->subject->getUrls());
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function addUrlAddsGivenUrlToListOfUrls(): void
     {
         $url = new Sitemap\Url('https://www.example.org/sitemap.xml');
@@ -179,9 +165,7 @@ final class CacheWarmerTest extends Framework\TestCase
         self::assertSame([$url], $this->subject->addUrl($url)->getUrls());
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function addUrlDoesNotAddAlreadyAvailableUrlToListOfUrls(): void
     {
         $url = new Sitemap\Url('https://www.example.org/sitemap.xml');
@@ -189,9 +173,7 @@ final class CacheWarmerTest extends Framework\TestCase
         self::assertSame([$url], $this->subject->addUrl($url)->addUrl($url)->getUrls());
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function addUrlDoesNotAddUrlIfLimitWasExceeded(): void
     {
         $url1 = new Sitemap\Url('https://www.example.org/sitemap.xml');
@@ -203,9 +185,7 @@ final class CacheWarmerTest extends Framework\TestCase
         self::assertSame([$url1], $subject->getUrls());
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function getLimitReturnsUrlLimit(): void
     {
         self::assertSame(0, $this->subject->getLimit());
@@ -214,7 +194,7 @@ final class CacheWarmerTest extends Framework\TestCase
     /**
      * @return Generator<string, array{array<int, string>}>
      */
-    public function runCrawlsListOfUrlsDataProvider(): Generator
+    public static function runCrawlsListOfUrlsDataProvider(): Generator
     {
         yield 'no urls' => [
             [],
@@ -230,7 +210,7 @@ final class CacheWarmerTest extends Framework\TestCase
     /**
      * @return Generator<string, array{0: list<string|Sitemap\Sitemap>|string|Sitemap\Sitemap, 1: list<Sitemap\Sitemap>, 2: list<Sitemap\Url>, 3?: list<string>}>
      */
-    public function addSitemapsAddsAndParsesGivenSitemapsDataProvider(): Generator
+    public static function addSitemapsAddsAndParsesGivenSitemapsDataProvider(): Generator
     {
         yield 'empty sitemaps' => [
             [],
@@ -271,8 +251,8 @@ final class CacheWarmerTest extends Framework\TestCase
                 'https://www.example.com/sitemap.xml',
             ],
             [
-                new Sitemap\Sitemap($this->getExpectedUri('https://www.example.org/sitemap.xml')),
-                new Sitemap\Sitemap($this->getExpectedUri('https://www.example.com/sitemap.xml')),
+                new Sitemap\Sitemap(self::getExpectedUri('https://www.example.org/sitemap.xml')),
+                new Sitemap\Sitemap(self::getExpectedUri('https://www.example.com/sitemap.xml')),
             ],
             [
                 new Sitemap\Url('https://www.example.org/'),
@@ -288,12 +268,12 @@ final class CacheWarmerTest extends Framework\TestCase
         ];
         yield 'multiple sitemap objects' => [
             [
-                new Sitemap\Sitemap($this->getExpectedUri('https://www.example.org/sitemap.xml')),
-                new Sitemap\Sitemap($this->getExpectedUri('https://www.example.com/sitemap.xml')),
+                new Sitemap\Sitemap(self::getExpectedUri('https://www.example.org/sitemap.xml')),
+                new Sitemap\Sitemap(self::getExpectedUri('https://www.example.com/sitemap.xml')),
             ],
             [
-                new Sitemap\Sitemap($this->getExpectedUri('https://www.example.org/sitemap.xml')),
-                new Sitemap\Sitemap($this->getExpectedUri('https://www.example.com/sitemap.xml')),
+                new Sitemap\Sitemap(self::getExpectedUri('https://www.example.org/sitemap.xml')),
+                new Sitemap\Sitemap(self::getExpectedUri('https://www.example.com/sitemap.xml')),
             ],
             [
                 new Sitemap\Url('https://www.example.org/'),
@@ -309,13 +289,13 @@ final class CacheWarmerTest extends Framework\TestCase
         ];
         yield 'mix of sitemap url set and sitemap index' => [
             [
-                new Sitemap\Sitemap($this->getExpectedUri('https://www.example.org/sitemap.xml')),
-                new Sitemap\Sitemap($this->getExpectedUri('https://www.example.com/sitemap.xml')),
+                new Sitemap\Sitemap(self::getExpectedUri('https://www.example.org/sitemap.xml')),
+                new Sitemap\Sitemap(self::getExpectedUri('https://www.example.com/sitemap.xml')),
             ],
             [
-                new Sitemap\Sitemap($this->getExpectedUri('https://www.example.org/sitemap.xml')),
-                new Sitemap\Sitemap($this->getExpectedUri('https://www.example.com/sitemap.xml')),
-                new Sitemap\Sitemap($this->getExpectedUri('https://www.example.org/sitemap_en.xml')),
+                new Sitemap\Sitemap(self::getExpectedUri('https://www.example.org/sitemap.xml')),
+                new Sitemap\Sitemap(self::getExpectedUri('https://www.example.com/sitemap.xml')),
+                new Sitemap\Sitemap(self::getExpectedUri('https://www.example.org/sitemap_en.xml')),
             ],
             [
                 new Sitemap\Url('https://www.example.org/'),
@@ -337,7 +317,7 @@ final class CacheWarmerTest extends Framework\TestCase
         $this->closeStreams();
     }
 
-    private function getExpectedUri(string $url): Psr7\Uri
+    private static function getExpectedUri(string $url): Psr7\Uri
     {
         $uri = new Psr7\Uri($url);
 

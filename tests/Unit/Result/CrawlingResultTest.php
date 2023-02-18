@@ -35,9 +35,7 @@ use PHPUnit\Framework;
  */
 final class CrawlingResultTest extends Framework\TestCase
 {
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function createSuccessfulReturnsSuccessfulCrawlingStateForGivenUri(): void
     {
         $uri = new Psr7\Uri('https://www.example.org/');
@@ -52,9 +50,7 @@ final class CrawlingResultTest extends Framework\TestCase
         self::assertFalse($subject->is(Result\CrawlingState::Failed));
     }
 
-    /**
-     * @test
-     */
+    #[Framework\Attributes\Test]
     public function createFailedReturnsFailedCrawlingStateForGivenUri(): void
     {
         $uri = new Psr7\Uri('https://www.example.org/');
