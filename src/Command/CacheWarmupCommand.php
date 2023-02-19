@@ -28,9 +28,9 @@ use EliasHaeussler\CacheWarmup\Crawler;
 use EliasHaeussler\CacheWarmup\Formatter;
 use EliasHaeussler\CacheWarmup\Result;
 use EliasHaeussler\CacheWarmup\Sitemap;
-use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7;
-use Psr\Http\Client;
 use Symfony\Component\Console;
 
 use function count;
@@ -56,7 +56,7 @@ final class CacheWarmupCommand extends Console\Command\Command
     private Formatter\Formatter $formatter;
 
     public function __construct(
-        private readonly Client\ClientInterface $client = new GuzzleClient(),
+        private readonly ClientInterface $client = new Client(),
     ) {
         parent::__construct('cache-warmup');
     }

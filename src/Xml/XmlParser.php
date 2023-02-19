@@ -29,10 +29,10 @@ use EliasHaeussler\CacheWarmup\Exception;
 use EliasHaeussler\CacheWarmup\Mapper;
 use EliasHaeussler\CacheWarmup\Result;
 use EliasHaeussler\CacheWarmup\Sitemap;
-use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7;
-use Psr\Http\Client;
 use Psr\Http\Message;
 use Throwable;
 
@@ -47,26 +47,21 @@ final class XmlParser
     private readonly Valinor\Mapper\TreeMapper $mapper;
 
     public function __construct(
-        private readonly Client\ClientInterface $client = new GuzzleClient(),
+        private readonly ClientInterface $client = new Client(),
     ) {
         $this->mapper = $this->createMapper();
     }
 
     /**
-     * @throws Client\ClientExceptionInterface
      * @throws Exception\InvalidSitemapException
      * @throws Exception\MalformedXmlException
+     * @throws GuzzleException
      */
     public function parse(Sitemap\Sitemap $sitemap): Result\ParserResult
     {
         // Fetch XML source
         $request = new Psr7\Request('GET', $sitemap->getUri());
-        if ($this->client instanceof ClientInterface) {
-            // Make sure redirects and errors are properly handled when using a Guzzle client
-            $response = $this->client->send($request);
-        } else {
-            $response = $this->client->sendRequest($request);
-        }
+        $response = $this->client->send($request);
         $body = (string) $response->getBody();
 
         // Initialize XML source
