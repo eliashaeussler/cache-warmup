@@ -189,7 +189,6 @@ HELP);
 
         // Get sitemaps from interactive user input
         $sitemaps = [];
-        /** @var Console\Helper\QuestionHelper $helper */
         $helper = $this->getHelper('question');
         do {
             $question = new Console\Question\Question('Please enter the URL of a XML sitemap: ');
@@ -331,7 +330,6 @@ HELP);
                 throw new Console\Exception\RuntimeException('The specified crawler is not valid.', 1604261885);
             }
 
-            /** @var Crawler\CrawlerInterface $crawler */
             $crawler = new $crawler();
         } elseif ($input->getOption('progress')) {
             // Use default verbose crawler
