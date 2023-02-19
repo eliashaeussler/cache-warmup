@@ -78,6 +78,7 @@ The following input parameters are available:
 | `--crawler`, `-c`         | FQCN of the crawler to use for cache warming (must implement [`EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface`](src/Crawler/CrawlerInterface.php)) |
 | `--crawler-options`, `-o` | JSON-encoded string of additional config for configurable crawlers                                                                                      |
 | `--allow-failures`        | Allow failures during URL crawling and exit with zero                                                                                                   |
+| `--format`, `-f`          | Formatter used to print the cache warmup result, can be `json` or `text` *(default: `text`)*                                                            |
 
 💡 Run `vendor/bin/cache-warmup --help` to see a detailed explanation of
 all available input parameters.
