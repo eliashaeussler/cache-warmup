@@ -25,6 +25,7 @@ namespace EliasHaeussler\CacheWarmup\Tests\Unit\Command;
 
 use EliasHaeussler\CacheWarmup\Command;
 use EliasHaeussler\CacheWarmup\Exception;
+use EliasHaeussler\CacheWarmup\Formatter\JsonFormatter;
 use EliasHaeussler\CacheWarmup\Sitemap;
 use EliasHaeussler\CacheWarmup\Tests;
 use Generator;
@@ -54,6 +55,14 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         $application->add($command);
 
         $this->commandTester = new Console\Tester\CommandTester($command);
+    }
+
+    #[Framework\Attributes\Test]
+    public function initializeThrowsExceptionIfGivenFormatterIsUnsupported(): void
+    {
+        $this->expectExceptionObject(Exception\UnsupportedFormatterException::create('foo'));
+
+        $this->commandTester->execute(['--format' => 'foo']);
     }
 
     #[Framework\Attributes\Test]
@@ -406,6 +415,23 @@ final class CacheWarmupCommandTest extends Framework\TestCase
                 'https://www.example.com/sitemap.xml',
             ],
         ]);
+    }
+
+    #[Framework\Attributes\Test]
+    public function executeUsesConfiguredFormatter(): void
+    {
+        $this->mockSitemapRequest('valid_sitemap_3');
+
+        $this->commandTester->execute([
+            'sitemaps' => [
+                'https://www.example.com/sitemap.xml',
+            ],
+            '--format' => JsonFormatter::getType(),
+        ]);
+
+        // At this point, we cannot test the actual output of the JSON formatter
+        // because it's applied on destructuring first
+        self::assertSame('', $this->commandTester->getDisplay());
     }
 
     /**

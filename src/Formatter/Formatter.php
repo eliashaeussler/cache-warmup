@@ -21,55 +21,25 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Result;
+namespace EliasHaeussler\CacheWarmup\Formatter;
+
+use EliasHaeussler\CacheWarmup\Result;
 
 /**
- * CacheWarmupResult.
+ * Formatter.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class CacheWarmupResult
+interface Formatter
 {
-    /**
-     * @var list<CrawlingResult>
-     */
-    private array $successful = [];
+    public function formatParserResult(Result\ParserResult $successful, Result\ParserResult $failed): void;
 
-    /**
-     * @var list<CrawlingResult>
-     */
-    private array $failed = [];
+    public function formatCacheWarmupResult(Result\CacheWarmupResult $result): void;
 
-    public function addResult(CrawlingResult $result): self
-    {
-        if ($result->isSuccessful()) {
-            $this->successful[] = $result;
-        } elseif ($result->isFailed()) {
-            $this->failed[] = $result;
-        }
+    public function logMessage(string $message, MessageSeverity $severity = MessageSeverity::Info): void;
 
-        return $this;
-    }
+    public function isVerbose(): bool;
 
-    /**
-     * @return list<CrawlingResult>
-     */
-    public function getSuccessful(): array
-    {
-        return $this->successful;
-    }
-
-    /**
-     * @return list<CrawlingResult>
-     */
-    public function getFailed(): array
-    {
-        return $this->failed;
-    }
-
-    public function isSuccessful(): bool
-    {
-        return [] === $this->failed;
-    }
+    public static function getType(): string;
 }
