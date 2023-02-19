@@ -239,8 +239,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function executeThrowsExceptionIfGivenCrawlerClassDoesNotExist(): void
     {
-        $this->expectException(Console\Exception\RuntimeException::class);
-        $this->expectExceptionCode(1604261816);
+        $this->expectExceptionObject(Exception\InvalidCrawlerException::forMissingClass('foo'));
 
         $this->commandTester->execute([
             'sitemaps' => [
@@ -253,8 +252,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function executeThrowsExceptionIfGivenCrawlerClassIsNotValid(): void
     {
-        $this->expectException(Console\Exception\RuntimeException::class);
-        $this->expectExceptionCode(1604261885);
+        $this->expectExceptionObject(Exception\InvalidCrawlerException::forUnsupportedClass(self::class));
 
         $this->commandTester->execute([
             'sitemaps' => [

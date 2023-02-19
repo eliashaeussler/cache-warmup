@@ -36,7 +36,6 @@ use Symfony\Component\Console;
 use function count;
 use function is_array;
 use function is_string;
-use function is_subclass_of;
 use function json_decode;
 use function json_encode;
 use function sprintf;
@@ -54,6 +53,7 @@ final class CacheWarmupCommand extends Console\Command\Command
 
     private Console\Style\SymfonyStyle $io;
     private Formatter\Formatter $formatter;
+    private Crawler\CrawlerFactory $crawlerFactory;
 
     public function __construct(
         private readonly ClientInterface $client = new Client(),
@@ -200,6 +200,7 @@ HELP);
     {
         $this->io = new Console\Style\SymfonyStyle($input, $output);
         $this->formatter = (new Formatter\FormatterFactory($this->io))->get($input->getOption('format'));
+        $this->crawlerFactory = new Crawler\CrawlerFactory($output);
     }
 
     protected function interact(Console\Input\InputInterface $input, Console\Output\OutputInterface $output): void
@@ -240,10 +241,8 @@ HELP);
             throw new Console\Exception\RuntimeException('Neither sitemaps nor URLs are defined.', 1604261236);
         }
 
-        // Initialize crawler
-        $crawler = $this->initializeCrawler($input, $output);
-
-        // Initialize cache warmer
+        // Initialize components
+        $crawler = $this->initializeCrawler($input);
         $cacheWarmer = $this->initializeCacheWarmer($input, $crawler);
 
         // Print formatted parser result
@@ -322,46 +321,31 @@ HELP);
         return $cacheWarmer;
     }
 
-    private function initializeCrawler(
-        Console\Input\InputInterface $input,
-        Console\Output\OutputInterface $output,
-    ): Crawler\CrawlerInterface {
-        $crawler = $input->getOption('crawler');
-        $crawlerOptions = $input->getOption('crawler-options');
+    private function initializeCrawler(Console\Input\InputInterface $input): Crawler\CrawlerInterface
+    {
+        /** @var class-string<Crawler\CrawlerInterface>|null $crawlerClass */
+        $crawlerClass = $input->getOption('crawler');
+        $crawlerOptions = $this->parseCrawlerOptions($input->getOption('crawler-options'));
 
-        if (is_string($crawler)) {
-            // Use crawler specified by --crawler option
-            if (!class_exists($crawler)) {
-                throw new Console\Exception\RuntimeException('The specified crawler class does not exist.', 1604261816);
-            }
-
-            if (!is_subclass_of($crawler, Crawler\CrawlerInterface::class)) {
-                throw new Console\Exception\RuntimeException('The specified crawler is not valid.', 1604261885);
-            }
-
-            $crawler = new $crawler();
-        } elseif ($input->getOption('progress')) {
-            // Use default verbose crawler
-            $crawler = new Crawler\OutputtingCrawler();
-        } else {
-            // Use default crawler
-            $crawler = new Crawler\ConcurrentCrawler();
+        // Select default crawler
+        if (null === $crawlerClass) {
+            $crawlerClass = $input->getOption('progress')
+                ? Crawler\OutputtingCrawler::class
+                : Crawler\ConcurrentCrawler::class
+            ;
         }
 
-        if ($crawler instanceof Crawler\VerboseCrawlerInterface) {
-            $crawler->setOutput($output);
-        }
+        // Initialize crawler
+        $crawler = $this->crawlerFactory->get($crawlerClass, $crawlerOptions);
 
+        // Print crawler options
         if ($crawler instanceof Crawler\ConfigurableCrawlerInterface) {
-            $crawlerOptions = $this->parseCrawlerOptions($crawlerOptions);
-            $crawler->setOptions($crawlerOptions);
-
             if ($this->formatter->isVerbose() && $this->io->isVerbose() && [] !== $crawlerOptions) {
                 $this->io->section('Using custom crawler options:');
-                $this->io->writeln(json_encode($crawlerOptions, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
+                $this->io->writeln((string) json_encode($crawlerOptions, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
                 $this->io->newLine();
             }
-        } elseif (null !== $crawlerOptions) {
+        } elseif ([] !== $crawlerOptions) {
             $this->formatter->logMessage(
                 'You passed crawler options for a non-configurable crawler.',
                 Formatter\MessageSeverity::Warning,
