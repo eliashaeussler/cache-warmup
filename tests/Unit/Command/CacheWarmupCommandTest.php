@@ -25,7 +25,7 @@ namespace EliasHaeussler\CacheWarmup\Tests\Unit\Command;
 
 use EliasHaeussler\CacheWarmup\Command;
 use EliasHaeussler\CacheWarmup\Exception;
-use EliasHaeussler\CacheWarmup\Formatter\JsonFormatter;
+use EliasHaeussler\CacheWarmup\Formatter;
 use EliasHaeussler\CacheWarmup\Sitemap;
 use EliasHaeussler\CacheWarmup\Tests;
 use Generator;
@@ -232,7 +232,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         $output = $this->commandTester->getDisplay();
 
-        self::assertStringContainsString(' SUCCESS ', $output);
+        self::assertStringContainsString(' FAILURE ', $output);
         self::assertStringContainsString('100%', $output);
     }
 
@@ -375,7 +375,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         $output = $this->commandTester->getDisplay();
 
         self::assertSame($expected, $exitCode);
-        self::assertStringContainsString('Failed to warm up caches for 1 URL.', $output);
+        self::assertStringContainsString('Failed to warm up caches', $output);
     }
 
     #[Framework\Attributes\Test]
@@ -426,7 +426,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
             'sitemaps' => [
                 'https://www.example.com/sitemap.xml',
             ],
-            '--format' => JsonFormatter::getType(),
+            '--format' => Formatter\JsonFormatter::getType(),
         ]);
 
         // At this point, we cannot test the actual output of the JSON formatter

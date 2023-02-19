@@ -342,10 +342,10 @@ HELP);
             $crawler = new $crawler();
         } elseif ($input->getOption('progress')) {
             // Use default verbose crawler
-            $crawler = new Crawler\OutputtingCrawler();
+            $crawler = new Crawler\OutputtingCrawler(client: $this->client);
         } else {
             // Use default crawler
-            $crawler = new Crawler\ConcurrentCrawler();
+            $crawler = new Crawler\ConcurrentCrawler(client: $this->client);
         }
 
         if ($crawler instanceof Crawler\VerboseCrawlerInterface) {
