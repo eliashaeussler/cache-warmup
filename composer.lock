@@ -1868,16 +1868,16 @@
         },
         {
             "name": "eliashaeussler/php-cs-fixer-config",
-            "version": "1.0.1",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/php-cs-fixer-config.git",
-                "reference": "35e6bdcab30205040dedff35c68631ff0c665a45"
+                "reference": "dc83519822be91dad64d7fd5639c805cc1909e21"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/php-cs-fixer-config/zipball/35e6bdcab30205040dedff35c68631ff0c665a45",
-                "reference": "35e6bdcab30205040dedff35c68631ff0c665a45",
+                "url": "https://api.github.com/repos/eliashaeussler/php-cs-fixer-config/zipball/dc83519822be91dad64d7fd5639c805cc1909e21",
+                "reference": "dc83519822be91dad64d7fd5639c805cc1909e21",
                 "shasum": ""
             },
             "require": {
@@ -1915,9 +1915,9 @@
             ],
             "description": "My personal configuration for PHP-CS-Fixer",
             "support": {
-                "source": "https://github.com/eliashaeussler/php-cs-fixer-config/tree/1.0.1"
+                "source": "https://github.com/eliashaeussler/php-cs-fixer-config/tree/1.1.0"
             },
-            "time": "2023-02-18T23:59:27+00:00"
+            "time": "2023-02-19T13:11:16+00:00"
         },
         {
             "name": "ergebnis/composer-normalize",
