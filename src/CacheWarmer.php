@@ -23,9 +23,10 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup;
 
-use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7;
-use Psr\Http\Client;
 
 use function array_key_exists;
 use function array_values;
@@ -60,7 +61,7 @@ final class CacheWarmer
 
     public function __construct(
         private readonly int $limit = 0,
-        private readonly Client\ClientInterface $client = new GuzzleClient(),
+        private readonly ClientInterface $client = new Client(),
         private readonly Crawler\CrawlerInterface $crawler = new Crawler\ConcurrentCrawler(),
         private readonly bool $strict = true,
     ) {
@@ -77,6 +78,8 @@ final class CacheWarmer
      *
      * @throws Exception\InvalidSitemapException
      * @throws Exception\InvalidUrlException
+     * @throws Exception\MalformedXmlException
+     * @throws GuzzleException
      */
     public function addSitemaps(array|string|Sitemap\Sitemap $sitemaps): self
     {
@@ -106,7 +109,7 @@ final class CacheWarmer
             // Parse sitemap object
             try {
                 $result = $this->parser->parse($sitemap);
-            } catch (Client\ClientExceptionInterface|Exception\Exception $exception) {
+            } catch (GuzzleException|Exception\InvalidSitemapException|Exception\MalformedXmlException $exception) {
                 // Exit early if running in strict mode
                 if ($this->strict) {
                     throw $exception;

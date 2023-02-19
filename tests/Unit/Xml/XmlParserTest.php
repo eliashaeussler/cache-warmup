@@ -104,7 +104,7 @@ final class XmlParserTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
-    public function parseFollowsRedirectsWhenUsingGuzzleClient(): void
+    public function parseFollowsRedirects(): void
     {
         $this->mockHandler->append(new Psr7\Response(301, ['Location' => 'https://www.example.org/sub/sitemap.xml']));
 
@@ -113,20 +113,6 @@ final class XmlParserTest extends Framework\TestCase
         $result = $this->subject->parse($this->sitemap);
 
         self::assertNotEmpty($result->getUrls());
-    }
-
-    #[Framework\Attributes\Test]
-    public function parseDoesNotFollowRedirectsWhenUsingOtherClient(): void
-    {
-        $client = new Tests\Unit\Fixtures\DummyClient();
-        $subject = new Xml\XmlParser($client);
-
-        $client->expectedResponse = new Psr7\Response(301, ['Location' => 'https://www.example.org/sub/sitemap.xml']);
-
-        $this->expectException(Exception\MalformedXmlException::class);
-        $this->expectExceptionCode(1670962571);
-
-        $subject->parse($this->sitemap);
     }
 
     #[Framework\Attributes\Test]

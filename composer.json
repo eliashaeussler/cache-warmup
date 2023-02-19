@@ -20,7 +20,6 @@
 		"guzzlehttp/guzzle": "^7.0",
 		"guzzlehttp/psr7": "^2.0",
 		"mtownsend/xml-to-array": "^2.0",
-		"psr/http-client": "^1.0",
 		"psr/http-message": "^1.0",
 		"symfony/console": "^5.4 || ^6.0"
 	},
