@@ -14,7 +14,7 @@ declare(strict_types=1);
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -49,7 +49,7 @@ final class InvalidSitemapExceptionTest extends Framework\TestCase
         self::assertSame(1660668799, $actual->getCode());
         self::assertSame(
             'The sitemap "https://www.example.com" is invalid and cannot be parsed.',
-            $actual->getMessage()
+            $actual->getMessage(),
         );
     }
 
@@ -78,7 +78,7 @@ final class InvalidSitemapExceptionTest extends Framework\TestCase
         self::assertSame(1604055096, $actual->getCode());
         self::assertSame(
             sprintf('Sitemaps must be of type string or %s, null given.', Sitemap\Sitemap::class),
-            $actual->getMessage()
+            $actual->getMessage(),
         );
     }
 

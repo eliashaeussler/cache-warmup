@@ -14,7 +14,7 @@ declare(strict_types=1);
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -132,44 +132,44 @@ final class CacheWarmupCommand extends Console\Command\Command
         $this->addArgument(
             'sitemaps',
             Console\Input\InputArgument::OPTIONAL | Console\Input\InputArgument::IS_ARRAY,
-            'URLs of XML sitemaps to be used for cache warming'
+            'URLs of XML sitemaps to be used for cache warming',
         );
         $this->addOption(
             'urls',
             'u',
             Console\Input\InputOption::VALUE_REQUIRED | Console\Input\InputOption::VALUE_IS_ARRAY,
-            'Custom additional URLs to be used for cache warming'
+            'Custom additional URLs to be used for cache warming',
         );
         $this->addOption(
             'limit',
             'l',
             Console\Input\InputOption::VALUE_REQUIRED,
             'Limit the number of URLs to be processed',
-            0
+            0,
         );
         $this->addOption(
             'progress',
             'p',
             Console\Input\InputOption::VALUE_NONE,
-            'Show progress bar during cache warmup'
+            'Show progress bar during cache warmup',
         );
         $this->addOption(
             'crawler',
             'c',
             Console\Input\InputOption::VALUE_REQUIRED,
-            'FQCN of the crawler to be used for cache warming'
+            'FQCN of the crawler to be used for cache warming',
         );
         $this->addOption(
             'crawler-options',
             'o',
             Console\Input\InputOption::VALUE_REQUIRED,
-            'Additional config for configurable crawlers'
+            'Additional config for configurable crawlers',
         );
         $this->addOption(
             'allow-failures',
             null,
             Console\Input\InputOption::VALUE_NONE,
-            'Allow failures during URL crawling and exit with zero'
+            'Allow failures during URL crawling and exit with zero',
         );
     }
 
@@ -295,8 +295,8 @@ final class CacheWarmupCommand extends Console\Command\Command
                 sprintf(
                     'Successfully warmed up caches for %d URL%s.',
                     $countSuccessfulUrls,
-                    1 === $countSuccessfulUrls ? '' : 's'
-                )
+                    1 === $countSuccessfulUrls ? '' : 's',
+                ),
             );
         }
 
@@ -306,8 +306,8 @@ final class CacheWarmupCommand extends Console\Command\Command
                 sprintf(
                     'Failed to warm up caches for %d URL%s.',
                     $countFailedUrls,
-                    1 === $countFailedUrls ? '' : 's'
-                )
+                    1 === $countFailedUrls ? '' : 's',
+                ),
             );
         }
     }

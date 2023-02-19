@@ -14,7 +14,7 @@ declare(strict_types=1);
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -107,7 +107,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
             ],
             [
                 'verbosity' => Console\Output\OutputInterface::VERBOSITY_VERY_VERBOSE,
-            ]
+            ],
         );
 
         $output = $this->commandTester->getDisplay();
@@ -131,7 +131,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
             ],
             [
                 'verbosity' => Console\Output\OutputInterface::VERBOSITY_VERY_VERBOSE,
-            ]
+            ],
         );
 
         $output = $this->commandTester->getDisplay();
@@ -155,7 +155,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
             ],
             [
                 'verbosity' => Console\Output\OutputInterface::VERBOSITY_VERY_VERBOSE,
-            ]
+            ],
         );
 
         $output = $this->commandTester->getDisplay();
@@ -177,7 +177,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
             ],
             [
                 'verbosity' => Console\Output\OutputInterface::VERBOSITY_VERBOSE,
-            ]
+            ],
         );
 
         $output = $this->commandTester->getDisplay();
@@ -218,7 +218,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
             [
                 'verbosity' => Console\Output\OutputInterface::VERBOSITY_VERBOSE,
                 'capture_stderr_separately' => true,
-            ]
+            ],
         );
 
         $output = $this->commandTester->getDisplay();
@@ -307,7 +307,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
             ],
             [
                 'verbosity' => Console\Output\OutputInterface::VERBOSITY_VERBOSE,
-            ]
+            ],
         );
 
         $output = $this->commandTester->getDisplay();
