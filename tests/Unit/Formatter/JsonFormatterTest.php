@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Formatter;
 
 use EliasHaeussler\CacheWarmup as Src;
+use Generator;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
 use Symfony\Component\Console;
@@ -157,5 +158,36 @@ final class JsonFormatterTest extends Framework\TestCase
             ],
             $this->subject->getJson(),
         );
+    }
+
+    /**
+     * @param array{messages: array<value-of<Src\Formatter\MessageSeverity>, list<string>>} $expected
+     */
+    #[Framework\Attributes\Test]
+    #[Framework\Attributes\DataProvider('logMessageAddsMessageDataProvider')]
+    public function logMessageAddsMessage(Src\Formatter\MessageSeverity $severity, array $expected): void
+    {
+        $this->subject->logMessage('foo', $severity);
+
+        self::assertSame($expected, $this->subject->getJson());
+    }
+
+    /**
+     * @return \Generator<string, array{Src\Formatter\MessageSeverity, array{messages: array<value-of<Src\Formatter\MessageSeverity>, list<string>>}}>
+     */
+    public static function logMessageAddsMessageDataProvider(): Generator
+    {
+        $message = static fn (Src\Formatter\MessageSeverity $severity) => [
+            'messages' => [
+                $severity->value => [
+                    'foo',
+                ],
+            ],
+        ];
+
+        yield 'error' => [Src\Formatter\MessageSeverity::Error, $message(Src\Formatter\MessageSeverity::Error)];
+        yield 'info' => [Src\Formatter\MessageSeverity::Info, $message(Src\Formatter\MessageSeverity::Info)];
+        yield 'success' => [Src\Formatter\MessageSeverity::Success, $message(Src\Formatter\MessageSeverity::Success)];
+        yield 'warning' => [Src\Formatter\MessageSeverity::Warning, $message(Src\Formatter\MessageSeverity::Warning)];
     }
 }

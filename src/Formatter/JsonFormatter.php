@@ -50,6 +50,7 @@ use function json_encode;
  *         success?: list<string>,
  *         failure?: list<string>,
  *     },
+ *     messages?: array<value-of<MessageSeverity>, list<string>>
  * }
  */
 final class JsonFormatter implements Formatter
@@ -97,6 +98,19 @@ final class JsonFormatter implements Formatter
         if ([] !== ($failedUrls = $result->getFailed())) {
             $this->json['cacheWarmupResult']['failure'] = array_map('strval', $failedUrls);
         }
+    }
+
+    public function logMessage(string $message, MessageSeverity $severity = MessageSeverity::Info): void
+    {
+        if (!is_array($this->json['messages'] ?? null)) {
+            $this->json['messages'] = [];
+        }
+
+        if (!is_array($this->json['messages'][$severity->value] ?? null)) {
+            $this->json['messages'][$severity->value] = [];
+        }
+
+        $this->json['messages'][$severity->value][] = $message;
     }
 
     public function isVerbose(): bool

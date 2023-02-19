@@ -27,6 +27,7 @@ use EliasHaeussler\CacheWarmup\Result;
 use Symfony\Component\Console;
 
 use function array_map;
+use function method_exists;
 
 /**
  * TextFormatter.
@@ -102,6 +103,16 @@ final class TextFormatter implements Formatter
                     1 === $countFailedUrls ? '' : 's',
                 ),
             );
+        }
+    }
+
+    public function logMessage(string $message, MessageSeverity $severity = MessageSeverity::Info): void
+    {
+        $methodName = $severity->value;
+
+        if (method_exists($this->io, $methodName)) {
+            /* @phpstan-ignore-next-line */
+            $this->io->{$methodName}($message);
         }
     }
 

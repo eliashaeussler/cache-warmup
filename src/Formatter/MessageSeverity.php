@@ -23,23 +23,16 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Formatter;
 
-use EliasHaeussler\CacheWarmup\Result;
-
 /**
- * Formatter.
+ * MessageSeverity.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-interface Formatter
+enum MessageSeverity: string
 {
-    public function formatParserResult(Result\ParserResult $successful, Result\ParserResult $failed): void;
-
-    public function formatCacheWarmupResult(Result\CacheWarmupResult $result): void;
-
-    public function logMessage(string $message, MessageSeverity $severity = MessageSeverity::Info): void;
-
-    public function isVerbose(): bool;
-
-    public static function getType(): string;
+    case Error = 'error';
+    case Info = 'info';
+    case Success = 'success';
+    case Warning = 'warning';
 }

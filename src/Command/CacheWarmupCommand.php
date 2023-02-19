@@ -361,8 +361,11 @@ HELP);
                 $this->io->writeln(json_encode($crawlerOptions, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
                 $this->io->newLine();
             }
-        } elseif ($this->formatter->isVerbose() && null !== $crawlerOptions) {
-            $this->io->warning('You passed crawler options for a non-configurable crawler.');
+        } elseif (null !== $crawlerOptions) {
+            $this->formatter->logMessage(
+                'You passed crawler options for a non-configurable crawler.',
+                Formatter\MessageSeverity::Warning,
+            );
         }
 
         return $crawler;

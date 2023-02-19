@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Formatter;
 
 use EliasHaeussler\CacheWarmup as Src;
+use Generator;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
 use Symfony\Component\Console;
@@ -190,5 +191,27 @@ final class TextFormatterTest extends Framework\TestCase
         $this->subject->formatCacheWarmupResult($result);
 
         self::assertStringContainsString('Failed to warm up caches for 1 URL.', $this->output->fetch());
+    }
+
+    #[Framework\Attributes\Test]
+    #[Framework\Attributes\DataProvider('logMessagePrintsGivenMessageWithGivenSeverityDataProvider')]
+    public function logMessagePrintsGivenMessageWithGivenSeverity(
+        Src\Formatter\MessageSeverity $severity,
+        string $expected,
+    ): void {
+        $this->subject->logMessage('foo', $severity);
+
+        self::assertStringContainsString($expected, $this->output->fetch());
+    }
+
+    /**
+     * @return \Generator<string, array{Src\Formatter\MessageSeverity, string}>
+     */
+    public static function logMessagePrintsGivenMessageWithGivenSeverityDataProvider(): Generator
+    {
+        yield 'error' => [Src\Formatter\MessageSeverity::Error, '[ERROR] foo'];
+        yield 'info' => [Src\Formatter\MessageSeverity::Info, '[INFO] foo'];
+        yield 'success' => [Src\Formatter\MessageSeverity::Success, '[OK] foo'];
+        yield 'warning' => [Src\Formatter\MessageSeverity::Warning, '[WARNING] foo'];
     }
 }
