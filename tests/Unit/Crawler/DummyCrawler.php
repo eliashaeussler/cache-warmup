@@ -27,6 +27,8 @@ use EliasHaeussler\CacheWarmup\Crawler;
 use EliasHaeussler\CacheWarmup\Result;
 use Psr\Http\Message;
 
+use function array_shift;
+
 /**
  * DummyCrawler.
  *
@@ -41,17 +43,19 @@ class DummyCrawler implements Crawler\CrawlerInterface
      * @var list<Message\UriInterface>
      */
     public static array $crawledUrls = [];
-    public static bool $simulateFailure = false;
+
+    /**
+     * @var list<Result\CrawlingState>
+     */
+    public static array $resultStack = [];
 
     public function crawl(array $urls): Result\CacheWarmupResult
     {
         static::$crawledUrls = $urls;
 
         $result = new Result\CacheWarmupResult();
-        $urls = $this->mapUrlsToCrawlingResults(
-            static::$crawledUrls,
-            static::$simulateFailure ? Result\CrawlingState::Failed : Result\CrawlingState::Successful,
-        );
+        $crawlingState = array_shift(static::$resultStack) ?? Result\CrawlingState::Successful;
+        $urls = $this->mapUrlsToCrawlingResults(static::$crawledUrls, $crawlingState);
 
         foreach ($urls as $crawlingResult) {
             $result->addResult($crawlingResult);

@@ -38,6 +38,7 @@ use function is_array;
 use function is_string;
 use function json_decode;
 use function json_encode;
+use function sleep;
 use function sprintf;
 
 /**
@@ -54,6 +55,7 @@ final class CacheWarmupCommand extends Console\Command\Command
     private Console\Style\SymfonyStyle $io;
     private Formatter\Formatter $formatter;
     private Crawler\CrawlerFactory $crawlerFactory;
+    private bool $firstRun = true;
 
     public function __construct(
         private readonly ClientInterface $client = new Client(),
@@ -194,6 +196,12 @@ HELP);
             'Formatter used to print the cache warmup result',
             Formatter\TextFormatter::getType(),
         );
+        $this->addOption(
+            'repeat-after',
+            null,
+            Console\Input\InputOption::VALUE_REQUIRED,
+            'Run cache warmup in endless loop and repeat x seconds after each run',
+        );
     }
 
     protected function initialize(Console\Input\InputInterface $input, Console\Output\OutputInterface $output): void
@@ -235,10 +243,17 @@ HELP);
     {
         $sitemaps = $input->getArgument('sitemaps');
         $urls = $input->getOption('urls');
+        $repeatAfter = (int) $input->getOption('repeat-after');
 
         // Throw exception if neither sitemaps nor URLs are defined
         if ([] === $sitemaps && [] === $urls) {
             throw new Console\Exception\RuntimeException('Neither sitemaps nor URLs are defined.', 1604261236);
+        }
+
+        // Show warning on endless runs
+        if ($this->firstRun && $repeatAfter > 0) {
+            $this->showEndlessModeWarning($repeatAfter);
+            $this->firstRun = false;
         }
 
         // Initialize components
@@ -260,14 +275,18 @@ HELP);
         // Print formatted cache warmup result
         $this->formatter->formatCacheWarmupResult($result);
 
-        // Early return if failures are allowed
-        if ($input->getOption('allow-failures')) {
-            return self::SUCCESSFUL;
+        // Early return if parsing or crawling failed
+        if (!$input->getOption('allow-failures')
+            && ([] !== $cacheWarmer->getFailedSitemaps() || !$result->isSuccessful())
+        ) {
+            return self::FAILED;
         }
 
-        // Early return if parsing or crawling failed
-        if ([] !== $cacheWarmer->getFailedSitemaps() || !$result->isSuccessful()) {
-            return self::FAILED;
+        // Repeat on endless mode
+        if ($repeatAfter > 0) {
+            sleep($repeatAfter);
+
+            return $this->execute($input, $output);
         }
 
         return self::SUCCESSFUL;
@@ -377,6 +396,18 @@ HELP);
         }
 
         return $crawlerOptions;
+    }
+
+    private function showEndlessModeWarning(int $interval): void
+    {
+        $this->formatter->logMessage(
+            sprintf(
+                'Command is scheduled to run forever. It will be repeated %d second%s after each run.',
+                $interval,
+                1 === $interval ? '' : 's',
+            ),
+            Formatter\MessageSeverity::Warning,
+        );
     }
 
     private function validateSitemap(?string $input): ?Sitemap\Sitemap

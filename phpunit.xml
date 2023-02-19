@@ -4,6 +4,9 @@
          bootstrap="vendor/autoload.php"
          colors="true"
 >
+    <php>
+        <env name="COLUMNS" value="300" />
+    </php>
     <testsuites>
         <testsuite name="tests">
             <directory>tests/Unit</directory>

@@ -25,7 +25,8 @@ namespace EliasHaeussler\CacheWarmup\Tests\Unit\Command;
 
 use EliasHaeussler\CacheWarmup\Command;
 use EliasHaeussler\CacheWarmup\Exception;
-use EliasHaeussler\CacheWarmup\Formatter\JsonFormatter;
+use EliasHaeussler\CacheWarmup\Formatter;
+use EliasHaeussler\CacheWarmup\Result;
 use EliasHaeussler\CacheWarmup\Sitemap;
 use EliasHaeussler\CacheWarmup\Tests;
 use Generator;
@@ -359,7 +360,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     #[Framework\Attributes\DataProvider('executeFailsIfSitemapCannotBeCrawledDataProvider')]
     public function executeFailsIfSitemapCannotBeCrawled(bool $allowFailures, int $expected): void
     {
-        Tests\Unit\Crawler\DummyCrawler::$simulateFailure = true;
+        Tests\Unit\Crawler\DummyCrawler::$resultStack[] = Result\CrawlingState::Failed;
 
         $this->mockSitemapRequest('valid_sitemap_3');
 
@@ -424,12 +425,39 @@ final class CacheWarmupCommandTest extends Framework\TestCase
             'sitemaps' => [
                 'https://www.example.com/sitemap.xml',
             ],
-            '--format' => JsonFormatter::getType(),
+            '--format' => Formatter\JsonFormatter::getType(),
         ]);
 
         // At this point, we cannot test the actual output of the JSON formatter
         // because it's applied on destructuring first
         self::assertSame('', $this->commandTester->getDisplay());
+    }
+
+    #[Framework\Attributes\Test]
+    public function executeRepeatsCacheWarmupIfEndlessModeIsEnabled(): void
+    {
+        Tests\Unit\Crawler\DummyCrawler::$resultStack[] = Result\CrawlingState::Successful;
+        Tests\Unit\Crawler\DummyCrawler::$resultStack[] = Result\CrawlingState::Failed;
+
+        $this->mockSitemapRequest('valid_sitemap_3');
+        $this->mockSitemapRequest('valid_sitemap_3');
+
+        $this->commandTester->execute([
+            'sitemaps' => [
+                'https://www.example.com/sitemap.xml',
+            ],
+            '--crawler' => Tests\Unit\Crawler\DummyCrawler::class,
+            '--repeat-after' => '1',
+        ]);
+
+        $output = $this->commandTester->getDisplay();
+
+        self::assertStringContainsString(
+            '[WARNING] Command is scheduled to run forever. It will be repeated 1 second after each run.',
+            $output,
+        );
+        self::assertStringContainsString('[OK] Successfully warmed up caches for 2 URLs.', $output);
+        self::assertStringContainsString('[ERROR] Failed to warm up caches for 2 URLs.', $output);
     }
 
     /**
@@ -453,7 +481,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     protected function tearDown(): void
     {
         Tests\Unit\Crawler\DummyCrawler::$crawledUrls = [];
-        Tests\Unit\Crawler\DummyCrawler::$simulateFailure = false;
+        Tests\Unit\Crawler\DummyCrawler::$resultStack = [];
         Tests\Unit\Crawler\DummyVerboseCrawler::$output = null;
     }
 }
