@@ -79,6 +79,7 @@ The following input parameters are available:
 | `--crawler-options`, `-o` | JSON-encoded string of additional config for configurable crawlers                                                                                      |
 | `--allow-failures`        | Allow failures during URL crawling and exit with zero                                                                                                   |
 | `--format`, `-f`          | Formatter used to print the cache warmup result, can be `json` or `text` *(default: `text`)*                                                            |
+| `--repeat-after`          | Run cache warmup in endless loop and repeat x seconds after each run                                                                                    |
 
 💡 Run `vendor/bin/cache-warmup --help` to see a detailed explanation of
 all available input parameters.
