@@ -63,71 +63,73 @@ final class CacheWarmupCommand extends Console\Command\Command
 
     protected function configure(): void
     {
+        $crawlerInterface = Crawler\CrawlerInterface::class;
+        $configurableCrawlerInterface = Crawler\ConfigurableCrawlerInterface::class;
+
         $this->setDescription('Warms up caches of URLs provided by a given set of XML sitemaps.');
-        $this->setHelp(implode(PHP_EOL, [
-            'This command can be used to warm up website caches. ',
-            'It requires a set of XML sitemaps offering several URLs which will be crawled.',
-            '',
-            '<info>Sitemaps</info>',
-            '<info>========</info>',
-            'The list of sitemaps to be crawled can be defined as command argument:',
-            '',
-            '   <comment>%command.full_name% https://www.example.com/sitemap.xml</comment>',
-            '',
-            'You are free to crawl as many different sitemaps as you want.',
-            'Alternatively, sitemaps can be specified from user input when application is in interactive mode.',
-            '',
-            '<info>Custom URLs</info>',
-            '<info>===========</info>',
-            'In addition or as an alternative to sitemaps, it\'s also possible to provide a given URL set '.
-            'using the <comment>--urls</comment> option:',
-            '',
-            '   <comment>%command.full_name% -u https://www.example.com/foo -u https://www.example.com/baz</comment>',
-            '',
-            '<info>Progress bar</info>',
-            '<info>============</info>',
-            'You can track the cache warmup progress by using the <comment>--progress</comment> option:',
-            '',
-            '   <comment>%command.full_name% --progress</comment>',
-            '',
-            'This shows a compact progress bar, including current warmup failures.',
-            'For a more verbose output, add the <comment>--verbose</comment> option:',
-            '',
-            '   <comment>%command.full_name% --progress --verbose</comment>',
-            '',
-            '<info>URL limit</info>',
-            '<info>=========</info>',
-            'The number of URLs to be crawled can be limited using the <comment>--limit</comment> option:',
-            '',
-            '   <comment>%command.full_name% --limit 50</comment>',
-            '',
-            '<info>Crawler</info>',
-            '<info>=======</info>',
-            'By default, cache warmup will be done using concurrent HEAD requests. ',
-            'This behavior can be overridden in case a special crawler is defined using the <comment>--crawler</comment> option:',
-            '',
-            '   <comment>%command.full_name% --crawler "Vendor\Crawler\MyCrawler"</comment>',
-            '',
-            'It\'s up to you to ensure the given crawler class is available and fully loaded.',
-            'This can best be achieved by registering the class with Composer autoloader.',
-            'Also make sure the crawler implements the <comment>'.Crawler\CrawlerInterface::class.'</comment> interface.',
-            '',
-            '<info>Crawler options</info>',
-            '<info>===============</info>',
-            'For crawlers implementing the <comment>'.Crawler\ConfigurableCrawlerInterface::class.'</comment> interface,',
-            'it is possible to pass a JSON-encoded array of crawler options by using the <comment>--crawler-options</comment> option:',
-            '',
-            '   <comment>%command.full_name% --crawler-options \'{"concurrency": 3}\'</comment>',
-            '',
-            '<info>Allow failures</info>',
-            '<info>==============</info>',
-            'If a sitemap cannot be parsed or an URL fails to be crawled, this command normally exits ',
-            'with a non-zero exit code. This is not always the desired behavior. Therefore, you can change ',
-            'this behavior by using the <comment>--allow-failures</comment> option:',
-            '',
-            '   <comment>%command.full_name% --allow-failures</comment>',
-            '',
-        ]));
+        $this->setHelp(<<<HELP
+This command can be used to warm up website caches.
+It requires a set of XML sitemaps offering several URLs which will be crawled.
+
+<info>Sitemaps</info>
+<info>========</info>
+The list of sitemaps to be crawled can be defined as command argument:
+
+   <comment>%command.full_name% https://www.example.com/sitemap.xml</comment>
+
+You are free to crawl as many sitemaps as you want.
+Alternatively, sitemaps can be specified from user input when application is in interactive mode.
+
+<info>Custom URLs</info>
+<info>===========</info>
+In addition or as an alternative to sitemaps, it's also possible to provide a given URL set using the <comment>--urls</comment> option:
+
+   <comment>%command.full_name% -u https://www.example.com/foo -u https://www.example.com/baz</comment>
+
+<info>Progress bar</info>
+<info>============</info>
+You can track the cache warmup progress by using the <comment>--progress</comment> option:
+
+   <comment>%command.full_name% --progress</comment>
+
+This shows a compact progress bar, including current warmup failures.
+For a more verbose output, add the <comment>--verbose</comment> option:
+
+   <comment>%command.full_name% --progress --verbose</comment>
+
+<info>URL limit</info>
+<info>=========</info>
+The number of URLs to be crawled can be limited using the <comment>--limit</comment> option:
+
+   <comment>%command.full_name% --limit 50</comment>
+
+<info>Crawler</info>
+<info>=======</info>
+By default, cache warmup will be done using concurrent HEAD requests.
+This behavior can be overridden in case a special crawler is defined using the <comment>--crawler</comment> option:
+
+   <comment>%command.full_name% --crawler "Vendor\Crawler\MyCrawler"</comment>
+
+It's up to you to ensure the given crawler class is available and fully loaded.
+This can best be achieved by registering the class with Composer autoloader.
+Also make sure the crawler implements the <comment>{$crawlerInterface}</comment> interface.
+
+<info>Crawler options</info>
+<info>===============</info>
+For crawlers implementing the <comment>{$configurableCrawlerInterface}</comment> interface,
+it is possible to pass a JSON-encoded array of crawler options by using the <comment>--crawler-options</comment> option:
+
+   <comment>%command.full_name% --crawler-options '{"concurrency": 3}'</comment>
+
+<info>Allow failures</info>
+<info>==============</info>
+If a sitemap cannot be parsed or a URL fails to be crawled, this command normally exits
+with a non-zero exit code. This is not always the desired behavior. Therefore, you can change
+this behavior by using the <comment>--allow-failures</comment> option:
+
+   <comment>%command.full_name% --allow-failures</comment>
+
+HELP);
 
         $this->addArgument(
             'sitemaps',
