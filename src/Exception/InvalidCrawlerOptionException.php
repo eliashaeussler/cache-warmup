@@ -14,7 +14,7 @@ declare(strict_types=1);
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -42,7 +42,7 @@ final class InvalidCrawlerOptionException extends RuntimeException
     {
         return new self(
             sprintf('The crawler option "%s" is invalid or not supported by crawler "%s".', $option, $crawler::class),
-            1659120894
+            1659120894,
         );
     }
 
@@ -59,9 +59,9 @@ final class InvalidCrawlerOptionException extends RuntimeException
             sprintf(
                 'The crawler options "%s" are invalid or not supported by crawler "%s".',
                 implode('", "', $options),
-                $crawler::class
+                $crawler::class,
             ),
-            1659206995
+            1659206995,
         );
     }
 }

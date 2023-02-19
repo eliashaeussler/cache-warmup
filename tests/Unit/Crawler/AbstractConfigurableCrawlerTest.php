@@ -14,7 +14,7 @@ declare(strict_types=1);
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -58,7 +58,7 @@ final class AbstractConfigurableCrawlerTest extends Framework\TestCase
         $this->expectException(Exception\InvalidCrawlerOptionException::class);
         $this->expectExceptionCode(1659206995);
         $this->expectExceptionMessage(
-            'The crawler options "dummy", "blub" are invalid or not supported by crawler "'.$this->subject::class.'".'
+            'The crawler options "dummy", "blub" are invalid or not supported by crawler "'.$this->subject::class.'".',
         );
 
         $this->subject->setOptions([
