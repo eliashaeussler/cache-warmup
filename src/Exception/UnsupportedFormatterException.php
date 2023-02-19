@@ -21,55 +21,23 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Result;
+namespace EliasHaeussler\CacheWarmup\Exception;
+
+use function sprintf;
 
 /**
- * CacheWarmupResult.
+ * UnsupportedFormatterException.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class CacheWarmupResult
+final class UnsupportedFormatterException extends Exception
 {
-    /**
-     * @var list<CrawlingResult>
-     */
-    private array $successful = [];
-
-    /**
-     * @var list<CrawlingResult>
-     */
-    private array $failed = [];
-
-    public function addResult(CrawlingResult $result): self
+    public static function create(string $type): self
     {
-        if ($result->isSuccessful()) {
-            $this->successful[] = $result;
-        } elseif ($result->isFailed()) {
-            $this->failed[] = $result;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return list<CrawlingResult>
-     */
-    public function getSuccessful(): array
-    {
-        return $this->successful;
-    }
-
-    /**
-     * @return list<CrawlingResult>
-     */
-    public function getFailed(): array
-    {
-        return $this->failed;
-    }
-
-    public function isSuccessful(): bool
-    {
-        return [] === $this->failed;
+        return new self(
+            sprintf('The formatter "%s" is not supported.', $type),
+            1676814093,
+        );
     }
 }

@@ -21,55 +21,33 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Result;
+namespace EliasHaeussler\CacheWarmup\Formatter;
+
+use EliasHaeussler\CacheWarmup\Exception;
+use Symfony\Component\Console;
 
 /**
- * CacheWarmupResult.
+ * FormatterFactory.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class CacheWarmupResult
+final class FormatterFactory
 {
-    /**
-     * @var list<CrawlingResult>
-     */
-    private array $successful = [];
-
-    /**
-     * @var list<CrawlingResult>
-     */
-    private array $failed = [];
-
-    public function addResult(CrawlingResult $result): self
-    {
-        if ($result->isSuccessful()) {
-            $this->successful[] = $result;
-        } elseif ($result->isFailed()) {
-            $this->failed[] = $result;
-        }
-
-        return $this;
+    public function __construct(
+        private readonly Console\Style\SymfonyStyle $io,
+    ) {
     }
 
     /**
-     * @return list<CrawlingResult>
+     * @throws Exception\UnsupportedFormatterException
      */
-    public function getSuccessful(): array
+    public function get(string $type): Formatter
     {
-        return $this->successful;
-    }
-
-    /**
-     * @return list<CrawlingResult>
-     */
-    public function getFailed(): array
-    {
-        return $this->failed;
-    }
-
-    public function isSuccessful(): bool
-    {
-        return [] === $this->failed;
+        return match ($type) {
+            JsonFormatter::getType() => new JsonFormatter($this->io),
+            TextFormatter::getType() => new TextFormatter($this->io),
+            default => throw Exception\UnsupportedFormatterException::create($type),
+        };
     }
 }

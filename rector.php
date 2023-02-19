@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
 use Rector\Core\ValueObject\PhpVersion;
-use Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector;
 use Rector\Php74\Rector\LNumber\AddLiteralSeparatorToNumberRector;
+use Rector\Php80\Rector\Class_\AnnotationToAttributeRector;
 use Rector\PHPUnit\Set\PHPUnitLevelSetList;
 use Rector\Set\ValueObject\LevelSetList;
 
@@ -36,7 +36,9 @@ return static function (RectorConfig $rectorConfig): void {
 
     $rectorConfig->skip([
         AddLiteralSeparatorToNumberRector::class,
-        JsonThrowOnErrorRector::class,
+        AnnotationToAttributeRector::class => [
+            __DIR__.'/src',
+        ],
     ]);
 
     $rectorConfig->phpVersion(PhpVersion::PHP_81);

@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Result;
 
 use Psr\Http\Message;
+use Stringable;
 
 /**
  * CrawlingResult.
@@ -31,7 +32,7 @@ use Psr\Http\Message;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class CrawlingResult
+final class CrawlingResult implements Stringable
 {
     /**
      * @param array<string, mixed> $data
@@ -85,5 +86,10 @@ final class CrawlingResult
     public function is(CrawlingState $state): bool
     {
         return $this->state === $state;
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->uri;
     }
 }

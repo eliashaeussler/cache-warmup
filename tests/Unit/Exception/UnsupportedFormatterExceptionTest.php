@@ -21,55 +21,25 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Result;
+namespace EliasHaeussler\CacheWarmup\Tests\Unit\Exception;
+
+use EliasHaeussler\CacheWarmup\Exception;
+use PHPUnit\Framework;
 
 /**
- * CacheWarmupResult.
+ * UnsupportedFormatterExceptionTest.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class CacheWarmupResult
+final class UnsupportedFormatterExceptionTest extends Framework\TestCase
 {
-    /**
-     * @var list<CrawlingResult>
-     */
-    private array $successful = [];
-
-    /**
-     * @var list<CrawlingResult>
-     */
-    private array $failed = [];
-
-    public function addResult(CrawlingResult $result): self
+    #[Framework\Attributes\Test]
+    public function createReturnsExceptionForGivenType(): void
     {
-        if ($result->isSuccessful()) {
-            $this->successful[] = $result;
-        } elseif ($result->isFailed()) {
-            $this->failed[] = $result;
-        }
+        $actual = Exception\UnsupportedFormatterException::create('foo');
 
-        return $this;
-    }
-
-    /**
-     * @return list<CrawlingResult>
-     */
-    public function getSuccessful(): array
-    {
-        return $this->successful;
-    }
-
-    /**
-     * @return list<CrawlingResult>
-     */
-    public function getFailed(): array
-    {
-        return $this->failed;
-    }
-
-    public function isSuccessful(): bool
-    {
-        return [] === $this->failed;
+        self::assertSame(1676814093, $actual->getCode());
+        self::assertSame('The formatter "foo" is not supported.', $actual->getMessage());
     }
 }

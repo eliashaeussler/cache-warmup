@@ -25,6 +25,7 @@ namespace EliasHaeussler\CacheWarmup\Command;
 
 use EliasHaeussler\CacheWarmup\CacheWarmer;
 use EliasHaeussler\CacheWarmup\Crawler;
+use EliasHaeussler\CacheWarmup\Formatter;
 use EliasHaeussler\CacheWarmup\Result;
 use EliasHaeussler\CacheWarmup\Sitemap;
 use GuzzleHttp\Client as GuzzleClient;
@@ -32,8 +33,6 @@ use GuzzleHttp\Psr7;
 use Psr\Http\Client;
 use Symfony\Component\Console;
 
-use function array_map;
-use function array_values;
 use function count;
 use function is_array;
 use function is_string;
@@ -54,6 +53,7 @@ final class CacheWarmupCommand extends Console\Command\Command
     private const FAILED = 1;
 
     private Console\Style\SymfonyStyle $io;
+    private Formatter\Formatter $formatter;
 
     public function __construct(
         private readonly Client\ClientInterface $client = new GuzzleClient(),
@@ -65,6 +65,8 @@ final class CacheWarmupCommand extends Console\Command\Command
     {
         $crawlerInterface = Crawler\CrawlerInterface::class;
         $configurableCrawlerInterface = Crawler\ConfigurableCrawlerInterface::class;
+        $textFormatter = Formatter\TextFormatter::getType();
+        $jsonFormatter = Formatter\JsonFormatter::getType();
 
         $this->setDescription('Warms up caches of URLs provided by a given set of XML sitemaps.');
         $this->setHelp(<<<HELP
@@ -129,6 +131,18 @@ this behavior by using the <comment>--allow-failures</comment> option:
 
    <comment>%command.full_name% --allow-failures</comment>
 
+<info>Format output</info>
+<info>=============</info>
+By default, all user-oriented output is printed as plain text to the console.
+However, you can use other formatters by using the <comment>--format</comment> option:
+
+   <comment>%command.full_name% --format json</comment>
+
+Currently, the following formatters are available:
+
+   * <comment>{$textFormatter}</comment> (default)
+   * <comment>{$jsonFormatter}</comment>
+
 HELP);
 
         $this->addArgument(
@@ -173,11 +187,19 @@ HELP);
             Console\Input\InputOption::VALUE_NONE,
             'Allow failures during URL crawling and exit with zero',
         );
+        $this->addOption(
+            'format',
+            'f',
+            Console\Input\InputOption::VALUE_REQUIRED,
+            'Formatter used to print the cache warmup result',
+            Formatter\TextFormatter::getType(),
+        );
     }
 
     protected function initialize(Console\Input\InputInterface $input, Console\Output\OutputInterface $output): void
     {
         $this->io = new Console\Style\SymfonyStyle($input, $output);
+        $this->formatter = (new Formatter\FormatterFactory($this->io))->get($input->getOption('format'));
     }
 
     protected function interact(Console\Input\InputInterface $input, Console\Output\OutputInterface $output): void
@@ -212,8 +234,6 @@ HELP);
     {
         $sitemaps = $input->getArgument('sitemaps');
         $urls = $input->getOption('urls');
-        $limit = (int) $input->getOption('limit');
-        $allowFailures = $input->getOption('allow-failures');
 
         // Throw exception if neither sitemaps nor URLs are defined
         if ([] === $sitemaps && [] === $urls) {
@@ -222,95 +242,84 @@ HELP);
 
         // Initialize crawler
         $crawler = $this->initializeCrawler($input, $output);
-        $isVerboseCrawler = $crawler instanceof Crawler\VerboseCrawlerInterface;
 
         // Initialize cache warmer
-        $output->write('Parsing sitemaps... ');
-        $cacheWarmer = new CacheWarmer($limit, $this->client, $crawler, !$allowFailures);
-        $cacheWarmer->addSitemaps(array_values($sitemaps));
-        foreach ($urls as $url) {
-            $cacheWarmer->addUrl($url);
-        }
-        $output->writeln('<info>Done</info>');
+        $cacheWarmer = $this->initializeCacheWarmer($input, $crawler);
 
-        if ($output->isVeryVerbose()) {
-            // Print parsed sitemaps
-            $decoratedSitemaps = array_map($this->decorateSitemap(...), $cacheWarmer->getSitemaps());
-            $this->io->section('The following sitemaps were processed:');
-            $this->io->listing($decoratedSitemaps);
-
-            // Print parsed URLs
-            $this->io->section('The following URLs will be crawled:');
-            $this->io->listing($cacheWarmer->getUrls());
-        }
-
-        // Print failed sitemaps
-        if ([] !== ($failedSitemaps = $cacheWarmer->getFailedSitemaps())) {
-            $decoratedFailedSitemaps = array_map($this->decorateSitemap(...), $failedSitemaps);
-            $this->io->section('The following sitemaps could not be parsed:');
-            $this->io->listing($decoratedFailedSitemaps);
-        }
+        // Print formatted parser result
+        $this->formatter->formatParserResult(
+            new Result\ParserResult($cacheWarmer->getSitemaps(), $cacheWarmer->getUrls()),
+            new Result\ParserResult($cacheWarmer->getFailedSitemaps()),
+        );
 
         // Start crawling
-        $urlCount = count($cacheWarmer->getUrls());
-        $output->write(sprintf('Crawling URL%s... ', 1 === $urlCount ? '' : 's'), $isVerboseCrawler);
-        $result = $cacheWarmer->run();
-        if (!$isVerboseCrawler) {
-            $output->writeln('<info>Done</info>');
+        $result = $this->runCacheWarmup(
+            $cacheWarmer,
+            $crawler instanceof Crawler\VerboseCrawlerInterface,
+        );
+
+        // Print formatted cache warmup result
+        $this->formatter->formatCacheWarmupResult($result);
+
+        // Early return if failures are allowed
+        if ($input->getOption('allow-failures')) {
+            return self::SUCCESSFUL;
         }
 
-        $this->printResult($result);
-
-        if ([] !== [...$result->getFailed(), ...$failedSitemaps] && !$allowFailures) {
+        // Early return if parsing or crawling failed
+        if ([] !== $cacheWarmer->getFailedSitemaps() || !$result->isSuccessful()) {
             return self::FAILED;
         }
 
         return self::SUCCESSFUL;
     }
 
-    private function printResult(Result\CacheWarmupResult $result): void
+    private function runCacheWarmup(CacheWarmer $cacheWarmer, bool $isVerboseCrawler): Result\CacheWarmupResult
     {
-        $successfulUrls = $result->getSuccessful();
-        $failedUrls = $result->getFailed();
+        $urlCount = count($cacheWarmer->getUrls());
 
-        // Print crawler statistics
-        if ($this->io->isVeryVerbose()) {
-            $this->io->newLine();
-
-            if ([] !== $successfulUrls) {
-                $this->io->section('The following URLs were successfully crawled:');
-                $this->io->listing($this->decorateCrawledUrls($successfulUrls));
-            }
-        }
-        if ($this->io->isVerbose()) {
-            if ([] !== $failedUrls) {
-                $this->io->section('The following URLs failed during crawling:');
-                $this->io->listing($this->decorateCrawledUrls($failedUrls));
-            }
+        if ($this->formatter->isVerbose()) {
+            $this->io->write(sprintf('Crawling URL%s... ', 1 === $urlCount ? '' : 's'), $isVerboseCrawler);
         }
 
-        // Print crawler results
-        if ([] !== $successfulUrls) {
-            $countSuccessfulUrls = count($successfulUrls);
-            $this->io->success(
-                sprintf(
-                    'Successfully warmed up caches for %d URL%s.',
-                    $countSuccessfulUrls,
-                    1 === $countSuccessfulUrls ? '' : 's',
-                ),
-            );
+        $result = $cacheWarmer->run();
+
+        if ($this->formatter->isVerbose() && !$isVerboseCrawler) {
+            $this->io->writeln('<info>Done</info>');
         }
 
-        if ([] !== $failedUrls) {
-            $countFailedUrls = count($failedUrls);
-            $this->io->error(
-                sprintf(
-                    'Failed to warm up caches for %d URL%s.',
-                    $countFailedUrls,
-                    1 === $countFailedUrls ? '' : 's',
-                ),
-            );
+        return $result;
+    }
+
+    private function initializeCacheWarmer(
+        Console\Input\InputInterface $input,
+        Crawler\CrawlerInterface $crawler,
+    ): CacheWarmer {
+        if ($this->formatter->isVerbose()) {
+            $this->io->write('Parsing sitemaps... ');
         }
+
+        // Initialize cache warmer
+        $cacheWarmer = new CacheWarmer(
+            (int) $input->getOption('limit'),
+            $this->client,
+            $crawler,
+            !$input->getOption('allow-failures'),
+        );
+
+        // Add and parse XML sitemaps
+        $cacheWarmer->addSitemaps([...$input->getArgument('sitemaps')]);
+
+        // Add URLs
+        foreach ($input->getOption('urls') as $url) {
+            $cacheWarmer->addUrl($url);
+        }
+
+        if ($this->formatter->isVerbose()) {
+            $this->io->writeln('<info>Done</info>');
+        }
+
+        return $cacheWarmer;
     }
 
     private function initializeCrawler(
@@ -347,12 +356,12 @@ HELP);
             $crawlerOptions = $this->parseCrawlerOptions($crawlerOptions);
             $crawler->setOptions($crawlerOptions);
 
-            if ($output->isVerbose() && [] !== $crawlerOptions) {
+            if ($this->formatter->isVerbose() && $this->io->isVerbose() && [] !== $crawlerOptions) {
                 $this->io->section('Using custom crawler options:');
                 $this->io->writeln(json_encode($crawlerOptions, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
                 $this->io->newLine();
             }
-        } elseif (null !== $crawlerOptions) {
+        } elseif ($this->formatter->isVerbose() && null !== $crawlerOptions) {
             $this->io->warning('You passed crawler options for a non-configurable crawler.');
         }
 
@@ -381,27 +390,6 @@ HELP);
         }
 
         return $crawlerOptions;
-    }
-
-    private function decorateSitemap(Sitemap\Sitemap $sitemap): string
-    {
-        return (string) $sitemap->getUri();
-    }
-
-    /**
-     * @param list<Result\CrawlingResult> $crawledUrls
-     *
-     * @return list<string>
-     */
-    private function decorateCrawledUrls(array $crawledUrls): array
-    {
-        $urls = [];
-
-        foreach ($crawledUrls as $crawlingState) {
-            $urls[] = (string) $crawlingState->getUri();
-        }
-
-        return $urls;
     }
 
     private function validateSitemap(?string $input): ?Sitemap\Sitemap
