@@ -8,10 +8,10 @@ changelog:
       - question
       - wontfix
   categories:
-    - title: 📖 Documentation
-      labels:
-        - documentation
     - title: ⚡ Breaking
+      labels:
+        - breaking
+    - title: 🚨 Security fixes
       labels:
         - breaking
     - title: 🚀 Improved
@@ -20,12 +20,15 @@ changelog:
     - title: 🚑 Fixed
       labels:
         - bug
-    - title: ⚙️ Dependencies
-      labels:
-        - dependencies
     - title: 👷 Changed
       labels:
         - maintenance
+    - title: 📖 Documentation
+      labels:
+        - documentation
+    - title: ⚙️ Dependencies
+      labels:
+        - dependencies
     - title: Other changes
       labels:
         - "*"
