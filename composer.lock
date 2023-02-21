@@ -1868,16 +1868,16 @@
         },
         {
             "name": "eliashaeussler/php-cs-fixer-config",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/php-cs-fixer-config.git",
-                "reference": "dc83519822be91dad64d7fd5639c805cc1909e21"
+                "reference": "f80df8093aff4e2397bf156dabd0ca47d956d313"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/php-cs-fixer-config/zipball/dc83519822be91dad64d7fd5639c805cc1909e21",
-                "reference": "dc83519822be91dad64d7fd5639c805cc1909e21",
+                "url": "https://api.github.com/repos/eliashaeussler/php-cs-fixer-config/zipball/f80df8093aff4e2397bf156dabd0ca47d956d313",
+                "reference": "f80df8093aff4e2397bf156dabd0ca47d956d313",
                 "shasum": ""
             },
             "require": {
@@ -1887,11 +1887,9 @@
             },
             "require-dev": {
                 "armin/editorconfig-cli": "^1.5",
+                "eliashaeussler/phpstan-config": "^1.0.1",
                 "ergebnis/composer-normalize": "^2.29",
                 "phpstan/extension-installer": "^1.2",
-                "phpstan/phpstan": "^1.9",
-                "phpstan/phpstan-deprecation-rules": "^1.1",
-                "phpstan/phpstan-strict-rules": "^1.4",
                 "phpunit/phpunit": "^10.0",
                 "rector/rector": "^0.15.17"
             },
@@ -1915,9 +1913,10 @@
             ],
             "description": "My personal configuration for PHP-CS-Fixer",
             "support": {
-                "source": "https://github.com/eliashaeussler/php-cs-fixer-config/tree/1.1.0"
+                "issues": "https://github.com/eliashaeussler/php-cs-fixer-config/issues",
+                "source": "https://github.com/eliashaeussler/php-cs-fixer-config/tree/1.1.1"
             },
-            "time": "2023-02-19T13:11:16+00:00"
+            "time": "2023-02-20T17:32:53+00:00"
         },
         {
             "name": "eliashaeussler/phpstan-config",
