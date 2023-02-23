@@ -73,6 +73,7 @@ The following input parameters are available:
 |---------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `sitemaps`                | URLs of XML sitemaps to be warmed up *(multiple values allowed)*                                                                                        |
 | `--urls`, `-u`            | Additional URLs to be warmed up *(multiple values allowed)*                                                                                             |
+| `--exclude`, `-e`         | Patterns for URLs to be excluded from cache warming *(multiple values allowed)*                                                                         |
 | `--limit`, `-l`           | Limit the number of URLs to be processed *(default: 0)*                                                                                                 |
 | `--progress`, `-p`        | Show progress bar during cache warmup                                                                                                                   |
 | `--crawler`, `-c`         | FQCN of the crawler to use for cache warming (must implement [`EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface`](src/Crawler/CrawlerInterface.php)) |

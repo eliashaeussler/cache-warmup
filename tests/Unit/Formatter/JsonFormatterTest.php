@@ -53,8 +53,9 @@ final class JsonFormatterTest extends Framework\TestCase
     {
         $successful = new Src\Result\ParserResult([new Src\Sitemap\Sitemap(new Psr7\Uri('https://www.example.com'))]);
         $failed = new Src\Result\ParserResult();
+        $excluded = new Src\Result\ParserResult();
 
-        $this->subject->formatParserResult($successful, $failed);
+        $this->subject->formatParserResult($successful, $failed, $excluded);
 
         self::assertSame([], $this->subject->getJson());
     }
@@ -70,8 +71,9 @@ final class JsonFormatterTest extends Framework\TestCase
             [new Src\Sitemap\Url($url)],
         );
         $failed = new Src\Result\ParserResult();
+        $excluded = new Src\Result\ParserResult();
 
-        $this->subject->formatParserResult($successful, $failed);
+        $this->subject->formatParserResult($successful, $failed, $excluded);
 
         self::assertSame(
             [
@@ -92,8 +94,9 @@ final class JsonFormatterTest extends Framework\TestCase
         $url = 'https://www.example.com';
         $successful = new Src\Result\ParserResult();
         $failed = new Src\Result\ParserResult([new Src\Sitemap\Sitemap(new Psr7\Uri($url))]);
+        $excluded = new Src\Result\ParserResult();
 
-        $this->subject->formatParserResult($successful, $failed);
+        $this->subject->formatParserResult($successful, $failed, $excluded);
 
         self::assertSame(
             [
@@ -108,18 +111,39 @@ final class JsonFormatterTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    public function formatParserResultAddsExcludedResult(): void
+    {
+        $url = 'https://www.example.com';
+        $successful = new Src\Result\ParserResult();
+        $failed = new Src\Result\ParserResult();
+        $excluded = new Src\Result\ParserResult(
+            [new Src\Sitemap\Sitemap(new Psr7\Uri($url))],
+            [new Src\Sitemap\Url($url)],
+        );
+
+        $this->subject->formatParserResult($successful, $failed, $excluded);
+
+        self::assertSame(
+            [
+                'parserResult' => [
+                    'excluded' => [
+                        'sitemaps' => [$url],
+                        'urls' => [$url],
+                    ],
+                ],
+            ],
+            $this->subject->getJson(),
+        );
+    }
+
+    #[Framework\Attributes\Test]
     public function formatCacheWarmupResultDoesNotAddUrlsIfResultDoesNotContainUrls(): void
     {
         $result = new Src\Result\CacheWarmupResult();
 
         $this->subject->formatCacheWarmupResult($result);
 
-        self::assertSame(
-            [
-                'cacheWarmupResult' => [],
-            ],
-            $this->subject->getJson(),
-        );
+        self::assertSame([], $this->subject->getJson());
     }
 
     #[Framework\Attributes\Test]

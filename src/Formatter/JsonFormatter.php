@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Formatter;
 
+use EliasHaeussler\CacheWarmup\Helper;
 use EliasHaeussler\CacheWarmup\Result;
 use Symfony\Component\Console;
 
@@ -45,6 +46,10 @@ use function json_encode;
  *         failure?: array{
  *             sitemaps: list<string>,
  *         },
+ *         excluded?: array{
+ *             sitemaps: list<string>,
+ *             urls: list<string>,
+ *         },
  *     },
  *     cacheWarmupResult?: array{
  *         success?: list<string>,
@@ -65,39 +70,29 @@ final class JsonFormatter implements Formatter
     ) {
     }
 
-    public function formatParserResult(Result\ParserResult $successful, Result\ParserResult $failed): void
-    {
+    public function formatParserResult(
+        Result\ParserResult $successful,
+        Result\ParserResult $failed,
+        Result\ParserResult $excluded,
+    ): void {
+        // Add successful result
         if ($this->io->isVeryVerbose()) {
-            $this->json['parserResult'] = [
-                'success' => [
-                    'sitemaps' => array_map('strval', $successful->getSitemaps()),
-                    'urls' => array_map('strval', $successful->getUrls()),
-                ],
-            ];
+            $this->addToJson('parserResult/success/sitemaps', $successful->getSitemaps());
+            $this->addToJson('parserResult/success/urls', $successful->getUrls());
         }
 
-        if ([] !== ($failedSitemaps = $failed->getSitemaps())) {
-            if (!is_array($this->json['parserResult'] ?? null)) {
-                $this->json['parserResult'] = [];
-            }
+        // Add failed result
+        $this->addToJson('parserResult/failure/sitemaps', $failed->getSitemaps());
 
-            $this->json['parserResult']['failure'] = [
-                'sitemaps' => array_map('strval', $failedSitemaps),
-            ];
-        }
+        // Add excluded result
+        $this->addToJson('parserResult/excluded/sitemaps', $excluded->getSitemaps());
+        $this->addToJson('parserResult/excluded/urls', $excluded->getUrls());
     }
 
     public function formatCacheWarmupResult(Result\CacheWarmupResult $result): void
     {
-        $this->json['cacheWarmupResult'] = [];
-
-        if ([] !== ($successfulUrls = $result->getSuccessful())) {
-            $this->json['cacheWarmupResult']['success'] = array_map('strval', $successfulUrls);
-        }
-
-        if ([] !== ($failedUrls = $result->getFailed())) {
-            $this->json['cacheWarmupResult']['failure'] = array_map('strval', $failedUrls);
-        }
+        $this->addToJson('cacheWarmupResult/success', $result->getSuccessful());
+        $this->addToJson('cacheWarmupResult/failure', $result->getFailed());
     }
 
     public function logMessage(string $message, MessageSeverity $severity = MessageSeverity::Info): void
@@ -129,6 +124,16 @@ final class JsonFormatter implements Formatter
     public static function getType(): string
     {
         return 'json';
+    }
+
+    /**
+     * @param list<mixed> $list
+     */
+    private function addToJson(string $path, array $list): void
+    {
+        if ([] !== $list) {
+            Helper\ArrayHelper::setValueByPath($this->json, $path, array_map('strval', $list));
+        }
     }
 
     /**

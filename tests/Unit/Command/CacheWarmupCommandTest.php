@@ -175,6 +175,25 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    public function executeExcludesUrlsByGivenPatterns(): void
+    {
+        $this->mockSitemapRequest('valid_sitemap_3');
+
+        $this->commandTester->execute([
+            'sitemaps' => [
+                'https://www.example.com/sitemap.xml',
+            ],
+            '--exclude' => [
+                '*/foo',
+            ],
+        ]);
+
+        $output = $this->commandTester->getDisplay();
+
+        self::assertStringContainsString('The following URLs were excluded by a pattern:', $output);
+    }
+
+    #[Framework\Attributes\Test]
     public function executeDoesNotShowProgressBarIfProgressOptionIsNotSet(): void
     {
         $this->mockSitemapRequest('valid_sitemap_3');
