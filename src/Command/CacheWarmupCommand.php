@@ -90,6 +90,18 @@ In addition or as an alternative to sitemaps, it's also possible to provide a gi
 
    <comment>%command.full_name% -u https://www.example.com/foo -u https://www.example.com/baz</comment>
 
+<info>Exclude patterns</info>
+<info>================</info>
+You can specify exclude patterns to be applied on URLs in order to ignore them from cache warming.
+Use the <comment>--exclude</comment> (or <comment>-e</comment>) option to specify one or more patterns:
+
+   <comment>%command.full_name% -e "*no_cache=1*" -e "*no_warming=1*"</comment>
+
+You can also specify regular expressions as exclude patterns.
+Note that each expression must start and end with a <comment>#</comment> symbol:
+
+   <comment>%command.full_name% -e "#(no_cache|no_warming)=1#"</comment>
+
 <info>Progress bar</info>
 <info>============</info>
 You can track the cache warmup progress by using the <comment>--progress</comment> option:
@@ -157,6 +169,12 @@ HELP);
             'u',
             Console\Input\InputOption::VALUE_REQUIRED | Console\Input\InputOption::VALUE_IS_ARRAY,
             'Custom additional URLs to be used for cache warming',
+        );
+        $this->addOption(
+            'exclude',
+            'e',
+            Console\Input\InputOption::VALUE_REQUIRED | Console\Input\InputOption::VALUE_IS_ARRAY,
+            'Patterns for URLs to be excluded from cache warming',
         );
         $this->addOption(
             'limit',
@@ -264,6 +282,7 @@ HELP);
         $this->formatter->formatParserResult(
             new Result\ParserResult($cacheWarmer->getSitemaps(), $cacheWarmer->getUrls()),
             new Result\ParserResult($cacheWarmer->getFailedSitemaps()),
+            new Result\ParserResult($cacheWarmer->getExcludedSitemaps(), $cacheWarmer->getExcludedUrls()),
         );
 
         // Start crawling
@@ -323,6 +342,7 @@ HELP);
             $this->client,
             $crawler,
             !$input->getOption('allow-failures'),
+            $input->getOption('exclude'),
         );
 
         // Add and parse XML sitemaps

@@ -33,7 +33,11 @@ use EliasHaeussler\CacheWarmup\Result;
  */
 interface Formatter
 {
-    public function formatParserResult(Result\ParserResult $successful, Result\ParserResult $failed): void;
+    public function formatParserResult(
+        Result\ParserResult $successful,
+        Result\ParserResult $failed,
+        Result\ParserResult $excluded,
+    ): void;
 
     public function formatCacheWarmupResult(Result\CacheWarmupResult $result): void;
 

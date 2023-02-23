@@ -133,6 +133,43 @@ final class CacheWarmerTest extends Framework\TestCase
         self::assertEquals($expected, $subject->getUrls());
     }
 
+    #[Framework\Attributes\Test]
+    public function addSitemapsIgnoresSitemapsIfExcludePatternMatches(): void
+    {
+        $subject = new CacheWarmer(client: $this->client, excludePatterns: ['*/foo', '#www\\.example\\.com#']);
+
+        $this->mockSitemapRequest('valid_sitemap_2');
+
+        $subject->addSitemaps('https://www.example.org/sitemap.xml');
+        $subject->addSitemaps('https://www.example.com/sitemap.xml');
+
+        self::assertEquals(
+            [
+                new Sitemap\Sitemap(new Psr7\Uri('https://www.example.com/sitemap.xml')),
+            ],
+            $subject->getExcludedSitemaps(),
+        );
+        self::assertEquals(
+            [
+                new Sitemap\Url('https://www.example.org/foo'),
+            ],
+            $subject->getExcludedUrls(),
+        );
+        self::assertEquals(
+            [
+                new Sitemap\Sitemap(new Psr7\Uri('https://www.example.org/sitemap.xml')),
+            ],
+            $subject->getSitemaps(),
+        );
+        self::assertEquals(
+            [
+                new Sitemap\Url('https://www.example.org/'),
+                new Sitemap\Url('https://www.example.org/baz'),
+            ],
+            $subject->getUrls(),
+        );
+    }
+
     /**
      * @param list<string|Sitemap\Sitemap>|string|Sitemap\Sitemap $sitemaps
      * @param list<Sitemap\Sitemap>                               $expectedSitemaps

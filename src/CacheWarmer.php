@@ -31,8 +31,11 @@ use GuzzleHttp\Psr7;
 use function array_key_exists;
 use function array_values;
 use function count;
+use function fnmatch;
 use function is_array;
 use function is_string;
+use function preg_match;
+use function str_starts_with;
 
 /**
  * CacheWarmer.
@@ -59,11 +62,25 @@ final class CacheWarmer
      */
     private array $failedSitemaps = [];
 
+    /**
+     * @var list<Sitemap\Sitemap>
+     */
+    private array $excludedSitemaps = [];
+
+    /**
+     * @var list<Sitemap\Url>
+     */
+    private array $excludedUrls = [];
+
+    /**
+     * @param array<string> $excludePatterns
+     */
     public function __construct(
         private readonly int $limit = 0,
         private readonly ClientInterface $client = new Client(),
         private readonly Crawler\CrawlerInterface $crawler = new Crawler\ConcurrentCrawler(),
         private readonly bool $strict = true,
+        private readonly array $excludePatterns = [],
     ) {
         $this->parser = new Xml\XmlParser($this->client);
     }
@@ -104,6 +121,13 @@ final class CacheWarmer
             /* @phpstan-ignore-next-line */
             if (!($sitemap instanceof Sitemap\Sitemap)) {
                 throw Exception\InvalidSitemapException::forInvalidType($sitemap);
+            }
+
+            // Skip sitemap if exclude pattern matches
+            if ($this->isExcluded((string) $sitemap->getUri())) {
+                $this->excludedSitemaps[] = $sitemap;
+
+                continue;
             }
 
             // Parse sitemap object
@@ -149,6 +173,12 @@ final class CacheWarmer
             $url = new Sitemap\Url($url);
         }
 
+        if ($this->isExcluded((string) $url)) {
+            $this->excludedUrls[] = $url;
+
+            return $this;
+        }
+
         if (!$this->exceededLimit() && !array_key_exists((string) $url, $this->urls)) {
             $this->urls[(string) $url] = $url;
         }
@@ -159,6 +189,21 @@ final class CacheWarmer
     private function exceededLimit(): bool
     {
         return $this->limit > 0 && count($this->urls) >= $this->limit;
+    }
+
+    private function isExcluded(string $url): bool
+    {
+        foreach ($this->excludePatterns as $pattern) {
+            if (fnmatch($pattern, $url)) {
+                return true;
+            }
+
+            if (str_starts_with($pattern, '#') && 1 === preg_match($pattern, $url)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -183,6 +228,22 @@ final class CacheWarmer
     public function getFailedSitemaps(): array
     {
         return $this->failedSitemaps;
+    }
+
+    /**
+     * @return list<Sitemap\Sitemap>
+     */
+    public function getExcludedSitemaps(): array
+    {
+        return $this->excludedSitemaps;
+    }
+
+    /**
+     * @return list<Sitemap\Url>
+     */
+    public function getExcludedUrls(): array
+    {
+        return $this->excludedUrls;
     }
 
     public function getLimit(): int

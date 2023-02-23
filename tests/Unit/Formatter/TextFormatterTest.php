@@ -53,8 +53,9 @@ final class TextFormatterTest extends Framework\TestCase
     {
         $successful = new Src\Result\ParserResult([new Src\Sitemap\Sitemap(new Psr7\Uri('https://www.example.com'))]);
         $failed = new Src\Result\ParserResult();
+        $excluded = new Src\Result\ParserResult();
 
-        $this->subject->formatParserResult($successful, $failed);
+        $this->subject->formatParserResult($successful, $failed, $excluded);
 
         self::assertSame('', $this->output->fetch());
     }
@@ -70,8 +71,9 @@ final class TextFormatterTest extends Framework\TestCase
             [new Src\Sitemap\Url($url)],
         );
         $failed = new Src\Result\ParserResult();
+        $excluded = new Src\Result\ParserResult();
 
-        $this->subject->formatParserResult($successful, $failed);
+        $this->subject->formatParserResult($successful, $failed, $excluded);
 
         $output = $this->output->fetch();
 
@@ -86,12 +88,33 @@ final class TextFormatterTest extends Framework\TestCase
         $url = 'https://www.example.com';
         $successful = new Src\Result\ParserResult();
         $failed = new Src\Result\ParserResult([new Src\Sitemap\Sitemap(new Psr7\Uri($url))]);
+        $excluded = new Src\Result\ParserResult();
 
-        $this->subject->formatParserResult($successful, $failed);
+        $this->subject->formatParserResult($successful, $failed, $excluded);
 
         $output = $this->output->fetch();
 
         self::assertStringContainsString('The following sitemaps could not be parsed:', $output);
+        self::assertStringContainsString('* https://www.example.com', $output);
+    }
+
+    #[Framework\Attributes\Test]
+    public function formatParserResultPrintsExcludedResult(): void
+    {
+        $url = 'https://www.example.com';
+        $successful = new Src\Result\ParserResult();
+        $failed = new Src\Result\ParserResult();
+        $excluded = new Src\Result\ParserResult(
+            [new Src\Sitemap\Sitemap(new Psr7\Uri($url))],
+            [new Src\Sitemap\Url($url)],
+        );
+
+        $this->subject->formatParserResult($successful, $failed, $excluded);
+
+        $output = $this->output->fetch();
+
+        self::assertStringContainsString('The following sitemaps were excluded by a pattern:', $output);
+        self::assertStringContainsString('The following URLs were excluded by a pattern:', $output);
         self::assertStringContainsString('* https://www.example.com', $output);
     }
 

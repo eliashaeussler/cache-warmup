@@ -42,13 +42,15 @@ final class TextFormatter implements Formatter
     ) {
     }
 
-    public function formatParserResult(Result\ParserResult $successful, Result\ParserResult $failed): void
-    {
+    public function formatParserResult(
+        Result\ParserResult $successful,
+        Result\ParserResult $failed,
+        Result\ParserResult $excluded,
+    ): void {
         if ($this->io->isVeryVerbose()) {
             // Print parsed sitemaps
-            $decoratedSitemaps = array_map('strval', $successful->getSitemaps());
             $this->io->section('The following sitemaps were processed:');
-            $this->io->listing($decoratedSitemaps);
+            $this->io->listing(array_map('strval', $successful->getSitemaps()));
 
             // Print parsed URLs
             $this->io->section('The following URLs will be crawled:');
@@ -57,9 +59,18 @@ final class TextFormatter implements Formatter
 
         // Print failed sitemaps
         if ([] !== ($failedSitemaps = $failed->getSitemaps())) {
-            $decoratedFailedSitemaps = array_map('strval', $failedSitemaps);
             $this->io->section('The following sitemaps could not be parsed:');
-            $this->io->listing($decoratedFailedSitemaps);
+            $this->io->listing(array_map('strval', $failedSitemaps));
+        }
+
+        // Print excluded sitemaps
+        if ([] !== ($excludedSitemaps = $excluded->getSitemaps())) {
+            $this->io->section('The following sitemaps were excluded by a pattern:');
+            $this->io->listing(array_map('strval', $excludedSitemaps));
+        }
+        if ([] !== ($excludedUrls = $excluded->getUrls())) {
+            $this->io->section('The following URLs were excluded by a pattern:');
+            $this->io->listing(array_map('strval', $excludedUrls));
         }
     }
 
