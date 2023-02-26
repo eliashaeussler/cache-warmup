@@ -67,6 +67,27 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    public function initializeHidesOutputForCrawlersIfGivenFormatterIsNotVerbose(): void
+    {
+        $this->mockSitemapRequest('valid_sitemap_3');
+
+        $this->commandTester->execute(
+            [
+                'sitemaps' => [
+                    'https://www.example.com/sitemap.xml',
+                ],
+                '--format' => 'json',
+                '--progress' => true,
+            ],
+            [
+                'verbosity' => Console\Output\OutputInterface::VERBOSITY_VERY_VERBOSE,
+            ],
+        );
+
+        self::assertSame('', $this->commandTester->getDisplay());
+    }
+
+    #[Framework\Attributes\Test]
     public function interactThrowsExceptionIfNeitherArgumentNorInteractiveInputProvidesSitemaps(): void
     {
         $this->expectException(Console\Exception\RuntimeException::class);
