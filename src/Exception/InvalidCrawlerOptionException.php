@@ -27,6 +27,7 @@ use EliasHaeussler\CacheWarmup\Crawler;
 use RuntimeException;
 
 use function count;
+use function get_debug_type;
 use function implode;
 use function sprintf;
 
@@ -62,6 +63,14 @@ final class InvalidCrawlerOptionException extends RuntimeException
                 $crawler::class,
             ),
             1659206995,
+        );
+    }
+
+    public static function forInvalidType(mixed $options): self
+    {
+        return new self(
+            sprintf('The crawler options must be an associative array, %s given.', get_debug_type($options)),
+            1677424305,
         );
     }
 }

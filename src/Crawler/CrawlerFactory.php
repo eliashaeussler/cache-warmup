@@ -24,10 +24,13 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Crawler;
 
 use EliasHaeussler\CacheWarmup\Exception;
+use JsonException;
 use Symfony\Component\Console;
 
 use function class_exists;
+use function is_string;
 use function is_subclass_of;
+use function json_decode;
 
 /**
  * CrawlerFactory.
@@ -63,6 +66,41 @@ final class CrawlerFactory
         }
 
         return $crawler;
+    }
+
+    /**
+     * @param string|array<string, mixed>|null $crawlerOptions
+     *
+     * @return array<string, mixed>
+     *
+     * @throws Exception\InvalidCrawlerOptionException
+     */
+    public function parseCrawlerOptions(string|array|null $crawlerOptions): array
+    {
+        if (null === $crawlerOptions) {
+            return [];
+        }
+
+        // Decode JSON array
+        if (is_string($crawlerOptions)) {
+            try {
+                $crawlerOptions = json_decode($crawlerOptions, true, 512, JSON_THROW_ON_ERROR);
+            } catch (JsonException) {
+                throw Exception\InvalidCrawlerOptionException::forInvalidType($crawlerOptions);
+            }
+        }
+
+        // Handle non-array crawler options
+        if (!is_array($crawlerOptions)) {
+            throw Exception\InvalidCrawlerOptionException::forInvalidType($crawlerOptions);
+        }
+
+        // Handle non-associative-array crawler options
+        if ($crawlerOptions !== array_filter($crawlerOptions, 'strval', ARRAY_FILTER_USE_KEY)) {
+            throw Exception\InvalidCrawlerOptionException::forInvalidType($crawlerOptions);
+        }
+
+        return $crawlerOptions;
     }
 
     /**
