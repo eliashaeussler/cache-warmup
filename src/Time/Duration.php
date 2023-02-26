@@ -21,34 +21,43 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Formatter;
+namespace EliasHaeussler\CacheWarmup\Time;
 
-use EliasHaeussler\CacheWarmup\Result;
-use EliasHaeussler\CacheWarmup\Time;
+use NumberFormatter;
 
 /**
- * Formatter.
+ * Duration.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-interface Formatter
+final class Duration
 {
-    public function formatParserResult(
-        Result\ParserResult $successful,
-        Result\ParserResult $failed,
-        Result\ParserResult $excluded,
-        Time\Duration $duration = null,
-    ): void;
+    private readonly NumberFormatter $formatter;
 
-    public function formatCacheWarmupResult(
-        Result\CacheWarmupResult $result,
-        Time\Duration $duration = null,
-    ): void;
+    public function __construct(
+        private readonly float $milliseconds,
+    ) {
+        $this->formatter = new NumberFormatter('en', NumberFormatter::DECIMAL);
+        $this->formatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 3);
+        $this->formatter->setAttribute(NumberFormatter::DECIMAL_ALWAYS_SHOWN, 3);
+    }
 
-    public function logMessage(string $message, MessageSeverity $severity = MessageSeverity::Info): void;
+    public function get(): float
+    {
+        return $this->milliseconds;
+    }
 
-    public function isVerbose(): bool;
+    public function format(): string
+    {
+        $seconds = $this->milliseconds / 1000;
 
-    public static function getType(): string;
+        // Format with seconds
+        if ($seconds >= 0.01) {
+            return $this->formatter->format($seconds).'s';
+        }
+
+        // Format with milliseconds
+        return $this->formatter->format($this->milliseconds).'ms';
+    }
 }

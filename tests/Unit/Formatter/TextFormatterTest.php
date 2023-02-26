@@ -119,6 +119,34 @@ final class TextFormatterTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    public function formatParserResultDoesNotPrintDurationIfOutputIsNotVeryVerbose(): void
+    {
+        $successful = new Src\Result\ParserResult();
+        $failed = new Src\Result\ParserResult();
+        $excluded = new Src\Result\ParserResult();
+        $duration = new Src\Time\Duration(500);
+
+        $this->subject->formatParserResult($successful, $failed, $excluded, $duration);
+
+        self::assertStringNotContainsString('Parsing finished in 0.5s', $this->output->fetch());
+    }
+
+    #[Framework\Attributes\Test]
+    public function formatParserResultPrintsDuration(): void
+    {
+        $successful = new Src\Result\ParserResult();
+        $failed = new Src\Result\ParserResult();
+        $excluded = new Src\Result\ParserResult();
+        $duration = new Src\Time\Duration(500);
+
+        $this->output->setVerbosity(Console\Output\OutputInterface::VERBOSITY_VERY_VERBOSE);
+
+        $this->subject->formatParserResult($successful, $failed, $excluded, $duration);
+
+        self::assertStringContainsString('Parsing finished in 0.5s', $this->output->fetch());
+    }
+
+    #[Framework\Attributes\Test]
     public function formatCacheWarmupResultDoesNotPrintUrlsIfResultDoesNotContainUrls(): void
     {
         $result = new Src\Result\CacheWarmupResult();
@@ -214,6 +242,17 @@ final class TextFormatterTest extends Framework\TestCase
         $this->subject->formatCacheWarmupResult($result);
 
         self::assertStringContainsString('Failed to warm up caches for 1 URL.', $this->output->fetch());
+    }
+
+    #[Framework\Attributes\Test]
+    public function formatCacheWarmupResultPrintsDuration(): void
+    {
+        $result = new Src\Result\CacheWarmupResult();
+        $duration = new Src\Time\Duration(500);
+
+        $this->subject->formatCacheWarmupResult($result, $duration);
+
+        self::assertStringContainsString('Crawling finished in 0.5s', $this->output->fetch());
     }
 
     #[Framework\Attributes\Test]

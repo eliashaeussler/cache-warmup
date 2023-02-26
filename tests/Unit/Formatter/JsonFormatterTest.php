@@ -137,6 +137,26 @@ final class JsonFormatterTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    public function formatParserResultAddsDuration(): void
+    {
+        $successful = new Src\Result\ParserResult();
+        $failed = new Src\Result\ParserResult();
+        $excluded = new Src\Result\ParserResult();
+        $duration = new Src\Time\Duration(123.45);
+
+        $this->subject->formatParserResult($successful, $failed, $excluded, $duration);
+
+        self::assertSame(
+            [
+                'time' => [
+                    'parse' => $duration->format(),
+                ],
+            ],
+            $this->subject->getJson(),
+        );
+    }
+
+    #[Framework\Attributes\Test]
     public function formatCacheWarmupResultDoesNotAddUrlsIfResultDoesNotContainUrls(): void
     {
         $result = new Src\Result\CacheWarmupResult();
@@ -178,6 +198,24 @@ final class JsonFormatterTest extends Framework\TestCase
             [
                 'cacheWarmupResult' => [
                     'failure' => [$url],
+                ],
+            ],
+            $this->subject->getJson(),
+        );
+    }
+
+    #[Framework\Attributes\Test]
+    public function formatCacheWarmupResultAddsDuration(): void
+    {
+        $result = new Src\Result\CacheWarmupResult();
+        $duration = new Src\Time\Duration(123.45);
+
+        $this->subject->formatCacheWarmupResult($result, $duration);
+
+        self::assertSame(
+            [
+                'time' => [
+                    'crawl' => $duration->format(),
                 ],
             ],
             $this->subject->getJson(),

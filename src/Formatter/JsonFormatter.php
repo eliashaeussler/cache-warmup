@@ -25,10 +25,12 @@ namespace EliasHaeussler\CacheWarmup\Formatter;
 
 use EliasHaeussler\CacheWarmup\Helper;
 use EliasHaeussler\CacheWarmup\Result;
+use EliasHaeussler\CacheWarmup\Time;
 use Symfony\Component\Console;
 
 use function array_map;
 use function is_array;
+use function is_string;
 use function json_encode;
 
 /**
@@ -55,7 +57,11 @@ use function json_encode;
  *         success?: list<string>,
  *         failure?: list<string>,
  *     },
- *     messages?: array<value-of<MessageSeverity>, list<string>>
+ *     messages?: array<value-of<MessageSeverity>, list<string>>,
+ *     time?: array{
+ *         parse?: string,
+ *         crawl?: string,
+ *     },
  * }
  */
 final class JsonFormatter implements Formatter
@@ -74,6 +80,7 @@ final class JsonFormatter implements Formatter
         Result\ParserResult $successful,
         Result\ParserResult $failed,
         Result\ParserResult $excluded,
+        Time\Duration $duration = null,
     ): void {
         // Add successful result
         if ($this->io->isVeryVerbose()) {
@@ -87,12 +94,23 @@ final class JsonFormatter implements Formatter
         // Add excluded result
         $this->addToJson('parserResult/excluded/sitemaps', $excluded->getSitemaps());
         $this->addToJson('parserResult/excluded/urls', $excluded->getUrls());
+
+        // Add duration
+        if (null !== $duration) {
+            $this->addToJson('time/parse', $duration->format());
+        }
     }
 
-    public function formatCacheWarmupResult(Result\CacheWarmupResult $result): void
-    {
+    public function formatCacheWarmupResult(
+        Result\CacheWarmupResult $result,
+        Time\Duration $duration = null,
+    ): void {
         $this->addToJson('cacheWarmupResult/success', $result->getSuccessful());
         $this->addToJson('cacheWarmupResult/failure', $result->getFailed());
+
+        if (null !== $duration) {
+            $this->addToJson('time/crawl', $duration->format());
+        }
     }
 
     public function logMessage(string $message, MessageSeverity $severity = MessageSeverity::Info): void
@@ -127,12 +145,15 @@ final class JsonFormatter implements Formatter
     }
 
     /**
-     * @param list<mixed> $list
+     * @param string|list<mixed> $value
      */
-    private function addToJson(string $path, array $list): void
+    private function addToJson(string $path, string|array $value): void
     {
-        if ([] !== $list) {
-            Helper\ArrayHelper::setValueByPath($this->json, $path, array_map('strval', $list));
+        if (is_string($value) && '' !== $value) {
+            Helper\ArrayHelper::setValueByPath($this->json, $path, $value);
+        }
+        if (is_array($value) && [] !== $value) {
+            Helper\ArrayHelper::setValueByPath($this->json, $path, array_map('strval', $value));
         }
     }
 
