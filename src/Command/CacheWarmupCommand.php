@@ -28,6 +28,7 @@ use EliasHaeussler\CacheWarmup\Crawler;
 use EliasHaeussler\CacheWarmup\Formatter;
 use EliasHaeussler\CacheWarmup\Result;
 use EliasHaeussler\CacheWarmup\Sitemap;
+use EliasHaeussler\CacheWarmup\Time;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7;
@@ -49,6 +50,7 @@ final class CacheWarmupCommand extends Console\Command\Command
     private const SUCCESSFUL = 0;
     private const FAILED = 1;
 
+    private readonly Time\TimeTracker $timeTracker;
     private Console\Style\SymfonyStyle $io;
     private Formatter\Formatter $formatter;
     private Crawler\CrawlerFactory $crawlerFactory;
@@ -58,6 +60,7 @@ final class CacheWarmupCommand extends Console\Command\Command
         private readonly ClientInterface $client = new Client(),
     ) {
         parent::__construct('cache-warmup');
+        $this->timeTracker = new Time\TimeTracker();
     }
 
     protected function configure(): void
@@ -279,23 +282,26 @@ HELP);
 
         // Initialize components
         $crawler = $this->initializeCrawler($input);
-        $cacheWarmer = $this->initializeCacheWarmer($input, $crawler);
+        $cacheWarmer = $this->timeTracker->track(fn () => $this->initializeCacheWarmer($input, $crawler));
 
         // Print formatted parser result
         $this->formatter->formatParserResult(
             new Result\ParserResult($cacheWarmer->getSitemaps(), $cacheWarmer->getUrls()),
             new Result\ParserResult($cacheWarmer->getFailedSitemaps()),
             new Result\ParserResult($cacheWarmer->getExcludedSitemaps(), $cacheWarmer->getExcludedUrls()),
+            $this->timeTracker->getLastDuration(),
         );
 
         // Start crawling
-        $result = $this->runCacheWarmup(
-            $cacheWarmer,
-            $crawler instanceof Crawler\VerboseCrawlerInterface,
+        $result = $this->timeTracker->track(
+            fn () => $this->runCacheWarmup(
+                $cacheWarmer,
+                $crawler instanceof Crawler\VerboseCrawlerInterface,
+            ),
         );
 
         // Print formatted cache warmup result
-        $this->formatter->formatCacheWarmupResult($result);
+        $this->formatter->formatCacheWarmupResult($result, $this->timeTracker->getLastDuration());
 
         // Early return if parsing or crawling failed
         if (!$input->getOption('allow-failures')

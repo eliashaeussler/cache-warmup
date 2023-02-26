@@ -21,34 +21,49 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Formatter;
-
-use EliasHaeussler\CacheWarmup\Result;
-use EliasHaeussler\CacheWarmup\Time;
+namespace EliasHaeussler\CacheWarmup\Time;
 
 /**
- * Formatter.
+ * TimeTracker.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-interface Formatter
+final class TimeTracker
 {
-    public function formatParserResult(
-        Result\ParserResult $successful,
-        Result\ParserResult $failed,
-        Result\ParserResult $excluded,
-        Time\Duration $duration = null,
-    ): void;
+    private ?Duration $lastDuration = null;
 
-    public function formatCacheWarmupResult(
-        Result\CacheWarmupResult $result,
-        Time\Duration $duration = null,
-    ): void;
+    /**
+     * @template T
+     *
+     * @param callable(): T $function
+     *
+     * @return T
+     */
+    public function track(callable $function): mixed
+    {
+        $this->lastDuration = null;
 
-    public function logMessage(string $message, MessageSeverity $severity = MessageSeverity::Info): void;
+        $start = $this->now();
 
-    public function isVerbose(): bool;
+        try {
+            $result = $function();
+        } finally {
+            $end = $this->now();
 
-    public static function getType(): string;
+            $this->lastDuration = new Duration($end - $start);
+        }
+
+        return $result;
+    }
+
+    public function getLastDuration(): ?Duration
+    {
+        return $this->lastDuration;
+    }
+
+    private function now(): float
+    {
+        return microtime(true) * 1000;
+    }
 }

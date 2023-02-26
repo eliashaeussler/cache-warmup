@@ -24,10 +24,12 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Formatter;
 
 use EliasHaeussler\CacheWarmup\Result;
+use EliasHaeussler\CacheWarmup\Time;
 use Symfony\Component\Console;
 
 use function array_map;
 use function method_exists;
+use function sprintf;
 
 /**
  * TextFormatter.
@@ -46,6 +48,7 @@ final class TextFormatter implements Formatter
         Result\ParserResult $successful,
         Result\ParserResult $failed,
         Result\ParserResult $excluded,
+        Time\Duration $duration = null,
     ): void {
         if ($this->io->isVeryVerbose()) {
             // Print parsed sitemaps
@@ -72,10 +75,17 @@ final class TextFormatter implements Formatter
             $this->io->section('The following URLs were excluded by a pattern:');
             $this->io->listing(array_map('strval', $excludedUrls));
         }
+
+        // Print duration
+        if ($this->io->isVeryVerbose() && null !== $duration) {
+            $this->io->writeln(sprintf('Parsing finished in %s', $duration->format()));
+        }
     }
 
-    public function formatCacheWarmupResult(Result\CacheWarmupResult $result): void
-    {
+    public function formatCacheWarmupResult(
+        Result\CacheWarmupResult $result,
+        Time\Duration $duration = null,
+    ): void {
         $successfulUrls = $result->getSuccessful();
         $failedUrls = $result->getFailed();
 
@@ -114,6 +124,12 @@ final class TextFormatter implements Formatter
                     1 === $countFailedUrls ? '' : 's',
                 ),
             );
+        }
+
+        // Print duration
+        if (null !== $duration) {
+            $this->io->writeln(sprintf('Crawling finished in %s', $duration->format()));
+            $this->io->newLine();
         }
     }
 
