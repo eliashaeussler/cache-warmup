@@ -223,6 +223,12 @@ HELP);
     {
         $this->io = new Console\Style\SymfonyStyle($input, $output);
         $this->formatter = (new Formatter\FormatterFactory($this->io))->get($input->getOption('format'));
+
+        // Disable output if formatter is non-verbose
+        if (!$this->formatter->isVerbose()) {
+            $output = new Console\Output\NullOutput();
+        }
+
         $this->crawlerFactory = new Crawler\CrawlerFactory($output);
     }
 
