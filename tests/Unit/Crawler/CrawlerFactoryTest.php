@@ -92,4 +92,53 @@ final class CrawlerFactoryTest extends Framework\TestCase
 
         DummyVerboseCrawler::$output = null;
     }
+
+    #[Framework\Attributes\Test]
+    public function parseCrawlerOptionsReturnsEmptyArrayOnNull(): void
+    {
+        self::assertSame([], $this->subject->parseCrawlerOptions(null));
+    }
+
+    #[Framework\Attributes\Test]
+    public function parseCrawlerOptionsThrowsExceptionOnMalformedJson(): void
+    {
+        $this->expectExceptionObject(Exception\InvalidCrawlerOptionException::forInvalidType(''));
+
+        $this->subject->parseCrawlerOptions('');
+    }
+
+    #[Framework\Attributes\Test]
+    public function parseCrawlerOptionsThrowsExceptionIfJsonEncodedOptionsAreInvalid(): void
+    {
+        $this->expectExceptionObject(Exception\InvalidCrawlerOptionException::forInvalidType('"foo"'));
+
+        $this->subject->parseCrawlerOptions('"foo"');
+    }
+
+    #[Framework\Attributes\Test]
+    public function parseCrawlerOptionsThrowsExceptionOnNonAssociativeArray(): void
+    {
+        $this->expectExceptionObject(Exception\InvalidCrawlerOptionException::forInvalidType(['foo']));
+
+        /* @phpstan-ignore-next-line */
+        $this->subject->parseCrawlerOptions(['foo']);
+    }
+
+    #[Framework\Attributes\Test]
+    public function parseCrawlerOptionsCanUseJsonEncodedString(): void
+    {
+        $options = '{"foo":"baz"}';
+        $expected = ['foo' => 'baz'];
+
+        self::assertSame($expected, $this->subject->parseCrawlerOptions($options));
+    }
+
+    #[Framework\Attributes\Test]
+    public function parseCrawlerOptionsReturnsCrawlerOptions(): void
+    {
+        $options = ['foo' => 'baz'];
+        $expected = ['foo' => 'baz'];
+
+        self::assertSame($expected, $this->subject->parseCrawlerOptions($options));
+    }
 }

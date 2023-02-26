@@ -305,9 +305,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function executeThrowsExceptionIfCrawlerOptionsAreInvalid(): void
     {
-        $this->expectException(Console\Exception\RuntimeException::class);
-        $this->expectExceptionCode(1659120649);
-        $this->expectExceptionMessage('The given crawler options are invalid. Please pass crawler options as JSON-encoded array.');
+        $this->expectExceptionObject(Exception\InvalidCrawlerOptionException::forInvalidType('foo'));
 
         $this->commandTester->execute([
             'sitemaps' => [

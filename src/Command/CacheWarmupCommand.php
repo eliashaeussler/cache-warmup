@@ -34,9 +34,6 @@ use GuzzleHttp\Psr7;
 use Symfony\Component\Console;
 
 use function count;
-use function is_array;
-use function is_string;
-use function json_decode;
 use function json_encode;
 use function sleep;
 use function sprintf;
@@ -364,7 +361,7 @@ HELP);
     {
         /** @var class-string<Crawler\CrawlerInterface>|null $crawlerClass */
         $crawlerClass = $input->getOption('crawler');
-        $crawlerOptions = $this->parseCrawlerOptions($input->getOption('crawler-options'));
+        $crawlerOptions = $this->crawlerFactory->parseCrawlerOptions($input->getOption('crawler-options'));
 
         // Select default crawler
         if (null === $crawlerClass) {
@@ -392,30 +389,6 @@ HELP);
         }
 
         return $crawler;
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    private function parseCrawlerOptions(mixed $crawlerOptions): array
-    {
-        if (null === $crawlerOptions) {
-            return [];
-        }
-
-        if (is_array($crawlerOptions)) {
-            return $crawlerOptions;
-        }
-
-        if (is_string($crawlerOptions)) {
-            $crawlerOptions = json_decode($crawlerOptions, true);
-        }
-
-        if (!is_array($crawlerOptions)) {
-            throw new Console\Exception\RuntimeException('The given crawler options are invalid. Please pass crawler options as JSON-encoded array.', 1659120649);
-        }
-
-        return $crawlerOptions;
     }
 
     private function showEndlessModeWarning(int $interval): void
