@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Time;
 
-use NumberFormatter;
+use function round;
 
 /**
  * Duration.
@@ -33,14 +33,9 @@ use NumberFormatter;
  */
 final class Duration
 {
-    private readonly NumberFormatter $formatter;
-
     public function __construct(
         private readonly float $milliseconds,
     ) {
-        $this->formatter = new NumberFormatter('en', NumberFormatter::DECIMAL);
-        $this->formatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 3);
-        $this->formatter->setAttribute(NumberFormatter::DECIMAL_ALWAYS_SHOWN, 3);
     }
 
     public function get(): float
@@ -54,10 +49,10 @@ final class Duration
 
         // Format with seconds
         if ($seconds >= 0.01) {
-            return $this->formatter->format($seconds).'s';
+            return round($seconds, 3).'s';
         }
 
         // Format with milliseconds
-        return $this->formatter->format($this->milliseconds).'ms';
+        return round($this->milliseconds, 3).'ms';
     }
 }
