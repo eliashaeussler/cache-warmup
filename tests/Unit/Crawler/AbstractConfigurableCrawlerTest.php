@@ -58,7 +58,7 @@ final class AbstractConfigurableCrawlerTest extends Framework\TestCase
         $this->expectException(Exception\InvalidCrawlerOptionException::class);
         $this->expectExceptionCode(1659206995);
         $this->expectExceptionMessage(
-            'The crawler options "dummy", "blub" are invalid or not supported by crawler "'.$this->subject::class.'".',
+            'The crawler options "dummy" and "blub" are invalid or not supported by crawler "'.$this->subject::class.'".',
         );
 
         $this->subject->setOptions([

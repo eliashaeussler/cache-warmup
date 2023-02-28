@@ -27,6 +27,8 @@ use EliasHaeussler\CacheWarmup\Exception;
 use EliasHaeussler\CacheWarmup\Tests;
 use PHPUnit\Framework;
 
+use function sprintf;
+
 /**
  * InvalidCrawlerOptionExceptionTest.
  *
@@ -68,13 +70,17 @@ final class InvalidCrawlerOptionExceptionTest extends Framework\TestCase
         $options = [
             'foo',
             'bar',
+            'baz',
         ];
 
         $actual = Exception\InvalidCrawlerOptionException::createForAll($crawler, $options);
 
         self::assertSame(1659206995, $actual->getCode());
         self::assertSame(
-            'The crawler options "foo", "bar" are invalid or not supported by crawler "'.$crawler::class.'".',
+            sprintf(
+                'The crawler options "foo", "bar" and "baz" are invalid or not supported by crawler "%s".',
+                $crawler::class,
+            ),
             $actual->getMessage(),
         );
     }
