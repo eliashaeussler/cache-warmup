@@ -79,6 +79,7 @@ final class CacheWarmer
         private readonly int $limit = 0,
         private readonly ClientInterface $client = new Client(),
         private readonly Crawler\CrawlerInterface $crawler = new Crawler\ConcurrentCrawler(),
+        private readonly ?Crawler\Strategy\CrawlingStrategy $strategy = null,
         private readonly bool $strict = true,
         private readonly array $excludePatterns = [],
     ) {
@@ -87,7 +88,13 @@ final class CacheWarmer
 
     public function run(): Result\CacheWarmupResult
     {
-        return $this->crawler->crawl($this->getUrls());
+        $urls = $this->getUrls();
+
+        if (null !== $this->strategy) {
+            $urls = $this->strategy->prepareUrls($urls);
+        }
+
+        return $this->crawler->crawl($urls);
     }
 
     /**
