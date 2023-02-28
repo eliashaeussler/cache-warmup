@@ -73,6 +73,7 @@ jobs:
         run: sed -i 's#/home/runner/work/cache-warmup/cache-warmup#${{ github.workspace }}#g' clover.xml
       - name: CodeClimate report
         uses: paambaati/codeclimate-action@v3.2.0
+        if: env.CC_TEST_REPORTER_ID
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
