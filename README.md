@@ -78,6 +78,7 @@ The following input parameters are available:
 | `--progress`, `-p`        | Show progress bar during cache warmup                                                                                                                   |
 | `--crawler`, `-c`         | FQCN of the crawler to use for cache warming (must implement [`EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface`](src/Crawler/CrawlerInterface.php)) |
 | `--crawler-options`, `-o` | JSON-encoded string of additional config for configurable crawlers                                                                                      |
+| `--strategy`, `-s`        | Optional strategy to prepare URLs before crawling them                                                                                                  |
 | `--allow-failures`        | Allow failures during URL crawling and exit with zero                                                                                                   |
 | `--format`, `-f`          | Formatter used to print the cache warmup result, can be `json` or `text` *(default: `text`)*                                                            |
 | `--repeat-after`          | Run cache warmup in endless loop and repeat x seconds after each run                                                                                    |

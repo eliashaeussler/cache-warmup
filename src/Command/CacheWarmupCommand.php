@@ -137,6 +137,19 @@ it is possible to pass a JSON-encoded array of crawler options by using the <com
 
    <comment>%command.full_name% --crawler-options '{"concurrency": 3}'</comment>
 
+<info>Crawling strategy</info>
+<info>=================</info>
+URLs can be crawled using a specific crawling strategy, e.g. by sorting them by a specific property.
+For this, use the <comment>--strategy</comment> option together with a predefined value:
+
+   <comment>%command.full_name% --strategy sort-by-priority</comment>
+
+The following strategies are currently available:
+
+   * <comment>sort-by-changefreq</comment>
+   * <comment>sort-by-lastmod</comment>
+   * <comment>sort-by-priority</comment>
+
 <info>Allow failures</info>
 <info>==============</info>
 If a sitemap cannot be parsed or a URL fails to be crawled, this command normally exits
@@ -200,6 +213,12 @@ HELP);
             'o',
             Console\Input\InputOption::VALUE_REQUIRED,
             'Additional config for configurable crawlers',
+        );
+        $this->addOption(
+            'strategy',
+            's',
+            Console\Input\InputOption::VALUE_REQUIRED,
+            'Optional strategy to prepare URLs before crawling them',
         );
         $this->addOption(
             'allow-failures',
@@ -345,11 +364,21 @@ HELP);
             $this->io->write('Parsing sitemaps... ');
         }
 
+        // Initialize crawling strategy
+        $strategy = match ($input->getOption('strategy')) {
+            'sort-by-changefreq' => new Crawler\Strategy\SortByChangeFrequencyStrategy(),
+            'sort-by-lastmod' => new Crawler\Strategy\SortByLastModificationDateStrategy(),
+            'sort-by-priority' => new Crawler\Strategy\SortByPriorityStrategy(),
+            null => null,
+            default => throw new Console\Exception\RuntimeException('The given crawling strategy is invalid.', 1677618007),
+        };
+
         // Initialize cache warmer
         $cacheWarmer = new CacheWarmer(
             (int) $input->getOption('limit'),
             $this->client,
             $crawler,
+            $strategy,
             !$input->getOption('allow-failures'),
             $input->getOption('exclude'),
         );

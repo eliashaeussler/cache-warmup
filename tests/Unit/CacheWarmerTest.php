@@ -24,8 +24,10 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Tests\Unit;
 
 use EliasHaeussler\CacheWarmup\CacheWarmer;
+use EliasHaeussler\CacheWarmup\Crawler;
 use EliasHaeussler\CacheWarmup\Exception;
 use EliasHaeussler\CacheWarmup\Sitemap;
+use EliasHaeussler\CacheWarmup\Tests;
 use Generator;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
@@ -60,6 +62,7 @@ final class CacheWarmerTest extends Framework\TestCase
     public function runCrawlsListOfUrls(array $urls): void
     {
         foreach ($urls as $url) {
+            $this->mockHandler->append(new Psr7\Response());
             $this->subject->addUrl($url);
         }
 
@@ -67,6 +70,25 @@ final class CacheWarmerTest extends Framework\TestCase
         $processedUrls = $this->getProcessedUrlsFromCacheWarmupResult($result);
 
         self::assertSame([], array_diff($urls, $processedUrls));
+    }
+
+    #[Framework\Attributes\Test]
+    public function runPreparesUrlsWithConfiguredStrategy(): void
+    {
+        $crawler = new Tests\Unit\Crawler\DummyCrawler();
+        $subject = new CacheWarmer(crawler: $crawler, strategy: new Crawler\Strategy\SortByPriorityStrategy());
+
+        $url1 = new Sitemap\Url('https://www.example.org/foo', 0.75);
+        $url2 = new Sitemap\Url('https://www.example.org/', 0.5);
+        $url3 = new Sitemap\Url('https://www.example.org/baz', 1.0);
+
+        foreach ([$url1, $url2, $url3] as $url) {
+            $subject->addUrl($url);
+        }
+
+        $subject->run();
+
+        self::assertSame([$url3, $url1, $url2], $crawler::$crawledUrls);
     }
 
     #[Framework\Attributes\Test]
