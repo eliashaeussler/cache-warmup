@@ -26,6 +26,7 @@ namespace EliasHaeussler\CacheWarmup\Exception;
 use EliasHaeussler\CacheWarmup\Crawler;
 use RuntimeException;
 
+use function array_pop;
 use function count;
 use function get_debug_type;
 use function implode;
@@ -56,10 +57,13 @@ final class InvalidCrawlerOptionException extends RuntimeException
             return self::create($crawler, $options[0]);
         }
 
+        $lastOption = array_pop($options);
+
         return new self(
             sprintf(
-                'The crawler options "%s" are invalid or not supported by crawler "%s".',
+                'The crawler options "%s" and "%s" are invalid or not supported by crawler "%s".',
                 implode('", "', $options),
+                $lastOption,
                 $crawler::class,
             ),
             1659206995,
