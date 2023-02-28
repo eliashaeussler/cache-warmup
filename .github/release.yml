@@ -13,7 +13,7 @@ changelog:
         - breaking
     - title: 🚨 Security fixes
       labels:
-        - breaking
+        - security
     - title: 🚀 Improved
       labels:
         - enhancement
