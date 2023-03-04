@@ -26,6 +26,7 @@ namespace EliasHaeussler\CacheWarmup\Command;
 use EliasHaeussler\CacheWarmup\CacheWarmer;
 use EliasHaeussler\CacheWarmup\Crawler;
 use EliasHaeussler\CacheWarmup\Formatter;
+use EliasHaeussler\CacheWarmup\Helper;
 use EliasHaeussler\CacheWarmup\Result;
 use EliasHaeussler\CacheWarmup\Sitemap;
 use EliasHaeussler\CacheWarmup\Time;
@@ -293,6 +294,11 @@ HELP);
             throw new Console\Exception\RuntimeException('Neither sitemaps nor URLs are defined.', 1604261236);
         }
 
+        // Show header
+        if ($this->formatter->isVerbose()) {
+            $this->printHeader();
+        }
+
         // Show warning on endless runs
         if ($this->firstRun && $repeatAfter > 0) {
             $this->showEndlessModeWarning($repeatAfter);
@@ -451,5 +457,17 @@ HELP);
         }
 
         return new Sitemap\Sitemap(new Psr7\Uri($input));
+    }
+
+    private function printHeader(): void
+    {
+        $currentVersion = Helper\VersionHelper::getCurrentVersion();
+
+        $this->io->writeln(
+            sprintf(
+                'Running <info>cache warmup</info>%s by Elias Häußler and contributors.',
+                null !== $currentVersion ? ' <comment>'.$currentVersion.'</comment>' : '',
+            ),
+        );
     }
 }
