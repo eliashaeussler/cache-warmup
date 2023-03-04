@@ -33,7 +33,7 @@ use function array_diff_key;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  *
- * @template TOptions of array
+ * @template TOptions of array<string, mixed>
  */
 abstract class AbstractConfigurableCrawler implements ConfigurableCrawlerInterface
 {
@@ -66,9 +66,6 @@ abstract class AbstractConfigurableCrawler implements ConfigurableCrawlerInterfa
             throw Exception\InvalidCrawlerOptionException::createForAll($this, array_keys($invalidOptions));
         }
 
-        $this->options = array_merge(
-            static::$defaultOptions,
-            array_intersect_key($options, static::$defaultOptions),
-        );
+        $this->options = [...static::$defaultOptions, ...$options];
     }
 }
