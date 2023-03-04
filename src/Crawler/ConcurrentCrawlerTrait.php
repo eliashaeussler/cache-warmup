@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Crawler;
 
+use EliasHaeussler\CacheWarmup\Helper;
 use EliasHaeussler\CacheWarmup\Http;
 use Generator;
 use GuzzleHttp\ClientInterface;
@@ -31,6 +32,7 @@ use GuzzleHttp\Psr7;
 use Psr\Http\Message;
 
 use function array_values;
+use function sprintf;
 
 /**
  * ConcurrentCrawlerTrait.
@@ -69,8 +71,22 @@ trait ConcurrentCrawlerTrait
             yield new Psr7\Request(
                 $this->options['request_method'],
                 $url,
-                $this->options['request_headers'],
+                $this->getRequestHeaders(),
             );
         }
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    protected function getRequestHeaders(): array
+    {
+        $currentVersion = Helper\VersionHelper::getCurrentVersion() ?? '1.0';
+        $userAgent = sprintf('EliasHaeussler-CacheWarmup/%s (https://github.com/eliashaeussler/cache-warmup)', $currentVersion);
+
+        return [
+            'User-Agent' => $userAgent,
+            ...$this->options['request_headers'],
+        ];
     }
 }
