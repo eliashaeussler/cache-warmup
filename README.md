@@ -1,6 +1,6 @@
 <div align="center">
 
-![Logo](docs/logo.png)
+![Screenshot](docs/screenshot.png)
 
 # Cache warmup
 
@@ -108,10 +108,6 @@ docker run --rm -it eliashaeussler/cache-warmup [options] [<sitemaps>...]
 ## 🧑‍💻 Contributing
 
 Please have a look at [`CONTRIBUTING.md`](CONTRIBUTING.md).
-
-## 💎 Credits
-
-[Background vector created by photoroyalty - www.freepik.com](https://www.freepik.com/vectors/background)
 
 ## ⭐ License
 
