@@ -57,18 +57,18 @@ final class TextFormatter implements Formatter
         // Add successful sitemaps
         if ($this->io->isVerbose()) {
             foreach ($successful->getSitemaps() as $successfulSitemap) {
-                $sitemaps[] = '<success> DONE </success> '.$successfulSitemap;
+                $sitemaps[] = sprintf('<success> DONE </> <href=%1$s>%1$s</>', (string) $successfulSitemap->getUri());
             }
         }
 
         // Add excluded sitemaps
         foreach ($excluded->getSitemaps() as $excludedSitemap) {
-            $sitemaps[] = '<skipped> SKIP </skipped> '.$excludedSitemap;
+            $sitemaps[] = sprintf('<skipped> SKIP </> <href=%1$s>%1$s</>', (string) $excludedSitemap->getUri());
         }
 
         // Add failed sitemaps
         foreach ($failed->getSitemaps() as $failedSitemap) {
-            $sitemaps[] = '<failure> FAIL </failure> '.$failedSitemap;
+            $sitemaps[] = sprintf('<failure> FAIL </> <href=%1$s>%1$s</>', (string) $failedSitemap->getUri());
         }
 
         // Print processed sitemaps
@@ -84,7 +84,7 @@ final class TextFormatter implements Formatter
             $this->io->section('Parsed URLs');
 
             foreach ($successful->getUrls() as $successfulUrl) {
-                $this->io->writeln('<success> DONE </success> '.$successfulUrl);
+                $this->io->writeln(sprintf('<success> DONE </> <href=%1$s>%1$s</>', (string) $successfulUrl));
             }
         }
 
@@ -95,7 +95,7 @@ final class TextFormatter implements Formatter
             $this->io->section('Excluded URLs');
 
             foreach ($excluded->getUrls() as $excludedUrl) {
-                $this->io->writeln('<skipped> SKIP </skipped> '.$excludedUrl);
+                $this->io->writeln(sprintf('<skipped> SKIP </> <href=%1$s>%1$s</>', (string) $excludedUrl));
             }
         }
 
@@ -121,14 +121,14 @@ final class TextFormatter implements Formatter
         // Add successful URLs
         if ($this->io->isDebug()) {
             foreach ($successfulUrls as $successfulUrl) {
-                $urls[] = '<success> DONE </success> '.$successfulUrl;
+                $urls[] = sprintf('<success> DONE </> <href=%1$s>%1$s</>', (string) $successfulUrl);
             }
         }
 
         // Add failed URLs
         if ($this->io->isVerbose()) {
             foreach ($failedUrls as $failedUrl) {
-                $urls[] = '<failure> FAIL </failure> '.$failedUrl;
+                $urls[] = sprintf('<failure> FAIL </> <href=%1$s>%1$s</>', (string) $failedUrl);
             }
         }
 
