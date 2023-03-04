@@ -34,6 +34,8 @@ jobs:
         run: phive install --trust-gpg-keys 2DF45277AEF09A2F humbug/box
       - name: Install Composer dependencies
         uses: ramsey/composer-install@v2
+        with:
+          composer-options: "--no-dev"
       - name: Compile PHAR
         run: ./tools/box compile --with-docker
 
