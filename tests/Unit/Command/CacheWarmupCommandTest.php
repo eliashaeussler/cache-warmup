@@ -249,7 +249,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         $output = $this->commandTester->getDisplay();
 
-        self::assertStringNotContainsString(' SUCCESS ', $output);
+        self::assertStringNotContainsString(' DONE ', $output);
         self::assertStringContainsString('100%', $output);
     }
 
@@ -273,7 +273,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         $output = $this->commandTester->getDisplay();
 
-        self::assertStringContainsString(' SUCCESS ', $output);
+        self::assertStringContainsString(' DONE ', $output);
         self::assertStringContainsString('100%', $output);
     }
 

@@ -76,7 +76,7 @@ final class VerboseProgressHandlerTest extends Framework\TestCase
 
         $output = $this->output->fetch();
 
-        self::assertStringContainsString(' SUCCESS  '.$uri, $output);
+        self::assertStringContainsString(' DONE  '.$uri, $output);
         self::assertMatchesRegularExpression('#^\s*1/10 \S+\s+10%$#m', $output);
     }
 
@@ -91,7 +91,7 @@ final class VerboseProgressHandlerTest extends Framework\TestCase
 
         $output = $this->output->fetch();
 
-        self::assertStringContainsString(' FAILURE  '.$uri, $output);
+        self::assertStringContainsString(' FAIL  '.$uri, $output);
         self::assertMatchesRegularExpression('#^\s*1/10 \S+\s+10%$#m', $output);
     }
 }

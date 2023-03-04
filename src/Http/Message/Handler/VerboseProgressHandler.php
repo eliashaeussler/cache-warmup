@@ -64,7 +64,7 @@ final class VerboseProgressHandler implements ResponseHandlerInterface
 
     public function onSuccess(Message\ResponseInterface $response, Message\UriInterface $uri): void
     {
-        $this->logSection->writeln(sprintf('<success> SUCCESS </success> <href=%s>%s</>', $uri, $uri));
+        $this->logSection->writeln(sprintf('<success> DONE </success> <href=%s>%s</>', $uri, $uri));
 
         $this->progressBar->advance();
         $this->progressBar->display();
@@ -72,7 +72,7 @@ final class VerboseProgressHandler implements ResponseHandlerInterface
 
     public function onFailure(Throwable $exception, Message\UriInterface $uri): void
     {
-        $this->logSection->writeln(sprintf('<failure> FAILURE </failure> <href=%s>%s</>', $uri, $uri));
+        $this->logSection->writeln(sprintf('<failure> FAIL </failure> <href=%s>%s</>', $uri, $uri));
 
         $this->progressBar->advance();
         $this->progressBar->display();
