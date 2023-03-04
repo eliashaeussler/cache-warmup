@@ -66,6 +66,7 @@ abstract class AbstractConfigurableCrawler implements ConfigurableCrawlerInterfa
             throw Exception\InvalidCrawlerOptionException::createForAll($this, array_keys($invalidOptions));
         }
 
+        /* @phpstan-ignore-next-line */
         $this->options = [...static::$defaultOptions, ...$options];
     }
 }
