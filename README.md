@@ -32,6 +32,7 @@ possible to write custom crawlers that take care of cache warmup.
 * Optionally warmup caches of single pages
 * Console command and PHP API for cache warmup
 * Additional Docker image
+* Support for gzipped XML sitemaps
 * Interface for custom crawler implementations
 
 ## 🔥 Installation

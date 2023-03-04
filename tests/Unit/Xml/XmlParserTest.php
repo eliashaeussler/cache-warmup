@@ -104,6 +104,21 @@ final class XmlParserTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    public function parseParsesGzippedSitemap(): void
+    {
+        $this->mockSitemapRequest('valid_sitemap_6', 'xml.gz');
+
+        $result = $this->subject->parse($this->sitemap);
+
+        $expected = [
+            new Sitemap\Url('https://www.example.com/'),
+            new Sitemap\Url('https://www.example.com/foo'),
+        ];
+
+        self::assertEquals($expected, $result->getUrls());
+    }
+
+    #[Framework\Attributes\Test]
     public function parseFollowsRedirects(): void
     {
         $this->mockHandler->append(new Psr7\Response(301, ['Location' => 'https://www.example.org/sub/sitemap.xml']));
