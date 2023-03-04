@@ -64,6 +64,11 @@ final class XmlParser
         $response = $this->client->send($request);
         $body = (string) $response->getBody();
 
+        // Decode gzipped sitemap
+        if (0 === mb_strpos($body, "\x1f\x8b\x08")) {
+            $body = (string) gzdecode($body);
+        }
+
         // Initialize XML source
         $xml = Mapper\Source\XmlSource::fromXml($body)
             ->asCollection('sitemap')
