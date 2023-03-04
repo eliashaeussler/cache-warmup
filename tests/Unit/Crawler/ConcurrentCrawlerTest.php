@@ -29,6 +29,7 @@ use EliasHaeussler\CacheWarmup\Tests;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
+use Psr\Http\Message;
 
 /**
  * ConcurrentCrawlerTest.
@@ -111,6 +112,49 @@ final class ConcurrentCrawlerTest extends Framework\TestCase
         $processedUrls = $this->getProcessedUrlsFromCacheWarmupResult($result);
 
         self::assertSame([], array_diff($urls, $processedUrls));
+    }
+
+    #[Framework\Attributes\Test]
+    public function crawlSendsRequestsWithDefaultUserAgentHeader(): void
+    {
+        $this->mockHandler->append(new Psr7\Response());
+
+        $urls = [
+            new Psr7\Uri('https://www.example.org'),
+        ];
+
+        $this->subject->crawl($urls);
+
+        $lastRequest = $this->mockHandler->getLastRequest();
+
+        self::assertInstanceOf(Message\RequestInterface::class, $lastRequest);
+        self::assertStringStartsWith('EliasHaeussler-CacheWarmup/', $lastRequest->getHeader('User-Agent')[0] ?? '');
+    }
+
+    #[Framework\Attributes\Test]
+    public function crawlSendsRequestsWithOverriddenUserAgentHeader(): void
+    {
+        $this->mockHandler->append(new Psr7\Response());
+
+        $urls = [
+            new Psr7\Uri('https://www.example.org'),
+        ];
+
+        $subject = new Crawler\ConcurrentCrawler(
+            [
+                'request_headers' => [
+                    'User-Agent' => 'foo',
+                ],
+            ],
+            $this->client,
+        );
+
+        $subject->crawl($urls);
+
+        $lastRequest = $this->mockHandler->getLastRequest();
+
+        self::assertInstanceOf(Message\RequestInterface::class, $lastRequest);
+        self::assertSame(['foo'], $lastRequest->getHeader('User-Agent'));
     }
 
     #[Framework\Attributes\Test]
