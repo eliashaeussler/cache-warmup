@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Http\Message\Handler;
 
+use EliasHaeussler\CacheWarmup\Helper;
 use Psr\Http\Message;
 use Symfony\Component\Console;
 use Throwable;
@@ -45,9 +46,11 @@ final class VerboseProgressHandler implements ResponseHandlerInterface
         Console\Output\ConsoleOutputInterface $output,
         int $max,
     ) {
+        Helper\ConsoleHelper::registerAdditionalConsoleOutputStyles($output->getFormatter());
+
         $this->logSection = $output->section();
         $this->progressBarSection = $output->section();
-        $this->progressBar = $this->createProgressBar($max);
+        $this->progressBar = new Console\Helper\ProgressBar($this->progressBarSection, $max);
     }
 
     public function startProgressBar(): void
@@ -76,20 +79,5 @@ final class VerboseProgressHandler implements ResponseHandlerInterface
 
         $this->progressBar->advance();
         $this->progressBar->display();
-    }
-
-    private function createProgressBar(int $max): Console\Helper\ProgressBar
-    {
-        $formatter = $this->progressBarSection->getFormatter();
-        $formatter->setStyle(
-            'success',
-            new Console\Formatter\OutputFormatterStyle('black', 'green'),
-        );
-        $formatter->setStyle(
-            'failure',
-            new Console\Formatter\OutputFormatterStyle('white', 'red'),
-        );
-
-        return new Console\Helper\ProgressBar($this->progressBarSection, $max);
     }
 }

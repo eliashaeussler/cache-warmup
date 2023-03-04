@@ -61,14 +61,14 @@ final class TextFormatterTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
-    public function formatParserResultPrintsSuccessfulResultIfOutputIsVeryVerbose(): void
+    public function formatParserResultPrintsSuccessfulSitemapsIfOutputIsVerbose(): void
     {
-        $this->output->setVerbosity(Console\Output\OutputInterface::VERBOSITY_VERY_VERBOSE);
+        $this->output->setVerbosity(Console\Output\OutputInterface::VERBOSITY_VERBOSE);
 
         $url = 'https://www.example.com';
         $successful = new Src\Result\ParserResult(
             [new Src\Sitemap\Sitemap(new Psr7\Uri($url))],
-            [new Src\Sitemap\Url($url)],
+            [new Src\Sitemap\Url($url.'/foo')],
         );
         $failed = new Src\Result\ParserResult();
         $excluded = new Src\Result\ParserResult();
@@ -77,9 +77,30 @@ final class TextFormatterTest extends Framework\TestCase
 
         $output = $this->output->fetch();
 
-        self::assertStringContainsString('The following sitemaps were processed:', $output);
-        self::assertStringContainsString('The following URLs will be crawled:', $output);
-        self::assertStringContainsString('* https://www.example.com', $output);
+        self::assertStringContainsString('Parsed sitemaps', $output);
+        self::assertStringContainsString('DONE  https://www.example.com', $output);
+        self::assertStringNotContainsString('DONE  https://www.example.com/foo', $output);
+    }
+
+    #[Framework\Attributes\Test]
+    public function formatParserResultPrintsSuccessfulUrlsIfOutputIsDebug(): void
+    {
+        $this->output->setVerbosity(Console\Output\OutputInterface::VERBOSITY_DEBUG);
+
+        $url = 'https://www.example.com';
+        $successful = new Src\Result\ParserResult(
+            [new Src\Sitemap\Sitemap(new Psr7\Uri($url))],
+            [new Src\Sitemap\Url($url.'/foo')],
+        );
+        $failed = new Src\Result\ParserResult();
+        $excluded = new Src\Result\ParserResult();
+
+        $this->subject->formatParserResult($successful, $failed, $excluded);
+
+        $output = $this->output->fetch();
+
+        self::assertStringContainsString('Parsed URLs', $output);
+        self::assertStringContainsString('DONE  https://www.example.com', $output);
     }
 
     #[Framework\Attributes\Test]
@@ -94,8 +115,7 @@ final class TextFormatterTest extends Framework\TestCase
 
         $output = $this->output->fetch();
 
-        self::assertStringContainsString('The following sitemaps could not be parsed:', $output);
-        self::assertStringContainsString('* https://www.example.com', $output);
+        self::assertStringContainsString('FAIL  https://www.example.com', $output);
     }
 
     #[Framework\Attributes\Test]
@@ -113,13 +133,11 @@ final class TextFormatterTest extends Framework\TestCase
 
         $output = $this->output->fetch();
 
-        self::assertStringContainsString('The following sitemaps were excluded by a pattern:', $output);
-        self::assertStringContainsString('The following URLs were excluded by a pattern:', $output);
-        self::assertStringContainsString('* https://www.example.com', $output);
+        self::assertStringContainsString('SKIP  https://www.example.com', $output);
     }
 
     #[Framework\Attributes\Test]
-    public function formatParserResultDoesNotPrintDurationIfOutputIsNotVeryVerbose(): void
+    public function formatParserResultDoesNotPrintDurationIfOutputIsNotDebug(): void
     {
         $successful = new Src\Result\ParserResult();
         $failed = new Src\Result\ParserResult();
@@ -139,7 +157,7 @@ final class TextFormatterTest extends Framework\TestCase
         $excluded = new Src\Result\ParserResult();
         $duration = new Src\Time\Duration(500);
 
-        $this->output->setVerbosity(Console\Output\OutputInterface::VERBOSITY_VERY_VERBOSE);
+        $this->output->setVerbosity(Console\Output\OutputInterface::VERBOSITY_DEBUG);
 
         $this->subject->formatParserResult($successful, $failed, $excluded, $duration);
 
@@ -172,9 +190,9 @@ final class TextFormatterTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
-    public function formatCacheWarmupResultPrintsSuccessfulUrlsIfOutputIsVeryVerbose(): void
+    public function formatCacheWarmupResultPrintsSuccessfulUrlsIfOutputIsDebug(): void
     {
-        $this->output->setVerbosity(Console\Output\OutputInterface::VERBOSITY_VERY_VERBOSE);
+        $this->output->setVerbosity(Console\Output\OutputInterface::VERBOSITY_DEBUG);
 
         $url = 'https://www.example.com';
         $result = new Src\Result\CacheWarmupResult();
@@ -184,8 +202,7 @@ final class TextFormatterTest extends Framework\TestCase
 
         $output = $this->output->fetch();
 
-        self::assertStringContainsString('The following URLs were successfully crawled:', $output);
-        self::assertStringContainsString('* https://www.example.com', $output);
+        self::assertStringContainsString('DONE  https://www.example.com', $output);
     }
 
     #[Framework\Attributes\Test]
@@ -199,8 +216,7 @@ final class TextFormatterTest extends Framework\TestCase
 
         $output = $this->output->fetch();
 
-        self::assertStringNotContainsString('The following URLs failed during crawling:', $output);
-        self::assertStringNotContainsString('* https://www.example.com', $output);
+        self::assertStringNotContainsString('https://www.example.com', $output);
     }
 
     #[Framework\Attributes\Test]
@@ -216,8 +232,7 @@ final class TextFormatterTest extends Framework\TestCase
 
         $output = $this->output->fetch();
 
-        self::assertStringContainsString('The following URLs failed during crawling:', $output);
-        self::assertStringContainsString('* https://www.example.com', $output);
+        self::assertStringContainsString('FAIL  https://www.example.com', $output);
     }
 
     #[Framework\Attributes\Test]
