@@ -116,13 +116,13 @@ final class CacheWarmupCommandTest extends Framework\TestCase
             null,
         ]);
 
-        $this->commandTester->execute([], ['verbosity' => Console\Output\OutputInterface::VERBOSITY_VERY_VERBOSE]);
+        $this->commandTester->execute([], ['verbosity' => Console\Output\OutputInterface::VERBOSITY_DEBUG]);
 
         $output = $this->commandTester->getDisplay();
 
-        self::assertStringContainsString('* https://www.example.com/sitemap.xml', $output);
-        self::assertStringContainsString('* https://www.example.com/', $output);
-        self::assertStringContainsString('* https://www.example.com/foo', $output);
+        self::assertStringContainsString('DONE  https://www.example.com/sitemap.xml', $output);
+        self::assertStringContainsString('DONE  https://www.example.com/', $output);
+        self::assertStringContainsString('DONE  https://www.example.com/foo', $output);
     }
 
     #[Framework\Attributes\Test]
@@ -137,15 +137,15 @@ final class CacheWarmupCommandTest extends Framework\TestCase
                 ],
             ],
             [
-                'verbosity' => Console\Output\OutputInterface::VERBOSITY_VERY_VERBOSE,
+                'verbosity' => Console\Output\OutputInterface::VERBOSITY_DEBUG,
             ],
         );
 
         $output = $this->commandTester->getDisplay();
 
-        self::assertStringContainsString('* https://www.example.com/sitemap.xml', $output);
-        self::assertStringContainsString('* https://www.example.com/', $output);
-        self::assertStringContainsString('* https://www.example.com/foo', $output);
+        self::assertStringContainsString('DONE  https://www.example.com/sitemap.xml', $output);
+        self::assertStringContainsString('DONE  https://www.example.com/', $output);
+        self::assertStringContainsString('DONE  https://www.example.com/foo', $output);
     }
 
     #[Framework\Attributes\Test]
@@ -161,15 +161,15 @@ final class CacheWarmupCommandTest extends Framework\TestCase
                 '--limit' => 1,
             ],
             [
-                'verbosity' => Console\Output\OutputInterface::VERBOSITY_VERY_VERBOSE,
+                'verbosity' => Console\Output\OutputInterface::VERBOSITY_DEBUG,
             ],
         );
 
         $output = $this->commandTester->getDisplay();
 
-        self::assertStringContainsString('* https://www.example.com/sitemap.xml', $output);
-        self::assertStringContainsString('* https://www.example.com/', $output);
-        self::assertStringNotContainsString('* https://www.example.com/foo', $output);
+        self::assertStringContainsString('DONE  https://www.example.com/sitemap.xml', $output);
+        self::assertStringContainsString('DONE  https://www.example.com/', $output);
+        self::assertStringNotContainsString('https://www.example.com/foo', $output);
     }
 
     #[Framework\Attributes\Test]
@@ -191,8 +191,8 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         $output = $this->commandTester->getDisplay();
 
-        self::assertStringContainsString('* https://www.example.com/', $output);
-        self::assertStringContainsString('* https://www.example.com/foo', $output);
+        self::assertStringContainsString('https://www.example.com/', $output);
+        self::assertStringContainsString('https://www.example.com/foo', $output);
     }
 
     #[Framework\Attributes\Test]
@@ -211,7 +211,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         $output = $this->commandTester->getDisplay();
 
-        self::assertStringContainsString('The following URLs were excluded by a pattern:', $output);
+        self::assertStringContainsString('SKIP  https://www.example.com/foo', $output);
     }
 
     #[Framework\Attributes\Test]
@@ -430,7 +430,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         $output = $this->commandTester->getDisplay();
 
         self::assertSame(0, $exitCode);
-        self::assertStringContainsString('The following sitemaps could not be parsed:', $output);
+        self::assertStringContainsString('FAIL  https://www.example.com/sitemap.xml', $output);
     }
 
     #[Framework\Attributes\Test]

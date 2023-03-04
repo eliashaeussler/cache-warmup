@@ -23,11 +23,11 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Formatter;
 
+use EliasHaeussler\CacheWarmup\Helper;
 use EliasHaeussler\CacheWarmup\Result;
 use EliasHaeussler\CacheWarmup\Time;
 use Symfony\Component\Console;
 
-use function array_map;
 use function method_exists;
 use function sprintf;
 
@@ -42,6 +42,7 @@ final class TextFormatter implements Formatter
     public function __construct(
         private readonly Console\Style\SymfonyStyle $io,
     ) {
+        Helper\ConsoleHelper::registerAdditionalConsoleOutputStyles($this->io->getFormatter());
     }
 
     public function formatParserResult(
@@ -50,35 +51,62 @@ final class TextFormatter implements Formatter
         Result\ParserResult $excluded,
         Time\Duration $duration = null,
     ): void {
-        if ($this->io->isVeryVerbose()) {
-            // Print parsed sitemaps
-            $this->io->section('The following sitemaps were processed:');
-            $this->io->listing(array_map('strval', $successful->getSitemaps()));
+        $sitemaps = [];
+        $urlsShown = false;
 
-            // Print parsed URLs
-            $this->io->section('The following URLs will be crawled:');
-            $this->io->listing($successful->getUrls());
+        // Add successful sitemaps
+        if ($this->io->isVerbose()) {
+            foreach ($successful->getSitemaps() as $successfulSitemap) {
+                $sitemaps[] = '<success> DONE </success> '.$successfulSitemap;
+            }
         }
 
-        // Print failed sitemaps
-        if ([] !== ($failedSitemaps = $failed->getSitemaps())) {
-            $this->io->section('The following sitemaps could not be parsed:');
-            $this->io->listing(array_map('strval', $failedSitemaps));
+        // Add excluded sitemaps
+        foreach ($excluded->getSitemaps() as $excludedSitemap) {
+            $sitemaps[] = '<skipped> SKIP </skipped> '.$excludedSitemap;
         }
 
-        // Print excluded sitemaps
-        if ([] !== ($excludedSitemaps = $excluded->getSitemaps())) {
-            $this->io->section('The following sitemaps were excluded by a pattern:');
-            $this->io->listing(array_map('strval', $excludedSitemaps));
+        // Add failed sitemaps
+        foreach ($failed->getSitemaps() as $failedSitemap) {
+            $sitemaps[] = '<failure> FAIL </failure> '.$failedSitemap;
         }
-        if ([] !== ($excludedUrls = $excluded->getUrls())) {
-            $this->io->section('The following URLs were excluded by a pattern:');
-            $this->io->listing(array_map('strval', $excludedUrls));
+
+        // Print processed sitemaps
+        if ([] !== $sitemaps) {
+            $this->io->section('Parsed sitemaps');
+            $this->io->writeln($sitemaps);
+        }
+
+        // Print parsed URLs
+        if ($this->io->isDebug() && [] !== $successful->getUrls()) {
+            $urlsShown = true;
+
+            $this->io->section('Parsed URLs');
+
+            foreach ($successful->getUrls() as $successfulUrl) {
+                $this->io->writeln('<success> DONE </success> '.$successfulUrl);
+            }
+        }
+
+        // Print excluded URLs
+        if ([] !== $excluded->getUrls()) {
+            $urlsShown = true;
+
+            $this->io->section('Excluded URLs');
+
+            foreach ($excluded->getUrls() as $excludedUrl) {
+                $this->io->writeln('<skipped> SKIP </skipped> '.$excludedUrl);
+            }
         }
 
         // Print duration
-        if ($this->io->isVeryVerbose() && null !== $duration) {
+        if ($this->io->isDebug() && null !== $duration) {
+            $this->io->newLine();
             $this->io->writeln(sprintf('Parsing finished in %s', $duration->format()));
+        }
+
+        if ([] !== $sitemaps || $urlsShown) {
+            $this->io->newLine();
         }
     }
 
@@ -88,19 +116,26 @@ final class TextFormatter implements Formatter
     ): void {
         $successfulUrls = $result->getSuccessful();
         $failedUrls = $result->getFailed();
+        $urls = [];
 
-        // Print crawler statistics
-        if ($this->io->isVeryVerbose()) {
-            $this->io->newLine();
-
-            if ([] !== $successfulUrls) {
-                $this->io->section('The following URLs were successfully crawled:');
-                $this->io->listing(array_map('strval', $successfulUrls));
+        // Add successful URLs
+        if ($this->io->isDebug()) {
+            foreach ($successfulUrls as $successfulUrl) {
+                $urls[] = '<success> DONE </success> '.$successfulUrl;
             }
         }
-        if ($this->io->isVerbose() && [] !== $failedUrls) {
-            $this->io->section('The following URLs failed during crawling:');
-            $this->io->listing(array_map('strval', $failedUrls));
+
+        // Add failed URLs
+        if ($this->io->isVerbose()) {
+            foreach ($failedUrls as $failedUrl) {
+                $urls[] = '<failure> FAIL </failure> '.$failedUrl;
+            }
+        }
+
+        // Prints URLs
+        if ([] !== $urls) {
+            $this->io->section('Crawled URLs');
+            $this->io->writeln($urls);
         }
 
         // Print crawler results
@@ -114,7 +149,6 @@ final class TextFormatter implements Formatter
                 ),
             );
         }
-
         if ([] !== $failedUrls) {
             $countFailedUrls = count($failedUrls);
             $this->io->error(
