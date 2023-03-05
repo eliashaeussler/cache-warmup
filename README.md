@@ -6,13 +6,9 @@
 
 [![Coverage](https://codecov.io/gh/eliashaeussler/cache-warmup/branch/main/graph/badge.svg?token=SAYQJPAHYS)](https://codecov.io/gh/eliashaeussler/cache-warmup)
 [![Maintainability](https://api.codeclimate.com/v1/badges/20217c57aa1fc511f8bc/maintainability)](https://codeclimate.com/github/eliashaeussler/cache-warmup/maintainability)
-[![Tests](https://github.com/eliashaeussler/cache-warmup/actions/workflows/tests.yaml/badge.svg)](https://github.com/eliashaeussler/cache-warmup/actions/workflows/tests.yaml)
 [![CGL](https://github.com/eliashaeussler/cache-warmup/actions/workflows/cgl.yaml/badge.svg)](https://github.com/eliashaeussler/cache-warmup/actions/workflows/cgl.yaml)
-[![Release](https://github.com/eliashaeussler/cache-warmup/actions/workflows/release.yaml/badge.svg)](https://github.com/eliashaeussler/cache-warmup/actions/workflows/release.yaml)
-[![Latest Stable Version](http://poser.pugx.org/eliashaeussler/cache-warmup/v)](https://packagist.org/packages/eliashaeussler/cache-warmup)
+[![Tests](https://github.com/eliashaeussler/cache-warmup/actions/workflows/tests.yaml/badge.svg)](https://github.com/eliashaeussler/cache-warmup/actions/workflows/tests.yaml)
 [![PHP Version Require](http://poser.pugx.org/eliashaeussler/cache-warmup/require/php)](https://packagist.org/packages/eliashaeussler/cache-warmup)
-[![Total Downloads](http://poser.pugx.org/eliashaeussler/cache-warmup/downloads)](https://packagist.org/packages/eliashaeussler/cache-warmup)
-[![Docker](https://img.shields.io/docker/v/eliashaeussler/cache-warmup?label=docker&sort=semver)](https://hub.docker.com/r/eliashaeussler/cache-warmup)
 [![License](http://poser.pugx.org/eliashaeussler/cache-warmup/license)](LICENSE)
 
 📦&nbsp;[Packagist](https://packagist.org/packages/eliashaeussler/cache-warmup) |
@@ -39,7 +35,10 @@ It is even possible to write custom crawlers that take care of cache warmup.
 
 ## 🔥 Installation
 
-### PHAR
+### PHAR (recommended)
+
+[![PHAR](https://img.shields.io/github/v/release/eliashaeussler/cache-warmup?label=version&logo=php&sort=semver)](https://github.com/eliashaeussler/cache-warmup/releases)
+[![PHAR](https://img.shields.io/github/downloads/eliashaeussler/cache-warmup/total?color=brightgreen)](https://github.com/eliashaeussler/cache-warmup/releases)
 
 Head over to <https://github.com/eliashaeussler/cache-warmup/releases/latest> and
 download the latest [`cache-warmup.phar`][1] file.
@@ -48,17 +47,25 @@ Run `chmod +x cache-warmup.phar` to make it executable.
 
 ### PHIVE
 
+![PHIVE](https://img.shields.io/github/v/release/eliashaeussler/cache-warmup?label=version&logo=php&sort=semver)
+
 ```bash
 phive install cache-warmup
 ```
 
 ### Docker
 
+[![Docker](https://img.shields.io/docker/v/eliashaeussler/cache-warmup?label=version&logo=docker&sort=semver)](https://hub.docker.com/r/eliashaeussler/cache-warmup)
+[![Docker Pulls](https://img.shields.io/docker/pulls/eliashaeussler/cache-warmup?color=brightgreen)](https://hub.docker.com/r/eliashaeussler/cache-warmup)
+
 ```bash
-docker run --rm -it eliashaeussler/cache-warmup [options] [<sitemaps>...]
+docker run --rm -it eliashaeussler/cache-warmup
 ```
 
 ### Composer
+
+[![Packagist](https://img.shields.io/packagist/v/eliashaeussler/cache-warmup?label=version&logo=packagist)](https://packagist.org/packages/eliashaeussler/cache-warmup)
+[![Packagist Downloads](https://img.shields.io/packagist/dt/eliashaeussler/cache-warmup?color=brightgreen)](https://packagist.org/packages/eliashaeussler/cache-warmup)
 
 ```bash
 composer require eliashaeussler/cache-warmup
