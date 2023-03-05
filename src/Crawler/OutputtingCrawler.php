@@ -41,8 +41,8 @@ use function count;
  *     concurrency: int,
  *     request_method: string,
  *     request_headers: array<string, string>,
- *     request_options: array<string, string>,
- *     client_config: array<string, mixed>
+ *     request_options: array<string, mixed>,
+ *     client_config: array<string, mixed>,
  * }>
  */
 final class OutputtingCrawler extends AbstractConfigurableCrawler implements VerboseCrawlerInterface
