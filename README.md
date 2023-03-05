@@ -42,7 +42,7 @@ Run `chmod +x cache-warmup.phar` to make it executable.
 
 ### PHIVE
 
-![PHIVE](https://img.shields.io/github/v/release/eliashaeussler/cache-warmup?label=version&logo=php&sort=semver)
+[![PHIVE](https://img.shields.io/github/v/release/eliashaeussler/cache-warmup?label=version&logo=php&sort=semver)](https://phar.io)
 
 ```bash
 phive install cache-warmup
