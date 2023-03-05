@@ -1,6 +1,6 @@
 <div align="center">
 
-![Screenshot](docs/screenshot.png)
+[![Screenshot](docs/screenshot.png)](#-installation)
 
 # Cache warmup
 
@@ -10,10 +10,6 @@
 [![Tests](https://github.com/eliashaeussler/cache-warmup/actions/workflows/tests.yaml/badge.svg)](https://github.com/eliashaeussler/cache-warmup/actions/workflows/tests.yaml)
 [![PHP Version Require](http://poser.pugx.org/eliashaeussler/cache-warmup/require/php)](https://packagist.org/packages/eliashaeussler/cache-warmup)
 [![License](http://poser.pugx.org/eliashaeussler/cache-warmup/license)](LICENSE)
-
-📦&nbsp;[Packagist](https://packagist.org/packages/eliashaeussler/cache-warmup) |
-💾&nbsp;[Repository](https://github.com/eliashaeussler/cache-warmup) |
-🐛&nbsp;[Issue tracker](https://github.com/eliashaeussler/cache-warmup/issues)
 
 </div>
 
@@ -37,13 +33,11 @@ It is even possible to write custom crawlers that take care of cache warmup.
 
 ### PHAR (recommended)
 
-[![PHAR](https://img.shields.io/github/v/release/eliashaeussler/cache-warmup?label=version&logo=php&sort=semver)](https://github.com/eliashaeussler/cache-warmup/releases)
+[![PHAR](https://img.shields.io/github/v/release/eliashaeussler/cache-warmup?label=version&logo=github&sort=semver)](https://github.com/eliashaeussler/cache-warmup/releases)
 [![PHAR](https://img.shields.io/github/downloads/eliashaeussler/cache-warmup/total?color=brightgreen)](https://github.com/eliashaeussler/cache-warmup/releases)
 
-Head over to <https://github.com/eliashaeussler/cache-warmup/releases/latest> and
-download the latest [`cache-warmup.phar`][1] file.
-
-Run `chmod +x cache-warmup.phar` to make it executable.
+Head over to the [latest GitHub release][20] and download the [`cache-warmup.phar`][1]
+file. Run `chmod +x cache-warmup.phar` to make it executable.
 
 ### PHIVE
 
@@ -428,3 +422,4 @@ This project is licensed under [GNU General Public License 3.0 (or later)](LICEN
 [17]: src/Crawler/ConcurrentCrawlerTrait.php
 [18]: https://docs.guzzlephp.org/en/stable/request-options.html
 [19]: https://docs.guzzlephp.org/en/stable/quickstart.html#creating-a-client
+[20]: https://github.com/eliashaeussler/cache-warmup/releases/latest
