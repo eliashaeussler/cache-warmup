@@ -4,12 +4,11 @@
 
 # Cache warmup
 
-[![Coverage](https://codecov.io/gh/eliashaeussler/cache-warmup/branch/main/graph/badge.svg?token=SAYQJPAHYS)](https://codecov.io/gh/eliashaeussler/cache-warmup)
-[![Maintainability](https://api.codeclimate.com/v1/badges/20217c57aa1fc511f8bc/maintainability)](https://codeclimate.com/github/eliashaeussler/cache-warmup/maintainability)
-[![CGL](https://github.com/eliashaeussler/cache-warmup/actions/workflows/cgl.yaml/badge.svg)](https://github.com/eliashaeussler/cache-warmup/actions/workflows/cgl.yaml)
-[![Tests](https://github.com/eliashaeussler/cache-warmup/actions/workflows/tests.yaml/badge.svg)](https://github.com/eliashaeussler/cache-warmup/actions/workflows/tests.yaml)
-[![PHP Version Require](http://poser.pugx.org/eliashaeussler/cache-warmup/require/php)](https://packagist.org/packages/eliashaeussler/cache-warmup)
-[![License](http://poser.pugx.org/eliashaeussler/cache-warmup/license)](LICENSE)
+[![Coverage](https://img.shields.io/codecov/c/github/eliashaeussler/cache-warmup?logo=codecov&token=SAYQJPAHYS)](https://codecov.io/gh/eliashaeussler/cache-warmup)
+[![Maintainability](https://img.shields.io/codeclimate/maintainability/eliashaeussler/cache-warmup?logo=codeclimate)](https://codeclimate.com/github/eliashaeussler/cache-warmup/maintainability)
+[![CGL](https://img.shields.io/github/actions/workflow/status/eliashaeussler/cache-warmup/cgl.yaml?label=cgl&logo=github)](https://github.com/eliashaeussler/cache-warmup/actions/workflows/cgl.yaml)
+[![Tests](https://img.shields.io/github/actions/workflow/status/eliashaeussler/cache-warmup/tests.yaml?label=tests&logo=github)](https://github.com/eliashaeussler/cache-warmup/actions/workflows/tests.yaml)
+[![Supported PHP Versions](https://img.shields.io/packagist/dependency-v/eliashaeussler/cache-warmup/php?logo=php)](https://packagist.org/packages/eliashaeussler/cache-warmup)
 
 </div>
 
