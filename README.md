@@ -375,19 +375,31 @@ $crawler = new \EliasHaeussler\CacheWarmup\Crawler\ConcurrentCrawler([
 
 Optional [configuration][19] used when instantiating a new Guzzle client.
 
-> ⚠️ Client configuration is only respected if a new client is instantiated
-> in the crawler. If an existing client is passed to the crawler, client
-> configuration is ignored.
+> ⚠️ Client configuration is ignored when running cache warmup from the
+> command-line. In addition, it is only respected if a new client is
+> instantiated *within* the crawler. If an existing client is passed to
+> the crawler, client configuration is ignored.
 
 ```php
 $stack = \GuzzleHttp\HandlerStack::create();
 $stack->push($customMiddleware);
 
-$crawler = new \EliasHaeussler\CacheWarmup\Crawler\ConcurrentCrawler([
+$crawlerConfig = [
     'client_config' => [
         'handler' => $stack,
     ],
-]);
+];
+
+// ✅ This works as expected
+$crawler = new \EliasHaeussler\CacheWarmup\Crawler\ConcurrentCrawler(
+    $crawlerConfig,
+);
+
+// ❌ This does *not* respect client configuration
+$crawler = new \EliasHaeussler\CacheWarmup\Crawler\ConcurrentCrawler(
+    $crawlerConfig,
+    new \GuzzleHttp\Client(),
+);
 ```
 
 | Type      | `array<string, mixed>` |
