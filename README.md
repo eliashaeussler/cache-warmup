@@ -36,8 +36,9 @@ It is even possible to write custom crawlers that take care of cache warmup.
 [![PHAR](https://img.shields.io/github/v/release/eliashaeussler/cache-warmup?label=version&logo=github&sort=semver)](https://github.com/eliashaeussler/cache-warmup/releases)
 [![PHAR](https://img.shields.io/github/downloads/eliashaeussler/cache-warmup/total?color=brightgreen)](https://github.com/eliashaeussler/cache-warmup/releases)
 
-Head over to the [latest GitHub release][20] and download the [`cache-warmup.phar`][1]
-file. Run `chmod +x cache-warmup.phar` to make it executable.
+Head over to the [latest GitHub release][20] and download the [`cache-warmup.phar`][1] file.
+
+Run `chmod +x cache-warmup.phar` to make it executable.
 
 ### PHIVE
 
