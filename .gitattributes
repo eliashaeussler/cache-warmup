@@ -6,8 +6,9 @@
 /.php-cs-fixer.php        export-ignore
 /box.json                 export-ignore
 /codecov.yml              export-ignore
-/composer.lock            export-ignore
 /CODEOWNERS               export-ignore
+/composer.lock            export-ignore
+/CONTRIBUTING.md          export-ignore
 /phpstan.neon             export-ignore
 /phpunit.xml              export-ignore
 /phpunit.coverage.xml     export-ignore
