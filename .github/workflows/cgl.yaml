@@ -23,6 +23,8 @@ jobs:
         with:
           php-version: 8.1
           tools: composer:v2, composer-require-checker, composer-unused:0.7
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Validation
       - name: Validate composer.json
