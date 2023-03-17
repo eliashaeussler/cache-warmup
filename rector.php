@@ -21,32 +21,32 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use EliasHaeussler\RectorConfig\Config\Config;
 use Rector\Config\RectorConfig;
-use Rector\Core\ValueObject\PhpVersion;
-use Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector;
-use Rector\Php74\Rector\LNumber\AddLiteralSeparatorToNumberRector;
 use Rector\Php80\Rector\Class_\AnnotationToAttributeRector;
-use Rector\PHPUnit\Set\PHPUnitLevelSetList;
-use Rector\Set\ValueObject\LevelSetList;
+use Rector\Privatization\Rector\Class_\FinalizeClassesWithoutChildrenRector;
 
 return static function (RectorConfig $rectorConfig): void {
-    $rectorConfig->paths([
-        __DIR__.'/src',
-        __DIR__.'/tests',
-    ]);
-
-    $rectorConfig->skip([
-        AddLiteralSeparatorToNumberRector::class,
-        AnnotationToAttributeRector::class => [
+    Config::create($rectorConfig)
+        ->in(
             __DIR__.'/src',
-        ],
-        JsonThrowOnErrorRector::class,
-    ]);
-
-    $rectorConfig->phpVersion(PhpVersion::PHP_81);
-
-    $rectorConfig->sets([
-        LevelSetList::UP_TO_PHP_81,
-        PHPUnitLevelSetList::UP_TO_PHPUNIT_100,
-    ]);
+            __DIR__.'/tests',
+        )
+        ->withPHPUnit()
+        ->skip(
+            AnnotationToAttributeRector::class,
+            [
+                __DIR__.'/src/Formatter/JsonFormatter.php',
+                __DIR__.'/src/Helper/VersionHelper.php',
+            ],
+        )
+        ->skip(
+            FinalizeClassesWithoutChildrenRector::class,
+            [
+                __DIR__.'/src/Sitemap/Sitemap.php',
+                __DIR__.'/src/Sitemap/Url.php',
+            ],
+        )
+        ->apply()
+    ;
 };

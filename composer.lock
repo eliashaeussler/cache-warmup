@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0ebadd1d60c4b45a37a7dafb08f70a15",
+    "content-hash": "8a753ddb4ed49604385d342fc3cc1588",
     "packages": [
         {
             "name": "cuyz/valinor",
@@ -1967,6 +1967,61 @@
                 "source": "https://github.com/eliashaeussler/phpstan-config/tree/1.0.2"
             },
             "time": "2023-02-20T17:41:19+00:00"
+        },
+        {
+            "name": "eliashaeussler/rector-config",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/eliashaeussler/rector-config.git",
+                "reference": "b0e12929af8e4dff79e2c6195f187580c6ccd431"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eliashaeussler/rector-config/zipball/b0e12929af8e4dff79e2c6195f187580c6ccd431",
+                "reference": "b0e12929af8e4dff79e2c6195f187580c6ccd431",
+                "shasum": ""
+            },
+            "require": {
+                "composer-runtime-api": "^2.0",
+                "php": "~8.1.0 || ~8.2.0",
+                "rector/rector": "^0.15.21"
+            },
+            "require-dev": {
+                "armin/editorconfig-cli": "^1.5",
+                "composer/composer": "^2.0",
+                "eliashaeussler/php-cs-fixer-config": "^1.1",
+                "eliashaeussler/phpstan-config": "^1.0",
+                "ergebnis/composer-normalize": "^2.30",
+                "phpstan/extension-installer": "^1.2",
+                "phpunit/phpunit": "^10.0.7",
+                "symfony/config": "^5.4 || ^6.0",
+                "symfony/dependency-injection": "^5.4 || ^6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "EliasHaeussler\\RectorConfig\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Elias Häußler",
+                    "email": "elias@haeussler.dev",
+                    "homepage": "https://haeussler.dev",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "My personal configuration for Rector",
+            "support": {
+                "issues": "https://github.com/eliashaeussler/rector-config/issues",
+                "source": "https://github.com/eliashaeussler/rector-config/tree/1.1.0"
+            },
+            "time": "2023-03-17T20:47:06+00:00"
         },
         {
             "name": "ergebnis/composer-normalize",
