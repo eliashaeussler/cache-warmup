@@ -67,10 +67,9 @@ final class UrlTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function constructorAssignsPriorityCorrectly(): void
     {
-        $priority = 0.8;
-        $subject = new Sitemap\Url('https://foo.baz', priority: $priority);
+        $subject = new Sitemap\Url('https://foo.baz', priority: 0.8);
 
-        self::assertSame($priority, $subject->getPriority());
+        self::assertSame(0.8, $subject->getPriority());
     }
 
     #[Framework\Attributes\Test]

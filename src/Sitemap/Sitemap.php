@@ -60,6 +60,6 @@ class Sitemap implements Stringable
 
     public function __toString(): string
     {
-        return (string) $this->getUri();
+        return (string) $this->uri;
     }
 }
