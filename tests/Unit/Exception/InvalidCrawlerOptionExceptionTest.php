@@ -67,13 +67,8 @@ final class InvalidCrawlerOptionExceptionTest extends Framework\TestCase
     public function createForAllReturnsExceptionForGivenCrawlerAndOptions(): void
     {
         $crawler = new Tests\Unit\Crawler\DummyConfigurableCrawler();
-        $options = [
-            'foo',
-            'bar',
-            'baz',
-        ];
 
-        $actual = Exception\InvalidCrawlerOptionException::createForAll($crawler, $options);
+        $actual = Exception\InvalidCrawlerOptionException::createForAll($crawler, ['foo', 'bar', 'baz']);
 
         self::assertSame(1659206995, $actual->getCode());
         self::assertSame(
