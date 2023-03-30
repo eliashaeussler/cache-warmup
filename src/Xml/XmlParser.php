@@ -109,7 +109,10 @@ final class XmlParser
                     throw $exception;
                 },
             )
-            ->supportDateFormats(DateTimeInterface::W3C)
+            ->supportDateFormats(
+                DateTimeInterface::W3C,
+                '!Y-m-d',
+            )
             ->mapper()
         ;
     }

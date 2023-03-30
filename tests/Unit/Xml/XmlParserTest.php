@@ -82,7 +82,7 @@ final class XmlParserTest extends Framework\TestCase
             new Sitemap\Url(
                 uri: 'https://www.example.org/',
                 priority: 0.8,
-                lastModificationDate: new DateTimeImmutable('2022-05-02T12:14:44+02:00'),
+                lastModificationDate: new DateTimeImmutable('2022-05-02T00:00:00+00:00'),
                 changeFrequency: Sitemap\ChangeFrequency::Yearly,
             ),
             new Sitemap\Url(
