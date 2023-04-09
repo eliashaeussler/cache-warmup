@@ -1970,16 +1970,16 @@
         },
         {
             "name": "eliashaeussler/rector-config",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/rector-config.git",
-                "reference": "b0e12929af8e4dff79e2c6195f187580c6ccd431"
+                "reference": "87a316eb58efe53876923b4fff7b87cd8b6d2b7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/rector-config/zipball/b0e12929af8e4dff79e2c6195f187580c6ccd431",
-                "reference": "b0e12929af8e4dff79e2c6195f187580c6ccd431",
+                "url": "https://api.github.com/repos/eliashaeussler/rector-config/zipball/87a316eb58efe53876923b4fff7b87cd8b6d2b7c",
+                "reference": "87a316eb58efe53876923b4fff7b87cd8b6d2b7c",
                 "shasum": ""
             },
             "require": {
@@ -2019,9 +2019,9 @@
             "description": "My personal configuration for Rector",
             "support": {
                 "issues": "https://github.com/eliashaeussler/rector-config/issues",
-                "source": "https://github.com/eliashaeussler/rector-config/tree/1.1.0"
+                "source": "https://github.com/eliashaeussler/rector-config/tree/1.1.1"
             },
-            "time": "2023-03-17T20:47:06+00:00"
+            "time": "2023-04-09T15:26:54+00:00"
         },
         {
             "name": "ergebnis/composer-normalize",
