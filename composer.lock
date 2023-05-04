@@ -1967,16 +1967,16 @@
         },
         {
             "name": "eliashaeussler/rector-config",
-            "version": "1.1.1",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/rector-config.git",
-                "reference": "87a316eb58efe53876923b4fff7b87cd8b6d2b7c"
+                "reference": "4d2e392a5f308735512dd9e73b88aad38228cadc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/rector-config/zipball/87a316eb58efe53876923b4fff7b87cd8b6d2b7c",
-                "reference": "87a316eb58efe53876923b4fff7b87cd8b6d2b7c",
+                "url": "https://api.github.com/repos/eliashaeussler/rector-config/zipball/4d2e392a5f308735512dd9e73b88aad38228cadc",
+                "reference": "4d2e392a5f308735512dd9e73b88aad38228cadc",
                 "shasum": ""
             },
             "require": {
@@ -1991,9 +1991,14 @@
                 "eliashaeussler/phpstan-config": "^1.0",
                 "ergebnis/composer-normalize": "^2.30",
                 "phpstan/extension-installer": "^1.2",
-                "phpunit/phpunit": "^10.0.7",
+                "phpunit/phpunit": "^10.1",
+                "ssch/typo3-rector": "^1.2",
                 "symfony/config": "^5.4 || ^6.0",
-                "symfony/dependency-injection": "^5.4 || ^6.0"
+                "symfony/dependency-injection": "^5.4 || ^6.0",
+                "typo3/cms-core": "^12.4"
+            },
+            "suggest": {
+                "ssch/typo3-rector": "Configures additional Rector rules for TYPO3 CMS projects"
             },
             "type": "library",
             "autoload": {
@@ -2016,9 +2021,9 @@
             "description": "My personal configuration for Rector",
             "support": {
                 "issues": "https://github.com/eliashaeussler/rector-config/issues",
-                "source": "https://github.com/eliashaeussler/rector-config/tree/1.1.1"
+                "source": "https://github.com/eliashaeussler/rector-config/tree/1.3.0"
             },
-            "time": "2023-04-09T15:26:54+00:00"
+            "time": "2023-05-04T18:56:57+00:00"
         },
         {
             "name": "ergebnis/composer-normalize",
