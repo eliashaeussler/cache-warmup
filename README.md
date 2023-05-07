@@ -56,6 +56,12 @@ phive install cache-warmup
 docker run --rm -it eliashaeussler/cache-warmup
 ```
 
+You can also use the image from [GitHub Container Registry][21]:
+
+```bash
+docker run --rm -it ghcr.io/eliashaeussler/cache-warmup
+```
+
 ### Composer
 
 [![Packagist](https://img.shields.io/packagist/v/eliashaeussler/cache-warmup?label=version&logo=packagist)](https://packagist.org/packages/eliashaeussler/cache-warmup)
@@ -435,3 +441,4 @@ This project is licensed under [GNU General Public License 3.0 (or later)](LICEN
 [18]: https://docs.guzzlephp.org/en/stable/request-options.html
 [19]: https://docs.guzzlephp.org/en/stable/quickstart.html#creating-a-client
 [20]: https://github.com/eliashaeussler/cache-warmup/releases/latest
+[21]: https://github.com/eliashaeussler/cache-warmup/pkgs/container/cache-warmup
