@@ -78,7 +78,9 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: eliashaeussler/cache-warmup
+          images: |
+            eliashaeussler/cache-warmup
+            ghcr.io/eliashaeussler/cache-warmup
           tags: |
             type=raw,value=latest,enable=${{ github.event_name != 'workflow_dispatch' }}
             type=semver,pattern={{version}}
@@ -96,6 +98,14 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Login at GitHub container registry
+      - name: Login to GHCR
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       # Build and push image
       - name: Build and push
