@@ -1436,32 +1436,32 @@
     "packages-dev": [
         {
             "name": "armin/editorconfig-cli",
-            "version": "1.5.2",
+            "version": "1.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/a-r-m-i-n/editorconfig-cli.git",
-                "reference": "e6bc7cc8c05a24d488c077b6dac09fc587eef761"
+                "reference": "13b80480d6c4115533ef5e935ada8b71b7a9630b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/a-r-m-i-n/editorconfig-cli/zipball/e6bc7cc8c05a24d488c077b6dac09fc587eef761",
-                "reference": "e6bc7cc8c05a24d488c077b6dac09fc587eef761",
+                "url": "https://api.github.com/repos/a-r-m-i-n/editorconfig-cli/zipball/13b80480d6c4115533ef5e935ada8b71b7a9630b",
+                "reference": "13b80480d6c4115533ef5e935ada8b71b7a9630b",
                 "shasum": ""
             },
             "require": {
                 "ext-iconv": "*",
                 "ext-json": "*",
                 "idiosyncratic/editorconfig": "^0.1.1",
-                "php": "^7.3 | ^8.0",
+                "php": "^7.4 | ^8.0",
                 "symfony/console": "^4 || ^5 || ^6",
                 "symfony/finder": "^4.4 || ^5 || ^6",
                 "symfony/mime": "^4 || ^5 || ^6"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.4",
-                "jangregor/phpstan-prophecy": "^1.0",
-                "phpstan/phpstan": "^1.4",
-                "phpunit/phpunit": "^9.5",
+                "friendsofphp/php-cs-fixer": "3.4.0",
+                "jangregor/phpstan-prophecy": "1.0.0",
+                "phpstan/phpstan": "1.4.0",
+                "phpunit/phpunit": "^9.5 || ^10.1",
                 "seld/phar-utils": "^1.1"
             },
             "bin": [
@@ -1490,7 +1490,7 @@
                 "issues": "https://github.com/a-r-m-i-n/editorconfig-cli/issues",
                 "source": "https://github.com/a-r-m-i-n/editorconfig-cli"
             },
-            "time": "2022-01-17T14:19:34+00:00"
+            "time": "2023-05-27T16:04:30+00:00"
         },
         {
             "name": "composer/pcre",
