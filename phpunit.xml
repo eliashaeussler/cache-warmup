@@ -13,8 +13,18 @@
         </testsuite>
     </testsuites>
     <coverage>
-        <include>
-            <directory suffix=".php">src</directory>
-        </include>
+        <report>
+            <clover outputFile=".build/coverage/clover.xml"/>
+            <html outputDirectory=".build/coverage/html"/>
+            <text outputFile="php://stdout" showOnlySummary="true"/>
+        </report>
     </coverage>
+    <logging>
+        <junit outputFile=".build/coverage/junit.xml"/>
+    </logging>
+    <source>
+        <include>
+            <directory>src</directory>
+        </include>
+    </source>
 </phpunit>

@@ -34,7 +34,7 @@
 		"phpstan/extension-installer": "^1.2",
 		"phpstan/phpstan-phpunit": "^1.1",
 		"phpstan/phpstan-symfony": "^1.2.11",
-		"phpunit/phpunit": "^10.0"
+		"phpunit/phpunit": "^10.1"
 	},
 	"autoload": {
 		"psr-4": {
@@ -76,7 +76,7 @@
 			"@sca:php"
 		],
 		"sca:php": "phpstan analyse -c phpstan.neon",
-		"test": "phpunit -c phpunit.xml",
-		"test:coverage": "phpunit -c phpunit.coverage.xml"
+		"test": "@test:coverage --no-coverage",
+		"test:coverage": "phpunit -c phpunit.xml"
 	}
 }
