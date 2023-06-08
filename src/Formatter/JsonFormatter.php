@@ -26,6 +26,7 @@ namespace EliasHaeussler\CacheWarmup\Formatter;
 use EliasHaeussler\CacheWarmup\Helper;
 use EliasHaeussler\CacheWarmup\Result;
 use EliasHaeussler\CacheWarmup\Time;
+use Stringable;
 use Symfony\Component\Console;
 
 use function array_map;
@@ -145,7 +146,7 @@ final class JsonFormatter implements Formatter
     }
 
     /**
-     * @param string|list<mixed> $value
+     * @param string|list<bool|float|int|resource|string|Stringable|null> $value
      */
     private function addToJson(string $path, string|array $value): void
     {
