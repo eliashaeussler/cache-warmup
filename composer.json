@@ -75,7 +75,7 @@
 		"sca": [
 			"@sca:php"
 		],
-		"sca:php": "phpstan analyse -c phpstan.neon",
+		"sca:php": "phpstan analyse -c phpstan.php",
 		"test": "@test:coverage --no-coverage",
 		"test:coverage": "phpunit -c phpunit.xml"
 	}
