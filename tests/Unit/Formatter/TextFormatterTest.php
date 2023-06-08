@@ -282,7 +282,7 @@ final class TextFormatterTest extends Framework\TestCase
     }
 
     /**
-     * @return \Generator<string, array{Src\Formatter\MessageSeverity, string}>
+     * @return Generator<string, array{Src\Formatter\MessageSeverity, string}>
      */
     public static function logMessagePrintsGivenMessageWithGivenSeverityDataProvider(): Generator
     {

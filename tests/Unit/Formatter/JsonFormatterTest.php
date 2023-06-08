@@ -235,7 +235,7 @@ final class JsonFormatterTest extends Framework\TestCase
     }
 
     /**
-     * @return \Generator<string, array{Src\Formatter\MessageSeverity, array{messages: array<value-of<Src\Formatter\MessageSeverity>, list<string>>}}>
+     * @return Generator<string, array{Src\Formatter\MessageSeverity, array{messages: array<value-of<Src\Formatter\MessageSeverity>, list<string>>}}>
      */
     public static function logMessageAddsMessageDataProvider(): Generator
     {

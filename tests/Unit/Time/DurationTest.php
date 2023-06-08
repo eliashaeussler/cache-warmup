@@ -53,7 +53,7 @@ final class DurationTest extends Framework\TestCase
     }
 
     /**
-     * @return \Generator<string, array{float, string}>
+     * @return Generator<string, array{float, string}>
      */
     public static function formatReturnsFormattedDurationDataProvider(): Generator
     {
