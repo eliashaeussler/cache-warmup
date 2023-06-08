@@ -11,7 +11,7 @@
 /CODEOWNERS               export-ignore
 /composer.lock            export-ignore
 /CONTRIBUTING.md          export-ignore
-/phpstan.neon             export-ignore
+/phpstan.php              export-ignore
 /phpunit.xml              export-ignore
 /rector.php               export-ignore
 /renovate.json            export-ignore

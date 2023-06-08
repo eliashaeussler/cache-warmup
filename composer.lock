@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e7745f49db02e190ffff3e9ac80e8697",
+    "content-hash": "d3dcdee018ceed77405081c419c61e47",
     "packages": [
         {
             "name": "cuyz/valinor",
@@ -1917,16 +1917,16 @@
         },
         {
             "name": "eliashaeussler/phpstan-config",
-            "version": "1.1.0",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/phpstan-config.git",
-                "reference": "0028c7b29734623a5e3e1bdfe1b01d3a80b238b7"
+                "reference": "51905f10073f6a2ad14c102e8cb1ba65c189383f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/phpstan-config/zipball/0028c7b29734623a5e3e1bdfe1b01d3a80b238b7",
-                "reference": "0028c7b29734623a5e3e1bdfe1b01d3a80b238b7",
+                "url": "https://api.github.com/repos/eliashaeussler/phpstan-config/zipball/51905f10073f6a2ad14c102e8cb1ba65c189383f",
+                "reference": "51905f10073f6a2ad14c102e8cb1ba65c189383f",
                 "shasum": ""
             },
             "require": {
@@ -1970,9 +1970,9 @@
             "description": "My personal configuration for PHPStan",
             "support": {
                 "issues": "https://github.com/eliashaeussler/phpstan-config/issues",
-                "source": "https://github.com/eliashaeussler/phpstan-config/tree/1.1.0"
+                "source": "https://github.com/eliashaeussler/phpstan-config/tree/2.0.0"
             },
-            "time": "2023-05-27T15:05:05+00:00"
+            "time": "2023-05-28T19:20:15+00:00"
         },
         {
             "name": "eliashaeussler/rector-config",
