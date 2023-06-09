@@ -33,6 +33,11 @@ use EliasHaeussler\CacheWarmup\Sitemap;
  */
 final class SortByChangeFrequencyStrategy extends SortingStrategy
 {
+    public static function getName(): string
+    {
+        return 'sort-by-changefreq';
+    }
+
     protected function sortUrls(Sitemap\Url $a, Sitemap\Url $b): int
     {
         return $this->mapChangeFrequency($a->getChangeFrequency())

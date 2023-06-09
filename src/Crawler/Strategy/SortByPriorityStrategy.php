@@ -33,6 +33,11 @@ use EliasHaeussler\CacheWarmup\Sitemap;
  */
 final class SortByPriorityStrategy extends SortingStrategy
 {
+    public static function getName(): string
+    {
+        return 'sort-by-priority';
+    }
+
     protected function sortUrls(Sitemap\Url $a, Sitemap\Url $b): int
     {
         return ($a->getPriority() <=> $b->getPriority()) * -1;
