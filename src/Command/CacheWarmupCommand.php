@@ -70,6 +70,9 @@ final class CacheWarmupCommand extends Console\Command\Command
         $configurableCrawlerInterface = Crawler\ConfigurableCrawlerInterface::class;
         $textFormatter = Formatter\TextFormatter::getType();
         $jsonFormatter = Formatter\JsonFormatter::getType();
+        $sortByChangeFrequencyStrategy = Crawler\Strategy\SortByChangeFrequencyStrategy::getName();
+        $sortByLastModificationDateStrategy = Crawler\Strategy\SortByLastModificationDateStrategy::getName();
+        $sortByPriorityStrategy = Crawler\Strategy\SortByPriorityStrategy::getName();
 
         $this->setDescription('Warms up caches of URLs provided by a given set of XML sitemaps.');
         $this->setHelp(<<<HELP
@@ -143,13 +146,13 @@ it is possible to pass a JSON-encoded array of crawler options by using the <com
 URLs can be crawled using a specific crawling strategy, e.g. by sorting them by a specific property.
 For this, use the <comment>--strategy</comment> option together with a predefined value:
 
-   <comment>%command.full_name% --strategy sort-by-priority</comment>
+   <comment>%command.full_name% --strategy {$sortByPriorityStrategy}</comment>
 
 The following strategies are currently available:
 
-   * <comment>sort-by-changefreq</comment>
-   * <comment>sort-by-lastmod</comment>
-   * <comment>sort-by-priority</comment>
+   * <comment>{$sortByChangeFrequencyStrategy}</comment>
+   * <comment>{$sortByLastModificationDateStrategy}</comment>
+   * <comment>{$sortByPriorityStrategy}</comment>
 
 <info>Allow failures</info>
 <info>==============</info>
@@ -372,9 +375,9 @@ HELP);
 
         // Initialize crawling strategy
         $strategy = match ($input->getOption('strategy')) {
-            'sort-by-changefreq' => new Crawler\Strategy\SortByChangeFrequencyStrategy(),
-            'sort-by-lastmod' => new Crawler\Strategy\SortByLastModificationDateStrategy(),
-            'sort-by-priority' => new Crawler\Strategy\SortByPriorityStrategy(),
+            Crawler\Strategy\SortByChangeFrequencyStrategy::getName() => new Crawler\Strategy\SortByChangeFrequencyStrategy(),
+            Crawler\Strategy\SortByLastModificationDateStrategy::getName() => new Crawler\Strategy\SortByLastModificationDateStrategy(),
+            Crawler\Strategy\SortByPriorityStrategy::getName() => new Crawler\Strategy\SortByPriorityStrategy(),
             null => null,
             default => throw new Console\Exception\RuntimeException('The given crawling strategy is invalid.', 1677618007),
         };

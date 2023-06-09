@@ -39,4 +39,9 @@ interface CrawlingStrategy
      * @return list<Sitemap\Url>
      */
     public function prepareUrls(array $urls): array;
+
+    /**
+     * @return non-empty-string
+     */
+    public static function getName(): string;
 }

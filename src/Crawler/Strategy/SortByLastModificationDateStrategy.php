@@ -33,6 +33,11 @@ use EliasHaeussler\CacheWarmup\Sitemap;
  */
 final class SortByLastModificationDateStrategy extends SortingStrategy
 {
+    public static function getName(): string
+    {
+        return 'sort-by-lastmod';
+    }
+
     protected function sortUrls(Sitemap\Url $a, Sitemap\Url $b): int
     {
         return ($this->resolveLastModificationDate($a) <=> $this->resolveLastModificationDate($b)) * -1;
