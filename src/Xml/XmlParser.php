@@ -85,10 +85,20 @@ final class XmlParser
 
         // Map XML source
         try {
-            return $this->mapper->map(Result\ParserResult::class, $source);
+            $result = $this->mapper->map(Result\ParserResult::class, $source);
         } catch (Valinor\Mapper\MappingError $error) {
             throw Exception\InvalidSitemapException::create($sitemap, $error);
         }
+
+        // Apply origin to sitemaps and urls
+        foreach ($result->getSitemaps() as $parsedSitemap) {
+            $parsedSitemap->setOrigin($sitemap);
+        }
+        foreach ($result->getUrls() as $parsedUrl) {
+            $parsedUrl->setOrigin($sitemap);
+        }
+
+        return $result;
     }
 
     private function createMapper(): Valinor\Mapper\TreeMapper

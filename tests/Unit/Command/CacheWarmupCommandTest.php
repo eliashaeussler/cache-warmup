@@ -30,6 +30,7 @@ use EliasHaeussler\CacheWarmup\Result;
 use EliasHaeussler\CacheWarmup\Sitemap;
 use EliasHaeussler\CacheWarmup\Tests;
 use Generator;
+use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
 use Symfony\Component\Console;
 
@@ -306,6 +307,8 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function executeUsesCustomCrawler(): void
     {
+        $origin = new Sitemap\Sitemap(new Psr7\Uri('https://www.example.com/sitemap.xml'));
+
         $this->mockSitemapRequest('valid_sitemap_3');
 
         $this->commandTester->execute([
@@ -316,8 +319,8 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         ]);
 
         $expected = [
-            new Sitemap\Url('https://www.example.com/'),
-            new Sitemap\Url('https://www.example.com/foo'),
+            new Sitemap\Url('https://www.example.com/', origin: $origin),
+            new Sitemap\Url('https://www.example.com/foo', origin: $origin),
         ];
 
         self::assertEquals($expected, Tests\Unit\Crawler\DummyCrawler::$crawledUrls);

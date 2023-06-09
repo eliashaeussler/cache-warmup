@@ -64,6 +64,7 @@ final class XmlParserTest extends Framework\TestCase
             new Sitemap\Sitemap(
                 uri: new Psr7\Uri('https://www.example.org/sitemap_en.xml'),
                 lastModificationDate: new DateTimeImmutable('2022-08-17T13:18:06+02:00'),
+                origin: $this->sitemap,
             ),
         ];
 
@@ -84,18 +85,21 @@ final class XmlParserTest extends Framework\TestCase
                 priority: 0.8,
                 lastModificationDate: new DateTimeImmutable('2022-05-02T00:00:00+00:00'),
                 changeFrequency: Sitemap\ChangeFrequency::Yearly,
+                origin: $this->sitemap,
             ),
             new Sitemap\Url(
                 uri: 'https://www.example.org/foo',
                 priority: 0.5,
                 lastModificationDate: new DateTimeImmutable('2021-06-07T20:01:25+02:00'),
                 changeFrequency: Sitemap\ChangeFrequency::Monthly,
+                origin: $this->sitemap,
             ),
             new Sitemap\Url(
                 uri: 'https://www.example.org/baz',
                 priority: 0.5,
                 lastModificationDate: new DateTimeImmutable('2021-05-28T11:54:00+02:00'),
                 changeFrequency: Sitemap\ChangeFrequency::Hourly,
+                origin: $this->sitemap,
             ),
         ];
 
@@ -111,8 +115,8 @@ final class XmlParserTest extends Framework\TestCase
         $result = $this->subject->parse($this->sitemap);
 
         $expected = [
-            new Sitemap\Url('https://www.example.com/'),
-            new Sitemap\Url('https://www.example.com/foo'),
+            new Sitemap\Url('https://www.example.com/', origin: $this->sitemap),
+            new Sitemap\Url('https://www.example.com/foo', origin: $this->sitemap),
         ];
 
         self::assertEquals($expected, $result->getUrls());
