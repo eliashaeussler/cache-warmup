@@ -46,6 +46,7 @@ class Url extends Psr7\Uri
         protected float $priority = 0.5,
         protected ?DateTimeInterface $lastModificationDate = null,
         protected ?ChangeFrequency $changeFrequency = null,
+        protected ?Sitemap $origin = null,
     ) {
         parent::__construct($uri);
         $this->validateUri();
@@ -69,5 +70,22 @@ class Url extends Psr7\Uri
     public function getChangeFrequency(): ?ChangeFrequency
     {
         return $this->changeFrequency;
+    }
+
+    public function getOrigin(): ?Sitemap
+    {
+        return $this->origin;
+    }
+
+    public function getRootOrigin(): ?Sitemap
+    {
+        return $this->origin?->getRootOrigin() ?? $this->origin;
+    }
+
+    public function setOrigin(Sitemap $origin): self
+    {
+        $this->origin = $origin;
+
+        return $this;
     }
 }

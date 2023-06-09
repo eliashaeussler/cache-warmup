@@ -44,6 +44,7 @@ class Sitemap implements Stringable
     public function __construct(
         protected Message\UriInterface $uri,
         protected ?DateTimeInterface $lastModificationDate = null,
+        protected ?self $origin = null,
     ) {
         $this->validateUri();
     }
@@ -56,6 +57,23 @@ class Sitemap implements Stringable
     public function getLastModificationDate(): ?DateTimeInterface
     {
         return $this->lastModificationDate;
+    }
+
+    public function getOrigin(): ?self
+    {
+        return $this->origin;
+    }
+
+    public function getRootOrigin(): ?self
+    {
+        return $this->origin?->getRootOrigin() ?? $this->origin;
+    }
+
+    public function setOrigin(self $origin): self
+    {
+        $this->origin = $origin;
+
+        return $this;
     }
 
     public function __toString(): string

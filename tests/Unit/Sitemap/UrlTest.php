@@ -26,6 +26,7 @@ namespace EliasHaeussler\CacheWarmup\Tests\Unit\Sitemap;
 use DateTimeImmutable;
 use EliasHaeussler\CacheWarmup\Exception;
 use EliasHaeussler\CacheWarmup\Sitemap;
+use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
 
 /**
@@ -88,5 +89,25 @@ final class UrlTest extends Framework\TestCase
         $subject = new Sitemap\Url('https://foo.baz', changeFrequency: $changeFrequency);
 
         self::assertSame($changeFrequency, $subject->getChangeFrequency());
+    }
+
+    #[Framework\Attributes\Test]
+    public function constructorAssignsOriginCorrectly(): void
+    {
+        $origin = new Sitemap\Sitemap(new Psr7\Uri('https://baz.foo'));
+        $subject = new Sitemap\Url('https://foo.baz', origin: $origin);
+
+        self::assertSame($origin, $subject->getOrigin());
+    }
+
+    #[Framework\Attributes\Test]
+    public function getRootOriginReturnsRootOrigin(): void
+    {
+        $origin = new Sitemap\Sitemap(new Psr7\Uri('https://baz.foo'));
+        $origin2 = new Sitemap\Sitemap(new Psr7\Uri('https://baz.foo'), origin: $origin);
+        $origin3 = new Sitemap\Sitemap(new Psr7\Uri('https://baz.foo'), origin: $origin2);
+        $subject = new Sitemap\Url('https://foo.baz', origin: $origin3);
+
+        self::assertSame($origin, $subject->getRootOrigin());
     }
 }

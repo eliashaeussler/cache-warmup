@@ -139,9 +139,11 @@ final class CacheWarmerTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function addSitemapsIgnoresSitemapsIfLimitWasExceeded(): void
     {
+        $origin = new Sitemap\Sitemap(new Psr7\Uri('https://www.example.org/sitemap.xml'));
+
         $subject = new CacheWarmer(limit: 1, client: $this->client);
         $expected = [
-            new Sitemap\Url('https://www.example.org/'),
+            new Sitemap\Url('https://www.example.org/', origin: $origin),
         ];
 
         $this->mockSitemapRequest('valid_sitemap_2');
@@ -158,6 +160,8 @@ final class CacheWarmerTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function addSitemapsIgnoresSitemapsIfExcludePatternMatches(): void
     {
+        $origin = new Sitemap\Sitemap(new Psr7\Uri('https://www.example.org/sitemap.xml'));
+
         $subject = new CacheWarmer(client: $this->client, excludePatterns: ['*/foo', '#www\\.example\\.com#']);
 
         $this->mockSitemapRequest('valid_sitemap_2');
@@ -173,7 +177,7 @@ final class CacheWarmerTest extends Framework\TestCase
         );
         self::assertEquals(
             [
-                new Sitemap\Url('https://www.example.org/foo'),
+                new Sitemap\Url('https://www.example.org/foo', origin: $origin),
             ],
             $subject->getExcludedUrls(),
         );
@@ -185,8 +189,8 @@ final class CacheWarmerTest extends Framework\TestCase
         );
         self::assertEquals(
             [
-                new Sitemap\Url('https://www.example.org/'),
-                new Sitemap\Url('https://www.example.org/baz'),
+                new Sitemap\Url('https://www.example.org/', origin: $origin),
+                new Sitemap\Url('https://www.example.org/baz', origin: $origin),
             ],
             $subject->getUrls(),
         );
@@ -267,10 +271,19 @@ final class CacheWarmerTest extends Framework\TestCase
     }
 
     /**
-     * @return Generator<string, array{0: list<string|Sitemap\Sitemap>|string|Sitemap\Sitemap, 1: list<Sitemap\Sitemap>, 2: list<Sitemap\Url>, 3?: list<string>}>
+     * @return Generator<string, array{
+     *     0: list<string|Sitemap\Sitemap>|string|Sitemap\Sitemap,
+     *     1: list<Sitemap\Sitemap>,
+     *     2: list<Sitemap\Url>,
+     *     3?: list<string>,
+     * }>
      */
     public static function addSitemapsAddsAndParsesGivenSitemapsDataProvider(): Generator
     {
+        $origin = new Sitemap\Sitemap(new Psr7\Uri('https://www.example.org/sitemap.xml'));
+        $origin2 = new Sitemap\Sitemap(new Psr7\Uri('https://www.example.com/sitemap.xml'));
+        $origin3 = new Sitemap\Sitemap(new Psr7\Uri('https://www.example.org/sitemap_en.xml'), origin: $origin2);
+
         yield 'empty sitemaps' => [
             [],
             [],
@@ -282,9 +295,9 @@ final class CacheWarmerTest extends Framework\TestCase
                 new Sitemap\Sitemap(new Psr7\Uri('https://www.example.org/sitemap.xml')),
             ],
             [
-                new Sitemap\Url('https://www.example.org/'),
-                new Sitemap\Url('https://www.example.org/foo'),
-                new Sitemap\Url('https://www.example.org/baz'),
+                new Sitemap\Url('https://www.example.org/', origin: $origin),
+                new Sitemap\Url('https://www.example.org/foo', origin: $origin),
+                new Sitemap\Url('https://www.example.org/baz', origin: $origin),
             ],
             [
                 'valid_sitemap_2',
@@ -296,9 +309,9 @@ final class CacheWarmerTest extends Framework\TestCase
                 new Sitemap\Sitemap(new Psr7\Uri('https://www.example.org/sitemap.xml')),
             ],
             [
-                new Sitemap\Url('https://www.example.org/'),
-                new Sitemap\Url('https://www.example.org/foo'),
-                new Sitemap\Url('https://www.example.org/baz'),
+                new Sitemap\Url('https://www.example.org/', origin: $origin),
+                new Sitemap\Url('https://www.example.org/foo', origin: $origin),
+                new Sitemap\Url('https://www.example.org/baz', origin: $origin),
             ],
             [
                 'valid_sitemap_2',
@@ -314,11 +327,11 @@ final class CacheWarmerTest extends Framework\TestCase
                 new Sitemap\Sitemap(self::getExpectedUri('https://www.example.com/sitemap.xml')),
             ],
             [
-                new Sitemap\Url('https://www.example.org/'),
-                new Sitemap\Url('https://www.example.org/foo'),
-                new Sitemap\Url('https://www.example.org/baz'),
-                new Sitemap\Url('https://www.example.com/'),
-                new Sitemap\Url('https://www.example.com/foo'),
+                new Sitemap\Url('https://www.example.org/', origin: $origin),
+                new Sitemap\Url('https://www.example.org/foo', origin: $origin),
+                new Sitemap\Url('https://www.example.org/baz', origin: $origin),
+                new Sitemap\Url('https://www.example.com/', origin: $origin2),
+                new Sitemap\Url('https://www.example.com/foo', origin: $origin2),
             ],
             [
                 'valid_sitemap_2',
@@ -335,11 +348,11 @@ final class CacheWarmerTest extends Framework\TestCase
                 new Sitemap\Sitemap(self::getExpectedUri('https://www.example.com/sitemap.xml')),
             ],
             [
-                new Sitemap\Url('https://www.example.org/'),
-                new Sitemap\Url('https://www.example.org/foo'),
-                new Sitemap\Url('https://www.example.org/baz'),
-                new Sitemap\Url('https://www.example.com/'),
-                new Sitemap\Url('https://www.example.com/foo'),
+                new Sitemap\Url('https://www.example.org/', origin: $origin),
+                new Sitemap\Url('https://www.example.org/foo', origin: $origin),
+                new Sitemap\Url('https://www.example.org/baz', origin: $origin),
+                new Sitemap\Url('https://www.example.com/', origin: $origin2),
+                new Sitemap\Url('https://www.example.com/foo', origin: $origin2),
             ],
             [
                 'valid_sitemap_2',
@@ -354,14 +367,14 @@ final class CacheWarmerTest extends Framework\TestCase
             [
                 new Sitemap\Sitemap(self::getExpectedUri('https://www.example.org/sitemap.xml')),
                 new Sitemap\Sitemap(self::getExpectedUri('https://www.example.com/sitemap.xml')),
-                new Sitemap\Sitemap(self::getExpectedUri('https://www.example.org/sitemap_en.xml')),
+                new Sitemap\Sitemap(self::getExpectedUri('https://www.example.org/sitemap_en.xml'), origin: $origin2),
             ],
             [
-                new Sitemap\Url('https://www.example.org/'),
-                new Sitemap\Url('https://www.example.org/foo'),
-                new Sitemap\Url('https://www.example.org/baz'),
-                new Sitemap\Url('https://www.example.com/'),
-                new Sitemap\Url('https://www.example.com/foo'),
+                new Sitemap\Url('https://www.example.org/', origin: $origin),
+                new Sitemap\Url('https://www.example.org/foo', origin: $origin),
+                new Sitemap\Url('https://www.example.org/baz', origin: $origin),
+                new Sitemap\Url('https://www.example.com/', origin: $origin3),
+                new Sitemap\Url('https://www.example.com/foo', origin: $origin3),
             ],
             [
                 'valid_sitemap_2',
