@@ -34,7 +34,7 @@ use PHPUnit\Framework;
  */
 final class AbstractConfigurableCrawlerTest extends Framework\TestCase
 {
-    private DummyConfigurableCrawler$subject;
+    private DummyConfigurableCrawler $subject;
 
     protected function setUp(): void
     {
