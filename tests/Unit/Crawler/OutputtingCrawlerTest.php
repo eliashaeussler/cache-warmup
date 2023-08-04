@@ -209,6 +209,7 @@ final class OutputtingCrawlerTest extends Framework\TestCase
 
         $output = $this->output->fetch();
 
+        self::assertNotEmpty($output);
         self::assertMatchesRegularExpression('#^\s*1/2 \S+\s+\d+% -- no failures$#m', $output);
         self::assertMatchesRegularExpression('#^\s*2/2 \S+\s+\d+% -- 1 failure$#m', $output);
     }
