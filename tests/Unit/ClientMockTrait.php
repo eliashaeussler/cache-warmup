@@ -62,6 +62,9 @@ trait ClientMockTrait
         return new Client(['handler' => HandlerStack::create($this->mockHandler)]);
     }
 
+    /**
+     * @param non-empty-string $file
+     */
     protected function openStream(string $file): Psr7\Stream
     {
         if (isset($this->streams[$file])) {

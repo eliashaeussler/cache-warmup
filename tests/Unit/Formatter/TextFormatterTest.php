@@ -77,6 +77,7 @@ final class TextFormatterTest extends Framework\TestCase
 
         $output = $this->output->fetch();
 
+        self::assertNotEmpty($output);
         self::assertStringContainsString('Parsed sitemaps', $output);
         self::assertStringContainsString('DONE  https://www.example.com', $output);
         self::assertStringNotContainsString('DONE  https://www.example.com/foo', $output);
@@ -99,6 +100,7 @@ final class TextFormatterTest extends Framework\TestCase
 
         $output = $this->output->fetch();
 
+        self::assertNotEmpty($output);
         self::assertStringContainsString('Parsed URLs', $output);
         self::assertStringContainsString('DONE  https://www.example.com', $output);
     }
@@ -115,6 +117,7 @@ final class TextFormatterTest extends Framework\TestCase
 
         $output = $this->output->fetch();
 
+        self::assertNotEmpty($output);
         self::assertStringContainsString('FAIL  https://www.example.com', $output);
     }
 
@@ -133,6 +136,7 @@ final class TextFormatterTest extends Framework\TestCase
 
         $output = $this->output->fetch();
 
+        self::assertNotEmpty($output);
         self::assertStringContainsString('SKIP  https://www.example.com', $output);
     }
 
@@ -146,7 +150,7 @@ final class TextFormatterTest extends Framework\TestCase
 
         $this->subject->formatParserResult($successful, $failed, $excluded, $duration);
 
-        self::assertStringNotContainsString('Parsing finished in 0.5s', $this->output->fetch());
+        self::assertEmpty($this->output->fetch());
     }
 
     #[Framework\Attributes\Test]
@@ -161,7 +165,10 @@ final class TextFormatterTest extends Framework\TestCase
 
         $this->subject->formatParserResult($successful, $failed, $excluded, $duration);
 
-        self::assertStringContainsString('Parsing finished in 0.5s', $this->output->fetch());
+        $output = $this->output->fetch();
+
+        self::assertNotEmpty($output);
+        self::assertStringContainsString('Parsing finished in 0.5s', $output);
     }
 
     #[Framework\Attributes\Test]
@@ -171,7 +178,7 @@ final class TextFormatterTest extends Framework\TestCase
 
         $this->subject->formatCacheWarmupResult($result);
 
-        self::assertSame('', $this->output->fetch());
+        self::assertEmpty($this->output->fetch());
     }
 
     #[Framework\Attributes\Test]
@@ -185,6 +192,7 @@ final class TextFormatterTest extends Framework\TestCase
 
         $output = $this->output->fetch();
 
+        self::assertNotEmpty($output);
         self::assertStringNotContainsString('The following URLs were successfully crawled:', $output);
         self::assertStringNotContainsString('* https://www.example.com', $output);
     }
@@ -202,6 +210,7 @@ final class TextFormatterTest extends Framework\TestCase
 
         $output = $this->output->fetch();
 
+        self::assertNotEmpty($output);
         self::assertStringContainsString('DONE  https://www.example.com', $output);
     }
 
@@ -216,6 +225,7 @@ final class TextFormatterTest extends Framework\TestCase
 
         $output = $this->output->fetch();
 
+        self::assertNotEmpty($output);
         self::assertStringNotContainsString('https://www.example.com', $output);
     }
 
@@ -232,6 +242,7 @@ final class TextFormatterTest extends Framework\TestCase
 
         $output = $this->output->fetch();
 
+        self::assertNotEmpty($output);
         self::assertStringContainsString('FAIL  https://www.example.com', $output);
     }
 
@@ -244,7 +255,10 @@ final class TextFormatterTest extends Framework\TestCase
 
         $this->subject->formatCacheWarmupResult($result);
 
-        self::assertStringContainsString('Successfully warmed up caches for 1 URL.', $this->output->fetch());
+        $output = $this->output->fetch();
+
+        self::assertNotEmpty($output);
+        self::assertStringContainsString('Successfully warmed up caches for 1 URL.', $output);
     }
 
     #[Framework\Attributes\Test]
@@ -256,7 +270,10 @@ final class TextFormatterTest extends Framework\TestCase
 
         $this->subject->formatCacheWarmupResult($result);
 
-        self::assertStringContainsString('Failed to warm up caches for 1 URL.', $this->output->fetch());
+        $output = $this->output->fetch();
+
+        self::assertNotEmpty($output);
+        self::assertStringContainsString('Failed to warm up caches for 1 URL.', $output);
     }
 
     #[Framework\Attributes\Test]
@@ -267,9 +284,15 @@ final class TextFormatterTest extends Framework\TestCase
 
         $this->subject->formatCacheWarmupResult($result, $duration);
 
-        self::assertStringContainsString('Crawling finished in 0.5s', $this->output->fetch());
+        $output = $this->output->fetch();
+
+        self::assertNotEmpty($output);
+        self::assertStringContainsString('Crawling finished in 0.5s', $output);
     }
 
+    /**
+     * @param non-empty-string $expected
+     */
     #[Framework\Attributes\Test]
     #[Framework\Attributes\DataProvider('logMessagePrintsGivenMessageWithGivenSeverityDataProvider')]
     public function logMessagePrintsGivenMessageWithGivenSeverity(
@@ -278,11 +301,14 @@ final class TextFormatterTest extends Framework\TestCase
     ): void {
         $this->subject->logMessage('foo', $severity);
 
-        self::assertStringContainsString($expected, $this->output->fetch());
+        $output = $this->output->fetch();
+
+        self::assertNotEmpty($output);
+        self::assertStringContainsString($expected, $output);
     }
 
     /**
-     * @return Generator<string, array{Src\Formatter\MessageSeverity, string}>
+     * @return Generator<string, array{Src\Formatter\MessageSeverity, non-empty-string}>
      */
     public static function logMessagePrintsGivenMessageWithGivenSeverityDataProvider(): Generator
     {
