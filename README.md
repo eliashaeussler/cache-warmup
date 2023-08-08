@@ -23,6 +23,7 @@ It is even possible to write custom crawlers that take care of cache warmup.
 
 * Warm up caches of URLs located in XML sitemaps
 * Console command and PHP API for cache warmup
+* Support for sitemap indexes
 * Exclusion patterns for sitemaps and URLs
 * Various crawling strategies
 * Support for gzipped XML sitemaps
