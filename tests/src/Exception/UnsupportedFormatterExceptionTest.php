@@ -21,20 +21,26 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use EliasHaeussler\PHPStanConfig;
+namespace EliasHaeussler\CacheWarmup\Tests\Exception;
 
-$symfonySet = PHPStanConfig\Set\SymfonySet::create()
-    ->withConsoleApplicationLoader('tests/build/console-application.php')
-;
+use EliasHaeussler\CacheWarmup as Src;
+use PHPUnit\Framework;
 
-return PHPStanConfig\Config\Config::create(__DIR__)
-    ->in(
-        'bin/cache-warmup',
-        'src',
-        'tests',
-    )
-    ->withBleedingEdge()
-    ->maxLevel()
-    ->withSets($symfonySet)
-    ->toArray()
-;
+/**
+ * UnsupportedFormatterExceptionTest.
+ *
+ * @author Elias Häußler <elias@haeussler.dev>
+ * @license GPL-3.0-or-later
+ */
+#[Framework\Attributes\CoversClass(Src\Exception\UnsupportedFormatterException::class)]
+final class UnsupportedFormatterExceptionTest extends Framework\TestCase
+{
+    #[Framework\Attributes\Test]
+    public function createReturnsExceptionForGivenType(): void
+    {
+        $actual = Src\Exception\UnsupportedFormatterException::create('foo');
+
+        self::assertSame(1676814093, $actual->getCode());
+        self::assertSame('The formatter "foo" is not supported.', $actual->getMessage());
+    }
+}

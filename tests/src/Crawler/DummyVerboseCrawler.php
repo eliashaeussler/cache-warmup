@@ -21,20 +21,25 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use EliasHaeussler\PHPStanConfig;
+namespace EliasHaeussler\CacheWarmup\Tests\Crawler;
 
-$symfonySet = PHPStanConfig\Set\SymfonySet::create()
-    ->withConsoleApplicationLoader('tests/build/console-application.php')
-;
+use EliasHaeussler\CacheWarmup\Crawler;
+use Symfony\Component\Console;
 
-return PHPStanConfig\Config\Config::create(__DIR__)
-    ->in(
-        'bin/cache-warmup',
-        'src',
-        'tests',
-    )
-    ->withBleedingEdge()
-    ->maxLevel()
-    ->withSets($symfonySet)
-    ->toArray()
-;
+/**
+ * DummyVerboseCrawler.
+ *
+ * @author Elias Häußler <elias@haeussler.dev>
+ * @license GPL-3.0-or-later
+ *
+ * @internal
+ */
+final class DummyVerboseCrawler extends DummyCrawler implements Crawler\VerboseCrawlerInterface
+{
+    public static ?Console\Output\OutputInterface $output = null;
+
+    public function setOutput(Console\Output\OutputInterface $output): void
+    {
+        self::$output = $output;
+    }
+}

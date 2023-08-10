@@ -21,20 +21,38 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use EliasHaeussler\PHPStanConfig;
+namespace EliasHaeussler\CacheWarmup\Tests\Crawler;
 
-$symfonySet = PHPStanConfig\Set\SymfonySet::create()
-    ->withConsoleApplicationLoader('tests/build/console-application.php')
-;
+use EliasHaeussler\CacheWarmup\Crawler;
+use EliasHaeussler\CacheWarmup\Result;
 
-return PHPStanConfig\Config\Config::create(__DIR__)
-    ->in(
-        'bin/cache-warmup',
-        'src',
-        'tests',
-    )
-    ->withBleedingEdge()
-    ->maxLevel()
-    ->withSets($symfonySet)
-    ->toArray()
-;
+/**
+ * DummyConfigurableCrawler.
+ *
+ * @author Elias Häußler <elias@haeussler.dev>
+ * @license GPL-3.0-or-later
+ *
+ * @internal
+ *
+ * @extends Crawler\AbstractConfigurableCrawler<array{foo: string, bar: int}>
+ */
+final class DummyConfigurableCrawler extends Crawler\AbstractConfigurableCrawler
+{
+    protected static array $defaultOptions = [
+        'foo' => 'hello world',
+        'bar' => 42,
+    ];
+
+    public function crawl(array $urls): Result\CacheWarmupResult
+    {
+        return new Result\CacheWarmupResult();
+    }
+
+    /**
+     * @return array{foo: string, bar: int}
+     */
+    public function getOptions(): array
+    {
+        return $this->options;
+    }
+}

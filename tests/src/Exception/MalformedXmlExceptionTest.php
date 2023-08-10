@@ -21,20 +21,26 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use EliasHaeussler\PHPStanConfig;
+namespace EliasHaeussler\CacheWarmup\Tests\Exception;
 
-$symfonySet = PHPStanConfig\Set\SymfonySet::create()
-    ->withConsoleApplicationLoader('tests/build/console-application.php')
-;
+use EliasHaeussler\CacheWarmup as Src;
+use PHPUnit\Framework;
 
-return PHPStanConfig\Config\Config::create(__DIR__)
-    ->in(
-        'bin/cache-warmup',
-        'src',
-        'tests',
-    )
-    ->withBleedingEdge()
-    ->maxLevel()
-    ->withSets($symfonySet)
-    ->toArray()
-;
+/**
+ * MalformedXmlExceptionTest.
+ *
+ * @author Elias Häußler <elias@haeussler.dev>
+ * @license GPL-3.0-or-later
+ */
+#[Framework\Attributes\CoversClass(Src\Exception\MalformedXmlException::class)]
+final class MalformedXmlExceptionTest extends Framework\TestCase
+{
+    #[Framework\Attributes\Test]
+    public function createReturnsExceptionForGivenInputString(): void
+    {
+        $actual = Src\Exception\MalformedXmlException::create('foo', 'Invalid XML.');
+
+        self::assertSame(1670962571, $actual->getCode());
+        self::assertSame('The string "foo" does not contain valid XML: Invalid XML.', $actual->getMessage());
+    }
+}
