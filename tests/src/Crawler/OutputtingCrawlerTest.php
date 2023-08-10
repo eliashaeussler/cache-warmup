@@ -237,4 +237,25 @@ final class OutputtingCrawlerTest extends Framework\TestCase
         self::assertStringContainsString('DONE  https://www.example.org', $output);
         self::assertStringContainsString('FAIL  https://www.foo.baz', $output);
     }
+
+    #[Framework\Attributes\Test]
+    public function crawlLogsCrawlingResults(): void
+    {
+        $logger = new Tests\Log\DummyLogger();
+
+        $this->mockHandler->append(
+            new Psr7\Response(),
+            new Psr7\Response(404),
+        );
+
+        $uri1 = new Psr7\Uri('https://www.example.org');
+        $uri2 = new Psr7\Uri('https://www.foo.baz');
+
+        $this->subject->setLogger($logger);
+        $this->subject->setLogLevel(Src\Log\LogLevel::Info);
+        $this->subject->crawl([$uri1, $uri2]);
+
+        self::assertCount(1, $logger->log[Src\Log\LogLevel::Error->value]);
+        self::assertCount(1, $logger->log[Src\Log\LogLevel::Info->value]);
+    }
 }

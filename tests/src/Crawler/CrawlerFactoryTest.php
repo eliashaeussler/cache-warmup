@@ -37,12 +37,14 @@ use Symfony\Component\Console;
 final class CrawlerFactoryTest extends Framework\TestCase
 {
     private Console\Output\BufferedOutput $output;
+    private Src\Tests\Log\DummyLogger $logger;
     private Src\Crawler\CrawlerFactory $subject;
 
     protected function setUp(): void
     {
         $this->output = new Console\Output\BufferedOutput();
-        $this->subject = new Src\Crawler\CrawlerFactory($this->output);
+        $this->logger = new Src\Tests\Log\DummyLogger();
+        $this->subject = new Src\Crawler\CrawlerFactory($this->output, $this->logger);
     }
 
     #[Framework\Attributes\Test]
@@ -91,6 +93,19 @@ final class CrawlerFactoryTest extends Framework\TestCase
         self::assertSame($this->output, DummyVerboseCrawler::$output);
 
         DummyVerboseCrawler::$output = null;
+    }
+
+    #[Framework\Attributes\Test]
+    public function getReturnsLoggingCrawler(): void
+    {
+        $actual = $this->subject->get(DummyLoggingCrawler::class);
+
+        self::assertInstanceOf(DummyLoggingCrawler::class, $actual);
+        self::assertSame($this->logger, DummyLoggingCrawler::$logger);
+        self::assertSame(Src\Log\LogLevel::Error, DummyLoggingCrawler::$logLevel);
+
+        DummyLoggingCrawler::$logger = null;
+        DummyLoggingCrawler::$logLevel = null;
     }
 
     #[Framework\Attributes\Test]

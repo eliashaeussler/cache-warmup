@@ -21,21 +21,32 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use EliasHaeussler\PHPStanConfig;
+namespace EliasHaeussler\CacheWarmup\Tests\Crawler;
 
-$symfonySet = PHPStanConfig\Set\SymfonySet::create()
-    ->withConsoleApplicationLoader('tests/build/console-application.php')
-;
+use EliasHaeussler\CacheWarmup\Crawler;
+use EliasHaeussler\CacheWarmup\Log;
+use Psr\Log\LoggerInterface;
 
-return PHPStanConfig\Config\Config::create(__DIR__)
-    ->in(
-        'bin/cache-warmup',
-        'src',
-        'tests',
-    )
-    ->withBaseline()
-    ->withBleedingEdge()
-    ->maxLevel()
-    ->withSets($symfonySet)
-    ->toArray()
-;
+/**
+ * DummyLoggingCrawler.
+ *
+ * @author Elias Häußler <elias@haeussler.dev>
+ * @license GPL-3.0-or-later
+ *
+ * @internal
+ */
+final class DummyLoggingCrawler extends DummyCrawler implements Crawler\LoggingCrawlerInterface
+{
+    public static ?LoggerInterface $logger = null;
+    public static ?Log\LogLevel $logLevel = null;
+
+    public function setLogger(LoggerInterface $logger): void
+    {
+        self::$logger = $logger;
+    }
+
+    public function setLogLevel(Log\LogLevel $logLevel): void
+    {
+        self::$logLevel = $logLevel;
+    }
+}

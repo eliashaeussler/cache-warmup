@@ -24,7 +24,9 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Crawler;
 
 use EliasHaeussler\CacheWarmup\Exception;
+use EliasHaeussler\CacheWarmup\Log;
 use JsonException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console;
 
 use function class_exists;
@@ -42,6 +44,8 @@ final class CrawlerFactory
 {
     public function __construct(
         private readonly Console\Output\OutputInterface $output = new Console\Output\ConsoleOutput(),
+        private readonly ?LoggerInterface $logger = null,
+        private readonly Log\LogLevel $logLevel = Log\LogLevel::Error,
     ) {
     }
 
@@ -63,6 +67,11 @@ final class CrawlerFactory
 
         if ($crawler instanceof ConfigurableCrawlerInterface) {
             $crawler->setOptions($options);
+        }
+
+        if ($crawler instanceof LoggingCrawlerInterface && null !== $this->logger) {
+            $crawler->setLogger($this->logger);
+            $crawler->setLogLevel($this->logLevel);
         }
 
         return $crawler;
