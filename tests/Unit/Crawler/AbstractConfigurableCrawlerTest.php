@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler;
 
+use EliasHaeussler\CacheWarmup\Crawler;
 use EliasHaeussler\CacheWarmup\Exception;
 use PHPUnit\Framework;
 
@@ -32,6 +33,7 @@ use PHPUnit\Framework;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
+#[Framework\Attributes\CoversClass(Crawler\AbstractConfigurableCrawler::class)]
 final class AbstractConfigurableCrawlerTest extends Framework\TestCase
 {
     private DummyConfigurableCrawler $subject;

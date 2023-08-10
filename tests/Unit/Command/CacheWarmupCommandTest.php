@@ -42,6 +42,7 @@ use function implode;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
+#[Framework\Attributes\CoversClass(Command\CacheWarmupCommand::class)]
 final class CacheWarmupCommandTest extends Framework\TestCase
 {
     use Tests\Unit\ClientMockTrait;

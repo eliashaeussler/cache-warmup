@@ -33,6 +33,7 @@ use PHPUnit\Framework;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
+#[Framework\Attributes\CoversClass(Crawler\Strategy\SortByPriorityStrategy::class)]
 final class SortByPriorityStrategyTest extends Framework\TestCase
 {
     private Crawler\Strategy\SortByPriorityStrategy $subject;

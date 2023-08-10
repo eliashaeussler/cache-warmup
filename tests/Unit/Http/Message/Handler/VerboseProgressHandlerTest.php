@@ -35,6 +35,7 @@ use PHPUnit\Framework;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
+#[Framework\Attributes\CoversClass(Http\Message\Handler\VerboseProgressHandler::class)]
 final class VerboseProgressHandlerTest extends Framework\TestCase
 {
     private Tests\Unit\BufferedConsoleOutput $output;

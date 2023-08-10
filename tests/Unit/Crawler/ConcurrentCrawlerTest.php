@@ -37,6 +37,7 @@ use Psr\Http\Message;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
+#[Framework\Attributes\CoversClass(Crawler\ConcurrentCrawler::class)]
 final class ConcurrentCrawlerTest extends Framework\TestCase
 {
     use Tests\Unit\CacheWarmupResultProcessorTrait;

@@ -35,6 +35,7 @@ use function sleep;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
+#[Framework\Attributes\CoversClass(Time\TimeTracker::class)]
 final class TimeTrackerTest extends Framework\TestCase
 {
     private Time\TimeTracker $subject;

@@ -35,6 +35,7 @@ use function sprintf;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
+#[Framework\Attributes\CoversClass(Exception\InvalidCrawlerOptionException::class)]
 final class InvalidCrawlerOptionExceptionTest extends Framework\TestCase
 {
     #[Framework\Attributes\Test]

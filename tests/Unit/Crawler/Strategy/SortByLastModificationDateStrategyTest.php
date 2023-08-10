@@ -34,6 +34,7 @@ use PHPUnit\Framework;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
+#[Framework\Attributes\CoversClass(Crawler\Strategy\SortByLastModificationDateStrategy::class)]
 final class SortByLastModificationDateStrategyTest extends Framework\TestCase
 {
     private Crawler\Strategy\SortByLastModificationDateStrategy $subject;

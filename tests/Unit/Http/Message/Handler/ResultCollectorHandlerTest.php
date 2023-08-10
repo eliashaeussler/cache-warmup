@@ -35,6 +35,7 @@ use PHPUnit\Framework;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
+#[Framework\Attributes\CoversClass(Http\Message\Handler\ResultCollectorHandler::class)]
 final class ResultCollectorHandlerTest extends Framework\TestCase
 {
     private Http\Message\Handler\ResultCollectorHandler $subject;

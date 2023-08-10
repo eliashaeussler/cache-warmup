@@ -35,6 +35,7 @@ use Symfony\Component\Console;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
+#[Framework\Attributes\CoversClass(Http\Message\Handler\CompactProgressHandler::class)]
 final class CompactProgressHandlerTest extends Framework\TestCase
 {
     private Console\Output\BufferedOutput $output;
