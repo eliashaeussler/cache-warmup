@@ -65,4 +65,13 @@ final class CrawlingResultTest extends Framework\TestCase
         self::assertFalse($subject->isSuccessful());
         self::assertFalse($subject->is(Src\Result\CrawlingState::Successful));
     }
+
+    #[Framework\Attributes\Test]
+    public function stringRepresentationReturnsUri(): void
+    {
+        $uri = new Psr7\Uri('https://foo.baz');
+        $subject = Src\Result\CrawlingResult::createSuccessful($uri);
+
+        self::assertSame((string) $uri, (string) $subject);
+    }
 }

@@ -25,9 +25,12 @@ namespace EliasHaeussler\CacheWarmup\Tests\Http\Message;
 
 use EliasHaeussler\CacheWarmup as Src;
 use EliasHaeussler\CacheWarmup\Tests;
+use Exception;
 use GuzzleHttp\Psr7;
+use GuzzleHttp\RequestOptions;
 use PHPUnit\Framework;
 use Psr\Http\Message;
+use ReflectionObject;
 
 use function sort;
 
@@ -42,9 +45,16 @@ final class RequestPoolFactoryTest extends Framework\TestCase
 {
     use Tests\ClientMockTrait;
 
+    private Src\Http\Message\RequestPoolFactory $subject;
+
     protected function setUp(): void
     {
         $this->client = $this->createClient();
+        $this->subject = Src\Http\Message\RequestPoolFactory::create([
+            new Psr7\Request('GET', 'https://www.example.com/'),
+            new Psr7\Request('GET', 'https://www.example.com/baz'),
+            new Psr7\Request('GET', 'https://www.example.com/foo'),
+        ])->withClient($this->client);
     }
 
     #[Framework\Attributes\Test]
@@ -63,22 +73,84 @@ final class RequestPoolFactoryTest extends Framework\TestCase
             'https://www.example.com/foo',
         ];
 
-        $actual = Src\Http\Message\RequestPoolFactory::create([
-            new Psr7\Request('GET', 'https://www.example.com/'),
-            new Psr7\Request('GET', 'https://www.example.com/foo'),
-            new Psr7\Request('GET', 'https://www.example.com/baz'),
-        ])->withClient($this->client);
-
         $this->mockHandler->append(
             $response(...),
             $response(...),
             $response(...),
         );
 
-        $actual->createPool()->promise()->wait();
+        $this->subject->createPool()->promise()->wait();
 
         sort($visitedUrls);
 
         self::assertSame($expected, $visitedUrls);
+    }
+
+    #[Framework\Attributes\Test]
+    public function withClientClonesObjectAndAppliesGivenClient(): void
+    {
+        $this->mockHandler->append(new Psr7\Response());
+
+        $this->subject->createPool()->promise()->wait();
+
+        self::assertNotNull($this->mockHandler->getLastRequest());
+    }
+
+    #[Framework\Attributes\Test]
+    public function withConcurrencyClonesObjectAndAppliesGivenConcurrency(): void
+    {
+        $this->mockHandler->append(new Psr7\Response());
+
+        $actual = $this->subject->withConcurrency(123);
+
+        self::assertPropertyEquals($actual, 'concurrency', 123);
+    }
+
+    #[Framework\Attributes\Test]
+    public function withOptionsClonesObjectAndAppliesGivenOptions(): void
+    {
+        $this->mockHandler->append(
+            new Psr7\Response(),
+        );
+
+        $actual = $this->subject->withOptions([
+            RequestOptions::HEADERS => [
+                'X-Foo' => 'baz',
+            ],
+        ]);
+
+        $actual->createPool()->promise()->wait();
+
+        $lastRequest = $this->mockHandler->getLastRequest();
+
+        self::assertNotNull($lastRequest);
+        self::assertSame(['baz'], $lastRequest->getHeader('X-Foo'));
+    }
+
+    #[Framework\Attributes\Test]
+    public function withResponseHandlerClonesObjectAndAppliesGivenResponseHandler(): void
+    {
+        $handler = new Tests\Http\Message\Handler\DummyHandler();
+
+        $this->mockHandler->append(
+            new Psr7\Response(),
+            new Exception(),
+            new Psr7\Response(),
+        );
+
+        $actual = $this->subject->withResponseHandler($handler);
+
+        $actual->createPool()->promise()->wait();
+
+        self::assertCount(2, $handler->successful);
+        self::assertCount(1, $handler->failed);
+    }
+
+    private function assertPropertyEquals(object $object, string $property, mixed $expected): void
+    {
+        $reflectionObject = new ReflectionObject($object);
+        $reflectionProperty = $reflectionObject->getProperty($property);
+
+        self::assertEquals($expected, $reflectionProperty->getValue($object));
     }
 }

@@ -66,4 +66,24 @@ final class CacheWarmupResultTest extends Framework\TestCase
 
         self::assertSame([$result], $this->subject->getFailed());
     }
+
+    #[Framework\Attributes\Test]
+    public function isSuccessfulReturnsTrueIfNoFailedCrawlingResultsAreGiven(): void
+    {
+        $uri = new Psr7\Uri('https://www.example.com');
+
+        self::assertTrue($this->subject->isSuccessful());
+
+        $this->subject->addResult(
+            Src\Result\CrawlingResult::createSuccessful($uri),
+        );
+
+        self::assertTrue($this->subject->isSuccessful());
+
+        $this->subject->addResult(
+            Src\Result\CrawlingResult::createFailed($uri),
+        );
+
+        self::assertFalse($this->subject->isSuccessful());
+    }
 }

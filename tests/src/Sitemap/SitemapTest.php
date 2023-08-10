@@ -98,6 +98,20 @@ final class SitemapTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    public function setOriginAssignsOriginCorrectly(): void
+    {
+        $uri = new Psr7\Uri('https://foo.baz');
+        $origin = new Src\Sitemap\Sitemap(new Psr7\Uri('https://baz.foo'));
+        $subject = new Src\Sitemap\Sitemap($uri);
+
+        self::assertNull($subject->getOrigin());
+
+        $subject->setOrigin($origin);
+
+        self::assertSame($origin, $subject->getOrigin());
+    }
+
+    #[Framework\Attributes\Test]
     public function stringRepresentationReturnsUri(): void
     {
         $uri = new Psr7\Uri('https://foo.baz');
