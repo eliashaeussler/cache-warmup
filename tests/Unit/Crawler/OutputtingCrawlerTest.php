@@ -38,6 +38,7 @@ use Symfony\Component\Console;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
+#[Framework\Attributes\CoversClass(Crawler\OutputtingCrawler::class)]
 final class OutputtingCrawlerTest extends Framework\TestCase
 {
     use Tests\Unit\CacheWarmupResultProcessorTrait;

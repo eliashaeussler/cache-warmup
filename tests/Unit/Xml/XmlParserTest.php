@@ -39,6 +39,7 @@ use function implode;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
+#[Framework\Attributes\CoversClass(Xml\XmlParser::class)]
 final class XmlParserTest extends Framework\TestCase
 {
     use Tests\Unit\ClientMockTrait;

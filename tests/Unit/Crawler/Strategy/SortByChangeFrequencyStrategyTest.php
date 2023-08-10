@@ -33,6 +33,7 @@ use PHPUnit\Framework;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
+#[Framework\Attributes\CoversClass(Crawler\Strategy\SortByChangeFrequencyStrategy::class)]
 final class SortByChangeFrequencyStrategyTest extends Framework\TestCase
 {
     private Crawler\Strategy\SortByChangeFrequencyStrategy $subject;

@@ -37,6 +37,7 @@ use function iterator_to_array;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
+#[Framework\Attributes\CoversClass(Mapper\Source\XmlSource::class)]
 final class XmlSourceTest extends Framework\TestCase
 {
     #[Framework\Attributes\Test]

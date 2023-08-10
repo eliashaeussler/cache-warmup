@@ -34,6 +34,7 @@ use Symfony\Component\Console;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
+#[Framework\Attributes\CoversClass(Src\Formatter\FormatterFactory::class)]
 final class FormatterFactoryTest extends Framework\TestCase
 {
     private Console\Output\BufferedOutput $output;

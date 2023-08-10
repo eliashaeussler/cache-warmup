@@ -35,6 +35,7 @@ use Symfony\Component\Console;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
+#[Framework\Attributes\CoversClass(Src\Formatter\TextFormatter::class)]
 final class TextFormatterTest extends Framework\TestCase
 {
     private Console\Output\BufferedOutput $output;

@@ -32,6 +32,7 @@ use PHPUnit\Framework;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
+#[Framework\Attributes\CoversClass(Exception\UnsupportedFormatterException::class)]
 final class UnsupportedFormatterExceptionTest extends Framework\TestCase
 {
     #[Framework\Attributes\Test]

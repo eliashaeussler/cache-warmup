@@ -37,6 +37,7 @@ use function sort;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
+#[Framework\Attributes\CoversClass(Http\Message\RequestPoolFactory::class)]
 final class RequestPoolFactoryTest extends Framework\TestCase
 {
     use Tests\Unit\ClientMockTrait;

@@ -33,6 +33,7 @@ use PHPUnit\Framework;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
+#[Framework\Attributes\CoversClass(Result\CrawlingResult::class)]
 final class CrawlingResultTest extends Framework\TestCase
 {
     #[Framework\Attributes\Test]
