@@ -213,4 +213,28 @@ final class OutputtingCrawlerTest extends Framework\TestCase
         self::assertMatchesRegularExpression('#^\s*1/2 \S+\s+\d+% -- no failures$#m', $output);
         self::assertMatchesRegularExpression('#^\s*2/2 \S+\s+\d+% -- 1 failure$#m', $output);
     }
+
+    #[Framework\Attributes\Test]
+    public function crawlWritesCrawlingStateAsVerboseProgressBarToOutput(): void
+    {
+        $this->mockHandler->append(
+            new Psr7\Response(),
+            new Psr7\Response(404),
+        );
+
+        $output = new Tests\BufferedConsoleOutput();
+        $output->setVerbosity(Console\Output\OutputInterface::VERBOSITY_VERBOSE);
+
+        $uri1 = new Psr7\Uri('https://www.example.org');
+        $uri2 = new Psr7\Uri('https://www.foo.baz');
+
+        $this->subject->setOutput($output);
+        $this->subject->crawl([$uri1, $uri2]);
+
+        $output = $output->fetch();
+
+        self::assertNotEmpty($output);
+        self::assertStringContainsString('DONE  https://www.example.org', $output);
+        self::assertStringContainsString('FAIL  https://www.foo.baz', $output);
+    }
 }

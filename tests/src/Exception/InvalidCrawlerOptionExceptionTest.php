@@ -80,4 +80,13 @@ final class InvalidCrawlerOptionExceptionTest extends Framework\TestCase
             $actual->getMessage(),
         );
     }
+
+    #[Framework\Attributes\Test]
+    public function forInvalidTypeReturnsExceptionForGivenOptions(): void
+    {
+        $actual = Src\Exception\InvalidCrawlerOptionException::forInvalidType(null);
+
+        self::assertSame(1677424305, $actual->getCode());
+        self::assertSame('The crawler options must be an associative array, null given.', $actual->getMessage());
+    }
 }

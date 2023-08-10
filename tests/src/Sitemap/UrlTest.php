@@ -110,4 +110,17 @@ final class UrlTest extends Framework\TestCase
 
         self::assertSame($origin, $subject->getRootOrigin());
     }
+
+    #[Framework\Attributes\Test]
+    public function setOriginAssignsOriginCorrectly(): void
+    {
+        $origin = new Src\Sitemap\Sitemap(new Psr7\Uri('https://baz.foo'));
+        $subject = new Src\Sitemap\Url('https://foo.baz');
+
+        self::assertNull($subject->getOrigin());
+
+        $subject->setOrigin($origin);
+
+        self::assertSame($origin, $subject->getOrigin());
+    }
 }
