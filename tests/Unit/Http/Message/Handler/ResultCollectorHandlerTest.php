@@ -23,8 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Http\Message\Handler;
 
-use EliasHaeussler\CacheWarmup\Http;
-use EliasHaeussler\CacheWarmup\Result;
+use EliasHaeussler\CacheWarmup as Src;
 use Exception;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
@@ -35,14 +34,14 @@ use PHPUnit\Framework;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Http\Message\Handler\ResultCollectorHandler::class)]
+#[Framework\Attributes\CoversClass(Src\Http\Message\Handler\ResultCollectorHandler::class)]
 final class ResultCollectorHandlerTest extends Framework\TestCase
 {
-    private Http\Message\Handler\ResultCollectorHandler $subject;
+    private Src\Http\Message\Handler\ResultCollectorHandler $subject;
 
     protected function setUp(): void
     {
-        $this->subject = new Http\Message\Handler\ResultCollectorHandler();
+        $this->subject = new Src\Http\Message\Handler\ResultCollectorHandler();
     }
 
     #[Framework\Attributes\Test]
@@ -51,7 +50,7 @@ final class ResultCollectorHandlerTest extends Framework\TestCase
         $response = new Psr7\Response();
         $uri = new Psr7\Uri('https://www.example.com');
 
-        $expected = Result\CrawlingResult::createSuccessful($uri, ['response' => $response]);
+        $expected = Src\Result\CrawlingResult::createSuccessful($uri, ['response' => $response]);
 
         self::assertSame([], $this->subject->getResult()->getSuccessful());
         self::assertSame([], $this->subject->getResult()->getFailed());
@@ -68,7 +67,7 @@ final class ResultCollectorHandlerTest extends Framework\TestCase
         $exception = new Exception('foo');
         $uri = new Psr7\Uri('https://www.example.com');
 
-        $expected = Result\CrawlingResult::createFailed($uri, ['exception' => $exception]);
+        $expected = Src\Result\CrawlingResult::createFailed($uri, ['exception' => $exception]);
 
         self::assertSame([], $this->subject->getResult()->getSuccessful());
         self::assertSame([], $this->subject->getResult()->getFailed());

@@ -23,11 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Command;
 
-use EliasHaeussler\CacheWarmup\Command;
-use EliasHaeussler\CacheWarmup\Exception;
-use EliasHaeussler\CacheWarmup\Formatter;
-use EliasHaeussler\CacheWarmup\Result;
-use EliasHaeussler\CacheWarmup\Sitemap;
+use EliasHaeussler\CacheWarmup as Src;
 use EliasHaeussler\CacheWarmup\Tests;
 use Generator;
 use GuzzleHttp\Psr7;
@@ -42,7 +38,7 @@ use function implode;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Command\CacheWarmupCommand::class)]
+#[Framework\Attributes\CoversClass(Src\Command\CacheWarmupCommand::class)]
 final class CacheWarmupCommandTest extends Framework\TestCase
 {
     use Tests\Unit\ClientMockTrait;
@@ -53,7 +49,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     {
         $this->client = $this->createClient();
 
-        $command = new Command\CacheWarmupCommand($this->client);
+        $command = new Src\Command\CacheWarmupCommand($this->client);
         $application = new Console\Application();
         $application->add($command);
 
@@ -63,7 +59,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function initializeThrowsExceptionIfGivenFormatterIsUnsupported(): void
     {
-        $this->expectExceptionObject(Exception\UnsupportedFormatterException::create('foo'));
+        $this->expectExceptionObject(Src\Exception\UnsupportedFormatterException::create('foo'));
 
         $this->commandTester->execute(['--format' => 'foo']);
     }
@@ -290,7 +286,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function executeThrowsExceptionIfGivenCrawlerClassDoesNotExist(): void
     {
-        $this->expectExceptionObject(Exception\InvalidCrawlerException::forMissingClass('foo'));
+        $this->expectExceptionObject(Src\Exception\InvalidCrawlerException::forMissingClass('foo'));
 
         $this->commandTester->execute([
             'sitemaps' => [
@@ -303,7 +299,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function executeThrowsExceptionIfGivenCrawlerClassIsNotValid(): void
     {
-        $this->expectExceptionObject(Exception\InvalidCrawlerException::forUnsupportedClass(self::class));
+        $this->expectExceptionObject(Src\Exception\InvalidCrawlerException::forUnsupportedClass(self::class));
 
         $this->commandTester->execute([
             'sitemaps' => [
@@ -316,7 +312,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function executeUsesCustomCrawler(): void
     {
-        $origin = new Sitemap\Sitemap(new Psr7\Uri('https://www.example.com/sitemap.xml'));
+        $origin = new Src\Sitemap\Sitemap(new Psr7\Uri('https://www.example.com/sitemap.xml'));
 
         $this->mockSitemapRequest('valid_sitemap_3');
 
@@ -328,8 +324,8 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         ]);
 
         $expected = [
-            new Sitemap\Url('https://www.example.com/', origin: $origin),
-            new Sitemap\Url('https://www.example.com/foo', origin: $origin),
+            new Src\Sitemap\Url('https://www.example.com/', origin: $origin),
+            new Src\Sitemap\Url('https://www.example.com/foo', origin: $origin),
         ];
 
         self::assertEquals($expected, Tests\Unit\Crawler\DummyCrawler::$crawledUrls);
@@ -338,7 +334,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function executeThrowsExceptionIfCrawlerOptionsAreInvalid(): void
     {
-        $this->expectExceptionObject(Exception\InvalidCrawlerOptionException::forInvalidType('foo'));
+        $this->expectExceptionObject(Src\Exception\InvalidCrawlerOptionException::forInvalidType('foo'));
 
         $this->commandTester->execute([
             'sitemaps' => [
@@ -412,7 +408,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     #[Framework\Attributes\DataProvider('executeFailsIfSitemapCannotBeCrawledDataProvider')]
     public function executeFailsIfSitemapCannotBeCrawled(bool $allowFailures, int $expected): void
     {
-        Tests\Unit\Crawler\DummyCrawler::$resultStack[] = Result\CrawlingState::Failed;
+        Tests\Unit\Crawler\DummyCrawler::$resultStack[] = Src\Result\CrawlingState::Failed;
 
         $this->mockSitemapRequest('valid_sitemap_3');
 
@@ -454,7 +450,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     {
         $this->mockSitemapRequest('invalid_sitemap_1');
 
-        $this->expectException(Exception\InvalidSitemapException::class);
+        $this->expectException(Src\Exception\InvalidSitemapException::class);
         $this->expectExceptionCode(1660668799);
         $this->expectExceptionMessage(
             implode(PHP_EOL, [
@@ -479,7 +475,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
             'sitemaps' => [
                 'https://www.example.com/sitemap.xml',
             ],
-            '--format' => Formatter\JsonFormatter::getType(),
+            '--format' => Src\Formatter\JsonFormatter::getType(),
         ]);
 
         // At this point, we cannot test the actual output of the JSON formatter
@@ -490,8 +486,8 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function executeRepeatsCacheWarmupIfEndlessModeIsEnabled(): void
     {
-        Tests\Unit\Crawler\DummyCrawler::$resultStack[] = Result\CrawlingState::Successful;
-        Tests\Unit\Crawler\DummyCrawler::$resultStack[] = Result\CrawlingState::Failed;
+        Tests\Unit\Crawler\DummyCrawler::$resultStack[] = Src\Result\CrawlingState::Successful;
+        Tests\Unit\Crawler\DummyCrawler::$resultStack[] = Src\Result\CrawlingState::Failed;
 
         $this->mockSitemapRequest('valid_sitemap_3');
         $this->mockSitemapRequest('valid_sitemap_3');

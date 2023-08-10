@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Http\Message;
 
-use EliasHaeussler\CacheWarmup\Http;
+use EliasHaeussler\CacheWarmup as Src;
 use EliasHaeussler\CacheWarmup\Tests;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
@@ -37,7 +37,7 @@ use function sort;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Http\Message\RequestPoolFactory::class)]
+#[Framework\Attributes\CoversClass(Src\Http\Message\RequestPoolFactory::class)]
 final class RequestPoolFactoryTest extends Framework\TestCase
 {
     use Tests\Unit\ClientMockTrait;
@@ -63,7 +63,7 @@ final class RequestPoolFactoryTest extends Framework\TestCase
             'https://www.example.com/foo',
         ];
 
-        $actual = Http\Message\RequestPoolFactory::create([
+        $actual = Src\Http\Message\RequestPoolFactory::create([
             new Psr7\Request('GET', 'https://www.example.com/'),
             new Psr7\Request('GET', 'https://www.example.com/foo'),
             new Psr7\Request('GET', 'https://www.example.com/baz'),
@@ -98,7 +98,7 @@ final class RequestPoolFactoryTest extends Framework\TestCase
             'https://www.example.com/foo',
         ];
 
-        $actual = Http\Message\RequestPoolFactory::create([
+        $actual = Src\Http\Message\RequestPoolFactory::create([
             new Psr7\Request('GET', 'https://www.example.com/'),
             new Psr7\Request('GET', 'https://www.example.com/foo'),
             new Psr7\Request('GET', 'https://www.example.com/baz'),

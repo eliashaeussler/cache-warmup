@@ -23,8 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler;
 
-use EliasHaeussler\CacheWarmup\Crawler;
-use EliasHaeussler\CacheWarmup\Exception;
+use EliasHaeussler\CacheWarmup as Src;
 use PHPUnit\Framework;
 use Symfony\Component\Console;
 
@@ -34,22 +33,22 @@ use Symfony\Component\Console;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Crawler\CrawlerFactory::class)]
+#[Framework\Attributes\CoversClass(Src\Crawler\CrawlerFactory::class)]
 final class CrawlerFactoryTest extends Framework\TestCase
 {
     private Console\Output\BufferedOutput $output;
-    private Crawler\CrawlerFactory $subject;
+    private Src\Crawler\CrawlerFactory $subject;
 
     protected function setUp(): void
     {
         $this->output = new Console\Output\BufferedOutput();
-        $this->subject = new Crawler\CrawlerFactory($this->output);
+        $this->subject = new Src\Crawler\CrawlerFactory($this->output);
     }
 
     #[Framework\Attributes\Test]
     public function getThrowsExceptionIfGivenCrawlerClassIsInvalid(): void
     {
-        $this->expectExceptionObject(Exception\InvalidCrawlerException::forMissingClass('foo'));
+        $this->expectExceptionObject(Src\Exception\InvalidCrawlerException::forMissingClass('foo'));
 
         /* @phpstan-ignore-next-line */
         $this->subject->get('foo');
@@ -58,7 +57,7 @@ final class CrawlerFactoryTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function getThrowsExceptionIfGivenCrawlerClassIsUnsupported(): void
     {
-        $this->expectExceptionObject(Exception\InvalidCrawlerException::forUnsupportedClass(self::class));
+        $this->expectExceptionObject(Src\Exception\InvalidCrawlerException::forUnsupportedClass(self::class));
 
         /* @phpstan-ignore-next-line */
         $this->subject->get(self::class);
@@ -103,7 +102,7 @@ final class CrawlerFactoryTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function parseCrawlerOptionsThrowsExceptionOnMalformedJson(): void
     {
-        $this->expectExceptionObject(Exception\InvalidCrawlerOptionException::forInvalidType(''));
+        $this->expectExceptionObject(Src\Exception\InvalidCrawlerOptionException::forInvalidType(''));
 
         $this->subject->parseCrawlerOptions('');
     }
@@ -111,7 +110,7 @@ final class CrawlerFactoryTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function parseCrawlerOptionsThrowsExceptionIfJsonEncodedOptionsAreInvalid(): void
     {
-        $this->expectExceptionObject(Exception\InvalidCrawlerOptionException::forInvalidType('"foo"'));
+        $this->expectExceptionObject(Src\Exception\InvalidCrawlerOptionException::forInvalidType('"foo"'));
 
         $this->subject->parseCrawlerOptions('"foo"');
     }
@@ -119,7 +118,7 @@ final class CrawlerFactoryTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function parseCrawlerOptionsThrowsExceptionOnNonAssociativeArray(): void
     {
-        $this->expectExceptionObject(Exception\InvalidCrawlerOptionException::forInvalidType(['foo']));
+        $this->expectExceptionObject(Src\Exception\InvalidCrawlerOptionException::forInvalidType(['foo']));
 
         /* @phpstan-ignore-next-line */
         $this->subject->parseCrawlerOptions(['foo']);

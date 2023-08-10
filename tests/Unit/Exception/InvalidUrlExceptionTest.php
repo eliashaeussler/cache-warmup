@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Exception;
 
-use EliasHaeussler\CacheWarmup\Exception;
+use EliasHaeussler\CacheWarmup as Src;
 use PHPUnit\Framework;
 
 /**
@@ -32,13 +32,13 @@ use PHPUnit\Framework;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Exception\InvalidUrlException::class)]
+#[Framework\Attributes\CoversClass(Src\Exception\InvalidUrlException::class)]
 final class InvalidUrlExceptionTest extends Framework\TestCase
 {
     #[Framework\Attributes\Test]
     public function createReturnsExceptionForGivenUrl(): void
     {
-        $actual = Exception\InvalidUrlException::create('foo');
+        $actual = Src\Exception\InvalidUrlException::create('foo');
 
         self::assertSame(1604055334, $actual->getCode());
         self::assertSame('The given URL "foo" is not valid.', $actual->getMessage());
@@ -47,7 +47,7 @@ final class InvalidUrlExceptionTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function forEmptyUrlReturnsExceptionIfUrlIsEmpty(): void
     {
-        $actual = Exception\InvalidUrlException::forEmptyUrl();
+        $actual = Src\Exception\InvalidUrlException::forEmptyUrl();
 
         self::assertSame(1604055264, $actual->getCode());
         self::assertSame('The given URL must not be empty.', $actual->getMessage());

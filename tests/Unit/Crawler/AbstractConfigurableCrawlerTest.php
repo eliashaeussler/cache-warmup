@@ -23,8 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler;
 
-use EliasHaeussler\CacheWarmup\Crawler;
-use EliasHaeussler\CacheWarmup\Exception;
+use EliasHaeussler\CacheWarmup as Src;
 use PHPUnit\Framework;
 
 /**
@@ -33,7 +32,7 @@ use PHPUnit\Framework;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Crawler\AbstractConfigurableCrawler::class)]
+#[Framework\Attributes\CoversClass(Src\Crawler\AbstractConfigurableCrawler::class)]
 final class AbstractConfigurableCrawlerTest extends Framework\TestCase
 {
     private DummyConfigurableCrawler $subject;
@@ -57,7 +56,7 @@ final class AbstractConfigurableCrawlerTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function setOptionsThrowsExceptionIfInvalidOptionsAreGiven(): void
     {
-        $this->expectException(Exception\InvalidCrawlerOptionException::class);
+        $this->expectException(Src\Exception\InvalidCrawlerOptionException::class);
         $this->expectExceptionCode(1659206995);
         $this->expectExceptionMessage(
             'The crawler options "dummy" and "blub" are invalid or not supported by crawler "'.$this->subject::class.'".',

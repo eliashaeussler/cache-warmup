@@ -37,14 +37,15 @@ use Symfony\Component\Console;
 #[Framework\Attributes\CoversClass(Src\Formatter\FormatterFactory::class)]
 final class FormatterFactoryTest extends Framework\TestCase
 {
-    private Console\Output\BufferedOutput $output;
     private Src\Formatter\FormatterFactory $subject;
 
     protected function setUp(): void
     {
-        $this->output = new Console\Output\BufferedOutput();
         $this->subject = new Src\Formatter\FormatterFactory(
-            new Console\Style\SymfonyStyle(new Console\Input\StringInput(''), $this->output),
+            new Console\Style\SymfonyStyle(
+                new Console\Input\StringInput(''),
+                new Console\Output\BufferedOutput(),
+            ),
         );
     }
 

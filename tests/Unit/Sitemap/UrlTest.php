@@ -24,8 +24,7 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Sitemap;
 
 use DateTimeImmutable;
-use EliasHaeussler\CacheWarmup\Exception;
-use EliasHaeussler\CacheWarmup\Sitemap;
+use EliasHaeussler\CacheWarmup as Src;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
 
@@ -35,33 +34,33 @@ use PHPUnit\Framework;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Sitemap\Url::class)]
+#[Framework\Attributes\CoversClass(Src\Sitemap\Url::class)]
 final class UrlTest extends Framework\TestCase
 {
     #[Framework\Attributes\Test]
     public function constructorThrowsExceptionIfGivenUriIsEmpty(): void
     {
-        $this->expectException(Exception\InvalidUrlException::class);
+        $this->expectException(Src\Exception\InvalidUrlException::class);
         $this->expectExceptionCode(1604055264);
         $this->expectExceptionMessage('The given URL must not be empty.');
 
-        new Sitemap\Url('');
+        new Src\Sitemap\Url('');
     }
 
     #[Framework\Attributes\Test]
     public function constructorThrowsExceptionIfGivenUriIsNotValid(): void
     {
-        $this->expectException(Exception\InvalidUrlException::class);
+        $this->expectException(Src\Exception\InvalidUrlException::class);
         $this->expectExceptionCode(1604055334);
         $this->expectExceptionMessage('The given URL "foo" is not valid.');
 
-        new Sitemap\Url('foo');
+        new Src\Sitemap\Url('foo');
     }
 
     #[Framework\Attributes\Test]
     public function constructorAssignsUriCorrectly(): void
     {
-        $subject = new Sitemap\Url('https://foo.baz');
+        $subject = new Src\Sitemap\Url('https://foo.baz');
 
         self::assertSame($subject, $subject->getUri());
     }
@@ -69,7 +68,7 @@ final class UrlTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function constructorAssignsPriorityCorrectly(): void
     {
-        $subject = new Sitemap\Url('https://foo.baz', priority: 0.8);
+        $subject = new Src\Sitemap\Url('https://foo.baz', priority: 0.8);
 
         self::assertSame(0.8, $subject->getPriority());
     }
@@ -78,7 +77,7 @@ final class UrlTest extends Framework\TestCase
     public function constructorAssignsLastModificationDateCorrectly(): void
     {
         $lastModificationDate = (new DateTimeImmutable())->modify('- 1 day');
-        $subject = new Sitemap\Url('https://foo.baz', lastModificationDate: $lastModificationDate);
+        $subject = new Src\Sitemap\Url('https://foo.baz', lastModificationDate: $lastModificationDate);
 
         self::assertSame($lastModificationDate, $subject->getLastModificationDate());
     }
@@ -86,8 +85,8 @@ final class UrlTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function constructorAssignsChangeFrequencyCorrectly(): void
     {
-        $changeFrequency = Sitemap\ChangeFrequency::Hourly;
-        $subject = new Sitemap\Url('https://foo.baz', changeFrequency: $changeFrequency);
+        $changeFrequency = Src\Sitemap\ChangeFrequency::Hourly;
+        $subject = new Src\Sitemap\Url('https://foo.baz', changeFrequency: $changeFrequency);
 
         self::assertSame($changeFrequency, $subject->getChangeFrequency());
     }
@@ -95,8 +94,8 @@ final class UrlTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function constructorAssignsOriginCorrectly(): void
     {
-        $origin = new Sitemap\Sitemap(new Psr7\Uri('https://baz.foo'));
-        $subject = new Sitemap\Url('https://foo.baz', origin: $origin);
+        $origin = new Src\Sitemap\Sitemap(new Psr7\Uri('https://baz.foo'));
+        $subject = new Src\Sitemap\Url('https://foo.baz', origin: $origin);
 
         self::assertSame($origin, $subject->getOrigin());
     }
@@ -104,10 +103,10 @@ final class UrlTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function getRootOriginReturnsRootOrigin(): void
     {
-        $origin = new Sitemap\Sitemap(new Psr7\Uri('https://baz.foo'));
-        $origin2 = new Sitemap\Sitemap(new Psr7\Uri('https://baz.foo'), origin: $origin);
-        $origin3 = new Sitemap\Sitemap(new Psr7\Uri('https://baz.foo'), origin: $origin2);
-        $subject = new Sitemap\Url('https://foo.baz', origin: $origin3);
+        $origin = new Src\Sitemap\Sitemap(new Psr7\Uri('https://baz.foo'));
+        $origin2 = new Src\Sitemap\Sitemap(new Psr7\Uri('https://baz.foo'), origin: $origin);
+        $origin3 = new Src\Sitemap\Sitemap(new Psr7\Uri('https://baz.foo'), origin: $origin2);
+        $subject = new Src\Sitemap\Url('https://foo.baz', origin: $origin3);
 
         self::assertSame($origin, $subject->getRootOrigin());
     }

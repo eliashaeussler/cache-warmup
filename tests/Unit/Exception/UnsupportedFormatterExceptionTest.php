@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Exception;
 
-use EliasHaeussler\CacheWarmup\Exception;
+use EliasHaeussler\CacheWarmup as Src;
 use PHPUnit\Framework;
 
 /**
@@ -32,13 +32,13 @@ use PHPUnit\Framework;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Exception\UnsupportedFormatterException::class)]
+#[Framework\Attributes\CoversClass(Src\Exception\UnsupportedFormatterException::class)]
 final class UnsupportedFormatterExceptionTest extends Framework\TestCase
 {
     #[Framework\Attributes\Test]
     public function createReturnsExceptionForGivenType(): void
     {
-        $actual = Exception\UnsupportedFormatterException::create('foo');
+        $actual = Src\Exception\UnsupportedFormatterException::create('foo');
 
         self::assertSame(1676814093, $actual->getCode());
         self::assertSame('The formatter "foo" is not supported.', $actual->getMessage());

@@ -24,8 +24,7 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Exception;
 
 use CuyZ\Valinor;
-use EliasHaeussler\CacheWarmup\Exception;
-use EliasHaeussler\CacheWarmup\Sitemap;
+use EliasHaeussler\CacheWarmup as Src;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
 
@@ -38,14 +37,14 @@ use function sprintf;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Exception\InvalidSitemapException::class)]
+#[Framework\Attributes\CoversClass(Src\Exception\InvalidSitemapException::class)]
 final class InvalidSitemapExceptionTest extends Framework\TestCase
 {
     #[Framework\Attributes\Test]
     public function createReturnsExceptionForGivenSitemap(): void
     {
-        $sitemap = new Sitemap\Sitemap(new Psr7\Uri('https://www.example.com'));
-        $actual = Exception\InvalidSitemapException::create($sitemap);
+        $sitemap = new Src\Sitemap\Sitemap(new Psr7\Uri('https://www.example.com'));
+        $actual = Src\Exception\InvalidSitemapException::create($sitemap);
 
         self::assertSame(1660668799, $actual->getCode());
         self::assertSame(
@@ -57,9 +56,9 @@ final class InvalidSitemapExceptionTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function createReturnsExceptionForGivenSitemapAndMappingError(): void
     {
-        $sitemap = new Sitemap\Sitemap(new Psr7\Uri('https://www.example.com'));
+        $sitemap = new Src\Sitemap\Sitemap(new Psr7\Uri('https://www.example.com'));
         $error = $this->createMappingError();
-        $actual = Exception\InvalidSitemapException::create($sitemap, $error);
+        $actual = Src\Exception\InvalidSitemapException::create($sitemap, $error);
 
         self::assertSame(1660668799, $actual->getCode());
         self::assertSame(
@@ -74,11 +73,11 @@ final class InvalidSitemapExceptionTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function forInvalidTypeReturnsExceptionForGivenSitemap(): void
     {
-        $actual = Exception\InvalidSitemapException::forInvalidType(null);
+        $actual = Src\Exception\InvalidSitemapException::forInvalidType(null);
 
         self::assertSame(1604055096, $actual->getCode());
         self::assertSame(
-            sprintf('Sitemaps must be of type string or %s, null given.', Sitemap\Sitemap::class),
+            sprintf('Sitemaps must be of type string or %s, null given.', Src\Sitemap\Sitemap::class),
             $actual->getMessage(),
         );
     }

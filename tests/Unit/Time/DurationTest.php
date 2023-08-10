@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Time;
 
-use EliasHaeussler\CacheWarmup\Time;
+use EliasHaeussler\CacheWarmup as Src;
 use Generator;
 use PHPUnit\Framework;
 
@@ -33,13 +33,13 @@ use PHPUnit\Framework;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Time\Duration::class)]
+#[Framework\Attributes\CoversClass(Src\Time\Duration::class)]
 final class DurationTest extends Framework\TestCase
 {
     #[Framework\Attributes\Test]
     public function getReturnsDurationInMilliseconds(): void
     {
-        $subject = new Time\Duration(123.45);
+        $subject = new Src\Time\Duration(123.45);
 
         self::assertSame(123.45, $subject->get());
     }
@@ -48,7 +48,7 @@ final class DurationTest extends Framework\TestCase
     #[Framework\Attributes\DataProvider('formatReturnsFormattedDurationDataProvider')]
     public function formatReturnsFormattedDuration(float $milliseconds, string $expected): void
     {
-        $subject = new Time\Duration($milliseconds);
+        $subject = new Src\Time\Duration($milliseconds);
 
         self::assertSame($expected, $subject->format());
     }

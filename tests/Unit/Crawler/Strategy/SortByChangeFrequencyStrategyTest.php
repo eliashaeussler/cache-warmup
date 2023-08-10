@@ -23,8 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler\Strategy;
 
-use EliasHaeussler\CacheWarmup\Crawler;
-use EliasHaeussler\CacheWarmup\Sitemap;
+use EliasHaeussler\CacheWarmup as Src;
 use PHPUnit\Framework;
 
 /**
@@ -33,22 +32,22 @@ use PHPUnit\Framework;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Crawler\Strategy\SortByChangeFrequencyStrategy::class)]
+#[Framework\Attributes\CoversClass(Src\Crawler\Strategy\SortByChangeFrequencyStrategy::class)]
 final class SortByChangeFrequencyStrategyTest extends Framework\TestCase
 {
-    private Crawler\Strategy\SortByChangeFrequencyStrategy $subject;
+    private Src\Crawler\Strategy\SortByChangeFrequencyStrategy $subject;
 
     protected function setUp(): void
     {
-        $this->subject = new Crawler\Strategy\SortByChangeFrequencyStrategy();
+        $this->subject = new Src\Crawler\Strategy\SortByChangeFrequencyStrategy();
     }
 
     #[Framework\Attributes\Test]
     public function prepareUrlsSortsGivenUrlsByPriority(): void
     {
-        $url1 = new Sitemap\Url('https://www.example.org/foo', changeFrequency: Sitemap\ChangeFrequency::Never);
-        $url2 = new Sitemap\Url('https://www.example.org/', changeFrequency: Sitemap\ChangeFrequency::Daily);
-        $url3 = new Sitemap\Url('https://www.example.org/baz', changeFrequency: Sitemap\ChangeFrequency::Always);
+        $url1 = new Src\Sitemap\Url('https://www.example.org/foo', changeFrequency: Src\Sitemap\ChangeFrequency::Never);
+        $url2 = new Src\Sitemap\Url('https://www.example.org/', changeFrequency: Src\Sitemap\ChangeFrequency::Daily);
+        $url3 = new Src\Sitemap\Url('https://www.example.org/baz', changeFrequency: Src\Sitemap\ChangeFrequency::Always);
 
         self::assertSame([$url3, $url2, $url1], $this->subject->prepareUrls([$url1, $url2, $url3]));
     }

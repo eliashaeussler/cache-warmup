@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Time;
 
-use EliasHaeussler\CacheWarmup\Time;
+use EliasHaeussler\CacheWarmup as Src;
 use Exception;
 use PHPUnit\Framework;
 
@@ -35,14 +35,14 @@ use function sleep;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Time\TimeTracker::class)]
+#[Framework\Attributes\CoversClass(Src\Time\TimeTracker::class)]
 final class TimeTrackerTest extends Framework\TestCase
 {
-    private Time\TimeTracker $subject;
+    private Src\Time\TimeTracker $subject;
 
     protected function setUp(): void
     {
-        $this->subject = new Time\TimeTracker();
+        $this->subject = new Src\Time\TimeTracker();
     }
 
     #[Framework\Attributes\Test]

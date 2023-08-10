@@ -23,8 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Mapper\Source;
 
-use EliasHaeussler\CacheWarmup\Exception;
-use EliasHaeussler\CacheWarmup\Mapper;
+use EliasHaeussler\CacheWarmup as Src;
 use PHPUnit\Framework;
 
 use function dirname;
@@ -37,23 +36,23 @@ use function iterator_to_array;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Mapper\Source\XmlSource::class)]
+#[Framework\Attributes\CoversClass(Src\Mapper\Source\XmlSource::class)]
 final class XmlSourceTest extends Framework\TestCase
 {
     #[Framework\Attributes\Test]
     public function fromXmlThrowsExceptionIfGivenXmlIsMalformed(): void
     {
-        $this->expectException(Exception\MalformedXmlException::class);
+        $this->expectException(Src\Exception\MalformedXmlException::class);
         $this->expectExceptionCode(1670962571);
         $this->expectExceptionMessageMatches('/^The string "foo" does not contain valid XML/');
 
-        Mapper\Source\XmlSource::fromXml('foo');
+        Src\Mapper\Source\XmlSource::fromXml('foo');
     }
 
     #[Framework\Attributes\Test]
     public function fromXmlConvertsXmlToArray(): void
     {
-        $subject = Mapper\Source\XmlSource::fromXml($this->readFixtureFile('valid_sitemap_5'));
+        $subject = Src\Mapper\Source\XmlSource::fromXml($this->readFixtureFile('valid_sitemap_5'));
 
         $expected = [
             'url' => [
@@ -84,7 +83,7 @@ final class XmlSourceTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function asCollectionConvertsSingleItemNodesToCollections(): void
     {
-        $subject = Mapper\Source\XmlSource::fromXml($this->readFixtureFile('valid_sitemap_1'));
+        $subject = Src\Mapper\Source\XmlSource::fromXml($this->readFixtureFile('valid_sitemap_1'));
 
         self::assertSame(
             [

@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Result;
 
-use EliasHaeussler\CacheWarmup\Result;
+use EliasHaeussler\CacheWarmup as Src;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
 
@@ -33,7 +33,7 @@ use PHPUnit\Framework;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Result\CrawlingResult::class)]
+#[Framework\Attributes\CoversClass(Src\Result\CrawlingResult::class)]
 final class CrawlingResultTest extends Framework\TestCase
 {
     #[Framework\Attributes\Test]
@@ -41,14 +41,14 @@ final class CrawlingResultTest extends Framework\TestCase
     {
         $uri = new Psr7\Uri('https://www.example.org/');
         $data = ['foo' => 'baz'];
-        $subject = Result\CrawlingResult::createSuccessful($uri, $data);
+        $subject = Src\Result\CrawlingResult::createSuccessful($uri, $data);
 
         self::assertSame($uri, $subject->getUri());
         self::assertSame($data, $subject->getData());
         self::assertTrue($subject->isSuccessful());
-        self::assertTrue($subject->is(Result\CrawlingState::Successful));
+        self::assertTrue($subject->is(Src\Result\CrawlingState::Successful));
         self::assertFalse($subject->isFailed());
-        self::assertFalse($subject->is(Result\CrawlingState::Failed));
+        self::assertFalse($subject->is(Src\Result\CrawlingState::Failed));
     }
 
     #[Framework\Attributes\Test]
@@ -56,13 +56,13 @@ final class CrawlingResultTest extends Framework\TestCase
     {
         $uri = new Psr7\Uri('https://www.example.org/');
         $data = ['foo' => 'baz'];
-        $subject = Result\CrawlingResult::createFailed($uri, $data);
+        $subject = Src\Result\CrawlingResult::createFailed($uri, $data);
 
         self::assertSame($uri, $subject->getUri());
         self::assertSame($data, $subject->getData());
         self::assertTrue($subject->isFailed());
-        self::assertTrue($subject->is(Result\CrawlingState::Failed));
+        self::assertTrue($subject->is(Src\Result\CrawlingState::Failed));
         self::assertFalse($subject->isSuccessful());
-        self::assertFalse($subject->is(Result\CrawlingState::Successful));
+        self::assertFalse($subject->is(Src\Result\CrawlingState::Successful));
     }
 }

@@ -23,8 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler;
 
-use EliasHaeussler\CacheWarmup\Crawler;
-use EliasHaeussler\CacheWarmup\Result;
+use EliasHaeussler\CacheWarmup as Src;
 use EliasHaeussler\CacheWarmup\Tests;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7;
@@ -38,20 +37,20 @@ use Symfony\Component\Console;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Crawler\OutputtingCrawler::class)]
+#[Framework\Attributes\CoversClass(Src\Crawler\OutputtingCrawler::class)]
 final class OutputtingCrawlerTest extends Framework\TestCase
 {
     use Tests\Unit\CacheWarmupResultProcessorTrait;
     use Tests\Unit\ClientMockTrait;
 
     private Console\Output\BufferedOutput $output;
-    private Crawler\OutputtingCrawler $subject;
+    private Src\Crawler\OutputtingCrawler $subject;
 
     protected function setUp(): void
     {
         $this->client = $this->createClient();
         $this->output = new Console\Output\BufferedOutput();
-        $this->subject = new Crawler\OutputtingCrawler(client: $this->client);
+        $this->subject = new Src\Crawler\OutputtingCrawler(client: $this->client);
         $this->subject->setOutput($this->output);
     }
 
@@ -60,7 +59,7 @@ final class OutputtingCrawlerTest extends Framework\TestCase
     {
         $this->mockHandler->append(new Psr7\Response());
 
-        $subject = new Crawler\OutputtingCrawler(
+        $subject = new Src\Crawler\OutputtingCrawler(
             [
                 'client_config' => [
                     'handler' => $this->mockHandler,
@@ -79,7 +78,7 @@ final class OutputtingCrawlerTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function constructorIgnoresGivenClientConfigIfInstantiatedClientIsPassed(): void
     {
-        $subject = new Crawler\OutputtingCrawler(
+        $subject = new Src\Crawler\OutputtingCrawler(
             [
                 'client_config' => [
                     'handler' => $this->mockHandler,
@@ -147,7 +146,7 @@ final class OutputtingCrawlerTest extends Framework\TestCase
             new Psr7\Uri('https://www.example.org'),
         ];
 
-        $subject = new Crawler\OutputtingCrawler(
+        $subject = new Src\Crawler\OutputtingCrawler(
             [
                 'request_headers' => [
                     'User-Agent' => 'foo',
@@ -176,7 +175,7 @@ final class OutputtingCrawlerTest extends Framework\TestCase
 
         $result = $this->subject->crawl($urls);
 
-        self::assertSame($urls, $this->getProcessedUrlsFromCacheWarmupResult($result, Result\CrawlingState::Successful));
+        self::assertSame($urls, $this->getProcessedUrlsFromCacheWarmupResult($result, Src\Result\CrawlingState::Successful));
         self::assertSame([], $result->getFailed());
     }
 
@@ -191,7 +190,7 @@ final class OutputtingCrawlerTest extends Framework\TestCase
 
         $result = $this->subject->crawl($urls);
 
-        self::assertSame($urls, $this->getProcessedUrlsFromCacheWarmupResult($result, Result\CrawlingState::Failed));
+        self::assertSame($urls, $this->getProcessedUrlsFromCacheWarmupResult($result, Src\Result\CrawlingState::Failed));
         self::assertSame([], $result->getSuccessful());
     }
 

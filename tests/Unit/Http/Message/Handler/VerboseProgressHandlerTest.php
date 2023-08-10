@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Http\Message\Handler;
 
-use EliasHaeussler\CacheWarmup\Http;
+use EliasHaeussler\CacheWarmup as Src;
 use EliasHaeussler\CacheWarmup\Tests;
 use Exception;
 use GuzzleHttp\Psr7;
@@ -35,16 +35,16 @@ use PHPUnit\Framework;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Http\Message\Handler\VerboseProgressHandler::class)]
+#[Framework\Attributes\CoversClass(Src\Http\Message\Handler\VerboseProgressHandler::class)]
 final class VerboseProgressHandlerTest extends Framework\TestCase
 {
     private Tests\Unit\BufferedConsoleOutput $output;
-    private Http\Message\Handler\VerboseProgressHandler $subject;
+    private Src\Http\Message\Handler\VerboseProgressHandler $subject;
 
     protected function setUp(): void
     {
         $this->output = new Tests\Unit\BufferedConsoleOutput();
-        $this->subject = new Http\Message\Handler\VerboseProgressHandler($this->output, 10);
+        $this->subject = new Src\Http\Message\Handler\VerboseProgressHandler($this->output, 10);
     }
 
     #[Framework\Attributes\Test]

@@ -23,8 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler\Strategy;
 
-use EliasHaeussler\CacheWarmup\Crawler;
-use EliasHaeussler\CacheWarmup\Sitemap;
+use EliasHaeussler\CacheWarmup as Src;
 use PHPUnit\Framework;
 
 /**
@@ -33,22 +32,22 @@ use PHPUnit\Framework;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Crawler\Strategy\SortByPriorityStrategy::class)]
+#[Framework\Attributes\CoversClass(Src\Crawler\Strategy\SortByPriorityStrategy::class)]
 final class SortByPriorityStrategyTest extends Framework\TestCase
 {
-    private Crawler\Strategy\SortByPriorityStrategy $subject;
+    private Src\Crawler\Strategy\SortByPriorityStrategy $subject;
 
     protected function setUp(): void
     {
-        $this->subject = new Crawler\Strategy\SortByPriorityStrategy();
+        $this->subject = new Src\Crawler\Strategy\SortByPriorityStrategy();
     }
 
     #[Framework\Attributes\Test]
     public function prepareUrlsSortsGivenUrlsByPriority(): void
     {
-        $url1 = new Sitemap\Url('https://www.example.org/foo', 0.75);
-        $url2 = new Sitemap\Url('https://www.example.org/', 0.5);
-        $url3 = new Sitemap\Url('https://www.example.org/baz', 1.0);
+        $url1 = new Src\Sitemap\Url('https://www.example.org/foo', 0.75);
+        $url2 = new Src\Sitemap\Url('https://www.example.org/', 0.5);
+        $url3 = new Src\Sitemap\Url('https://www.example.org/baz', 1.0);
 
         self::assertSame([$url3, $url1, $url2], $this->subject->prepareUrls([$url1, $url2, $url3]));
     }

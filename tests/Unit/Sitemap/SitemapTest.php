@@ -24,8 +24,7 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Sitemap;
 
 use DateTimeImmutable;
-use EliasHaeussler\CacheWarmup\Exception;
-use EliasHaeussler\CacheWarmup\Sitemap;
+use EliasHaeussler\CacheWarmup as Src;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
 
@@ -35,34 +34,34 @@ use PHPUnit\Framework;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Sitemap\Sitemap::class)]
+#[Framework\Attributes\CoversClass(Src\Sitemap\Sitemap::class)]
 final class SitemapTest extends Framework\TestCase
 {
     #[Framework\Attributes\Test]
     public function constructorThrowsExceptionIfGivenUriIsEmpty(): void
     {
-        $this->expectException(Exception\InvalidUrlException::class);
+        $this->expectException(Src\Exception\InvalidUrlException::class);
         $this->expectExceptionCode(1604055264);
         $this->expectExceptionMessage('The given URL must not be empty.');
 
-        new Sitemap\Sitemap(new Psr7\Uri(''));
+        new Src\Sitemap\Sitemap(new Psr7\Uri(''));
     }
 
     #[Framework\Attributes\Test]
     public function constructorThrowsExceptionIfGivenUriIsNotValid(): void
     {
-        $this->expectException(Exception\InvalidUrlException::class);
+        $this->expectException(Src\Exception\InvalidUrlException::class);
         $this->expectExceptionCode(1604055334);
         $this->expectExceptionMessage('The given URL "foo" is not valid.');
 
-        new Sitemap\Sitemap(new Psr7\Uri('foo'));
+        new Src\Sitemap\Sitemap(new Psr7\Uri('foo'));
     }
 
     #[Framework\Attributes\Test]
     public function constructorAssignsUriCorrectly(): void
     {
         $uri = new Psr7\Uri('https://foo.baz');
-        $subject = new Sitemap\Sitemap($uri);
+        $subject = new Src\Sitemap\Sitemap($uri);
 
         self::assertSame($uri, $subject->getUri());
     }
@@ -72,7 +71,7 @@ final class SitemapTest extends Framework\TestCase
     {
         $uri = new Psr7\Uri('https://foo.baz');
         $lastModificationDate = (new DateTimeImmutable())->modify('- 1 day');
-        $subject = new Sitemap\Sitemap($uri, $lastModificationDate);
+        $subject = new Src\Sitemap\Sitemap($uri, $lastModificationDate);
 
         self::assertSame($lastModificationDate, $subject->getLastModificationDate());
     }
@@ -81,8 +80,8 @@ final class SitemapTest extends Framework\TestCase
     public function constructorAssignsOriginCorrectly(): void
     {
         $uri = new Psr7\Uri('https://foo.baz');
-        $origin = new Sitemap\Sitemap(new Psr7\Uri('https://baz.foo'));
-        $subject = new Sitemap\Sitemap($uri, origin: $origin);
+        $origin = new Src\Sitemap\Sitemap(new Psr7\Uri('https://baz.foo'));
+        $subject = new Src\Sitemap\Sitemap($uri, origin: $origin);
 
         self::assertSame($origin, $subject->getOrigin());
     }
@@ -90,10 +89,10 @@ final class SitemapTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function getRootOriginReturnsRootOrigin(): void
     {
-        $origin = new Sitemap\Sitemap(new Psr7\Uri('https://baz.foo'));
-        $origin2 = new Sitemap\Sitemap(new Psr7\Uri('https://baz.foo'), origin: $origin);
-        $origin3 = new Sitemap\Sitemap(new Psr7\Uri('https://baz.foo'), origin: $origin2);
-        $subject = new Sitemap\Sitemap(new Psr7\Uri('https://foo.baz'), origin: $origin3);
+        $origin = new Src\Sitemap\Sitemap(new Psr7\Uri('https://baz.foo'));
+        $origin2 = new Src\Sitemap\Sitemap(new Psr7\Uri('https://baz.foo'), origin: $origin);
+        $origin3 = new Src\Sitemap\Sitemap(new Psr7\Uri('https://baz.foo'), origin: $origin2);
+        $subject = new Src\Sitemap\Sitemap(new Psr7\Uri('https://foo.baz'), origin: $origin3);
 
         self::assertSame($origin, $subject->getRootOrigin());
     }
@@ -102,7 +101,7 @@ final class SitemapTest extends Framework\TestCase
     public function stringRepresentationReturnsUri(): void
     {
         $uri = new Psr7\Uri('https://foo.baz');
-        $subject = new Sitemap\Sitemap($uri);
+        $subject = new Src\Sitemap\Sitemap($uri);
 
         self::assertSame((string) $uri, (string) $subject);
     }

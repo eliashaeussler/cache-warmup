@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Http\Message\Handler;
 
-use EliasHaeussler\CacheWarmup\Http;
+use EliasHaeussler\CacheWarmup as Src;
 use Exception;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
@@ -35,16 +35,16 @@ use Symfony\Component\Console;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Http\Message\Handler\CompactProgressHandler::class)]
+#[Framework\Attributes\CoversClass(Src\Http\Message\Handler\CompactProgressHandler::class)]
 final class CompactProgressHandlerTest extends Framework\TestCase
 {
     private Console\Output\BufferedOutput $output;
-    private Http\Message\Handler\CompactProgressHandler $subject;
+    private Src\Http\Message\Handler\CompactProgressHandler $subject;
 
     protected function setUp(): void
     {
         $this->output = new Console\Output\BufferedOutput();
-        $this->subject = new Http\Message\Handler\CompactProgressHandler($this->output, 10);
+        $this->subject = new Src\Http\Message\Handler\CompactProgressHandler($this->output, 10);
     }
 
     #[Framework\Attributes\Test]

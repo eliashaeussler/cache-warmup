@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Exception;
 
-use EliasHaeussler\CacheWarmup\Exception;
+use EliasHaeussler\CacheWarmup as Src;
 use PHPUnit\Framework;
 
 /**
@@ -32,13 +32,13 @@ use PHPUnit\Framework;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Exception\MalformedXmlException::class)]
+#[Framework\Attributes\CoversClass(Src\Exception\MalformedXmlException::class)]
 final class MalformedXmlExceptionTest extends Framework\TestCase
 {
     #[Framework\Attributes\Test]
     public function createReturnsExceptionForGivenInputString(): void
     {
-        $actual = Exception\MalformedXmlException::create('foo', 'Invalid XML.');
+        $actual = Src\Exception\MalformedXmlException::create('foo', 'Invalid XML.');
 
         self::assertSame(1670962571, $actual->getCode());
         self::assertSame('The string "foo" does not contain valid XML: Invalid XML.', $actual->getMessage());

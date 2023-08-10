@@ -24,8 +24,7 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler\Strategy;
 
 use DateTime;
-use EliasHaeussler\CacheWarmup\Crawler;
-use EliasHaeussler\CacheWarmup\Sitemap;
+use EliasHaeussler\CacheWarmup as Src;
 use PHPUnit\Framework;
 
 /**
@@ -34,22 +33,22 @@ use PHPUnit\Framework;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Crawler\Strategy\SortByLastModificationDateStrategy::class)]
+#[Framework\Attributes\CoversClass(Src\Crawler\Strategy\SortByLastModificationDateStrategy::class)]
 final class SortByLastModificationDateStrategyTest extends Framework\TestCase
 {
-    private Crawler\Strategy\SortByLastModificationDateStrategy $subject;
+    private Src\Crawler\Strategy\SortByLastModificationDateStrategy $subject;
 
     protected function setUp(): void
     {
-        $this->subject = new Crawler\Strategy\SortByLastModificationDateStrategy();
+        $this->subject = new Src\Crawler\Strategy\SortByLastModificationDateStrategy();
     }
 
     #[Framework\Attributes\Test]
     public function prepareUrlsSortsGivenUrlsByPriority(): void
     {
-        $url1 = new Sitemap\Url('https://www.example.org/foo');
-        $url2 = new Sitemap\Url('https://www.example.org/', lastModificationDate: new DateTime('last year'));
-        $url3 = new Sitemap\Url('https://www.example.org/baz', lastModificationDate: new DateTime('last month'));
+        $url1 = new Src\Sitemap\Url('https://www.example.org/foo');
+        $url2 = new Src\Sitemap\Url('https://www.example.org/', lastModificationDate: new DateTime('last year'));
+        $url3 = new Src\Sitemap\Url('https://www.example.org/baz', lastModificationDate: new DateTime('last month'));
 
         self::assertSame([$url3, $url2, $url1], $this->subject->prepareUrls([$url1, $url2, $url3]));
     }

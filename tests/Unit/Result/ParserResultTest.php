@@ -23,8 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Result;
 
-use EliasHaeussler\CacheWarmup\Result;
-use EliasHaeussler\CacheWarmup\Sitemap;
+use EliasHaeussler\CacheWarmup as Src;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
 
@@ -34,23 +33,23 @@ use PHPUnit\Framework;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Result\ParserResult::class)]
+#[Framework\Attributes\CoversClass(Src\Result\ParserResult::class)]
 final class ParserResultTest extends Framework\TestCase
 {
-    private Result\ParserResult $subject;
+    private Src\Result\ParserResult $subject;
 
     protected function setUp(): void
     {
         $sitemaps = [
-            new Sitemap\Sitemap(new Psr7\Uri('https://www.example.com/')),
-            new Sitemap\Sitemap(new Psr7\Uri('https://www.example.org/')),
+            new Src\Sitemap\Sitemap(new Psr7\Uri('https://www.example.com/')),
+            new Src\Sitemap\Sitemap(new Psr7\Uri('https://www.example.org/')),
         ];
         $urls = [
-            new Sitemap\Url('https://www.example.com/'),
-            new Sitemap\Url('https://www.example.org/'),
+            new Src\Sitemap\Url('https://www.example.com/'),
+            new Src\Sitemap\Url('https://www.example.org/'),
         ];
 
-        $this->subject = new Result\ParserResult($sitemaps, $urls);
+        $this->subject = new Src\Result\ParserResult($sitemaps, $urls);
     }
 
     #[Framework\Attributes\Test]
@@ -58,8 +57,8 @@ final class ParserResultTest extends Framework\TestCase
     {
         self::assertEquals(
             [
-                new Sitemap\Sitemap(new Psr7\Uri('https://www.example.com/')),
-                new Sitemap\Sitemap(new Psr7\Uri('https://www.example.org/')),
+                new Src\Sitemap\Sitemap(new Psr7\Uri('https://www.example.com/')),
+                new Src\Sitemap\Sitemap(new Psr7\Uri('https://www.example.org/')),
             ],
             $this->subject->getSitemaps(),
         );
@@ -70,8 +69,8 @@ final class ParserResultTest extends Framework\TestCase
     {
         self::assertEquals(
             [
-                new Sitemap\Url('https://www.example.com/'),
-                new Sitemap\Url('https://www.example.org/'),
+                new Src\Sitemap\Url('https://www.example.com/'),
+                new Src\Sitemap\Url('https://www.example.org/'),
             ],
             $this->subject->getUrls(),
         );

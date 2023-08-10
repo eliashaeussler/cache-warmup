@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Exception;
 
-use EliasHaeussler\CacheWarmup\Exception;
+use EliasHaeussler\CacheWarmup as Src;
 use EliasHaeussler\CacheWarmup\Tests;
 use PHPUnit\Framework;
 
@@ -35,14 +35,14 @@ use function sprintf;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Exception\InvalidCrawlerOptionException::class)]
+#[Framework\Attributes\CoversClass(Src\Exception\InvalidCrawlerOptionException::class)]
 final class InvalidCrawlerOptionExceptionTest extends Framework\TestCase
 {
     #[Framework\Attributes\Test]
     public function createReturnsExceptionForGivenCrawlerAndOption(): void
     {
         $crawler = new Tests\Unit\Crawler\DummyConfigurableCrawler();
-        $actual = Exception\InvalidCrawlerOptionException::create($crawler, 'foo');
+        $actual = Src\Exception\InvalidCrawlerOptionException::create($crawler, 'foo');
 
         self::assertSame(1659120894, $actual->getCode());
         self::assertSame(
@@ -55,7 +55,7 @@ final class InvalidCrawlerOptionExceptionTest extends Framework\TestCase
     public function createForAllReturnsExceptionForGivenCrawlerAndOptionIfOnlyOneOptionIsGiven(): void
     {
         $crawler = new Tests\Unit\Crawler\DummyConfigurableCrawler();
-        $actual = Exception\InvalidCrawlerOptionException::createForAll($crawler, ['foo']);
+        $actual = Src\Exception\InvalidCrawlerOptionException::createForAll($crawler, ['foo']);
 
         self::assertSame(1659120894, $actual->getCode());
         self::assertSame(
@@ -69,7 +69,7 @@ final class InvalidCrawlerOptionExceptionTest extends Framework\TestCase
     {
         $crawler = new Tests\Unit\Crawler\DummyConfigurableCrawler();
 
-        $actual = Exception\InvalidCrawlerOptionException::createForAll($crawler, ['foo', 'bar', 'baz']);
+        $actual = Src\Exception\InvalidCrawlerOptionException::createForAll($crawler, ['foo', 'bar', 'baz']);
 
         self::assertSame(1659206995, $actual->getCode());
         self::assertSame(

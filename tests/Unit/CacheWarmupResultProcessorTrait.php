@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit;
 
-use EliasHaeussler\CacheWarmup\Result;
+use EliasHaeussler\CacheWarmup as Src;
 use Psr\Http\Message;
 
 /**
@@ -38,8 +38,8 @@ trait CacheWarmupResultProcessorTrait
      * @return list<Message\UriInterface>
      */
     protected function getProcessedUrlsFromCacheWarmupResult(
-        Result\CacheWarmupResult $result,
-        Result\CrawlingState $state = null,
+        Src\Result\CacheWarmupResult $result,
+        Src\Result\CrawlingState $state = null,
     ): array {
         $urls = [];
         $crawlingResults = [...$result->getSuccessful(), ...$result->getFailed()];

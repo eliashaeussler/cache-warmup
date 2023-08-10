@@ -24,10 +24,8 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Xml;
 
 use DateTimeImmutable;
-use EliasHaeussler\CacheWarmup\Exception;
-use EliasHaeussler\CacheWarmup\Sitemap;
+use EliasHaeussler\CacheWarmup as Src;
 use EliasHaeussler\CacheWarmup\Tests;
-use EliasHaeussler\CacheWarmup\Xml;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
 
@@ -39,19 +37,19 @@ use function implode;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Xml\XmlParser::class)]
+#[Framework\Attributes\CoversClass(Src\Xml\XmlParser::class)]
 final class XmlParserTest extends Framework\TestCase
 {
     use Tests\Unit\ClientMockTrait;
 
-    private Sitemap\Sitemap $sitemap;
-    private Xml\XmlParser $subject;
+    private Src\Sitemap\Sitemap $sitemap;
+    private Src\Xml\XmlParser $subject;
 
     protected function setUp(): void
     {
         $this->client = $this->createClient();
-        $this->sitemap = new Sitemap\Sitemap(new Psr7\Uri('https://www.example.org/sitemap.xml'));
-        $this->subject = new Xml\XmlParser($this->client);
+        $this->sitemap = new Src\Sitemap\Sitemap(new Psr7\Uri('https://www.example.org/sitemap.xml'));
+        $this->subject = new Src\Xml\XmlParser($this->client);
     }
 
     #[Framework\Attributes\Test]
@@ -62,7 +60,7 @@ final class XmlParserTest extends Framework\TestCase
         $result = $this->subject->parse($this->sitemap);
 
         $expected = [
-            new Sitemap\Sitemap(
+            new Src\Sitemap\Sitemap(
                 uri: new Psr7\Uri('https://www.example.org/sitemap_en.xml'),
                 lastModificationDate: new DateTimeImmutable('2022-08-17T13:18:06+02:00'),
                 origin: $this->sitemap,
@@ -81,25 +79,25 @@ final class XmlParserTest extends Framework\TestCase
         $result = $this->subject->parse($this->sitemap);
 
         $expected = [
-            new Sitemap\Url(
+            new Src\Sitemap\Url(
                 uri: 'https://www.example.org/',
                 priority: 0.8,
                 lastModificationDate: new DateTimeImmutable('2022-05-02T00:00:00+00:00'),
-                changeFrequency: Sitemap\ChangeFrequency::Yearly,
+                changeFrequency: Src\Sitemap\ChangeFrequency::Yearly,
                 origin: $this->sitemap,
             ),
-            new Sitemap\Url(
+            new Src\Sitemap\Url(
                 uri: 'https://www.example.org/foo',
                 priority: 0.5,
                 lastModificationDate: new DateTimeImmutable('2021-06-07T20:01:25+02:00'),
-                changeFrequency: Sitemap\ChangeFrequency::Monthly,
+                changeFrequency: Src\Sitemap\ChangeFrequency::Monthly,
                 origin: $this->sitemap,
             ),
-            new Sitemap\Url(
+            new Src\Sitemap\Url(
                 uri: 'https://www.example.org/baz',
                 priority: 0.5,
                 lastModificationDate: new DateTimeImmutable('2021-05-28T11:54:00+02:00'),
-                changeFrequency: Sitemap\ChangeFrequency::Hourly,
+                changeFrequency: Src\Sitemap\ChangeFrequency::Hourly,
                 origin: $this->sitemap,
             ),
         ];
@@ -116,8 +114,8 @@ final class XmlParserTest extends Framework\TestCase
         $result = $this->subject->parse($this->sitemap);
 
         $expected = [
-            new Sitemap\Url('https://www.example.com/', origin: $this->sitemap),
-            new Sitemap\Url('https://www.example.com/foo', origin: $this->sitemap),
+            new Src\Sitemap\Url('https://www.example.com/', origin: $this->sitemap),
+            new Src\Sitemap\Url('https://www.example.com/foo', origin: $this->sitemap),
         ];
 
         self::assertEquals($expected, $result->getUrls());
@@ -140,7 +138,7 @@ final class XmlParserTest extends Framework\TestCase
     {
         $this->mockSitemapRequest('invalid_sitemap_1');
 
-        $this->expectException(Exception\InvalidSitemapException::class);
+        $this->expectException(Src\Exception\InvalidSitemapException::class);
         $this->expectExceptionCode(1660668799);
         $this->expectExceptionMessage(
             implode(PHP_EOL, [
@@ -157,7 +155,7 @@ final class XmlParserTest extends Framework\TestCase
     {
         $this->mockSitemapRequest('invalid_sitemap_2');
 
-        $this->expectException(Exception\InvalidSitemapException::class);
+        $this->expectException(Src\Exception\InvalidSitemapException::class);
         $this->expectExceptionCode(1660668799);
         $this->expectExceptionMessage(
             implode(PHP_EOL, [

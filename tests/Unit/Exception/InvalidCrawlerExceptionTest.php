@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Exception;
 
-use EliasHaeussler\CacheWarmup\Exception;
+use EliasHaeussler\CacheWarmup as Src;
 use PHPUnit\Framework;
 
 /**
@@ -32,13 +32,13 @@ use PHPUnit\Framework;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Exception\InvalidCrawlerException::class)]
+#[Framework\Attributes\CoversClass(Src\Exception\InvalidCrawlerException::class)]
 final class InvalidCrawlerExceptionTest extends Framework\TestCase
 {
     #[Framework\Attributes\Test]
     public function forMissingClassReturnsExceptionForGivenClass(): void
     {
-        $actual = Exception\InvalidCrawlerException::forMissingClass('foo');
+        $actual = Src\Exception\InvalidCrawlerException::forMissingClass('foo');
 
         self::assertSame(1604261816, $actual->getCode());
         self::assertSame('The specified crawler class "foo" does not exist.', $actual->getMessage());
@@ -47,7 +47,7 @@ final class InvalidCrawlerExceptionTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function forUnsupportedClassReturnsExceptionForGivenClass(): void
     {
-        $actual = Exception\InvalidCrawlerException::forUnsupportedClass('foo');
+        $actual = Src\Exception\InvalidCrawlerException::forUnsupportedClass('foo');
 
         self::assertSame(1604261885, $actual->getCode());
         self::assertSame('The specified crawler "foo" is not valid.', $actual->getMessage());

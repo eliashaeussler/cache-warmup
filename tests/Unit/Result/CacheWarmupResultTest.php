@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Unit\Result;
 
-use EliasHaeussler\CacheWarmup\Result;
+use EliasHaeussler\CacheWarmup as Src;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
 
@@ -33,20 +33,20 @@ use PHPUnit\Framework;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Result\CacheWarmupResult::class)]
+#[Framework\Attributes\CoversClass(Src\Result\CacheWarmupResult::class)]
 final class CacheWarmupResultTest extends Framework\TestCase
 {
-    private Result\CacheWarmupResult $subject;
+    private Src\Result\CacheWarmupResult $subject;
 
     protected function setUp(): void
     {
-        $this->subject = new Result\CacheWarmupResult();
+        $this->subject = new Src\Result\CacheWarmupResult();
     }
 
     #[Framework\Attributes\Test]
     public function addResultAddsSuccessfulResult(): void
     {
-        $result = Result\CrawlingResult::createSuccessful(new Psr7\Uri('https://www.example.com'));
+        $result = Src\Result\CrawlingResult::createSuccessful(new Psr7\Uri('https://www.example.com'));
 
         self::assertSame([], $this->subject->getSuccessful());
 
@@ -58,7 +58,7 @@ final class CacheWarmupResultTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function addResultAddsFailedResult(): void
     {
-        $result = Result\CrawlingResult::createFailed(new Psr7\Uri('https://www.example.com'));
+        $result = Src\Result\CrawlingResult::createFailed(new Psr7\Uri('https://www.example.com'));
 
         self::assertSame([], $this->subject->getFailed());
 
