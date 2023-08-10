@@ -57,17 +57,22 @@
 		"sort-packages": true
 	},
 	"scripts": {
-		"lint": [
-			"@lint:composer:fix",
-			"@lint:editorconfig:fix",
-			"@lint:php:fix"
+		"fix": [
+			"@fix:composer",
+			"@fix:editorconfig",
+			"@fix:php"
 		],
-		"lint:composer": "@lint:composer:fix --dry-run",
-		"lint:composer:fix": "@composer normalize",
+		"fix:composer": "@composer normalize",
+		"fix:editorconfig": "@lint:editorconfig --fix",
+		"fix:php": "php-cs-fixer fix",
+		"lint": [
+			"@lint:composer",
+			"@lint:editorconfig",
+			"@lint:php"
+		],
+		"lint:composer": "@fix:composer --dry-run",
 		"lint:editorconfig": "ec",
-		"lint:editorconfig:fix": "@lint:editorconfig --fix",
-		"lint:php": "@lint:php:fix --dry-run",
-		"lint:php:fix": "php-cs-fixer fix",
+		"lint:php": "@fix:php --dry-run",
 		"migration": [
 			"@migration:rector"
 		],
