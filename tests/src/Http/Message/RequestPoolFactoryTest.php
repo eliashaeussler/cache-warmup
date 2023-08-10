@@ -81,39 +81,4 @@ final class RequestPoolFactoryTest extends Framework\TestCase
 
         self::assertSame($expected, $visitedUrls);
     }
-
-    #[Framework\Attributes\Test]
-    public function forEachReturnsObjectForEachGivenRequest(): void
-    {
-        $visitedUrls = [];
-        $response = function (Message\RequestInterface $request) use (&$visitedUrls) {
-            $visitedUrls[] = (string) $request->getUri();
-
-            return new Psr7\Response();
-        };
-
-        $expected = [
-            'https://www.example.com/',
-            'https://www.example.com/baz',
-            'https://www.example.com/foo',
-        ];
-
-        $actual = Src\Http\Message\RequestPoolFactory::create([
-            new Psr7\Request('GET', 'https://www.example.com/'),
-            new Psr7\Request('GET', 'https://www.example.com/foo'),
-            new Psr7\Request('GET', 'https://www.example.com/baz'),
-        ])->withClient($this->client);
-
-        $this->mockHandler->append(
-            $response(...),
-            $response(...),
-            $response(...),
-        );
-
-        $actual->createPool()->promise()->wait();
-
-        sort($visitedUrls);
-
-        self::assertSame($expected, $visitedUrls);
-    }
 }
