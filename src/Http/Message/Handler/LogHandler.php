@@ -52,7 +52,7 @@ final class LogHandler implements ResponseHandlerInterface
             $this->logger->info(
                 'URL {url} was successfully crawled (status code: {status_code}).',
                 [
-                    'url' => (string) $uri,
+                    'url' => $uri,
                     'status_code' => $response->getStatusCode(),
                 ],
             );
@@ -65,7 +65,7 @@ final class LogHandler implements ResponseHandlerInterface
             $this->logger->error(
                 'Error while crawling URL {url} (exception: {exception}).',
                 [
-                    'url' => (string) $uri,
+                    'url' => $uri,
                     'exception' => $exception->getMessage(),
                 ],
             );
