@@ -66,7 +66,7 @@ final class LogHandler implements ResponseHandlerInterface
                 'Error while crawling URL {url} (exception: {exception}).',
                 [
                     'url' => $uri,
-                    'exception' => $exception->getMessage(),
+                    'exception' => $exception,
                 ],
             );
         }
