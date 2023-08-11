@@ -24,8 +24,7 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Tests\Crawler;
 
 use EliasHaeussler\CacheWarmup\Crawler;
-use EliasHaeussler\CacheWarmup\Log;
-use Psr\Log\LoggerInterface;
+use Psr\Log;
 
 /**
  * DummyLoggingCrawler.
@@ -37,15 +36,19 @@ use Psr\Log\LoggerInterface;
  */
 final class DummyLoggingCrawler extends DummyCrawler implements Crawler\LoggingCrawlerInterface
 {
-    public static ?LoggerInterface $logger = null;
-    public static ?Log\LogLevel $logLevel = null;
+    public static ?Log\LoggerInterface $logger = null;
 
-    public function setLogger(LoggerInterface $logger): void
+    /**
+     * @phpstan-var Log\LogLevel::*|null
+     */
+    public static ?string $logLevel = null;
+
+    public function setLogger(Log\LoggerInterface $logger): void
     {
         self::$logger = $logger;
     }
 
-    public function setLogLevel(Log\LogLevel $logLevel): void
+    public function setLogLevel(string $logLevel): void
     {
         self::$logLevel = $logLevel;
     }

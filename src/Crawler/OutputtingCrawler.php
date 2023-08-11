@@ -24,11 +24,10 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Crawler;
 
 use EliasHaeussler\CacheWarmup\Http;
-use EliasHaeussler\CacheWarmup\Log;
 use EliasHaeussler\CacheWarmup\Result;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
-use Psr\Log\LoggerInterface;
+use Psr\Log;
 use Symfony\Component\Console;
 
 use function count;
@@ -61,8 +60,12 @@ final class OutputtingCrawler extends AbstractConfigurableCrawler implements Log
 
     private readonly ClientInterface $client;
     private Console\Output\OutputInterface $output;
-    private ?LoggerInterface $logger = null;
-    private Log\LogLevel $logLevel = Log\LogLevel::Error;
+    private ?Log\LoggerInterface $logger = null;
+
+    /**
+     * @phpstan-var Log\LogLevel::*
+     */
+    private string $logLevel = Log\LogLevel::ERROR;
 
     public function __construct(
         array $options = [],
@@ -111,12 +114,12 @@ final class OutputtingCrawler extends AbstractConfigurableCrawler implements Log
         $this->output = $output;
     }
 
-    public function setLogger(LoggerInterface $logger): void
+    public function setLogger(Log\LoggerInterface $logger): void
     {
         $this->logger = $logger;
     }
 
-    public function setLogLevel(Log\LogLevel $logLevel): void
+    public function setLogLevel(string $logLevel): void
     {
         $this->logLevel = $logLevel;
     }

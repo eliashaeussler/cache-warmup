@@ -25,7 +25,6 @@ namespace EliasHaeussler\CacheWarmup\Log\Formatter;
 
 use DateTimeImmutable;
 use DateTimeInterface;
-use EliasHaeussler\CacheWarmup\Log;
 use JsonSerializable;
 use Stringable;
 
@@ -46,7 +45,7 @@ final class CompactLogFormatter implements LogFormatter
 {
     private const TEMPLATE = '[%s] %s: %s %s';
 
-    public function format(Log\LogLevel $level, Stringable|string $message, array $context = []): string
+    public function format(string $level, Stringable|string $message, array $context = []): string
     {
         $date = new DateTimeImmutable();
         $formattedMessage = $this->formatMessage($message, $context);
@@ -55,7 +54,7 @@ final class CompactLogFormatter implements LogFormatter
         return sprintf(
             self::TEMPLATE,
             $date->format(DateTimeInterface::ATOM),
-            strtoupper($level->name),
+            strtoupper($level),
             $formattedMessage,
             json_encode($context),
         );

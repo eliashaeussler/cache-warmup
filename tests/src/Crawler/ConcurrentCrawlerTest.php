@@ -29,6 +29,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
 use Psr\Http\Message;
+use Psr\Log;
 
 /**
  * ConcurrentCrawlerTest.
@@ -201,10 +202,10 @@ final class ConcurrentCrawlerTest extends Framework\TestCase
         $uri2 = new Psr7\Uri('https://www.foo.baz');
 
         $this->subject->setLogger($logger);
-        $this->subject->setLogLevel(Src\Log\LogLevel::Info);
+        $this->subject->setLogLevel(Log\LogLevel::INFO);
         $this->subject->crawl([$uri1, $uri2]);
 
-        self::assertCount(1, $logger->log[Src\Log\LogLevel::Error->value]);
-        self::assertCount(1, $logger->log[Src\Log\LogLevel::Info->value]);
+        self::assertCount(1, $logger->log[Log\LogLevel::ERROR]);
+        self::assertCount(1, $logger->log[Log\LogLevel::INFO]);
     }
 }

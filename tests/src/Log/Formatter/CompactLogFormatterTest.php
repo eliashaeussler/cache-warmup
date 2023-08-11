@@ -25,6 +25,7 @@ namespace EliasHaeussler\CacheWarmup\Tests\Log\Formatter;
 
 use EliasHaeussler\CacheWarmup as Src;
 use PHPUnit\Framework;
+use Psr\Log;
 use stdClass;
 
 /**
@@ -52,7 +53,7 @@ final class CompactLogFormatterTest extends Framework\TestCase
 
         self::assertStringEndsWith(
             'ERROR: oops, a baz occurred. []',
-            $this->subject->format(Src\Log\LogLevel::Error, 'oops, a {foo} occurred.', $context),
+            $this->subject->format(Log\LogLevel::ERROR, 'oops, a {foo} occurred.', $context),
         );
     }
 
@@ -66,7 +67,7 @@ final class CompactLogFormatterTest extends Framework\TestCase
 
         self::assertStringEndsWith(
             'ERROR: oops, a baz occurred. {"baz":"foo"}',
-            $this->subject->format(Src\Log\LogLevel::Error, 'oops, a {foo} occurred.', $context),
+            $this->subject->format(Log\LogLevel::ERROR, 'oops, a {foo} occurred.', $context),
         );
     }
 
@@ -79,7 +80,7 @@ final class CompactLogFormatterTest extends Framework\TestCase
 
         self::assertStringEndsWith(
             'ERROR: oops, a {foo} occurred. {"foo":"stdClass"}',
-            $this->subject->format(Src\Log\LogLevel::Error, 'oops, a {foo} occurred.', $context),
+            $this->subject->format(Log\LogLevel::ERROR, 'oops, a {foo} occurred.', $context),
         );
     }
 
@@ -88,7 +89,7 @@ final class CompactLogFormatterTest extends Framework\TestCase
     {
         self::assertStringEndsWith(
             'ERROR: oops, a {foo} occurred. []',
-            $this->subject->format(Src\Log\LogLevel::Error, 'oops, a {foo} occurred.'),
+            $this->subject->format(Log\LogLevel::ERROR, 'oops, a {foo} occurred.'),
         );
     }
 }

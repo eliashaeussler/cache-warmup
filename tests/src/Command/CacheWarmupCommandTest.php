@@ -68,6 +68,14 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    public function initializeThrowsExceptionIfGivenLogLevelIsUnsupported(): void
+    {
+        $this->expectExceptionObject(Src\Exception\UnsupportedLogLevelException::create('foo'));
+
+        $this->commandTester->execute(['--log-level' => 'foo']);
+    }
+
+    #[Framework\Attributes\Test]
     public function initializeHidesOutputForCrawlersIfGivenFormatterIsNotVerbose(): void
     {
         $this->mockSitemapRequest('valid_sitemap_3');

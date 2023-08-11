@@ -25,6 +25,7 @@ namespace EliasHaeussler\CacheWarmup\Tests\Crawler;
 
 use EliasHaeussler\CacheWarmup as Src;
 use PHPUnit\Framework;
+use Psr\Log;
 use Symfony\Component\Console;
 
 /**
@@ -102,7 +103,7 @@ final class CrawlerFactoryTest extends Framework\TestCase
 
         self::assertInstanceOf(DummyLoggingCrawler::class, $actual);
         self::assertSame($this->logger, DummyLoggingCrawler::$logger);
-        self::assertSame(Src\Log\LogLevel::Error, DummyLoggingCrawler::$logLevel);
+        self::assertSame(Log\LogLevel::ERROR, DummyLoggingCrawler::$logLevel);
 
         DummyLoggingCrawler::$logger = null;
         DummyLoggingCrawler::$logLevel = null;

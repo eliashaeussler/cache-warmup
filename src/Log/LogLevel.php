@@ -23,10 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Log;
 
-use EliasHaeussler\CacheWarmup\Exception;
 use Psr\Log;
-
-use function strtolower;
 
 /**
  * LogLevel.
@@ -34,54 +31,42 @@ use function strtolower;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-enum LogLevel: int
+final class LogLevel extends Log\LogLevel
 {
-    case Emergency = 7;
-    case Alert = 6;
-    case Critical = 5;
-    case Error = 4;
-    case Warning = 3;
-    case Notice = 2;
-    case Info = 1;
-    case Debug = 0;
+    private const VALUE_MAP = [
+        Log\LogLevel::EMERGENCY => 7,
+        Log\LogLevel::ALERT => 6,
+        Log\LogLevel::CRITICAL => 5,
+        Log\LogLevel::ERROR => 4,
+        Log\LogLevel::WARNING => 3,
+        Log\LogLevel::NOTICE => 2,
+        Log\LogLevel::INFO => 1,
+        Log\LogLevel::DEBUG => 0,
+    ];
 
-    public function satisfies(self $other): bool
+    /**
+     * @phpstan-param Log\LogLevel::* $level
+     * @phpstan-param Log\LogLevel::* $other
+     */
+    public static function satisfies(string $level, string $other): bool
     {
-        return $this->value <= $other->value;
+        return self::VALUE_MAP[$level] <= self::VALUE_MAP[$other];
     }
 
     /**
-     * @throws Exception\UnsupportedLogLevelException
+     * @return array<Log\LogLevel::*>
      */
-    public static function fromName(string $level): self
+    public static function getAll(): array
     {
-        return match (strtolower($level)) {
-            'emergency' => self::Emergency,
-            'alert' => self::Alert,
-            'critical' => self::Critical,
-            'error' => self::Error,
-            'warning' => self::Warning,
-            'notice' => self::Notice,
-            'info' => self::Info,
-            'debug' => self::Debug,
-            default => throw Exception\UnsupportedLogLevelException::create($level),
-        };
-    }
-
-    /**
-     * @phpstan-param Log\LogLevel::* $psrLogLevel
-     */
-    public static function fromPsrLogLevel(string $psrLogLevel): self
-    {
-        return match ($psrLogLevel) {
-            Log\LogLevel::EMERGENCY => self::Emergency,
-            Log\LogLevel::ALERT => self::Alert,
-            Log\LogLevel::CRITICAL => self::Critical,
-            Log\LogLevel::ERROR => self::Error,
-            Log\LogLevel::WARNING => self::Warning,
-            Log\LogLevel::NOTICE => self::Notice,
-            Log\LogLevel::INFO => self::Info,
-            Log\LogLevel::DEBUG => self::Debug,
-        };
+        return [
+            Log\LogLevel::EMERGENCY,
+            Log\LogLevel::ALERT,
+            Log\LogLevel::CRITICAL,
+            Log\LogLevel::ERROR,
+            Log\LogLevel::WARNING,
+            Log\LogLevel::NOTICE,
+            Log\LogLevel::INFO,
+            Log\LogLevel::DEBUG,
+        ];
     }
 }

@@ -25,6 +25,7 @@ namespace EliasHaeussler\CacheWarmup\Command;
 
 use EliasHaeussler\CacheWarmup\CacheWarmer;
 use EliasHaeussler\CacheWarmup\Crawler;
+use EliasHaeussler\CacheWarmup\Exception;
 use EliasHaeussler\CacheWarmup\Formatter;
 use EliasHaeussler\CacheWarmup\Helper;
 use EliasHaeussler\CacheWarmup\Log;
@@ -34,11 +35,13 @@ use EliasHaeussler\CacheWarmup\Time;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7;
+use Psr\Log\LogLevel;
 use Symfony\Component\Console;
 
 use function array_map;
 use function count;
 use function implode;
+use function in_array;
 use function is_string;
 use function json_encode;
 use function sleep;
@@ -81,8 +84,8 @@ final class CacheWarmupCommand extends Console\Command\Command
         $logLevels = implode(
             PHP_EOL,
             array_map(
-                static fn (Log\LogLevel $logLevel): string => '   * <comment>'.strtolower($logLevel->name).'</comment>',
-                Log\LogLevel::cases(),
+                static fn (string $logLevel): string => '   * <comment>'.strtolower($logLevel).'</comment>',
+                Log\LogLevel::getAll(),
             ),
         );
 
@@ -277,7 +280,7 @@ HELP);
             null,
             Console\Input\InputOption::VALUE_REQUIRED,
             'Log level used to determine which crawling results to log (see help for more information)',
-            Log\LogLevel::Error->name,
+            LogLevel::ERROR,
         );
         $this->addOption(
             'repeat-after',
@@ -287,18 +290,27 @@ HELP);
         );
     }
 
+    /**
+     * @throws Exception\UnsupportedFormatterException
+     * @throws Exception\UnsupportedLogLevelException
+     */
     protected function initialize(Console\Input\InputInterface $input, Console\Output\OutputInterface $output): void
     {
         $this->io = new Console\Style\SymfonyStyle($input, $output);
         $this->formatter = (new Formatter\FormatterFactory($this->io))->get($input->getOption('format'));
 
-        $logLevel = Log\LogLevel::fromName($input->getOption('log-level'));
+        $logLevel = $input->getOption('log-level');
         $logFile = $input->getOption('log-file');
         $logger = null;
 
         // Create logger
         if (is_string($logFile)) {
             $logger = new Log\FileLogger($logFile);
+        }
+
+        // Validate log level
+        if (!in_array($logLevel, Log\LogLevel::getAll(), true)) {
+            throw Exception\UnsupportedLogLevelException::create($logLevel);
         }
 
         // Disable output if formatter is non-verbose

@@ -26,6 +26,7 @@ namespace EliasHaeussler\CacheWarmup\Http\Message\Handler;
 use EliasHaeussler\CacheWarmup\Log;
 use Psr\Http\Message;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 use Throwable;
 
 /**
@@ -37,17 +38,17 @@ use Throwable;
 final class LogHandler implements ResponseHandlerInterface
 {
     /**
-     * @phpstan-param Log\LogLevel::* $logLevel
+     * @phpstan-param LogLevel::* $logLevel
      */
     public function __construct(
         private readonly LoggerInterface $logger,
-        private readonly Log\LogLevel $logLevel = Log\LogLevel::Error,
+        private readonly string $logLevel = LogLevel::ERROR,
     ) {
     }
 
     public function onSuccess(Message\ResponseInterface $response, Message\UriInterface $uri): void
     {
-        if ($this->logLevel->satisfies(Log\LogLevel::Info)) {
+        if (Log\LogLevel::satisfies($this->logLevel, LogLevel::INFO)) {
             $this->logger->info(
                 'URL {url} was successfully crawled (status code: {status_code}).',
                 [
@@ -60,7 +61,7 @@ final class LogHandler implements ResponseHandlerInterface
 
     public function onFailure(Throwable $exception, Message\UriInterface $uri): void
     {
-        if ($this->logLevel->satisfies(Log\LogLevel::Error)) {
+        if (Log\LogLevel::satisfies($this->logLevel, LogLevel::ERROR)) {
             $this->logger->error(
                 'Error while crawling URL {url} (exception: {exception}).',
                 [
