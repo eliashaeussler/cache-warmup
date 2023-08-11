@@ -284,7 +284,7 @@ $ cache-warmup --log-level error
 
 | Shorthand               | –                                        |
 |:------------------------|:-----------------------------------------|
-| Required                | **✅**                                    |
+| Required                | **–**                                    |
 | Multiple values allowed | **–**                                    |
 | Default                 | **`error`** *(= log only failed crawls)* |
 
