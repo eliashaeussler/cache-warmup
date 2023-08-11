@@ -103,7 +103,7 @@ final class LogHandlerTest extends Framework\TestCase
                 'message' => 'Error while crawling URL {url} (exception: {exception}).',
                 'context' => [
                     'url' => new Psr7\Uri('https://www.example.com'),
-                    'exception' => 'oops, something went wrong.',
+                    'exception' => new Exception('oops, something went wrong.'),
                 ],
             ],
         ];
