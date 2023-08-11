@@ -249,7 +249,7 @@ $ cache-warmup --format json
 #### `--log-file`
 
 A file where to log crawling results. Implicitly enables logging,
-if the options is set.
+if this option is set.
 
 ```bash
 $ cache-warmup --log-file cache-warmup.log
