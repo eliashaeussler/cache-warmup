@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Log\Formatter;
 
-use EliasHaeussler\CacheWarmup\Log;
+use Psr\Log;
 use Stringable;
 
 /**
@@ -35,7 +35,9 @@ use Stringable;
 interface LogFormatter
 {
     /**
+     * @phpstan-param Log\LogLevel::* $level
+     *
      * @param array<string, mixed> $context
      */
-    public function format(Log\LogLevel $level, Stringable|string $message, array $context = []): string;
+    public function format(string $level, Stringable|string $message, array $context = []): string;
 }

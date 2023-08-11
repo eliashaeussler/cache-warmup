@@ -28,6 +28,7 @@ use EliasHaeussler\CacheWarmup\Tests;
 use Exception;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
+use Psr\Log;
 
 /**
  * LogHandlerTest.
@@ -55,7 +56,7 @@ final class LogHandlerTest extends Framework\TestCase
             new Psr7\Uri('https://www.example.com'),
         );
 
-        self::assertSame([], $this->logger->log[Src\Log\LogLevel::Info->value]);
+        self::assertSame([], $this->logger->log[Log\LogLevel::INFO]);
     }
 
     #[Framework\Attributes\Test]
@@ -71,27 +72,27 @@ final class LogHandlerTest extends Framework\TestCase
             ],
         ];
 
-        $subject = new Src\Http\Message\Handler\LogHandler($this->logger, Src\Log\LogLevel::Info);
+        $subject = new Src\Http\Message\Handler\LogHandler($this->logger, Log\LogLevel::INFO);
 
         $subject->onSuccess(
             new Psr7\Response(),
             new Psr7\Uri('https://www.example.com'),
         );
 
-        self::assertSame($expected, $this->logger->log[Src\Log\LogLevel::Info->value]);
+        self::assertSame($expected, $this->logger->log[Log\LogLevel::INFO]);
     }
 
     #[Framework\Attributes\Test]
     public function onFailureDoesNothingIfConfiguredLogLevelDoesNotSatisfyErrorLevel(): void
     {
-        $subject = new Src\Http\Message\Handler\LogHandler($this->logger, Src\Log\LogLevel::Emergency);
+        $subject = new Src\Http\Message\Handler\LogHandler($this->logger, Log\LogLevel::EMERGENCY);
 
         $subject->onFailure(
             new Exception(),
             new Psr7\Uri('https://www.example.com'),
         );
 
-        self::assertSame([], $this->logger->log[Src\Log\LogLevel::Info->value]);
+        self::assertSame([], $this->logger->log[Log\LogLevel::INFO]);
     }
 
     #[Framework\Attributes\Test]
@@ -112,6 +113,6 @@ final class LogHandlerTest extends Framework\TestCase
             new Psr7\Uri('https://www.example.com'),
         );
 
-        self::assertSame($expected, $this->logger->log[Src\Log\LogLevel::Error->value]);
+        self::assertSame($expected, $this->logger->log[Log\LogLevel::ERROR]);
     }
 }

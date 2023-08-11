@@ -23,8 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Crawler;
 
-use EliasHaeussler\CacheWarmup\Log;
-use Psr\Log\LoggerInterface;
+use Psr\Log;
 
 /**
  * LoggingCrawlerInterface.
@@ -34,7 +33,10 @@ use Psr\Log\LoggerInterface;
  */
 interface LoggingCrawlerInterface extends CrawlerInterface
 {
-    public function setLogger(LoggerInterface $logger): void;
+    public function setLogger(Log\LoggerInterface $logger): void;
 
-    public function setLogLevel(Log\LogLevel $logLevel): void;
+    /**
+     * @phpstan-param Log\LogLevel::* $logLevel
+     */
+    public function setLogLevel(string $logLevel): void;
 }

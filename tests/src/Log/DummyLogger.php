@@ -39,14 +39,14 @@ use Stringable;
 final class DummyLogger extends AbstractLogger
 {
     /**
-     * @var array<value-of<Log\LogLevel>, list<array{message: string|Stringable, context: array<string, mixed>}>>
+     * @var array<LogLevel::*, list<array{message: string|Stringable, context: array<string, mixed>}>>
      */
     public array $log = [];
 
     public function __construct()
     {
-        foreach (Log\LogLevel::cases() as $logLevel) {
-            $this->log[$logLevel->value] = [];
+        foreach (Log\LogLevel::getAll() as $logLevel) {
+            $this->log[$logLevel] = [];
         }
     }
 
@@ -57,9 +57,7 @@ final class DummyLogger extends AbstractLogger
      */
     public function log($level, Stringable|string $message, array $context = []): void
     {
-        $logLevel = Log\LogLevel::fromPsrLogLevel($level);
-
-        $this->log[$logLevel->value][] = [
+        $this->log[$level][] = [
             'message' => $message,
             'context' => $context,
         ];

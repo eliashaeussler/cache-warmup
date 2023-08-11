@@ -74,8 +74,7 @@ final class FileLogger extends Log\AbstractLogger
             $this->stream = $this->openStream();
         }
 
-        $logLevel = LogLevel::fromPsrLogLevel($level);
-        $formatted = $this->formatter->format($logLevel, $message, $context);
+        $formatted = $this->formatter->format($level, $message, $context);
 
         fwrite($this->stream, $formatted.PHP_EOL);
     }
