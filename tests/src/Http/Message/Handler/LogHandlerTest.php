@@ -66,7 +66,7 @@ final class LogHandlerTest extends Framework\TestCase
             [
                 'message' => 'URL {url} was successfully crawled (status code: {status_code}).',
                 'context' => [
-                    'url' => 'https://www.example.com',
+                    'url' => new Psr7\Uri('https://www.example.com'),
                     'status_code' => 200,
                 ],
             ],
@@ -79,7 +79,7 @@ final class LogHandlerTest extends Framework\TestCase
             new Psr7\Uri('https://www.example.com'),
         );
 
-        self::assertSame($expected, $this->logger->log[Log\LogLevel::INFO]);
+        self::assertEquals($expected, $this->logger->log[Log\LogLevel::INFO]);
     }
 
     #[Framework\Attributes\Test]
@@ -102,7 +102,7 @@ final class LogHandlerTest extends Framework\TestCase
             [
                 'message' => 'Error while crawling URL {url} (exception: {exception}).',
                 'context' => [
-                    'url' => 'https://www.example.com',
+                    'url' => new Psr7\Uri('https://www.example.com'),
                     'exception' => 'oops, something went wrong.',
                 ],
             ],
@@ -113,6 +113,6 @@ final class LogHandlerTest extends Framework\TestCase
             new Psr7\Uri('https://www.example.com'),
         );
 
-        self::assertSame($expected, $this->logger->log[Log\LogLevel::ERROR]);
+        self::assertEquals($expected, $this->logger->log[Log\LogLevel::ERROR]);
     }
 }
