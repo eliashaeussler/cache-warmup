@@ -21,21 +21,21 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use EliasHaeussler\PHPStanConfig;
+namespace EliasHaeussler\CacheWarmup\Log\Formatter;
 
-$symfonySet = PHPStanConfig\Set\SymfonySet::create()
-    ->withConsoleApplicationLoader('tests/build/console-application.php')
-;
+use EliasHaeussler\CacheWarmup\Log;
+use Stringable;
 
-return PHPStanConfig\Config\Config::create(__DIR__)
-    ->in(
-        'bin/cache-warmup',
-        'src',
-        'tests',
-    )
-    ->withBaseline()
-    ->withBleedingEdge()
-    ->maxLevel()
-    ->withSets($symfonySet)
-    ->toArray()
-;
+/**
+ * LogFormatter.
+ *
+ * @author Elias Häußler <elias@haeussler.dev>
+ * @license GPL-3.0-or-later
+ */
+interface LogFormatter
+{
+    /**
+     * @param array<string, mixed> $context
+     */
+    public function format(Log\LogLevel $level, Stringable|string $message, array $context = []): string;
+}

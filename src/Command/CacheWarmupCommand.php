@@ -27,6 +27,7 @@ use EliasHaeussler\CacheWarmup\CacheWarmer;
 use EliasHaeussler\CacheWarmup\Crawler;
 use EliasHaeussler\CacheWarmup\Formatter;
 use EliasHaeussler\CacheWarmup\Helper;
+use EliasHaeussler\CacheWarmup\Log;
 use EliasHaeussler\CacheWarmup\Result;
 use EliasHaeussler\CacheWarmup\Sitemap;
 use EliasHaeussler\CacheWarmup\Time;
@@ -35,10 +36,14 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7;
 use Symfony\Component\Console;
 
+use function array_map;
 use function count;
+use function implode;
+use function is_string;
 use function json_encode;
 use function sleep;
 use function sprintf;
+use function strtolower;
 
 /**
  * CacheWarmupCommand.
@@ -73,6 +78,13 @@ final class CacheWarmupCommand extends Console\Command\Command
         $sortByChangeFrequencyStrategy = Crawler\Strategy\SortByChangeFrequencyStrategy::getName();
         $sortByLastModificationDateStrategy = Crawler\Strategy\SortByLastModificationDateStrategy::getName();
         $sortByPriorityStrategy = Crawler\Strategy\SortByPriorityStrategy::getName();
+        $logLevels = implode(
+            PHP_EOL,
+            array_map(
+                static fn (Log\LogLevel $logLevel): string => '   * <comment>'.strtolower($logLevel->name).'</comment>',
+                Log\LogLevel::cases(),
+            ),
+        );
 
         $this->setDescription('Warms up caches of URLs provided by a given set of XML sitemaps.');
         $this->setHelp(<<<HELP
@@ -174,6 +186,23 @@ Currently, the following formatters are available:
    * <comment>{$textFormatter}</comment> (default)
    * <comment>{$jsonFormatter}</comment>
 
+<info>Logging</info>
+<info>=======</info>
+You can log the crawling results of each crawled URL to an external log file.
+For this, the <comment>--log-file</comment> option exists:
+
+   <comment>%command.full_name% --log-file crawling-errors.log</comment>
+
+When logging is enabled, by default only crawling failures are logged.
+You can increase the log level to log successful crawlings as well:
+
+   * <comment>%command.full_name% --log-level error</comment> (default)
+   * <comment>%command.full_name% --log-level info</comment>
+
+The following log levels are currently available:
+
+{$logLevels}
+
 HELP);
 
         $this->addArgument(
@@ -238,6 +267,19 @@ HELP);
             Formatter\TextFormatter::getType(),
         );
         $this->addOption(
+            'log-file',
+            null,
+            Console\Input\InputOption::VALUE_REQUIRED,
+            'File where to log crawling results',
+        );
+        $this->addOption(
+            'log-level',
+            null,
+            Console\Input\InputOption::VALUE_REQUIRED,
+            'Log level used to determine which crawling results to log (see help for more information)',
+            Log\LogLevel::Error->name,
+        );
+        $this->addOption(
             'repeat-after',
             null,
             Console\Input\InputOption::VALUE_REQUIRED,
@@ -250,12 +292,21 @@ HELP);
         $this->io = new Console\Style\SymfonyStyle($input, $output);
         $this->formatter = (new Formatter\FormatterFactory($this->io))->get($input->getOption('format'));
 
+        $logLevel = Log\LogLevel::fromName($input->getOption('log-level'));
+        $logFile = $input->getOption('log-file');
+        $logger = null;
+
+        // Create logger
+        if (is_string($logFile)) {
+            $logger = new Log\FileLogger($logFile);
+        }
+
         // Disable output if formatter is non-verbose
         if (!$this->formatter->isVerbose()) {
             $output = new Console\Output\NullOutput();
         }
 
-        $this->crawlerFactory = new Crawler\CrawlerFactory($output);
+        $this->crawlerFactory = new Crawler\CrawlerFactory($output, $logger, $logLevel);
     }
 
     protected function interact(Console\Input\InputInterface $input, Console\Output\OutputInterface $output): void

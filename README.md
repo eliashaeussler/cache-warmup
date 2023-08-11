@@ -246,6 +246,48 @@ $ cache-warmup --format json
 | Multiple values allowed | **–**      |
 | Default                 | **`text`** |
 
+#### `--log-file`
+
+A file where to log crawling results. Implicitly enables logging,
+if the options is set.
+
+```bash
+$ cache-warmup --log-file cache-warmup.log
+```
+
+| Shorthand               | –     |
+|:------------------------|:------|
+| Required                | **–** |
+| Multiple values allowed | **–** |
+| Default                 | **–** |
+
+#### `--log-level`
+
+The log level used to determine which crawling results to log. This
+option is only respected if the [`--log-file`](#--log-file) command
+option is set.
+
+The following log levels are available:
+
+* `emergency`
+* `alert`
+* `critical`
+* `error` (default; enables logging of failed crawls)
+* `warning`
+* `notice`
+* `info` (enables logging of successful crawls)
+* `debug`
+
+```bash
+$ cache-warmup --log-level error
+```
+
+| Shorthand               | –                                        |
+|:------------------------|:-----------------------------------------|
+| Required                | **✅**                                    |
+| Multiple values allowed | **–**                                    |
+| Default                 | **`error`** *(= log only failed crawls)* |
+
 #### `--allow-failures`
 
 Allow failures during URL crawling and exit with zero.

@@ -21,21 +21,28 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use EliasHaeussler\PHPStanConfig;
+namespace EliasHaeussler\CacheWarmup\Exception;
 
-$symfonySet = PHPStanConfig\Set\SymfonySet::create()
-    ->withConsoleApplicationLoader('tests/build/console-application.php')
-;
+use function sprintf;
 
-return PHPStanConfig\Config\Config::create(__DIR__)
-    ->in(
-        'bin/cache-warmup',
-        'src',
-        'tests',
-    )
-    ->withBaseline()
-    ->withBleedingEdge()
-    ->maxLevel()
-    ->withSets($symfonySet)
-    ->toArray()
-;
+/**
+ * FilesystemFailureException.
+ *
+ * @author Elias Häußler <elias@haeussler.dev>
+ * @license GPL-3.0-or-later
+ */
+final class FilesystemFailureException extends Exception
+{
+    public static function forUnresolvableWorkingDirectory(): self
+    {
+        return new self('Unable to resolve the current working directory.', 1691648735);
+    }
+
+    public static function forUnexpectedFileStreamResult(string $file): self
+    {
+        return new self(
+            sprintf('Unable to open a file stream for "%s".', $file),
+            1691649034,
+        );
+    }
+}

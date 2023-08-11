@@ -24,9 +24,11 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Crawler;
 
 use EliasHaeussler\CacheWarmup\Http;
+use EliasHaeussler\CacheWarmup\Log;
 use EliasHaeussler\CacheWarmup\Result;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * ConcurrentCrawler.
@@ -42,7 +44,7 @@ use GuzzleHttp\ClientInterface;
  *     client_config: array<string, mixed>,
  * }>
  */
-final class ConcurrentCrawler extends AbstractConfigurableCrawler
+final class ConcurrentCrawler extends AbstractConfigurableCrawler implements LoggingCrawlerInterface
 {
     use ConcurrentCrawlerTrait;
 
@@ -55,6 +57,8 @@ final class ConcurrentCrawler extends AbstractConfigurableCrawler
     ];
 
     private readonly ClientInterface $client;
+    private ?LoggerInterface $logger = null;
+    private Log\LogLevel $logLevel = Log\LogLevel::Error;
 
     public function __construct(
         array $options = [],
@@ -66,11 +70,28 @@ final class ConcurrentCrawler extends AbstractConfigurableCrawler
 
     public function crawl(array $urls): Result\CacheWarmupResult
     {
-        $handler = new Http\Message\Handler\ResultCollectorHandler();
+        $resultHandler = new Http\Message\Handler\ResultCollectorHandler();
+        $handlers = [$resultHandler];
+
+        // Create log handler
+        if (null !== $this->logger) {
+            $logHandler = new Http\Message\Handler\LogHandler($this->logger, $this->logLevel);
+            $handlers[] = $logHandler;
+        }
 
         // Start crawling
-        $this->createPool($urls, $this->client, [$handler])->promise()->wait();
+        $this->createPool($urls, $this->client, $handlers)->promise()->wait();
 
-        return $handler->getResult();
+        return $resultHandler->getResult();
+    }
+
+    public function setLogger(LoggerInterface $logger): void
+    {
+        $this->logger = $logger;
+    }
+
+    public function setLogLevel(Log\LogLevel $logLevel): void
+    {
+        $this->logLevel = $logLevel;
     }
 }

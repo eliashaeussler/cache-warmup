@@ -24,9 +24,11 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Crawler;
 
 use EliasHaeussler\CacheWarmup\Http;
+use EliasHaeussler\CacheWarmup\Log;
 use EliasHaeussler\CacheWarmup\Result;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console;
 
 use function count;
@@ -45,7 +47,7 @@ use function count;
  *     client_config: array<string, mixed>,
  * }>
  */
-final class OutputtingCrawler extends AbstractConfigurableCrawler implements VerboseCrawlerInterface
+final class OutputtingCrawler extends AbstractConfigurableCrawler implements LoggingCrawlerInterface, VerboseCrawlerInterface
 {
     use ConcurrentCrawlerTrait;
 
@@ -59,6 +61,8 @@ final class OutputtingCrawler extends AbstractConfigurableCrawler implements Ver
 
     private readonly ClientInterface $client;
     private Console\Output\OutputInterface $output;
+    private ?LoggerInterface $logger = null;
+    private Log\LogLevel $logLevel = Log\LogLevel::Error;
 
     public function __construct(
         array $options = [],
@@ -82,8 +86,17 @@ final class OutputtingCrawler extends AbstractConfigurableCrawler implements Ver
             $progressBarHandler = new Http\Message\Handler\CompactProgressHandler($this->output, $numberOfUrls);
         }
 
+        // Define common handlers
+        $handlers = [$resultHandler, $progressBarHandler];
+
+        // Add log handler
+        if (null !== $this->logger) {
+            $logHandler = new Http\Message\Handler\LogHandler($this->logger, $this->logLevel);
+            $handlers[] = $logHandler;
+        }
+
         // Create request pool
-        $pool = $this->createPool($urls, $this->client, [$resultHandler, $progressBarHandler]);
+        $pool = $this->createPool($urls, $this->client, $handlers);
 
         // Start crawling
         $progressBarHandler->startProgressBar();
@@ -96,5 +109,15 @@ final class OutputtingCrawler extends AbstractConfigurableCrawler implements Ver
     public function setOutput(Console\Output\OutputInterface $output): void
     {
         $this->output = $output;
+    }
+
+    public function setLogger(LoggerInterface $logger): void
+    {
+        $this->logger = $logger;
+    }
+
+    public function setLogLevel(Log\LogLevel $logLevel): void
+    {
+        $this->logLevel = $logLevel;
     }
 }

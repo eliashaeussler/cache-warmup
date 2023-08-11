@@ -30,7 +30,10 @@ use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
 use Symfony\Component\Console;
 
+use function file_get_contents;
 use function implode;
+use function sys_get_temp_dir;
+use function uniqid;
 
 /**
  * CacheWarmupCommandTest.
@@ -481,6 +484,24 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         // At this point, we cannot test the actual output of the JSON formatter
         // because it's applied on destructuring first
         self::assertSame('', $this->commandTester->getDisplay());
+    }
+
+    #[Framework\Attributes\Test]
+    public function executeLogsCrawlingResults(): void
+    {
+        $this->mockSitemapRequest('valid_sitemap_3');
+
+        $logFile = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('cache-warmup_tests_').DIRECTORY_SEPARATOR.'test.log';
+
+        $this->commandTester->execute([
+            'sitemaps' => [
+                'https://www.example.com/sitemap.xml',
+            ],
+            '--log-file' => $logFile,
+        ]);
+
+        self::assertFileExists($logFile);
+        self::assertNotEmpty((string) file_get_contents($logFile));
     }
 
     #[Framework\Attributes\Test]

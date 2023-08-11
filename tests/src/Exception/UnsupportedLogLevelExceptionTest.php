@@ -21,21 +21,26 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use EliasHaeussler\PHPStanConfig;
+namespace EliasHaeussler\CacheWarmup\Tests\Exception;
 
-$symfonySet = PHPStanConfig\Set\SymfonySet::create()
-    ->withConsoleApplicationLoader('tests/build/console-application.php')
-;
+use EliasHaeussler\CacheWarmup as Src;
+use PHPUnit\Framework;
 
-return PHPStanConfig\Config\Config::create(__DIR__)
-    ->in(
-        'bin/cache-warmup',
-        'src',
-        'tests',
-    )
-    ->withBaseline()
-    ->withBleedingEdge()
-    ->maxLevel()
-    ->withSets($symfonySet)
-    ->toArray()
-;
+/**
+ * UnsupportedLogLevelExceptionTest.
+ *
+ * @author Elias Häußler <elias@haeussler.dev>
+ * @license GPL-3.0-or-later
+ */
+#[Framework\Attributes\CoversClass(Src\Exception\UnsupportedLogLevelException::class)]
+final class UnsupportedLogLevelExceptionTest extends Framework\TestCase
+{
+    #[Framework\Attributes\Test]
+    public function createReturnsExceptionForUnsupportedLogLevel(): void
+    {
+        $actual = Src\Exception\UnsupportedLogLevelException::create('foo');
+
+        self::assertSame(1691597515, $actual->getCode());
+        self::assertSame('The log level "foo" is not supported.', $actual->getMessage());
+    }
+}
