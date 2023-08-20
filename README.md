@@ -82,6 +82,22 @@ $ cache-warmup [options] [<sitemaps>...]
 
 The following input parameters are available:
 
+| Input parameter                                 | Description                                                            |
+|-------------------------------------------------|------------------------------------------------------------------------|
+| [`sitemaps`](#sitemaps)                         | URLs of XML sitemaps to be warmed up                                   |
+| [`--allow-failures`](#--allow-failures)         | Allow failures during URL crawling and exit with zero                  |
+| [`--crawler-options`, `-o`](#--crawler-options) | JSON-encoded string of additional config for configurable crawlers     |
+| [`--crawler`, `-c`](#--crawler)                 | FQCN of the crawler to use for cache warmup                            |
+| [`--exclude`, `-e`](#--exclude)                 | Patterns of URLs to be excluded from cache warmup                      |
+| [`--format`, `-f`](#--format)                   | Formatter used to print the cache warmup result                        |
+| [`--limit`, `-l`](#--limit)                     | Limit the number of URLs to be processed                               |
+| [`--log-file`](#--log-file)                     | File where to log crawling results                                     |
+| [`--log-level`](#--log-level)                   | Log level used to determine which crawling results to log              |
+| [`--progress`, `-p`](#--progress)               | Show a progress bar during cache warmup                                |
+| [`--repeat-after`](#--repeat-after)             | Run cache warmup in endless loop and repeat *x* seconds after each run |
+| [`--strategy`, `-s`](#--strategy)               | Optional crawling strategy to prepare URLs before crawling them        |
+| [`--urls`, `-u`](#--urls)                       | Additional URLs to be warmed up                                        |
+
 #### `sitemaps`
 
 URLs of XML sitemaps to be warmed up.
@@ -309,7 +325,7 @@ $ cache-warmup --allow-failures
 
 #### `--repeat-after`
 
-Run cache warmup in endless loop and repeat x seconds after each run.
+Run cache warmup in endless loop and repeat *x* seconds after each run.
 
 ```bash
 $ cache-warmup --repeat-after 300
