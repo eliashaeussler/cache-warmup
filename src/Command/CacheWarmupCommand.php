@@ -313,9 +313,14 @@ HELP);
             throw Exception\UnsupportedLogLevelException::create($logLevel);
         }
 
-        // Disable output if formatter is non-verbose
+        // Use error output or disable output if formatter is non-verbose
         if (!$this->formatter->isVerbose()) {
-            $output = new Console\Output\NullOutput();
+            if ($output instanceof Console\Output\ConsoleOutputInterface) {
+                $input->setOption('progress', true);
+                $output = $output->getErrorOutput();
+            } else {
+                $output = new Console\Output\NullOutput();
+            }
         }
 
         $this->crawlerFactory = new Crawler\CrawlerFactory($output, $logger, $logLevel);

@@ -80,20 +80,34 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     {
         $this->mockSitemapRequest('valid_sitemap_3');
 
+        $this->commandTester->execute([
+            'sitemaps' => [
+                'https://www.example.com/sitemap.xml',
+            ],
+            '--format' => 'json',
+        ]);
+
+        self::assertSame('', $this->commandTester->getDisplay());
+    }
+
+    #[Framework\Attributes\Test]
+    public function initializeWritesImplicitlyEnablesProgressForErrorOutputIfGivenFormatterIsNotVerbose(): void
+    {
+        $this->mockSitemapRequest('valid_sitemap_3');
+
         $this->commandTester->execute(
             [
                 'sitemaps' => [
                     'https://www.example.com/sitemap.xml',
                 ],
                 '--format' => 'json',
-                '--progress' => true,
             ],
             [
-                'verbosity' => Console\Output\OutputInterface::VERBOSITY_VERY_VERBOSE,
+                'capture_stderr_separately' => true,
             ],
         );
 
-        self::assertSame('', $this->commandTester->getDisplay());
+        self::assertStringContainsString('100%', $this->commandTester->getErrorOutput());
     }
 
     #[Framework\Attributes\Test]

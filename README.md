@@ -150,6 +150,9 @@ Show a progress bar during cache warmup.
 > 💡 You can show a more verbose progress bar by increasing output verbosity
 > with the `--verbose` command option.
 
+> ⚠️The progress bar is implicitly enabled when using a non-verbose
+> [formatter](#--format), e.g. `json`.
+
 ```bash
 $ cache-warmup --progress
 ```
