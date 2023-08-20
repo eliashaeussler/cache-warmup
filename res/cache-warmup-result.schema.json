@@ -1,0 +1,118 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"type": "object",
+	"title": "Cache warmup result",
+	"properties": {
+		"cacheWarmupResult": {
+			"type": "object",
+			"title": "Cache warmup result",
+			"description": "Lists all crawled URLs, grouped by their crawling result.",
+			"properties": {
+				"failure": {
+					"$ref": "#/definitions/urls"
+				},
+				"success": {
+					"$ref": "#/definitions/urls"
+				}
+			},
+			"additionalProperties": false
+		},
+		"messages": {
+			"type": "object",
+			"title": "Logged messages, grouped by severity",
+			"properties": {
+				"error": {
+					"$ref": "#/definitions/messages"
+				},
+				"info": {
+					"$ref": "#/definitions/messages"
+				},
+				"success": {
+					"$ref": "#/definitions/messages"
+				},
+				"warning": {
+					"$ref": "#/definitions/messages"
+				}
+			},
+			"additionalProperties": false
+		},
+		"parserResult": {
+			"type": "object",
+			"title": "Parser result",
+			"description": "Lists all parsed and excluded XML sitemaps and URLs, grouped by their parsing state.",
+			"properties": {
+				"excluded": {
+					"type": "object",
+					"title": "Excluded XML sitemaps and URLs",
+					"properties": {
+						"sitemaps": {
+							"$ref": "#/definitions/urls"
+						},
+						"urls": {
+							"$ref": "#/definitions/urls"
+						}
+					},
+					"additionalProperties": false
+				},
+				"failure": {
+					"type": "object",
+					"title": "XML sitemaps failed to parse",
+					"properties": {
+						"sitemaps": {
+							"$ref": "#/definitions/urls"
+						}
+					},
+					"additionalProperties": false
+				},
+				"success": {
+					"type": "object",
+					"title": "Successfully parsed XML sitemaps and URLs",
+					"description": "Only written if output is very verbose",
+					"properties": {
+						"sitemaps": {
+							"$ref": "#/definitions/urls"
+						},
+						"urls": {
+							"$ref": "#/definitions/urls"
+						}
+					},
+					"additionalProperties": false
+				}
+			},
+			"additionalProperties": false
+		},
+		"time": {
+			"type": "object",
+			"title": "Tracked times",
+			"description": "Lists all tracked times during cache warmup.",
+			"properties": {
+				"crawl": {
+					"type": "string",
+					"title": "Time used to crawl URLs"
+				},
+				"parse": {
+					"type": "string",
+					"title": "Time used to parse XML sitemaps"
+				}
+			},
+			"additionalProperties": false
+		}
+	},
+	"additionalProperties": false,
+	"definitions": {
+		"messages": {
+			"type": "array",
+			"title": "List of messages",
+			"items": {
+				"type": "string"
+			}
+		},
+		"urls": {
+			"type": "array",
+			"title": "List of URLs",
+			"items": {
+				"type": "string"
+			}
+		}
+	}
+}

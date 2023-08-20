@@ -239,6 +239,8 @@ At the moment, the following formatters are available:
 * [`json`][11]
 * [`text`][12] *(default)*
 
+> 💡 Read more in the [Formatters](#formatters) section below.
+
 ```bash
 $ cache-warmup --format json
 ```
@@ -459,6 +461,34 @@ $crawler = new \EliasHaeussler\CacheWarmup\Crawler\ConcurrentCrawler(
 | Mergeable | **–**                  |
 | Default   | **`[]`**               |
 
+### Formatters
+
+#### Text formatter
+
+* Class name: [`EliasHaeussler\CacheWarmup\Formatter\TextFormatter`][12]
+* Type: `text`
+
+This is the default formatter that is used if no other formatter
+is explicitly configured. It writes all user-oriented output to
+the console.
+
+#### JSON formatter
+
+* Class name: [`EliasHaeussler\CacheWarmup\Formatter\JsonFormatter`][11]
+* Type: `json`
+
+This formatter can be used to format user-oriented output as JSON
+object. It includes the following properties:
+
+| Property            | Description                                                                                                            |
+|---------------------|------------------------------------------------------------------------------------------------------------------------|
+| `cacheWarmupResult` | Lists all crawled URLs, grouped by their crawling state (`failure`, `success`)                                         |
+| `messages`          | Contains all logged messages, grouped by message severity (`error`, `info`, `success`, `warning`)                      |
+| `parserResult`      | Lists all parsed and excluded XML sitemaps and URLs, grouped by their parsing state (`excluded`, `failure`, `success`) |
+| `time`              | Lists all tracked times during cache warmup (`crawl`, `parse`)                                                         |
+
+> 💡 The complete JSON structure can be found in the provided [JSON schema][22].
+
 ## 🧑‍💻 Contributing
 
 Please have a look at [`CONTRIBUTING.md`](CONTRIBUTING.md).
@@ -488,3 +518,4 @@ This project is licensed under [GNU General Public License 3.0 (or later)](LICEN
 [19]: https://docs.guzzlephp.org/en/stable/quickstart.html#creating-a-client
 [20]: https://github.com/eliashaeussler/cache-warmup/releases/latest
 [21]: https://github.com/eliashaeussler/cache-warmup/pkgs/container/cache-warmup
+[22]: res/cache-warmup-result.schema.json
