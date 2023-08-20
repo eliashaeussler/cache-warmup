@@ -98,6 +98,9 @@ The following input parameters are available:
 | [`--strategy`, `-s`](#--strategy)               | Optional crawling strategy to prepare URLs before crawling them        |
 | [`--urls`, `-u`](#--urls)                       | Additional URLs to be warmed up                                        |
 
+💡 Run `cache-warmup --help` to see a detailed explanation of all available
+input parameters.
+
 #### `sitemaps`
 
 URLs of XML sitemaps to be warmed up.
@@ -340,9 +343,6 @@ $ cache-warmup --repeat-after 300
 | Required                | **–**                       |
 | Multiple values allowed | **–**                       |
 | Default                 | **`0`** *(= run only once)* |
-
-💡 Run `cache-warmup --help` to see a detailed explanation of all available
-input parameters.
 
 ### Code usage
 
