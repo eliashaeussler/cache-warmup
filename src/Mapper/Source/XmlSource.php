@@ -49,8 +49,7 @@ final class XmlSource implements IteratorAggregate
      */
     private function __construct(
         private array $source,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws Exception\MalformedXmlException

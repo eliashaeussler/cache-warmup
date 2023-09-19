@@ -41,8 +41,7 @@ final class CrawlingResult implements Stringable
         private readonly Message\UriInterface $uri,
         private readonly CrawlingState $state,
         private readonly array $data = [],
-    ) {
-    }
+    ) {}
 
     /**
      * @param array<string, mixed> $data

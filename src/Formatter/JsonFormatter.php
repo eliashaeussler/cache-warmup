@@ -74,8 +74,7 @@ final class JsonFormatter implements Formatter
 
     public function __construct(
         private readonly Console\Style\SymfonyStyle $io,
-    ) {
-    }
+    ) {}
 
     public function formatParserResult(
         Result\ParserResult $successful,

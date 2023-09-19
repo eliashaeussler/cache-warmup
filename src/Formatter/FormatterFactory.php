@@ -36,8 +36,7 @@ final class FormatterFactory
 {
     public function __construct(
         private readonly Console\Style\SymfonyStyle $io,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws Exception\UnsupportedFormatterException
