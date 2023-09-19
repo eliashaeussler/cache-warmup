@@ -48,8 +48,7 @@ final class CrawlerFactory
         private readonly Console\Output\OutputInterface $output = new Console\Output\ConsoleOutput(),
         private readonly ?Log\LoggerInterface $logger = null,
         private readonly string $logLevel = Log\LogLevel::ERROR,
-    ) {
-    }
+    ) {}
 
     /**
      * @param class-string<CrawlerInterface> $crawler

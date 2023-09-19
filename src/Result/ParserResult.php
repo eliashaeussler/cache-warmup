@@ -42,8 +42,7 @@ final class ParserResult
     public function __construct(
         private readonly array $sitemaps = [],
         private readonly array $urls = [],
-    ) {
-    }
+    ) {}
 
     /**
      * @return list<Sitemap\Sitemap>

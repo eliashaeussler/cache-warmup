@@ -43,8 +43,7 @@ final class LogHandler implements ResponseHandlerInterface
     public function __construct(
         private readonly LoggerInterface $logger,
         private readonly string $logLevel = LogLevel::ERROR,
-    ) {
-    }
+    ) {}
 
     public function onSuccess(Message\ResponseInterface $response, Message\UriInterface $uri): void
     {

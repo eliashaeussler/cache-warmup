@@ -35,8 +35,7 @@ final class Duration
 {
     public function __construct(
         private readonly float $milliseconds,
-    ) {
-    }
+    ) {}
 
     public function get(): float
     {
