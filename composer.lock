@@ -1537,16 +1537,16 @@
     "packages-dev": [
         {
             "name": "armin/editorconfig-cli",
-            "version": "1.6.2",
+            "version": "1.7.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/a-r-m-i-n/editorconfig-cli.git",
-                "reference": "13b80480d6c4115533ef5e935ada8b71b7a9630b"
+                "reference": "f16f5e723f01d385d9900178d1de856b492a5d1e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/a-r-m-i-n/editorconfig-cli/zipball/13b80480d6c4115533ef5e935ada8b71b7a9630b",
-                "reference": "13b80480d6c4115533ef5e935ada8b71b7a9630b",
+                "url": "https://api.github.com/repos/a-r-m-i-n/editorconfig-cli/zipball/f16f5e723f01d385d9900178d1de856b492a5d1e",
+                "reference": "f16f5e723f01d385d9900178d1de856b492a5d1e",
                 "shasum": ""
             },
             "require": {
@@ -1562,7 +1562,7 @@
                 "friendsofphp/php-cs-fixer": "3.4.0",
                 "jangregor/phpstan-prophecy": "1.0.0",
                 "phpstan/phpstan": "1.4.0",
-                "phpunit/phpunit": "^9.5 || ^10.1",
+                "phpunit/phpunit": "^9.6.8 || ^10.1",
                 "seld/phar-utils": "^1.1"
             },
             "bin": [
@@ -1591,7 +1591,7 @@
                 "issues": "https://github.com/a-r-m-i-n/editorconfig-cli/issues",
                 "source": "https://github.com/a-r-m-i-n/editorconfig-cli"
             },
-            "time": "2023-05-27T16:04:30+00:00"
+            "time": "2023-10-23T18:18:44+00:00"
         },
         {
             "name": "composer/pcre",
