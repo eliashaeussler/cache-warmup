@@ -27,6 +27,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7;
+use Psr\Http\Message;
 
 use function array_key_exists;
 use function array_values;
@@ -35,6 +36,7 @@ use function fnmatch;
 use function is_array;
 use function is_string;
 use function preg_match;
+use function str_contains;
 use function str_starts_with;
 
 /**
@@ -100,6 +102,7 @@ final class CacheWarmer
     /**
      * @param list<string|Sitemap\Sitemap>|string|Sitemap\Sitemap $sitemaps
      *
+     * @throws Exception\FilesystemFailureException
      * @throws Exception\InvalidSitemapException
      * @throws Exception\InvalidUrlException
      * @throws Exception\MalformedXmlException
@@ -121,7 +124,8 @@ final class CacheWarmer
         foreach ($sitemaps as $sitemap) {
             // Parse sitemap URL to valid sitemap object
             if (is_string($sitemap)) {
-                $sitemap = new Sitemap\Sitemap(new Psr7\Uri($sitemap));
+                $sitemapUri = $this->resolveSitemapUri($sitemap);
+                $sitemap = new Sitemap\Sitemap($sitemapUri);
             }
 
             // Throw exception if sitemap is invalid
@@ -140,7 +144,7 @@ final class CacheWarmer
             // Parse sitemap object
             try {
                 $result = $this->parser->parse($sitemap);
-            } catch (GuzzleException|Exception\InvalidSitemapException|Exception\MalformedXmlException $exception) {
+            } catch (GuzzleException|Exception\FilesystemFailureException|Exception\InvalidSitemapException|Exception\MalformedXmlException $exception) {
                 // Exit early if running in strict mode
                 if ($this->strict) {
                     throw $exception;
@@ -191,6 +195,19 @@ final class CacheWarmer
         }
 
         return $this;
+    }
+
+    private function resolveSitemapUri(string $sitemap): Message\UriInterface
+    {
+        // Sitemap is a remote URL
+        if (str_contains($sitemap, '://')) {
+            return new Psr7\Uri($sitemap);
+        }
+
+        // Sitemap is a local file
+        $file = Helper\FilesystemHelper::resolveRelativePath($sitemap);
+
+        return new Psr7\Uri('file://'.$file);
     }
 
     private function exceededLimit(): bool

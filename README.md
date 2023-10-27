@@ -84,7 +84,7 @@ The following input parameters are available:
 
 | Input parameter                                 | Description                                                            |
 |-------------------------------------------------|------------------------------------------------------------------------|
-| [`sitemaps`](#sitemaps)                         | URLs of XML sitemaps to be warmed up                                   |
+| [`sitemaps`](#sitemaps)                         | URLs or local filenames of XML sitemaps to be warmed up                |
 | [`--allow-failures`](#--allow-failures)         | Allow failures during URL crawling and exit with zero                  |
 | [`--crawler-options`, `-o`](#--crawler-options) | JSON-encoded string of additional config for configurable crawlers     |
 | [`--crawler`, `-c`](#--crawler)                 | FQCN of the crawler to use for cache warmup                            |
@@ -103,10 +103,10 @@ input parameters.
 
 #### `sitemaps`
 
-URLs of XML sitemaps to be warmed up.
+URLs or local filenames of XML sitemaps to be warmed up.
 
 ```bash
-$ cache-warmup "https://www.example.org/sitemap.xml" "https://www.example.org/de/sitemap.xml"
+$ cache-warmup "https://www.example.org/sitemap.xml" "/var/www/html/sitemap.xml"
 ```
 
 | Shorthand               | –                                                                            |

@@ -29,6 +29,7 @@ use EliasHaeussler\CacheWarmup\Tests;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
 
+use function dirname;
 use function implode;
 
 /**
@@ -165,6 +166,37 @@ final class XmlParserTest extends Framework\TestCase
         );
 
         $this->subject->parse($this->sitemap);
+    }
+
+    #[Framework\Attributes\Test]
+    public function parseParsesLocalFile(): void
+    {
+        $filename = dirname(__DIR__).'/Fixtures/valid_sitemap_4.xml';
+        $sitemap = new Src\Sitemap\Sitemap(new Psr7\Uri('file://'.$filename));
+
+        $result = $this->subject->parse($sitemap);
+
+        $expected = [
+            new Src\Sitemap\Sitemap(
+                uri: new Psr7\Uri('https://www.example.org/sitemap_en.xml'),
+                lastModificationDate: new DateTimeImmutable('2022-08-17T13:18:06+02:00'),
+                origin: $sitemap,
+            ),
+        ];
+
+        self::assertEquals($expected, $result->getSitemaps());
+    }
+
+    #[Framework\Attributes\Test]
+    public function parseThrowsExceptionOnMissingLocalFile(): void
+    {
+        $sitemap = new Src\Sitemap\Sitemap(new Psr7\Uri('file:///foo'));
+
+        $this->expectException(Src\Exception\FilesystemFailureException::class);
+        $this->expectExceptionCode(1698427082);
+        $this->expectExceptionMessage('The file "/foo" does not exist or is not readable');
+
+        $this->subject->parse($sitemap);
     }
 
     protected function tearDown(): void
