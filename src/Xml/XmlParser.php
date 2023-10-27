@@ -36,6 +36,12 @@ use GuzzleHttp\Psr7;
 use Psr\Http\Message;
 use Throwable;
 
+use function file_exists;
+use function file_get_contents;
+use function is_readable;
+use function str_starts_with;
+use function substr;
+
 /**
  * XmlParser.
  *
@@ -53,24 +59,29 @@ final class XmlParser
     }
 
     /**
+     * @throws Exception\FilesystemFailureException
      * @throws Exception\InvalidSitemapException
      * @throws Exception\MalformedXmlException
      * @throws GuzzleException
      */
     public function parse(Sitemap\Sitemap $sitemap): Result\ParserResult
     {
+        $uri = $sitemap->getUri();
+
         // Fetch XML source
-        $request = new Psr7\Request('GET', $sitemap->getUri());
-        $response = $this->client->send($request);
-        $body = (string) $response->getBody();
+        if (str_starts_with((string) $uri, 'file://')) {
+            $contents = $this->fetchLocalFile($uri);
+        } else {
+            $contents = $this->fetchUrl($uri);
+        }
 
         // Decode gzipped sitemap
-        if (0 === mb_strpos($body, "\x1f\x8b\x08")) {
-            $body = (string) gzdecode($body);
+        if (0 === mb_strpos($contents, "\x1f\x8b\x08")) {
+            $contents = (string) gzdecode($contents);
         }
 
         // Initialize XML source
-        $xml = Mapper\Source\XmlSource::fromXml($body)
+        $xml = Mapper\Source\XmlSource::fromXml($contents)
             ->asCollection('sitemap')
             ->asCollection('url');
         $source = Valinor\Mapper\Source\Source::iterable($xml)->map([
@@ -99,6 +110,32 @@ final class XmlParser
         }
 
         return $result;
+    }
+
+    /**
+     * @throws Exception\FilesystemFailureException
+     */
+    private function fetchLocalFile(Message\UriInterface $uri): string
+    {
+        // Remove file:// prefix
+        $filename = substr((string) $uri, 7);
+
+        if (!file_exists($filename) || !is_readable($filename)) {
+            throw Exception\FilesystemFailureException::forMissingFile($filename);
+        }
+
+        return (string) file_get_contents($filename);
+    }
+
+    /**
+     * @throws GuzzleException
+     */
+    private function fetchUrl(Message\UriInterface $uri): string
+    {
+        $request = new Psr7\Request('GET', $uri);
+        $response = $this->client->send($request);
+
+        return (string) $response->getBody();
     }
 
     private function createMapper(): Valinor\Mapper\TreeMapper

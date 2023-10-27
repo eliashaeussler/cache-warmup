@@ -282,6 +282,9 @@ final class CacheWarmerTest extends Framework\TestCase
         $origin2 = new Src\Sitemap\Sitemap(new Psr7\Uri('https://www.example.com/sitemap.xml'));
         $origin3 = new Src\Sitemap\Sitemap(new Psr7\Uri('https://www.example.org/sitemap_en.xml'), origin: $origin2);
 
+        $localFile = __DIR__.'/Fixtures/valid_sitemap_2.xml';
+        $originLocal = new Src\Sitemap\Sitemap(new Psr7\Uri('file://'.$localFile));
+
         yield 'empty sitemaps' => [
             [],
             [],
@@ -379,6 +382,34 @@ final class CacheWarmerTest extends Framework\TestCase
                 'valid_sitemap_1',
                 'valid_sitemap_3',
             ],
+        ];
+        yield 'local sitemap file' => [
+            [
+                $originLocal,
+            ],
+            [
+                $originLocal,
+            ],
+            [
+                new Src\Sitemap\Url('https://www.example.org/', origin: $originLocal),
+                new Src\Sitemap\Url('https://www.example.org/foo', origin: $originLocal),
+                new Src\Sitemap\Url('https://www.example.org/baz', origin: $originLocal),
+            ],
+            [],
+        ];
+        yield 'local sitemap object' => [
+            [
+                $localFile,
+            ],
+            [
+                $originLocal,
+            ],
+            [
+                new Src\Sitemap\Url('https://www.example.org/', origin: $originLocal),
+                new Src\Sitemap\Url('https://www.example.org/foo', origin: $originLocal),
+                new Src\Sitemap\Url('https://www.example.org/baz', origin: $originLocal),
+            ],
+            [],
         ];
     }
 

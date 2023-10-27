@@ -52,4 +52,13 @@ final class FilesystemFailureExceptionTest extends Framework\TestCase
         self::assertSame(1691649034, $actual->getCode());
         self::assertSame('Unable to open a file stream for "foo".', $actual->getMessage());
     }
+
+    #[Framework\Attributes\Test]
+    public function forMissingFileReturnsExceptionForMissingFile(): void
+    {
+        $actual = Src\Exception\FilesystemFailureException::forMissingFile('foo');
+
+        self::assertSame(1698427082, $actual->getCode());
+        self::assertSame('The file "foo" does not exist or is not readable.', $actual->getMessage());
+    }
 }

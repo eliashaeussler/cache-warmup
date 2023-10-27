@@ -45,4 +45,12 @@ final class FilesystemFailureException extends Exception
             1691649034,
         );
     }
+
+    public static function forMissingFile(string $file): self
+    {
+        return new self(
+            sprintf('The file "%s" does not exist or is not readable.', $file),
+            1698427082,
+        );
+    }
 }

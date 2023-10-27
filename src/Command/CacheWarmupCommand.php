@@ -98,7 +98,8 @@ It requires a set of XML sitemaps offering several URLs which will be crawled.
 <info>========</info>
 The list of sitemaps to be crawled can be defined as command argument:
 
-   <comment>%command.full_name% https://www.example.com/sitemap.xml</comment>
+   * <comment>%command.full_name% https://www.example.com/sitemap.xml</comment> (URL)
+   * <comment>%command.full_name% /var/www/html/sitemap.xml</comment> (local file)
 
 You are free to crawl as many sitemaps as you want.
 Alternatively, sitemaps can be specified from user input when application is in interactive mode.
@@ -211,7 +212,7 @@ HELP);
         $this->addArgument(
             'sitemaps',
             Console\Input\InputArgument::OPTIONAL | Console\Input\InputArgument::IS_ARRAY,
-            'URLs of XML sitemaps to be used for cache warming',
+            'URLs or local filenames of XML sitemaps to be used for cache warming',
         );
         $this->addOption(
             'urls',
