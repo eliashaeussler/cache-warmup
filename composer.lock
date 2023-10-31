@@ -1924,21 +1924,21 @@
         },
         {
             "name": "eliashaeussler/rector-config",
-            "version": "1.7.2",
+            "version": "1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/rector-config.git",
-                "reference": "7e3e16d1a3dd42b8e53686ff4b94ea647697c941"
+                "reference": "132a59e260ba39ac0a528bda4fa533134ee7bd38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/rector-config/zipball/7e3e16d1a3dd42b8e53686ff4b94ea647697c941",
-                "reference": "7e3e16d1a3dd42b8e53686ff4b94ea647697c941",
+                "url": "https://api.github.com/repos/eliashaeussler/rector-config/zipball/132a59e260ba39ac0a528bda4fa533134ee7bd38",
+                "reference": "132a59e260ba39ac0a528bda4fa533134ee7bd38",
                 "shasum": ""
             },
             "require": {
                 "composer-runtime-api": "^2.0",
-                "php": "~8.1.0 || ~8.2.0",
+                "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
                 "rector/rector": "^0.15.21 || ^0.16.0 || ^0.17.0 || ^0.18.0"
             },
             "require-dev": {
@@ -1978,9 +1978,9 @@
             "description": "My personal configuration for Rector",
             "support": {
                 "issues": "https://github.com/eliashaeussler/rector-config/issues",
-                "source": "https://github.com/eliashaeussler/rector-config/tree/1.7.2"
+                "source": "https://github.com/eliashaeussler/rector-config/tree/1.8.0"
             },
-            "time": "2023-09-15T12:17:40+00:00"
+            "time": "2023-10-31T07:20:06+00:00"
         },
         {
             "name": "ergebnis/composer-normalize",
