@@ -51,7 +51,10 @@ final class OutputtingCrawlerTest extends Framework\TestCase
     {
         $this->client = $this->createClient();
         $this->output = new Console\Output\BufferedOutput();
-        $this->subject = new Src\Crawler\OutputtingCrawler(client: $this->client);
+        $this->subject = new Src\Crawler\OutputtingCrawler(
+            ['concurrency' => 1],
+            $this->client,
+        );
         $this->subject->setOutput($this->output);
     }
 
@@ -258,5 +261,22 @@ final class OutputtingCrawlerTest extends Framework\TestCase
 
         self::assertCount(1, $logger->log[Log\LogLevel::ERROR]);
         self::assertCount(1, $logger->log[Log\LogLevel::INFO]);
+    }
+
+    #[Framework\Attributes\Test]
+    public function crawlStopsOnFailure(): void
+    {
+        $this->mockHandler->append(new Psr7\Response(404));
+
+        $uri1 = new Psr7\Uri('https://www.example.org');
+        $uri2 = new Psr7\Uri('https://www.foo.baz');
+
+        $this->subject->stopOnFailure();
+
+        $result = $this->subject->crawl([$uri1, $uri2]);
+
+        self::assertSame([$uri1], $this->getProcessedUrlsFromCacheWarmupResult($result, Src\Result\CrawlingState::Failed));
+        self::assertSame([], $result->getSuccessful());
+        self::assertTrue($result->wasCancelled());
     }
 }

@@ -45,7 +45,12 @@ final class CrawlerFactoryTest extends Framework\TestCase
     {
         $this->output = new Console\Output\BufferedOutput();
         $this->logger = new Src\Tests\Log\DummyLogger();
-        $this->subject = new Src\Crawler\CrawlerFactory($this->output, $this->logger);
+        $this->subject = new Src\Crawler\CrawlerFactory(
+            $this->output,
+            $this->logger,
+            Log\LogLevel::ERROR,
+            true,
+        );
     }
 
     #[Framework\Attributes\Test]
@@ -107,6 +112,17 @@ final class CrawlerFactoryTest extends Framework\TestCase
 
         DummyLoggingCrawler::$logger = null;
         DummyLoggingCrawler::$logLevel = null;
+    }
+
+    #[Framework\Attributes\Test]
+    public function getReturnsStoppableCrawler(): void
+    {
+        $actual = $this->subject->get(DummyStoppableCrawler::class);
+
+        self::assertInstanceOf(DummyStoppableCrawler::class, $actual);
+        self::assertTrue(DummyStoppableCrawler::$stopOnFailure);
+
+        DummyStoppableCrawler::$stopOnFailure = false;
     }
 
     #[Framework\Attributes\Test]

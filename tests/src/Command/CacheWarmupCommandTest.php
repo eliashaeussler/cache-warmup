@@ -377,6 +377,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     public function executeUsesCrawlerOptions(array|string $crawlerOptions): void
     {
         $this->mockSitemapRequest('valid_sitemap_3');
+
         $this->commandTester->execute(
             [
                 'sitemaps' => [
@@ -400,6 +401,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     public function executeShowsWarningIfCrawlerOptionsArePassedToNonConfigurableCrawler(): void
     {
         $this->mockSitemapRequest('valid_sitemap_3');
+
         $this->commandTester->execute([
             'sitemaps' => [
                 'https://www.example.com/sitemap.xml',
@@ -412,6 +414,25 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         self::assertNotEmpty($output);
         self::assertStringContainsString('You passed crawler options for a non-configurable crawler.', $output);
+    }
+
+    #[Framework\Attributes\Test]
+    public function executeShowsWarningIfStopOnFailureOptionIsPassedToNonStoppableCrawler(): void
+    {
+        $this->mockSitemapRequest('valid_sitemap_3');
+
+        $this->commandTester->execute([
+            'sitemaps' => [
+                'https://www.example.com/sitemap.xml',
+            ],
+            '--crawler' => Tests\Crawler\DummyCrawler::class,
+            '--stop-on-failure' => true,
+        ]);
+
+        $output = $this->commandTester->getDisplay();
+
+        self::assertNotEmpty($output);
+        self::assertStringContainsString('You passed --stop-on-failure to a non-stoppable crawler.', $output);
     }
 
     #[Framework\Attributes\Test]
@@ -524,6 +545,24 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         self::assertFileExists($logFile);
         self::assertNotEmpty((string) file_get_contents($logFile));
+    }
+
+    #[Framework\Attributes\Test]
+    public function executeStopsOnFailureWithStopOnFailureOptionAndStoppableCrawlerGiven(): void
+    {
+        $this->mockSitemapRequest('valid_sitemap_3');
+
+        $this->commandTester->execute([
+            'sitemaps' => [
+                'https://www.example.com/sitemap.xml',
+            ],
+            '--stop-on-failure' => true,
+        ]);
+
+        $output = $this->commandTester->getDisplay();
+
+        self::assertNotEmpty($output);
+        self::assertStringContainsString('Cancelled', $output);
     }
 
     #[Framework\Attributes\Test]

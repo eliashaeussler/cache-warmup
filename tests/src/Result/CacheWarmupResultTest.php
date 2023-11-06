@@ -86,4 +86,14 @@ final class CacheWarmupResultTest extends Framework\TestCase
 
         self::assertFalse($this->subject->isSuccessful());
     }
+
+    #[Framework\Attributes\Test]
+    public function wasCancelledReturnsTrueIfCacheWarmupWasCancelled(): void
+    {
+        self::assertFalse($this->subject->wasCancelled());
+
+        $this->subject->setCancelled(true);
+
+        self::assertTrue($this->subject->wasCancelled());
+    }
 }

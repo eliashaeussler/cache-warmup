@@ -27,6 +27,7 @@ use EliasHaeussler\CacheWarmup\Http;
 use EliasHaeussler\CacheWarmup\Result;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Promise;
 use Psr\Log;
 
 /**
@@ -43,7 +44,7 @@ use Psr\Log;
  *     client_config: array<string, mixed>,
  * }>
  */
-final class ConcurrentCrawler extends AbstractConfigurableCrawler implements LoggingCrawlerInterface
+final class ConcurrentCrawler extends AbstractConfigurableCrawler implements LoggingCrawlerInterface, StoppableCrawlerInterface
 {
     use ConcurrentCrawlerTrait;
 
@@ -62,6 +63,7 @@ final class ConcurrentCrawler extends AbstractConfigurableCrawler implements Log
      * @phpstan-var Log\LogLevel::*
      */
     private string $logLevel = Log\LogLevel::ERROR;
+    private bool $stopOnFailure = false;
 
     public function __construct(
         array $options = [],
@@ -74,6 +76,7 @@ final class ConcurrentCrawler extends AbstractConfigurableCrawler implements Log
     public function crawl(array $urls): Result\CacheWarmupResult
     {
         $resultHandler = new Http\Message\Handler\ResultCollectorHandler();
+        $result = $resultHandler->getResult();
         $handlers = [$resultHandler];
 
         // Create log handler
@@ -83,9 +86,13 @@ final class ConcurrentCrawler extends AbstractConfigurableCrawler implements Log
         }
 
         // Start crawling
-        $this->createPool($urls, $this->client, $handlers)->promise()->wait();
+        try {
+            $this->createPool($urls, $this->client, $handlers, $this->stopOnFailure)->promise()->wait();
+        } catch (Promise\CancellationException) {
+            $result->setCancelled(true);
+        }
 
-        return $resultHandler->getResult();
+        return $result;
     }
 
     public function setLogger(Log\LoggerInterface $logger): void
@@ -96,5 +103,10 @@ final class ConcurrentCrawler extends AbstractConfigurableCrawler implements Log
     public function setLogLevel(string $logLevel): void
     {
         $this->logLevel = $logLevel;
+    }
+
+    public function stopOnFailure(bool $stopOnFailure = true): void
+    {
+        $this->stopOnFailure = $stopOnFailure;
     }
 }

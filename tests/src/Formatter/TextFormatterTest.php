@@ -278,6 +278,20 @@ final class TextFormatterTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    public function formatCacheWarmupResultPrintsResultMessageOnCancelledCacheWarmup(): void
+    {
+        $result = new Src\Result\CacheWarmupResult();
+        $result->setCancelled(true);
+
+        $this->subject->formatCacheWarmupResult($result);
+
+        $output = $this->output->fetch();
+
+        self::assertNotEmpty($output);
+        self::assertStringContainsString('Cache warmup was cancelled due to a crawling failure.', $output);
+    }
+
+    #[Framework\Attributes\Test]
     public function formatCacheWarmupResultPrintsDuration(): void
     {
         $result = new Src\Result\CacheWarmupResult();

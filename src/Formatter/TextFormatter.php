@@ -159,10 +159,19 @@ final class TextFormatter implements Formatter
                 ),
             );
         }
+        if ($result->wasCancelled()) {
+            $this->io->warning('Cache warmup was cancelled due to a crawling failure.');
+        }
 
         // Print duration
         if (null !== $duration) {
-            $this->io->writeln(sprintf('Crawling finished in %s', $duration->format()));
+            $this->io->writeln(
+                sprintf(
+                    'Crawling %s %s',
+                    $result->wasCancelled() ? 'cancelled after' : 'finished in',
+                    $duration->format(),
+                ),
+            );
             $this->io->newLine();
         }
     }
