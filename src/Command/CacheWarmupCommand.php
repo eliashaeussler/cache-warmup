@@ -76,6 +76,7 @@ final class CacheWarmupCommand extends Console\Command\Command
     {
         $crawlerInterface = Crawler\CrawlerInterface::class;
         $configurableCrawlerInterface = Crawler\ConfigurableCrawlerInterface::class;
+        $stoppableCrawlerInterface = Crawler\StoppableCrawlerInterface::class;
         $textFormatter = Formatter\TextFormatter::getType();
         $jsonFormatter = Formatter\JsonFormatter::getType();
         $sortByChangeFrequencyStrategy = Crawler\Strategy\SortByChangeFrequencyStrategy::getName();
@@ -148,11 +149,11 @@ This behavior can be overridden in case a special crawler is defined using the <
 
 It's up to you to ensure the given crawler class is available and fully loaded.
 This can best be achieved by registering the class with Composer autoloader.
-Also make sure the crawler implements the <comment>{$crawlerInterface}</comment> interface.
+Also make sure the crawler implements <comment>{$crawlerInterface}</comment>.
 
 <info>Crawler options</info>
 <info>===============</info>
-For crawlers implementing the <comment>{$configurableCrawlerInterface}</comment> interface,
+For crawlers implementing <comment>{$configurableCrawlerInterface}</comment>,
 it is possible to pass a JSON-encoded array of crawler options by using the <comment>--crawler-options</comment> option:
 
    <comment>%command.full_name% --crawler-options '{"concurrency": 3}'</comment>
@@ -177,6 +178,14 @@ with a non-zero exit code. This is not always the desired behavior. Therefore, y
 this behavior by using the <comment>--allow-failures</comment> option:
 
    <comment>%command.full_name% --allow-failures</comment>
+
+<info>Stop on failure</info>
+<info>===============</info>
+For crawlers implementing <comment>{$stoppableCrawlerInterface}</comment>,
+you can also configure the crawler to stop on failure. The <comment>--stop-on-failure</comment> option
+exists for this case:
+
+   <comment>%command.full_name% --stop-on-failure</comment>
 
 <info>Format output</info>
 <info>=============</info>
@@ -264,6 +273,12 @@ HELP);
             'Allow failures during URL crawling and exit with zero',
         );
         $this->addOption(
+            'stop-on-failure',
+            null,
+            Console\Input\InputOption::VALUE_NONE,
+            'Cancel further cache warmup requests on failure',
+        );
+        $this->addOption(
             'format',
             'f',
             Console\Input\InputOption::VALUE_REQUIRED,
@@ -302,6 +317,7 @@ HELP);
 
         $logLevel = $input->getOption('log-level');
         $logFile = $input->getOption('log-file');
+        $stopOnFailure = $input->getOption('stop-on-failure');
         $logger = null;
 
         // Create logger
@@ -324,7 +340,7 @@ HELP);
             }
         }
 
-        $this->crawlerFactory = new Crawler\CrawlerFactory($output, $logger, $logLevel);
+        $this->crawlerFactory = new Crawler\CrawlerFactory($output, $logger, $logLevel, $stopOnFailure);
     }
 
     protected function interact(Console\Input\InputInterface $input, Console\Output\OutputInterface $output): void
@@ -428,7 +444,11 @@ HELP);
         $result = $cacheWarmer->run();
 
         if ($this->formatter->isVerbose() && !$isVerboseCrawler) {
-            $this->io->writeln('<info>Done</info>');
+            if ($result->wasCancelled()) {
+                $this->io->writeln('<comment>Cancelled</comment>');
+            } else {
+                $this->io->writeln('<info>Done</info>');
+            }
         }
 
         return $result;
@@ -481,6 +501,7 @@ HELP);
         /** @var class-string<Crawler\CrawlerInterface>|null $crawlerClass */
         $crawlerClass = $input->getOption('crawler');
         $crawlerOptions = $this->crawlerFactory->parseCrawlerOptions($input->getOption('crawler-options'));
+        $stopOnFailure = $input->getOption('stop-on-failure');
 
         // Select default crawler
         if (null === $crawlerClass) {
@@ -503,6 +524,14 @@ HELP);
         } elseif ([] !== $crawlerOptions) {
             $this->formatter->logMessage(
                 'You passed crawler options for a non-configurable crawler.',
+                Formatter\MessageSeverity::Warning,
+            );
+        }
+
+        // Show notice on unsupported stoppable crawler feature
+        if ($stopOnFailure && !($crawler instanceof Crawler\StoppableCrawlerInterface)) {
+            $this->formatter->logMessage(
+                'You passed --stop-on-failure to a non-stoppable crawler.',
                 Formatter\MessageSeverity::Warning,
             );
         }

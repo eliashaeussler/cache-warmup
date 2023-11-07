@@ -40,6 +40,7 @@ final class CacheWarmupResult
      * @var list<CrawlingResult>
      */
     private array $failed = [];
+    private bool $cancelled = false;
 
     public function addResult(CrawlingResult $result): self
     {
@@ -71,5 +72,15 @@ final class CacheWarmupResult
     public function isSuccessful(): bool
     {
         return [] === $this->failed;
+    }
+
+    public function wasCancelled(): bool
+    {
+        return $this->cancelled;
+    }
+
+    public function setCancelled(bool $cancelled): void
+    {
+        $this->cancelled = $cancelled;
     }
 }

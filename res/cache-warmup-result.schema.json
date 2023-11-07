@@ -8,6 +8,11 @@
 			"title": "Cache warmup result",
 			"description": "Lists all crawled URLs, grouped by their crawling result.",
 			"properties": {
+				"cancelled": {
+					"type": "boolean",
+					"title": "Cache warmup cancellation state",
+					"description": "Indicates whether cache warmup was cancelled prematurely."
+				},
 				"failure": {
 					"$ref": "#/definitions/urls"
 				},

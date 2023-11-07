@@ -95,6 +95,7 @@ The following input parameters are available:
 | [`--log-level`](#--log-level)                   | Log level used to determine which crawling results to log              |
 | [`--progress`, `-p`](#--progress)               | Show a progress bar during cache warmup                                |
 | [`--repeat-after`](#--repeat-after)             | Run cache warmup in endless loop and repeat *x* seconds after each run |
+| [`--stop-on-failure`](#--stop-on-failure)       | Cancel further cache warmup requests on failure                        |
 | [`--strategy`, `-s`](#--strategy)               | Optional crawling strategy to prepare URLs before crawling them        |
 | [`--urls`, `-u`](#--urls)                       | Additional URLs to be warmed up                                        |
 
@@ -195,6 +196,9 @@ The crawler must implement one the following interfaces:
   current console output to generate user-oriented output.
 * [`EliasHaeussler\CacheWarmup\Crawler\ConfigurableCrawlerInterface`][5] allows to
   make crawlers configurable (see [`--crawler-options`](#--crawler-options)).
+* [`EliasHaeussler\CacheWarmup\Crawler\StoppableCrawlerInterface`][23] may receive
+  an indicator whether to stop cache warmup prematurely if a crawling fails (see
+  [`--stop-on-failure`](#--stop-on-failure)).
 
 ```bash
 $ cache-warmup --crawler "Vendor\Crawler\MyCustomCrawler"
@@ -318,6 +322,20 @@ Allow failures during URL crawling and exit with zero.
 
 ```bash
 $ cache-warmup --allow-failures
+```
+
+| Shorthand               | –      |
+|:------------------------|:-------|
+| Required                | **–**  |
+| Multiple values allowed | **–**  |
+| Default                 | **no** |
+
+#### `--stop-on-failure`
+
+Cancel further cache warmup requests on failure.
+
+```bash
+$ cache-warmup --stop-on-failure
 ```
 
 | Shorthand               | –      |
@@ -498,7 +516,7 @@ object. It includes the following properties:
 
 | Property            | Description                                                                                                            |
 |---------------------|------------------------------------------------------------------------------------------------------------------------|
-| `cacheWarmupResult` | Lists all crawled URLs, grouped by their crawling state (`failure`, `success`)                                         |
+| `cacheWarmupResult` | Lists all crawled URLs, grouped by their crawling state (`failure`, `success`), and may contain `cancelled` state      |
 | `messages`          | Contains all logged messages, grouped by message severity (`error`, `info`, `success`, `warning`)                      |
 | `parserResult`      | Lists all parsed and excluded XML sitemaps and URLs, grouped by their parsing state (`excluded`, `failure`, `success`) |
 | `time`              | Lists all tracked times during cache warmup (`crawl`, `parse`)                                                         |
@@ -535,3 +553,4 @@ This project is licensed under [GNU General Public License 3.0 (or later)](LICEN
 [20]: https://github.com/eliashaeussler/cache-warmup/releases/latest
 [21]: https://github.com/eliashaeussler/cache-warmup/pkgs/container/cache-warmup
 [22]: res/cache-warmup-result.schema.json
+[23]: src/Crawler/StoppableCrawlerInterface.php

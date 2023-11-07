@@ -48,6 +48,7 @@ final class CrawlerFactory
         private readonly Console\Output\OutputInterface $output = new Console\Output\ConsoleOutput(),
         private readonly ?Log\LoggerInterface $logger = null,
         private readonly string $logLevel = Log\LogLevel::ERROR,
+        private readonly bool $stopOnFailure = false,
     ) {}
 
     /**
@@ -73,6 +74,10 @@ final class CrawlerFactory
         if ($crawler instanceof LoggingCrawlerInterface && null !== $this->logger) {
             $crawler->setLogger($this->logger);
             $crawler->setLogLevel($this->logLevel);
+        }
+
+        if ($crawler instanceof StoppableCrawlerInterface) {
+            $crawler->stopOnFailure($this->stopOnFailure);
         }
 
         return $crawler;

@@ -206,6 +206,24 @@ final class JsonFormatterTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    public function formatCacheWarmupResultAddsCancelledState(): void
+    {
+        $result = new Src\Result\CacheWarmupResult();
+        $result->setCancelled(true);
+
+        $this->subject->formatCacheWarmupResult($result);
+
+        self::assertSame(
+            [
+                'cacheWarmupResult' => [
+                    'cancelled' => true,
+                ],
+            ],
+            $this->subject->getJson(),
+        );
+    }
+
+    #[Framework\Attributes\Test]
     public function formatCacheWarmupResultAddsDuration(): void
     {
         $result = new Src\Result\CacheWarmupResult();

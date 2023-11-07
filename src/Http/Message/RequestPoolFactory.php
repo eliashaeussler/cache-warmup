@@ -27,6 +27,7 @@ use Generator;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Pool;
+use GuzzleHttp\Promise;
 use Psr\Http\Message;
 use Throwable;
 
@@ -52,6 +53,7 @@ final class RequestPoolFactory
      * @var list<Handler\ResponseHandlerInterface>
      */
     private array $handlers = [];
+    private bool $stopOnFailure = false;
 
     /**
      * @var array<int, Message\RequestInterface>
@@ -96,10 +98,14 @@ final class RequestPoolFactory
         }
     }
 
-    private function onRejected(Throwable $throwable, int $index): void
+    private function onRejected(Throwable $throwable, int $index, Promise\Promise $aggregate): void
     {
         foreach ($this->handlers as $handler) {
             $handler->onFailure($throwable, $this->visited[$index]->getUri());
+        }
+
+        if ($this->stopOnFailure) {
+            $aggregate->cancel();
         }
     }
 
@@ -155,6 +161,17 @@ final class RequestPoolFactory
     {
         $clone = clone $this;
         $clone->handlers = [...$clone->handlers, ...array_values($handler)];
+
+        return $clone;
+    }
+
+    /**
+     * @phpstan-impure
+     */
+    public function withStopOnFailure(bool $stopOnFailure = true): self
+    {
+        $clone = clone $this;
+        $clone->stopOnFailure = $stopOnFailure;
 
         return $clone;
     }

@@ -26,6 +26,7 @@ namespace EliasHaeussler\CacheWarmup\Tests\Http\Message;
 use EliasHaeussler\CacheWarmup as Src;
 use EliasHaeussler\CacheWarmup\Tests;
 use Exception;
+use GuzzleHttp\Promise;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\RequestOptions;
 use PHPUnit\Framework;
@@ -144,6 +145,21 @@ final class RequestPoolFactoryTest extends Framework\TestCase
 
         self::assertCount(2, $handler->successful);
         self::assertCount(1, $handler->failed);
+    }
+
+    #[Framework\Attributes\Test]
+    public function withStopOnFailureClonesObjectAndConfiguresStopOnFailure(): void
+    {
+        $this->mockHandler->append(
+            new Psr7\Response(),
+            new Exception(),
+        );
+
+        $actual = $this->subject->withStopOnFailure();
+
+        $this->expectException(Promise\CancellationException::class);
+
+        $actual->createPool()->promise()->wait();
     }
 
     private function assertPropertyEquals(object $object, string $property, mixed $expected): void

@@ -31,7 +31,7 @@ use Symfony\Component\Console;
 
 use function array_map;
 use function is_array;
-use function is_string;
+use function is_scalar;
 use function json_encode;
 
 /**
@@ -57,6 +57,7 @@ use function json_encode;
  *     cacheWarmupResult?: array{
  *         success?: list<string>,
  *         failure?: list<string>,
+ *         cancelled?: bool,
  *     },
  *     messages?: array<value-of<MessageSeverity>, list<string>>,
  *     time?: array{
@@ -108,6 +109,10 @@ final class JsonFormatter implements Formatter
         $this->addToJson('cacheWarmupResult/success', $result->getSuccessful());
         $this->addToJson('cacheWarmupResult/failure', $result->getFailed());
 
+        if ($result->wasCancelled()) {
+            $this->addToJson('cacheWarmupResult/cancelled', true);
+        }
+
         if (null !== $duration) {
             $this->addToJson('time/crawl', $duration->format());
         }
@@ -145,11 +150,11 @@ final class JsonFormatter implements Formatter
     }
 
     /**
-     * @param string|list<bool|float|int|resource|string|Stringable|null> $value
+     * @param string|bool|list<bool|float|int|resource|string|Stringable|null> $value
      */
-    private function addToJson(string $path, string|array $value): void
+    private function addToJson(string $path, string|bool|array $value): void
     {
-        if (is_string($value) && '' !== $value) {
+        if (is_scalar($value) && '' !== $value) {
             Helper\ArrayHelper::setValueByPath($this->json, $path, $value);
         }
         if (is_array($value) && [] !== $value) {

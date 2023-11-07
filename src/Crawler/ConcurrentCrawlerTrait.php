@@ -50,12 +50,14 @@ trait ConcurrentCrawlerTrait
         array $urls,
         ClientInterface $client,
         array $handlers = [],
+        bool $stopOnFailure = false,
     ): Pool {
         return Http\Message\RequestPoolFactory::create($this->buildRequests($urls))
             ->withClient($client)
             ->withConcurrency($this->options['concurrency'])
             ->withOptions($this->options['request_options'])
             ->withResponseHandler(...array_values($handlers))
+            ->withStopOnFailure($stopOnFailure)
             ->createPool()
         ;
     }

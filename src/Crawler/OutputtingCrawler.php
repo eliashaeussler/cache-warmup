@@ -27,6 +27,7 @@ use EliasHaeussler\CacheWarmup\Http;
 use EliasHaeussler\CacheWarmup\Result;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Promise;
 use Psr\Log;
 use Symfony\Component\Console;
 
@@ -46,7 +47,7 @@ use function count;
  *     client_config: array<string, mixed>,
  * }>
  */
-final class OutputtingCrawler extends AbstractConfigurableCrawler implements LoggingCrawlerInterface, VerboseCrawlerInterface
+final class OutputtingCrawler extends AbstractConfigurableCrawler implements LoggingCrawlerInterface, StoppableCrawlerInterface, VerboseCrawlerInterface
 {
     use ConcurrentCrawlerTrait;
 
@@ -66,6 +67,7 @@ final class OutputtingCrawler extends AbstractConfigurableCrawler implements Log
      * @phpstan-var Log\LogLevel::*
      */
     private string $logLevel = Log\LogLevel::ERROR;
+    private bool $stopOnFailure = false;
 
     public function __construct(
         array $options = [],
@@ -81,6 +83,7 @@ final class OutputtingCrawler extends AbstractConfigurableCrawler implements Log
     {
         $numberOfUrls = count($urls);
         $resultHandler = new Http\Message\Handler\ResultCollectorHandler();
+        $result = $resultHandler->getResult();
 
         // Create progress response handler (depends on the available output)
         if ($this->output instanceof Console\Output\ConsoleOutputInterface && $this->output->isVerbose()) {
@@ -99,14 +102,18 @@ final class OutputtingCrawler extends AbstractConfigurableCrawler implements Log
         }
 
         // Create request pool
-        $pool = $this->createPool($urls, $this->client, $handlers);
+        $pool = $this->createPool($urls, $this->client, $handlers, $this->stopOnFailure);
 
         // Start crawling
-        $progressBarHandler->startProgressBar();
-        $pool->promise()->wait();
-        $progressBarHandler->finishProgressBar();
+        try {
+            $progressBarHandler->startProgressBar();
+            $pool->promise()->wait();
+            $progressBarHandler->finishProgressBar();
+        } catch (Promise\CancellationException) {
+            $result->setCancelled(true);
+        }
 
-        return $resultHandler->getResult();
+        return $result;
     }
 
     public function setOutput(Console\Output\OutputInterface $output): void
@@ -122,5 +129,10 @@ final class OutputtingCrawler extends AbstractConfigurableCrawler implements Log
     public function setLogLevel(string $logLevel): void
     {
         $this->logLevel = $logLevel;
+    }
+
+    public function stopOnFailure(bool $stopOnFailure = true): void
+    {
+        $this->stopOnFailure = $stopOnFailure;
     }
 }
