@@ -194,11 +194,16 @@ The crawler must implement one the following interfaces:
   interface).
 * [`EliasHaeussler\CacheWarmup\Crawler\VerboseCrawlerInterface`][4] receives the
   current console output to generate user-oriented output.
+
+In addition, there exist more interfaces with advanced crawling features:
+
 * [`EliasHaeussler\CacheWarmup\Crawler\ConfigurableCrawlerInterface`][5] allows to
   make crawlers configurable (see [`--crawler-options`](#--crawler-options)).
-* [`EliasHaeussler\CacheWarmup\Crawler\StoppableCrawlerInterface`][23] may receive
-  an indicator whether to stop cache warmup prematurely if a crawling fails (see
-  [`--stop-on-failure`](#--stop-on-failure)).
+* [`EliasHaeussler\CacheWarmup\Crawler\LoggingCrawlerInterface`][24] can be used
+  to implement logging of crawling results (see [`--log-file`](#--log-file) and
+  [`--log-level`](#--log-level)).
+* [`EliasHaeussler\CacheWarmup\Crawler\StoppableCrawlerInterface`][23] prematurely
+  cancels cache warmup if a crawling fails (see [`--stop-on-failure`](#--stop-on-failure)).
 
 ```bash
 $ cache-warmup --crawler "Vendor\Crawler\MyCustomCrawler"
@@ -554,3 +559,4 @@ This project is licensed under [GNU General Public License 3.0 (or later)](LICEN
 [21]: https://github.com/eliashaeussler/cache-warmup/pkgs/container/cache-warmup
 [22]: res/cache-warmup-result.schema.json
 [23]: src/Crawler/StoppableCrawlerInterface.php
+[24]: src/Crawler/LoggingCrawlerInterface.php
