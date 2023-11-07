@@ -167,10 +167,12 @@ $ cache-warmup --limit 250
 
 Show a progress bar during cache warmup.
 
-> 💡 You can show a more verbose progress bar by increasing output verbosity
+> [!NOTE]
+> You can show a more verbose progress bar by increasing output verbosity
 > with the `--verbose` command option.
 
-> ⚠️The progress bar is implicitly enabled when using a non-verbose
+> [!IMPORTANT]
+> The progress bar is implicitly enabled when using a non-verbose
 > [formatter](#--format), e.g. `json`.
 
 ```bash
@@ -223,7 +225,8 @@ is used, otherwise the [`ConcurrentCrawler`][7].*
 
 A JSON-encoded string of additional config for configurable crawlers.
 
-> ⚠️ These options only apply to crawlers implementing
+> [!IMPORTANT]
+> These options only apply to crawlers implementing
 > [`EliasHaeussler\CacheWarmup\Crawler\ConfigurableCrawlerInterface`][5]. If the
 > configured crawler does not implement this interface, a warning is shown in case
 > crawler options are configured.
@@ -261,13 +264,12 @@ $ cache-warmup --strategy sort-by-priority
 #### `--format`
 
 The formatter used to print the cache warmup result.
+Read more in the [Formatters](#formatters) section below.
 
 At the moment, the following formatters are available:
 
 * [`json`][11]
 * [`text`][12] *(default)*
-
-> 💡 Read more in the [Formatters](#formatters) section below.
 
 ```bash
 $ cache-warmup --format json
@@ -357,7 +359,8 @@ Run cache warmup in endless loop and repeat *x* seconds after each run.
 $ cache-warmup --repeat-after 300
 ```
 
-> ⚠️ If cache warmup fails, the command fails immediately and is not repeated.
+> [!IMPORTANT]
+> If cache warmup fails, the command fails immediately and is not repeated.
 > To continue in case of failures, the [`--allow-failures`](#--allow-failures)
 > command option must be passed as well.
 
@@ -398,7 +401,8 @@ using the library with PHP.
 
 Define how many URLs are crawled concurrently.
 
-> 💡 Internally, Guzzle's [Pool][13] feature is used to send multiple requests
+> [!NOTE]
+> Internally, Guzzle's [Pool][13] feature is used to send multiple requests
 > concurrently using asynchronous requests. You may also have a look at how
 > this is implemented in the library's [`RequestPoolFactory`][14].
 
@@ -468,7 +472,8 @@ $crawler = new \EliasHaeussler\CacheWarmup\Crawler\ConcurrentCrawler([
 
 Optional [configuration][19] used when instantiating a new Guzzle client.
 
-> ⚠️ Client configuration is ignored when running cache warmup from the
+> [!IMPORTANT]
+> Client configuration is ignored when running cache warmup from the
 > command-line. In addition, it is only respected if a new client is
 > instantiated *within* the crawler. If an existing client is passed to
 > the crawler, client configuration is ignored.
@@ -526,7 +531,7 @@ object. It includes the following properties:
 | `parserResult`      | Lists all parsed and excluded XML sitemaps and URLs, grouped by their parsing state (`excluded`, `failure`, `success`) |
 | `time`              | Lists all tracked times during cache warmup (`crawl`, `parse`)                                                         |
 
-> 💡 The complete JSON structure can be found in the provided [JSON schema][22].
+💡 The complete JSON structure can be found in the provided [JSON schema][22].
 
 ## 🧑‍💻 Contributing
 
