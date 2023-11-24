@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Tests\Crawler\Strategy;
 
 use EliasHaeussler\CacheWarmup as Src;
+use EliasHaeussler\CacheWarmup\Tests;
 use PHPUnit\Framework;
 
 /**
@@ -35,11 +36,11 @@ use PHPUnit\Framework;
 #[Framework\Attributes\CoversClass(Src\Crawler\Strategy\SortingStrategy::class)]
 final class SortingStrategyTest extends Framework\TestCase
 {
-    private DummySortingStrategy $subject;
+    private Tests\Fixtures\Classes\DummySortingStrategy $subject;
 
     protected function setUp(): void
     {
-        $this->subject = new DummySortingStrategy();
+        $this->subject = new Tests\Fixtures\Classes\DummySortingStrategy();
     }
 
     #[Framework\Attributes\Test]

@@ -21,24 +21,25 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Tests\Crawler;
+namespace EliasHaeussler\CacheWarmup\Tests\Fixtures\Classes;
 
 use EliasHaeussler\CacheWarmup\Crawler;
+use Symfony\Component\Console;
 
 /**
- * DummyStoppableCrawler.
+ * DummyVerboseCrawler.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  *
  * @internal
  */
-final class DummyStoppableCrawler extends DummyCrawler implements Crawler\StoppableCrawlerInterface
+final class DummyVerboseCrawler extends DummyCrawler implements Crawler\VerboseCrawlerInterface
 {
-    public static bool $stopOnFailure = false;
+    public static ?Console\Output\OutputInterface $output = null;
 
-    public function stopOnFailure(bool $stopOnFailure = true): void
+    public function setOutput(Console\Output\OutputInterface $output): void
     {
-        self::$stopOnFailure = $stopOnFailure;
+        self::$output = $output;
     }
 }

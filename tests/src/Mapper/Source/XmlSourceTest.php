@@ -108,7 +108,7 @@ final class XmlSourceTest extends Framework\TestCase
 
     private function readFixtureFile(string $fixture): string
     {
-        $fixtureFile = dirname(__DIR__, 2).'/Fixtures/'.$fixture.'.xml';
+        $fixtureFile = dirname(__DIR__, 2).'/Fixtures/Files/'.$fixture.'.xml';
 
         self::assertFileExists($fixtureFile);
 

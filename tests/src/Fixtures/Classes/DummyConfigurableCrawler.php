@@ -21,30 +21,38 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Tests\Crawler\Strategy;
+namespace EliasHaeussler\CacheWarmup\Tests\Fixtures\Classes;
 
 use EliasHaeussler\CacheWarmup\Crawler;
-use EliasHaeussler\CacheWarmup\Sitemap;
-
-use function strcmp;
+use EliasHaeussler\CacheWarmup\Result;
 
 /**
- * DummySortingStrategy.
+ * DummyConfigurableCrawler.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  *
  * @internal
+ *
+ * @extends Crawler\AbstractConfigurableCrawler<array{foo: string, bar: int}>
  */
-final class DummySortingStrategy extends Crawler\Strategy\SortingStrategy
+final class DummyConfigurableCrawler extends Crawler\AbstractConfigurableCrawler
 {
-    public static function getName(): string
+    protected static array $defaultOptions = [
+        'foo' => 'hello world',
+        'bar' => 42,
+    ];
+
+    public function crawl(array $urls): Result\CacheWarmupResult
     {
-        return 'dummy';
+        return new Result\CacheWarmupResult();
     }
 
-    protected function sortUrls(Sitemap\Url $a, Sitemap\Url $b): int
+    /**
+     * @return array{foo: string, bar: int}
+     */
+    public function getOptions(): array
     {
-        return strcmp((string) $a, (string) $b);
+        return $this->options;
     }
 }

@@ -41,7 +41,7 @@ final class InvalidCrawlerOptionExceptionTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function createReturnsExceptionForGivenCrawlerAndOption(): void
     {
-        $crawler = new Tests\Crawler\DummyConfigurableCrawler();
+        $crawler = new Tests\Fixtures\Classes\DummyConfigurableCrawler();
         $actual = Src\Exception\InvalidCrawlerOptionException::create($crawler, 'foo');
 
         self::assertSame(1659120894, $actual->getCode());
@@ -54,7 +54,7 @@ final class InvalidCrawlerOptionExceptionTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function createForAllReturnsExceptionForGivenCrawlerAndOptionIfOnlyOneOptionIsGiven(): void
     {
-        $crawler = new Tests\Crawler\DummyConfigurableCrawler();
+        $crawler = new Tests\Fixtures\Classes\DummyConfigurableCrawler();
         $actual = Src\Exception\InvalidCrawlerOptionException::createForAll($crawler, ['foo']);
 
         self::assertSame(1659120894, $actual->getCode());
@@ -67,7 +67,7 @@ final class InvalidCrawlerOptionExceptionTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function createForAllReturnsExceptionForGivenCrawlerAndOptions(): void
     {
-        $crawler = new Tests\Crawler\DummyConfigurableCrawler();
+        $crawler = new Tests\Fixtures\Classes\DummyConfigurableCrawler();
 
         $actual = Src\Exception\InvalidCrawlerOptionException::createForAll($crawler, ['foo', 'bar', 'baz']);
 

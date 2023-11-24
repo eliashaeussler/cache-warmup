@@ -345,7 +345,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
             'sitemaps' => [
                 'https://www.example.com/sitemap.xml',
             ],
-            '--crawler' => Tests\Crawler\DummyCrawler::class,
+            '--crawler' => Tests\Fixtures\Classes\DummyCrawler::class,
         ]);
 
         $expected = [
@@ -353,7 +353,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
             new Src\Sitemap\Url('https://www.example.com/foo', origin: $origin),
         ];
 
-        self::assertEquals($expected, Tests\Crawler\DummyCrawler::$crawledUrls);
+        self::assertEquals($expected, Tests\Fixtures\Classes\DummyCrawler::$crawledUrls);
     }
 
     #[Framework\Attributes\Test]
@@ -406,7 +406,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
             'sitemaps' => [
                 'https://www.example.com/sitemap.xml',
             ],
-            '--crawler' => Tests\Crawler\DummyCrawler::class,
+            '--crawler' => Tests\Fixtures\Classes\DummyCrawler::class,
             '--crawler-options' => ['foo' => 'bar'],
         ]);
 
@@ -425,7 +425,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
             'sitemaps' => [
                 'https://www.example.com/sitemap.xml',
             ],
-            '--crawler' => Tests\Crawler\DummyCrawler::class,
+            '--crawler' => Tests\Fixtures\Classes\DummyCrawler::class,
             '--stop-on-failure' => true,
         ]);
 
@@ -444,17 +444,17 @@ final class CacheWarmupCommandTest extends Framework\TestCase
             'sitemaps' => [
                 'https://www.example.com/sitemap.xml',
             ],
-            '--crawler' => Tests\Crawler\DummyVerboseCrawler::class,
+            '--crawler' => Tests\Fixtures\Classes\DummyVerboseCrawler::class,
         ]);
 
-        self::assertSame($this->commandTester->getOutput(), Tests\Crawler\DummyVerboseCrawler::$output);
+        self::assertSame($this->commandTester->getOutput(), Tests\Fixtures\Classes\DummyVerboseCrawler::$output);
     }
 
     #[Framework\Attributes\Test]
     #[Framework\Attributes\DataProvider('executeFailsIfSitemapCannotBeCrawledDataProvider')]
     public function executeFailsIfSitemapCannotBeCrawled(bool $allowFailures, int $expected): void
     {
-        Tests\Crawler\DummyCrawler::$resultStack[] = Src\Result\CrawlingState::Failed;
+        Tests\Fixtures\Classes\DummyCrawler::$resultStack[] = Src\Result\CrawlingState::Failed;
 
         $this->mockSitemapRequest('valid_sitemap_3');
 
@@ -568,8 +568,8 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function executeRepeatsCacheWarmupIfEndlessModeIsEnabled(): void
     {
-        Tests\Crawler\DummyCrawler::$resultStack[] = Src\Result\CrawlingState::Successful;
-        Tests\Crawler\DummyCrawler::$resultStack[] = Src\Result\CrawlingState::Failed;
+        Tests\Fixtures\Classes\DummyCrawler::$resultStack[] = Src\Result\CrawlingState::Successful;
+        Tests\Fixtures\Classes\DummyCrawler::$resultStack[] = Src\Result\CrawlingState::Failed;
 
         $this->mockSitemapRequest('valid_sitemap_3');
         $this->mockSitemapRequest('valid_sitemap_3');
@@ -578,7 +578,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
             'sitemaps' => [
                 'https://www.example.com/sitemap.xml',
             ],
-            '--crawler' => Tests\Crawler\DummyCrawler::class,
+            '--crawler' => Tests\Fixtures\Classes\DummyCrawler::class,
             '--repeat-after' => '1',
         ]);
 
@@ -613,8 +613,8 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
     protected function tearDown(): void
     {
-        Tests\Crawler\DummyCrawler::$crawledUrls = [];
-        Tests\Crawler\DummyCrawler::$resultStack = [];
-        Tests\Crawler\DummyVerboseCrawler::$output = null;
+        Tests\Fixtures\Classes\DummyCrawler::$crawledUrls = [];
+        Tests\Fixtures\Classes\DummyCrawler::$resultStack = [];
+        Tests\Fixtures\Classes\DummyVerboseCrawler::$output = null;
     }
 }

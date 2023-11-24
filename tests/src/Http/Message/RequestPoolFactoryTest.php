@@ -131,7 +131,7 @@ final class RequestPoolFactoryTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function withResponseHandlerClonesObjectAndAppliesGivenResponseHandler(): void
     {
-        $handler = new Tests\Http\Message\Handler\DummyHandler();
+        $handler = new Tests\Fixtures\Classes\DummyHandler();
 
         $this->mockHandler->append(
             new Psr7\Response(),

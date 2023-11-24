@@ -21,7 +21,7 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Tests\Http\Message\Handler;
+namespace EliasHaeussler\CacheWarmup\Tests\Fixtures\Classes;
 
 use EliasHaeussler\CacheWarmup\Http;
 use Psr\Http\Message;
