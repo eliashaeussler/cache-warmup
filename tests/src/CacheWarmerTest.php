@@ -96,7 +96,6 @@ final class CacheWarmerTest extends Framework\TestCase
         $this->expectExceptionCode(1604055096);
         $this->expectExceptionMessage(sprintf('Sitemaps must be of type string or %s, bool given.', Src\Sitemap\Sitemap::class));
 
-        /* @phpstan-ignore-next-line */
         $this->subject->addSitemaps([false]);
     }
 

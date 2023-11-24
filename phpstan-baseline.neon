@@ -1,6 +1,16 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Instanceof between EliasHaeussler\\\\CacheWarmup\\\\Sitemap\\\\Sitemap and EliasHaeussler\\\\CacheWarmup\\\\Sitemap\\\\Sitemap will always evaluate to true\\.$#"
+			count: 1
+			path: src/CacheWarmer.php
+
+		-
+			message: "#^Property EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\AbstractConfigurableCrawler\\<TOptions of array\\<string, mixed\\>\\>\\:\\:\\$options \\(TOptions of array\\<string, mixed\\>\\) does not accept array\\<string, mixed\\>\\.$#"
+			count: 1
+			path: src/Crawler/AbstractConfigurableCrawler.php
+
+		-
 			message: "#^Parameter \\#1 \\$level \\('alert'\\|'critical'\\|'debug'\\|'emergency'\\|'error'\\|'info'\\|'notice'\\|'warning'\\) of method EliasHaeussler\\\\CacheWarmup\\\\Log\\\\FileLogger\\:\\:log\\(\\) should be contravariant with parameter \\$level \\(mixed\\) of method Psr\\\\Log\\\\AbstractLogger\\:\\:log\\(\\)$#"
 			count: 1
 			path: src/Log/FileLogger.php
@@ -29,3 +39,18 @@ parameters:
 			message: "#^Parameter \\#3 \\$context \\(array\\<string, mixed\\>\\) of method EliasHaeussler\\\\CacheWarmup\\\\Log\\\\FileLogger\\:\\:log\\(\\) should be contravariant with parameter \\$context \\(array\\) of method Psr\\\\Log\\\\LoggerTrait\\:\\:log\\(\\)$#"
 			count: 1
 			path: src/Log/FileLogger.php
+
+		-
+			message: "#^Parameter \\#1 \\$sitemaps of method EliasHaeussler\\\\CacheWarmup\\\\CacheWarmer\\:\\:addSitemaps\\(\\) expects list\\<EliasHaeussler\\\\CacheWarmup\\\\Sitemap\\\\Sitemap\\|string\\>\\|EliasHaeussler\\\\CacheWarmup\\\\Sitemap\\\\Sitemap\\|string, array\\{false\\} given\\.$#"
+			count: 1
+			path: tests/src/CacheWarmerTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$crawler of method EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\CrawlerFactory\\:\\:get\\(\\) expects class\\-string\\<EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\CrawlerInterface\\>, string given\\.$#"
+			count: 2
+			path: tests/src/Crawler/CrawlerFactoryTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$crawlerOptions of method EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\CrawlerFactory\\:\\:parseCrawlerOptions\\(\\) expects array\\<string, mixed\\>\\|string\\|null, array\\<int, string\\> given\\.$#"
+			count: 1
+			path: tests/src/Crawler/CrawlerFactoryTest.php

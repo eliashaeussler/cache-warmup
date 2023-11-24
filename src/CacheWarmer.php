@@ -129,7 +129,6 @@ final class CacheWarmer
             }
 
             // Throw exception if sitemap is invalid
-            /* @phpstan-ignore-next-line */
             if (!($sitemap instanceof Sitemap\Sitemap)) {
                 throw Exception\InvalidSitemapException::forInvalidType($sitemap);
             }
