@@ -21,7 +21,7 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Tests\Crawler;
+namespace EliasHaeussler\CacheWarmup\Tests\Fixtures\Classes;
 
 use EliasHaeussler\CacheWarmup\Crawler;
 use EliasHaeussler\CacheWarmup\Result;
@@ -69,7 +69,7 @@ class DummyCrawler implements Crawler\CrawlerInterface
      *
      * @return list<Result\CrawlingResult>
      */
-    protected function mapUrlsToCrawlingResults(array $urls, Result\CrawlingState $state): array
+    private function mapUrlsToCrawlingResults(array $urls, Result\CrawlingState $state): array
     {
         return array_map(fn (Message\UriInterface $uri): Result\CrawlingResult => match ($state) {
             Result\CrawlingState::Failed => Result\CrawlingResult::createFailed($uri),

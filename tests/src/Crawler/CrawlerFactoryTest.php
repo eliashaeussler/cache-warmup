@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Tests\Crawler;
 
 use EliasHaeussler\CacheWarmup as Src;
+use EliasHaeussler\CacheWarmup\Tests;
 use EliasHaeussler\TransientLogger;
 use PHPUnit\Framework;
 use Psr\Log;
@@ -75,7 +76,10 @@ final class CrawlerFactoryTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function getReturnsCrawler(): void
     {
-        self::assertInstanceOf(DummyCrawler::class, $this->subject->get(DummyCrawler::class));
+        self::assertInstanceOf(
+            Tests\Fixtures\Classes\DummyCrawler::class,
+            $this->subject->get(Tests\Fixtures\Classes\DummyCrawler::class),
+        );
     }
 
     #[Framework\Attributes\Test]
@@ -85,45 +89,45 @@ final class CrawlerFactoryTest extends Framework\TestCase
             'foo' => 'baz',
         ];
 
-        $actual = $this->subject->get(DummyConfigurableCrawler::class, $options);
+        $actual = $this->subject->get(Tests\Fixtures\Classes\DummyConfigurableCrawler::class, $options);
 
-        self::assertInstanceOf(DummyConfigurableCrawler::class, $actual);
+        self::assertInstanceOf(Tests\Fixtures\Classes\DummyConfigurableCrawler::class, $actual);
         self::assertSame(['foo' => 'baz', 'bar' => 42], $actual->getOptions());
     }
 
     #[Framework\Attributes\Test]
     public function getReturnsVerboseCrawler(): void
     {
-        $actual = $this->subject->get(DummyVerboseCrawler::class);
+        $actual = $this->subject->get(Tests\Fixtures\Classes\DummyVerboseCrawler::class);
 
-        self::assertInstanceOf(DummyVerboseCrawler::class, $actual);
-        self::assertSame($this->output, DummyVerboseCrawler::$output);
+        self::assertInstanceOf(Tests\Fixtures\Classes\DummyVerboseCrawler::class, $actual);
+        self::assertSame($this->output, Tests\Fixtures\Classes\DummyVerboseCrawler::$output);
 
-        DummyVerboseCrawler::$output = null;
+        Tests\Fixtures\Classes\DummyVerboseCrawler::$output = null;
     }
 
     #[Framework\Attributes\Test]
     public function getReturnsLoggingCrawler(): void
     {
-        $actual = $this->subject->get(DummyLoggingCrawler::class);
+        $actual = $this->subject->get(Tests\Fixtures\Classes\DummyLoggingCrawler::class);
 
-        self::assertInstanceOf(DummyLoggingCrawler::class, $actual);
-        self::assertSame($this->logger, DummyLoggingCrawler::$logger);
-        self::assertSame(Log\LogLevel::ERROR, DummyLoggingCrawler::$logLevel);
+        self::assertInstanceOf(Tests\Fixtures\Classes\DummyLoggingCrawler::class, $actual);
+        self::assertSame($this->logger, Tests\Fixtures\Classes\DummyLoggingCrawler::$logger);
+        self::assertSame(Log\LogLevel::ERROR, Tests\Fixtures\Classes\DummyLoggingCrawler::$logLevel);
 
-        DummyLoggingCrawler::$logger = null;
-        DummyLoggingCrawler::$logLevel = null;
+        Tests\Fixtures\Classes\DummyLoggingCrawler::$logger = null;
+        Tests\Fixtures\Classes\DummyLoggingCrawler::$logLevel = null;
     }
 
     #[Framework\Attributes\Test]
     public function getReturnsStoppableCrawler(): void
     {
-        $actual = $this->subject->get(DummyStoppableCrawler::class);
+        $actual = $this->subject->get(Tests\Fixtures\Classes\DummyStoppableCrawler::class);
 
-        self::assertInstanceOf(DummyStoppableCrawler::class, $actual);
-        self::assertTrue(DummyStoppableCrawler::$stopOnFailure);
+        self::assertInstanceOf(Tests\Fixtures\Classes\DummyStoppableCrawler::class, $actual);
+        self::assertTrue(Tests\Fixtures\Classes\DummyStoppableCrawler::$stopOnFailure);
 
-        DummyStoppableCrawler::$stopOnFailure = false;
+        Tests\Fixtures\Classes\DummyStoppableCrawler::$stopOnFailure = false;
     }
 
     #[Framework\Attributes\Test]

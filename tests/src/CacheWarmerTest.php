@@ -73,7 +73,7 @@ final class CacheWarmerTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function runPreparesUrlsWithConfiguredStrategy(): void
     {
-        $crawler = new Tests\Crawler\DummyCrawler();
+        $crawler = new Tests\Fixtures\Classes\DummyCrawler();
         $subject = new Src\CacheWarmer(crawler: $crawler, strategy: new Src\Crawler\Strategy\SortByPriorityStrategy());
 
         $url1 = new Src\Sitemap\Url('https://www.example.org/foo', 0.75);
@@ -282,7 +282,7 @@ final class CacheWarmerTest extends Framework\TestCase
         $origin2 = new Src\Sitemap\Sitemap(new Psr7\Uri('https://www.example.com/sitemap.xml'));
         $origin3 = new Src\Sitemap\Sitemap(new Psr7\Uri('https://www.example.org/sitemap_en.xml'), origin: $origin2);
 
-        $localFile = __DIR__.'/Fixtures/valid_sitemap_2.xml';
+        $localFile = __DIR__.'/Fixtures/Files/valid_sitemap_2.xml';
         $originLocal = new Src\Sitemap\Sitemap(new Psr7\Uri('file://'.$localFile));
 
         yield 'empty sitemaps' => [

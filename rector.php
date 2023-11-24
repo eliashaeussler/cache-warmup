@@ -46,6 +46,9 @@ return static function (RectorConfig $rectorConfig): void {
             [
                 __DIR__.'/src/Sitemap/Sitemap.php',
                 __DIR__.'/src/Sitemap/Url.php',
+                // For some reason Rector does not recognize child classes
+                // of this fixture class, therefore we need to skip it here
+                __DIR__.'/tests/src/Fixtures/Classes/DummyCrawler.php',
             ],
         )
         ->apply()

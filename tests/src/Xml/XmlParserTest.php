@@ -171,7 +171,7 @@ final class XmlParserTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function parseParsesLocalFile(): void
     {
-        $filename = dirname(__DIR__).'/Fixtures/valid_sitemap_4.xml';
+        $filename = dirname(__DIR__).'/Fixtures/Files/valid_sitemap_4.xml';
         $sitemap = new Src\Sitemap\Sitemap(new Psr7\Uri('file://'.$filename));
 
         $result = $this->subject->parse($sitemap);

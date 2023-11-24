@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Tests\Crawler;
 
 use EliasHaeussler\CacheWarmup as Src;
+use EliasHaeussler\CacheWarmup\Tests;
 use PHPUnit\Framework;
 
 /**
@@ -35,11 +36,11 @@ use PHPUnit\Framework;
 #[Framework\Attributes\CoversClass(Src\Crawler\AbstractConfigurableCrawler::class)]
 final class AbstractConfigurableCrawlerTest extends Framework\TestCase
 {
-    private DummyConfigurableCrawler $subject;
+    private Tests\Fixtures\Classes\DummyConfigurableCrawler $subject;
 
     protected function setUp(): void
     {
-        $this->subject = new DummyConfigurableCrawler();
+        $this->subject = new Tests\Fixtures\Classes\DummyConfigurableCrawler();
     }
 
     #[Framework\Attributes\Test]
