@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Tests\Crawler;
 
 use EliasHaeussler\CacheWarmup as Src;
+use EliasHaeussler\TransientLogger;
 use PHPUnit\Framework;
 use Psr\Log;
 use Symfony\Component\Console;
@@ -38,13 +39,13 @@ use Symfony\Component\Console;
 final class CrawlerFactoryTest extends Framework\TestCase
 {
     private Console\Output\BufferedOutput $output;
-    private Src\Tests\Log\DummyLogger $logger;
+    private TransientLogger\TransientLogger $logger;
     private Src\Crawler\CrawlerFactory $subject;
 
     protected function setUp(): void
     {
         $this->output = new Console\Output\BufferedOutput();
-        $this->logger = new Src\Tests\Log\DummyLogger();
+        $this->logger = new TransientLogger\TransientLogger();
         $this->subject = new Src\Crawler\CrawlerFactory(
             $this->output,
             $this->logger,

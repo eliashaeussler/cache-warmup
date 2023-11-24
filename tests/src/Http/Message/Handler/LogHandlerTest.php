@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Tests\Http\Message\Handler;
 
 use EliasHaeussler\CacheWarmup as Src;
-use EliasHaeussler\CacheWarmup\Tests;
+use EliasHaeussler\TransientLogger;
 use Exception;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
@@ -39,12 +39,12 @@ use Psr\Log;
 #[Framework\Attributes\CoversClass(Src\Http\Message\Handler\LogHandler::class)]
 final class LogHandlerTest extends Framework\TestCase
 {
-    private Tests\Log\DummyLogger $logger;
+    private TransientLogger\TransientLogger $logger;
     private Src\Http\Message\Handler\LogHandler $subject;
 
     protected function setUp(): void
     {
-        $this->logger = new Tests\Log\DummyLogger();
+        $this->logger = new TransientLogger\TransientLogger();
         $this->subject = new Src\Http\Message\Handler\LogHandler($this->logger);
     }
 
@@ -56,20 +56,21 @@ final class LogHandlerTest extends Framework\TestCase
             new Psr7\Uri('https://www.example.com'),
         );
 
-        self::assertSame([], $this->logger->log[Log\LogLevel::INFO]);
+        self::assertSame([], $this->logger->getByLogLevel(TransientLogger\Log\LogLevel::Info));
     }
 
     #[Framework\Attributes\Test]
     public function onSuccessLogsSuccessfulCrawl(): void
     {
         $expected = [
-            [
-                'message' => 'URL {url} was successfully crawled (status code: {status_code}).',
-                'context' => [
+            new TransientLogger\Log\LogRecord(
+                TransientLogger\Log\LogLevel::Info,
+                'URL {url} was successfully crawled (status code: {status_code}).',
+                [
                     'url' => new Psr7\Uri('https://www.example.com'),
                     'status_code' => 200,
                 ],
-            ],
+            ),
         ];
 
         $subject = new Src\Http\Message\Handler\LogHandler($this->logger, Log\LogLevel::INFO);
@@ -79,7 +80,7 @@ final class LogHandlerTest extends Framework\TestCase
             new Psr7\Uri('https://www.example.com'),
         );
 
-        self::assertEquals($expected, $this->logger->log[Log\LogLevel::INFO]);
+        self::assertEquals($expected, $this->logger->getByLogLevel(TransientLogger\Log\LogLevel::Info));
     }
 
     #[Framework\Attributes\Test]
@@ -92,20 +93,21 @@ final class LogHandlerTest extends Framework\TestCase
             new Psr7\Uri('https://www.example.com'),
         );
 
-        self::assertSame([], $this->logger->log[Log\LogLevel::INFO]);
+        self::assertSame([], $this->logger->getByLogLevel(TransientLogger\Log\LogLevel::Info));
     }
 
     #[Framework\Attributes\Test]
     public function onFailureLogsFailedCrawl(): void
     {
         $expected = [
-            [
-                'message' => 'Error while crawling URL {url} (exception: {exception}).',
-                'context' => [
+            new TransientLogger\Log\LogRecord(
+                TransientLogger\Log\LogLevel::Error,
+                'Error while crawling URL {url} (exception: {exception}).',
+                [
                     'url' => new Psr7\Uri('https://www.example.com'),
                     'exception' => new Exception('oops, something went wrong.'),
                 ],
-            ],
+            ),
         ];
 
         $this->subject->onFailure(
@@ -113,6 +115,6 @@ final class LogHandlerTest extends Framework\TestCase
             new Psr7\Uri('https://www.example.com'),
         );
 
-        self::assertEquals($expected, $this->logger->log[Log\LogLevel::ERROR]);
+        self::assertEquals($expected, $this->logger->getByLogLevel(TransientLogger\Log\LogLevel::Error));
     }
 }
