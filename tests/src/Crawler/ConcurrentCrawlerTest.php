@@ -25,6 +25,7 @@ namespace EliasHaeussler\CacheWarmup\Tests\Crawler;
 
 use EliasHaeussler\CacheWarmup as Src;
 use EliasHaeussler\CacheWarmup\Tests;
+use EliasHaeussler\TransientLogger;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
@@ -194,7 +195,7 @@ final class ConcurrentCrawlerTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function crawlLogsCrawlingResults(): void
     {
-        $logger = new Tests\Log\DummyLogger();
+        $logger = new TransientLogger\TransientLogger();
 
         $this->mockHandler->append(
             new Psr7\Response(),
@@ -208,8 +209,8 @@ final class ConcurrentCrawlerTest extends Framework\TestCase
         $this->subject->setLogLevel(Log\LogLevel::INFO);
         $this->subject->crawl([$uri1, $uri2]);
 
-        self::assertCount(1, $logger->log[Log\LogLevel::ERROR]);
-        self::assertCount(1, $logger->log[Log\LogLevel::INFO]);
+        self::assertCount(1, $logger->getByLogLevel(TransientLogger\Log\LogLevel::Error));
+        self::assertCount(1, $logger->getByLogLevel(TransientLogger\Log\LogLevel::Info));
     }
 
     #[Framework\Attributes\Test]
