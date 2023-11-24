@@ -28,6 +28,7 @@ use EliasHaeussler\CacheWarmup\Result;
 use EliasHaeussler\CacheWarmup\Time;
 use Symfony\Component\Console;
 
+use function call_user_func;
 use function method_exists;
 use function sprintf;
 
@@ -181,8 +182,7 @@ final class TextFormatter implements Formatter
         $methodName = $severity->value;
 
         if (method_exists($this->io, $methodName)) {
-            /* @phpstan-ignore-next-line */
-            $this->io->{$methodName}($message);
+            call_user_func([$this->io, $methodName], $message);
         }
     }
 

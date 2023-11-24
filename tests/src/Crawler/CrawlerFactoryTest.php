@@ -60,7 +60,6 @@ final class CrawlerFactoryTest extends Framework\TestCase
     {
         $this->expectExceptionObject(Src\Exception\InvalidCrawlerException::forMissingClass('foo'));
 
-        /* @phpstan-ignore-next-line */
         $this->subject->get('foo');
     }
 
@@ -69,7 +68,6 @@ final class CrawlerFactoryTest extends Framework\TestCase
     {
         $this->expectExceptionObject(Src\Exception\InvalidCrawlerException::forUnsupportedClass(self::class));
 
-        /* @phpstan-ignore-next-line */
         $this->subject->get(self::class);
     }
 
@@ -157,7 +155,6 @@ final class CrawlerFactoryTest extends Framework\TestCase
     {
         $this->expectExceptionObject(Src\Exception\InvalidCrawlerOptionException::forInvalidType(['foo']));
 
-        /* @phpstan-ignore-next-line */
         $this->subject->parseCrawlerOptions(['foo']);
     }
 
