@@ -69,7 +69,7 @@ class DummyCrawler implements Crawler\CrawlerInterface
      *
      * @return list<Result\CrawlingResult>
      */
-    protected function mapUrlsToCrawlingResults(array $urls, Result\CrawlingState $state): array
+    private function mapUrlsToCrawlingResults(array $urls, Result\CrawlingState $state): array
     {
         return array_map(fn (Message\UriInterface $uri): Result\CrawlingResult => match ($state) {
             Result\CrawlingState::Failed => Result\CrawlingResult::createFailed($uri),
