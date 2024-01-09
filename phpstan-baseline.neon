@@ -54,3 +54,8 @@ parameters:
 			message: "#^Parameter \\#1 \\$crawlerOptions of method EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\CrawlerFactory\\:\\:parseCrawlerOptions\\(\\) expects array\\<string, mixed\\>\\|string\\|null, array\\<int, string\\> given\\.$#"
 			count: 1
 			path: tests/src/Crawler/CrawlerFactoryTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with 'foo' and 'foo' will always evaluate to true\\.$#"
+			count: 1
+			path: tests/src/Time/TimeTrackerTest.php
