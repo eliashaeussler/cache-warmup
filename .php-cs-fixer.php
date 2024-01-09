@@ -28,6 +28,7 @@ $header = PhpCsFixerConfig\Rules\Header::create(
     'eliashaeussler/cache-warmup',
     PhpCsFixerConfig\Package\Type::ComposerPackage,
     PhpCsFixerConfig\Package\Author::create('Elias Häußler', 'elias@haeussler.dev'),
+    PhpCsFixerConfig\Package\CopyrightRange::from(2020),
     PhpCsFixerConfig\Package\License::GPL3OrLater,
 );
 
