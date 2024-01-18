@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Tests;
 
 use EliasHaeussler\CacheWarmup as Src;
-use EliasHaeussler\CacheWarmup\Tests;
 use Generator;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
@@ -73,7 +72,7 @@ final class CacheWarmerTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function runPreparesUrlsWithConfiguredStrategy(): void
     {
-        $crawler = new Tests\Fixtures\Classes\DummyCrawler();
+        $crawler = new Fixtures\Classes\DummyCrawler();
         $subject = new Src\CacheWarmer(crawler: $crawler, strategy: new Src\Crawler\Strategy\SortByPriorityStrategy());
 
         $url1 = new Src\Sitemap\Url('https://www.example.org/foo', 0.75);
