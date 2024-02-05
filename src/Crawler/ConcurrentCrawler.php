@@ -67,7 +67,7 @@ final class ConcurrentCrawler extends AbstractConfigurableCrawler implements Log
 
     public function __construct(
         array $options = [],
-        ClientInterface $client = null,
+        ?ClientInterface $client = null,
     ) {
         parent::__construct($options);
         $this->client = $client ?? new Client($this->options['client_config']);

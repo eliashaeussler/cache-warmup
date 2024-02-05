@@ -50,7 +50,7 @@ final class TextFormatter implements Formatter
         Result\ParserResult $successful,
         Result\ParserResult $failed,
         Result\ParserResult $excluded,
-        Time\Duration $duration = null,
+        ?Time\Duration $duration = null,
     ): void {
         $sitemaps = [];
         $urlsShown = false;
@@ -113,7 +113,7 @@ final class TextFormatter implements Formatter
 
     public function formatCacheWarmupResult(
         Result\CacheWarmupResult $result,
-        Time\Duration $duration = null,
+        ?Time\Duration $duration = null,
     ): void {
         $successfulUrls = $result->getSuccessful();
         $failedUrls = $result->getFailed();

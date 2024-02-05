@@ -38,12 +38,12 @@ interface Formatter
         Result\ParserResult $successful,
         Result\ParserResult $failed,
         Result\ParserResult $excluded,
-        Time\Duration $duration = null,
+        ?Time\Duration $duration = null,
     ): void;
 
     public function formatCacheWarmupResult(
         Result\CacheWarmupResult $result,
-        Time\Duration $duration = null,
+        ?Time\Duration $duration = null,
     ): void;
 
     public function logMessage(string $message, MessageSeverity $severity = MessageSeverity::Info): void;
