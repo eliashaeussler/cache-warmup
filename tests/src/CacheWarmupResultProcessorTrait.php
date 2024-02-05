@@ -39,7 +39,7 @@ trait CacheWarmupResultProcessorTrait
      */
     protected function getProcessedUrlsFromCacheWarmupResult(
         Src\Result\CacheWarmupResult $result,
-        Src\Result\CrawlingState $state = null,
+        ?Src\Result\CrawlingState $state = null,
     ): array {
         $urls = [];
         $crawlingResults = [...$result->getSuccessful(), ...$result->getFailed()];

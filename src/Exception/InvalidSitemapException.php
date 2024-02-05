@@ -39,7 +39,7 @@ use function sprintf;
  */
 final class InvalidSitemapException extends Exception
 {
-    public static function create(Sitemap\Sitemap $sitemap, Valinor\Mapper\MappingError $error = null): self
+    public static function create(Sitemap\Sitemap $sitemap, ?Valinor\Mapper\MappingError $error = null): self
     {
         $suffix = '.';
 

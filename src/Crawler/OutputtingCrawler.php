@@ -71,7 +71,7 @@ final class OutputtingCrawler extends AbstractConfigurableCrawler implements Log
 
     public function __construct(
         array $options = [],
-        ClientInterface $client = null,
+        ?ClientInterface $client = null,
     ) {
         parent::__construct($options);
 

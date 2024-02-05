@@ -81,7 +81,7 @@ final class JsonFormatter implements Formatter
         Result\ParserResult $successful,
         Result\ParserResult $failed,
         Result\ParserResult $excluded,
-        Time\Duration $duration = null,
+        ?Time\Duration $duration = null,
     ): void {
         // Add successful result
         if ($this->io->isVeryVerbose()) {
@@ -104,7 +104,7 @@ final class JsonFormatter implements Formatter
 
     public function formatCacheWarmupResult(
         Result\CacheWarmupResult $result,
-        Time\Duration $duration = null,
+        ?Time\Duration $duration = null,
     ): void {
         $this->addToJson('cacheWarmupResult/success', $result->getSuccessful());
         $this->addToJson('cacheWarmupResult/failure', $result->getFailed());
