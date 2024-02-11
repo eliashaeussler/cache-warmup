@@ -4,7 +4,7 @@
 
 # Cache warmup
 
-[![Coverage](https://img.shields.io/codecov/c/github/eliashaeussler/cache-warmup?logo=codecov&token=SAYQJPAHYS)](https://codecov.io/gh/eliashaeussler/cache-warmup)
+[![Coverage](https://img.shields.io/coverallsCoverage/github/eliashaeussler/cache-warmup?logo=coveralls)](https://coveralls.io/github/eliashaeussler/cache-warmup)
 [![Maintainability](https://img.shields.io/codeclimate/maintainability/eliashaeussler/cache-warmup?logo=codeclimate)](https://codeclimate.com/github/eliashaeussler/cache-warmup/maintainability)
 [![CGL](https://img.shields.io/github/actions/workflow/status/eliashaeussler/cache-warmup/cgl.yaml?label=cgl&logo=github)](https://github.com/eliashaeussler/cache-warmup/actions/workflows/cgl.yaml)
 [![Tests](https://img.shields.io/github/actions/workflow/status/eliashaeussler/cache-warmup/tests.yaml?label=tests&logo=github)](https://github.com/eliashaeussler/cache-warmup/actions/workflows/tests.yaml)

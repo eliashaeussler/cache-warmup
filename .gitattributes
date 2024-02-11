@@ -7,7 +7,6 @@
 /.gitignore               export-ignore
 /.php-cs-fixer.php        export-ignore
 /box.json                 export-ignore
-/codecov.yml              export-ignore
 /CODEOWNERS               export-ignore
 /composer.lock            export-ignore
 /CONTRIBUTING.md          export-ignore
