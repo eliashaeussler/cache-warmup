@@ -6,8 +6,7 @@ on:
       - 'renovate/**'
   pull_request:
     branches:
-      - '**'
-      - '!renovate/**'
+      - main
 
 jobs:
   tests:
