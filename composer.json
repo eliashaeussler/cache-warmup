@@ -32,7 +32,7 @@
 		"armin/editorconfig-cli": "^1.8 || ^2.0",
 		"eliashaeussler/php-cs-fixer-config": "^2.0",
 		"eliashaeussler/phpstan-config": "^2.0",
-		"eliashaeussler/rector-config": "^2.0",
+		"eliashaeussler/rector-config": "^3.0",
 		"eliashaeussler/transient-logger": "^1.0",
 		"ergebnis/composer-normalize": "^2.28",
 		"phpstan/extension-installer": "^1.2",
