@@ -111,7 +111,7 @@ final class CrawlerFactory
         }
 
         // Handle non-associative-array crawler options
-        if ($crawlerOptions !== array_filter($crawlerOptions, 'strval', ARRAY_FILTER_USE_KEY)) {
+        if ($crawlerOptions !== array_filter($crawlerOptions, 'is_string', ARRAY_FILTER_USE_KEY)) {
             throw Exception\InvalidCrawlerOptionException::forInvalidType($crawlerOptions);
         }
 
