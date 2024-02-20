@@ -31,7 +31,6 @@ use GuzzleHttp\Pool;
 use GuzzleHttp\Psr7;
 use Psr\Http\Message;
 
-use function array_values;
 use function sprintf;
 
 /**
@@ -56,7 +55,7 @@ trait ConcurrentCrawlerTrait
             ->withClient($client)
             ->withConcurrency($this->options['concurrency'])
             ->withOptions($this->options['request_options'])
-            ->withResponseHandler(...array_values($handlers))
+            ->withResponseHandler(...$handlers)
             ->withStopOnFailure($stopOnFailure)
             ->createPool()
         ;

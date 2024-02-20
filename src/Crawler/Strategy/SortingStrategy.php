@@ -25,7 +25,6 @@ namespace EliasHaeussler\CacheWarmup\Crawler\Strategy;
 
 use EliasHaeussler\CacheWarmup\Sitemap;
 
-use function array_values;
 use function usort;
 
 /**
@@ -40,7 +39,7 @@ abstract class SortingStrategy implements CrawlingStrategy
     {
         usort($urls, $this->sortUrls(...));
 
-        return array_values($urls);
+        return $urls;
     }
 
     abstract protected function sortUrls(Sitemap\Url $a, Sitemap\Url $b): int;
