@@ -25,6 +25,7 @@ namespace EliasHaeussler\CacheWarmup\Tests\Sitemap;
 
 use DateTimeImmutable;
 use EliasHaeussler\CacheWarmup as Src;
+use Generator;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
 
@@ -87,6 +88,13 @@ final class SitemapTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    #[Framework\Attributes\DataProvider('createFromStringReturnsSitemapObjectDataProvider')]
+    public function createFromStringReturnsSitemapObject(string $sitemap, Src\Sitemap\Sitemap $expected): void
+    {
+        self::assertEquals($expected, Src\Sitemap\Sitemap::createFromString($sitemap));
+    }
+
+    #[Framework\Attributes\Test]
     public function getRootOriginReturnsRootOrigin(): void
     {
         $origin = new Src\Sitemap\Sitemap(new Psr7\Uri('https://baz.foo'));
@@ -118,5 +126,22 @@ final class SitemapTest extends Framework\TestCase
         $subject = new Src\Sitemap\Sitemap($uri);
 
         self::assertSame((string) $uri, (string) $subject);
+    }
+
+    /**
+     * @return Generator<string, array{string, Src\Sitemap\Sitemap}>
+     */
+    public static function createFromStringReturnsSitemapObjectDataProvider(): Generator
+    {
+        $localFile = dirname(__DIR__).'/Fixtures/Sitemaps/valid_sitemap_1.xml';
+
+        yield 'sitemap url' => [
+            'https://www.example.org/sitemap.xml',
+            new Src\Sitemap\Sitemap(new Psr7\Uri('https://www.example.org/sitemap.xml')),
+        ];
+        yield 'local sitemap file' => [
+            $localFile,
+            new Src\Sitemap\Sitemap(new Psr7\Uri('file://'.$localFile)),
+        ];
     }
 }

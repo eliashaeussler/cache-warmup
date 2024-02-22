@@ -89,7 +89,7 @@ final class CacheWarmerTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
-    public function addSitemapsThrowsExceptionIfInvalidSitemapsIsGiven(): void
+    public function addSitemapsThrowsExceptionIfInvalidSitemapsAreGiven(): void
     {
         $this->expectException(Src\Exception\InvalidSitemapException::class);
         $this->expectExceptionCode(1604055096);
@@ -99,7 +99,7 @@ final class CacheWarmerTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
-    public function addSitemapsThrowsExceptionIfGivenSitemapCannotBeParsedAndCacheWarmerIsRunningInStrictMode(): void
+    public function addSitemapsThrowsExceptionIfGivenSitemapCannotBeParsedAndStrictModeIsEnabled(): void
     {
         $this->mockSitemapRequest('invalid_sitemap_1');
 
@@ -118,7 +118,7 @@ final class CacheWarmerTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
-    public function addSitemapsIgnoresParserErrorsIfCacheWarmerIsNotRunningInStrictMode(): void
+    public function addSitemapsIgnoresParserErrorsIfStrictModeIsDisabled(): void
     {
         $subject = new Src\CacheWarmer(client: $this->client, strict: false);
         $sitemap = new Src\Sitemap\Sitemap(new Psr7\Uri('https://www.example.com/sitemap.xml'));
@@ -158,7 +158,13 @@ final class CacheWarmerTest extends Framework\TestCase
     {
         $origin = new Src\Sitemap\Sitemap(new Psr7\Uri('https://www.example.org/sitemap.xml'));
 
-        $subject = new Src\CacheWarmer(client: $this->client, excludePatterns: ['*/foo', '#www\\.example\\.com#']);
+        $subject = new Src\CacheWarmer(
+            client: $this->client,
+            excludePatterns: [
+                Src\Config\Option\ExcludePattern::createFromPattern('*/foo'),
+                Src\Config\Option\ExcludePattern::createFromRegularExpression('#www\\.example\\.com#'),
+            ],
+        );
 
         $this->mockSitemapRequest('valid_sitemap_2');
 
@@ -280,7 +286,7 @@ final class CacheWarmerTest extends Framework\TestCase
         $origin2 = new Src\Sitemap\Sitemap(new Psr7\Uri('https://www.example.com/sitemap.xml'));
         $origin3 = new Src\Sitemap\Sitemap(new Psr7\Uri('https://www.example.org/sitemap_en.xml'), origin: $origin2);
 
-        $localFile = __DIR__.'/Fixtures/Files/valid_sitemap_2.xml';
+        $localFile = __DIR__.'/Fixtures/Sitemaps/valid_sitemap_2.xml';
         $originLocal = new Src\Sitemap\Sitemap(new Psr7\Uri('file://'.$localFile));
 
         yield 'empty sitemaps' => [

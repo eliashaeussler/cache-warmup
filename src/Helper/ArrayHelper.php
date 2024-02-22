@@ -23,7 +23,11 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Helper;
 
+use function array_filter;
+use function array_key_exists;
+use function explode;
 use function is_array;
+use function is_int;
 
 /**
  * ArrayHelper.
@@ -71,6 +75,40 @@ final class ArrayHelper
         }
 
         $reference = $value;
+    }
+
+    /**
+     * @param array<array-key, mixed> $subject
+     * @param array<array-key, mixed> $other
+     */
+    public static function mergeRecursive(array &$subject, array $other): void
+    {
+        foreach ($other as $key => $value) {
+            // Skip merge if key does not exist in subject
+            if (!array_key_exists($key, $subject)) {
+                $subject[$key] = $value;
+                continue;
+            }
+
+            // Append value if key is numeric
+            if (is_int($key)) {
+                $subject[] = $value;
+                continue;
+            }
+
+            $originalValue = &$subject[$key];
+
+            // Overwrite value in subject
+            if (!is_array($value)) {
+                $originalValue = $value;
+                continue;
+            }
+
+            // Merge arrays
+            if (is_array($originalValue)) {
+                self::mergeRecursive($originalValue, $value);
+            }
+        }
     }
 
     private static function pathSegmentExists(mixed $subject, string $pathSegment): bool

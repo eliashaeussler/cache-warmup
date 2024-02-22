@@ -86,6 +86,7 @@ The following input parameters are available:
 |-------------------------------------------------|------------------------------------------------------------------------|
 | [`sitemaps`](#sitemaps)                         | URLs or local filenames of XML sitemaps to be warmed up                |
 | [`--allow-failures`](#--allow-failures)         | Allow failures during URL crawling and exit with zero                  |
+| [`--config`](#--config)                         | Path to configuration file                                             |
 | [`--crawler-options`, `-o`](#--crawler-options) | JSON-encoded string of additional config for configurable crawlers     |
 | [`--crawler`, `-c`](#--crawler)                 | FQCN of the crawler to use for cache warmup                            |
 | [`--exclude`, `-e`](#--exclude)                 | Patterns of URLs to be excluded from cache warmup                      |
@@ -129,6 +130,33 @@ $ cache-warmup -u "https://www.example.org/" -u "https://www.example.org/de/"
 | Required                | ✅ *(either [`sitemaps`](#sitemaps) or [`--urls`](#--urls) must be provided)* |
 | Multiple values allowed | ✅                                                                            |
 | Default                 | **–**                                                                        |
+
+#### `--config`
+
+Path to a configuration file. Read more in the
+[Configuration file](#configuration-file) section below.
+
+At the moment, the following file formats are available:
+
+* [`json`](#json-and-yaml)
+* [`php`](#php)
+* [`yaml`/`yml`](#json-and-yaml)
+
+> [!NOTE]
+> Configuration options provided by command options take
+> precedence over those provided by configuration files.
+> Command options, on the other hand, will be overwritten
+> by [environment variables](#environment-variables).
+
+```bash
+$ cache-warmup --config cache-warmup.yaml
+```
+
+| Shorthand               | –     |
+|:------------------------|:------|
+| Required                | **–** |
+| Multiple values allowed | **–** |
+| Default                 | **–** |
 
 #### `--exclude`
 
@@ -532,6 +560,100 @@ object. It includes the following properties:
 | `time`              | Lists all tracked times during cache warmup (`crawl`, `parse`)                                                         |
 
 💡 The complete JSON structure can be found in the provided [JSON schema][22].
+
+### Configuration file
+
+Instead of passing all available configuration options as
+command parameters, it is also possible to provide a
+configuration file to be used for cache warmup. At the moment,
+the following file formats are supported:
+
+* [`json`](#json-and-yaml)
+* [`php`](#php)
+* [`yaml`/`yml`](#json-and-yaml)
+
+#### JSON and YAML
+
+For JSON and YAML files, the name of each configuration option
+can be derived from the list of available
+[command parameters](#command-line-usage) and must be written in
+camel case, e.g. `crawler-options` is configured as `crawlerOptions`.
+
+> [!NOTE]
+> Crawler options must be written in object notation instead of
+> JSON notation (see examples below).
+
+JSON example:
+
+```json
+{
+    "sitemaps": [
+        "https://www.example.org/sitemap.xml"
+    ],
+    "crawlerOptions": {
+        "concurrency": 3,
+        "request_options": {
+            "delay": 3000
+        }
+    }
+}
+```
+
+YAML example:
+
+```yaml
+sitemaps:
+  - https://www.example.org/sitemap.xml
+crawlerOptions:
+  concurrency: 3
+  request_options:
+    delay: 3000
+```
+
+> [!TIP]
+> For a full list of supported configuration options, have a look at the
+> [`EliasHaeussler\CacheWarmup\Config\CacheWarmupConfig`](src/Config/CacheWarmupConfig.php)
+> class.
+
+#### PHP
+
+PHP config files must return a closure which returns an instance
+of [`EliasHaeussler\CacheWarmup\Config\CacheWarmupConfig`](src/Config/CacheWarmupConfig.php).
+
+Example:
+
+```php
+use EliasHaeussler\CacheWarmup;
+
+return static function (CacheWarmup\Config\CacheWarmupConfig $config): void {
+    $config->addSitemap('https://www.example.org/sitemap.xml');
+    $config->setCrawlerOption('concurrency', 3);
+    $config->setCrawlerOption('request_options', [
+        'delay' => 3000,
+    ]);
+};
+```
+
+### Environment variables
+
+Several cache warmup options can also be configured using environment
+variables. Each environment variable is prefixed with `CACHE_WARMUP_`,
+followed by the cache warmup option in upper camel case.
+
+Example:
+
+* The `sitemaps` option is expected as `CACHE_WARMUP_SITEMAPS`
+* The `crawler-options` option is expected as `CACHE_WARMUP_CRAWLER_OPTIONS`
+
+The following value transformation between environment variables and
+cache warmup options exists:
+
+* Lists: Values are separated by comma
+  - Example: `CACHE_WARMUP_SITEMAPS="https://www.example.org/sitemap.xml, /var/www/html/sitemap.xml"`
+* Booleans: Values matching `true`, `yes` or `1` are interpreted as `true`
+  - Example: `CACHE_WARMUP_PROGRESS=yes` or `CACHE_WARMUP_PROGRESS=1`
+* All other values are converted to their underlying type
+  - Example: `CACHE_WARMUP_LIMIT=50` is converted to an integer value
 
 ## 🧑‍💻 Contributing
 
