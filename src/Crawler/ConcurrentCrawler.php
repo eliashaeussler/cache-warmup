@@ -56,7 +56,6 @@ final class ConcurrentCrawler extends AbstractConfigurableCrawler implements Log
         'client_config' => [],
     ];
 
-    private readonly ClientInterface $client;
     private ?Log\LoggerInterface $logger = null;
 
     /**
@@ -67,10 +66,9 @@ final class ConcurrentCrawler extends AbstractConfigurableCrawler implements Log
 
     public function __construct(
         array $options = [],
-        ?ClientInterface $client = null,
+        private readonly ?ClientInterface $client = null,
     ) {
         parent::__construct($options);
-        $this->client = $client ?? new Client($this->options['client_config']);
     }
 
     public function crawl(array $urls): Result\CacheWarmupResult
@@ -85,9 +83,12 @@ final class ConcurrentCrawler extends AbstractConfigurableCrawler implements Log
             $handlers[] = $logHandler;
         }
 
+        // Create new client
+        $client = $this->client ?? new Client($this->options['client_config']);
+
         // Start crawling
         try {
-            $this->createPool($urls, $this->client, $handlers, $this->stopOnFailure)->promise()->wait();
+            $this->createPool($urls, $client, $handlers, $this->stopOnFailure)->promise()->wait();
         } catch (Promise\CancellationException) {
             $result->setCancelled(true);
         }
