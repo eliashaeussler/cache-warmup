@@ -6,6 +6,21 @@ parameters:
 			path: src/CacheWarmer.php
 
 		-
+			message: "#^Parameter \\#1 \\$crawler of method EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\CrawlerFactory\\:\\:get\\(\\) expects class\\-string\\<EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\CrawlerInterface\\>, string given\\.$#"
+			count: 1
+			path: src/Config/Adapter/ConsoleInputConfigAdapter.php
+
+		-
+			message: "#^Parameter \\#1 \\$crawler of method EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\CrawlerFactory\\:\\:get\\(\\) expects class\\-string\\<EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\CrawlerInterface\\>, string given\\.$#"
+			count: 1
+			path: src/Config/Adapter/EnvironmentVariablesConfigAdapter.php
+
+		-
+			message: "#^Variable property access on \\$this\\(EliasHaeussler\\\\CacheWarmup\\\\Config\\\\CacheWarmupConfig\\)\\.$#"
+			count: 1
+			path: src/Config/CacheWarmupConfig.php
+
+		-
 			message: "#^Property EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\AbstractConfigurableCrawler\\<TOptions of array\\<string, mixed\\>\\>\\:\\:\\$options \\(TOptions of array\\<string, mixed\\>\\) does not accept array\\<string, mixed\\>\\.$#"
 			count: 1
 			path: src/Crawler/AbstractConfigurableCrawler.php
@@ -44,6 +59,11 @@ parameters:
 			message: "#^Parameter \\#1 \\$sitemaps of method EliasHaeussler\\\\CacheWarmup\\\\CacheWarmer\\:\\:addSitemaps\\(\\) expects list\\<EliasHaeussler\\\\CacheWarmup\\\\Sitemap\\\\Sitemap\\|string\\>\\|EliasHaeussler\\\\CacheWarmup\\\\Sitemap\\\\Sitemap\\|string, array\\{false\\} given\\.$#"
 			count: 1
 			path: tests/src/CacheWarmerTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$limit of method EliasHaeussler\\\\CacheWarmup\\\\Config\\\\CacheWarmupConfig\\:\\:setLimit\\(\\) expects int\\<0, max\\>, \\-10 given\\.$#"
+			count: 1
+			path: tests/src/Config/CacheWarmupConfigTest.php
 
 		-
 			message: "#^Parameter \\#1 \\$crawler of method EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\CrawlerFactory\\:\\:get\\(\\) expects class\\-string\\<EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\CrawlerInterface\\>, string given\\.$#"

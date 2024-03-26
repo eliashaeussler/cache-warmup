@@ -1,0 +1,21 @@
+sitemaps:
+  - https://www.example.com/sitemap.xml
+  - https://www.example.com/sitemap_en.xml
+urls:
+  - https://www.example.com/
+  - https://www.example.com/foo
+excludePatterns:
+  - '#foo#'
+  - '*foo*'
+limit: 10
+progress: true
+crawler: EliasHaeussler\CacheWarmup\Tests\Fixtures\Classes\DummyCrawler
+crawlerOptions:
+  foo: baz
+strategy: sort-by-changefreq
+format: json
+logFile: errors.log
+logLevel: debug
+allowFailures: true
+stopOnFailure: true
+repeatAfter: 300

@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Command;
 
 use EliasHaeussler\CacheWarmup\CacheWarmer;
+use EliasHaeussler\CacheWarmup\Config;
 use EliasHaeussler\CacheWarmup\Crawler;
 use EliasHaeussler\CacheWarmup\Exception;
 use EliasHaeussler\CacheWarmup\Formatter;
@@ -34,12 +35,14 @@ use EliasHaeussler\CacheWarmup\Sitemap;
 use EliasHaeussler\CacheWarmup\Time;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Psr7;
 use Psr\Log\LogLevel;
 use Symfony\Component\Console;
+use Symfony\Component\Filesystem;
 
 use function array_map;
+use function array_unshift;
 use function count;
+use function getenv;
 use function implode;
 use function in_array;
 use function is_string;
@@ -60,6 +63,7 @@ final class CacheWarmupCommand extends Console\Command\Command
     private const FAILED = 1;
 
     private readonly Time\TimeTracker $timeTracker;
+    private Config\CacheWarmupConfig $config;
     private Console\Style\SymfonyStyle $io;
     private Formatter\Formatter $formatter;
     private Crawler\CrawlerFactory $crawlerFactory;
@@ -110,6 +114,19 @@ Alternatively, sitemaps can be specified from user input when application is in 
 In addition or as an alternative to sitemaps, it's also possible to provide a given URL set using the <comment>--urls</comment> option:
 
    <comment>%command.full_name% -u https://www.example.com/foo -u https://www.example.com/baz</comment>
+
+<info>Config file</info>
+<info>===========</info>
+All command parameters can be configured in an external config file.
+Use the <comment>--config</comment> option to specify the config file:
+
+   <comment>%command.full_name% -c cache-warmup.php</comment>
+
+The following formats are currently supported:
+
+   * <comment>json</comment>
+   * <comment>php</comment>
+   * <comment>yaml/yml</comment>
 
 <info>Exclude patterns</info>
 <info>================</info>
@@ -230,6 +247,12 @@ HELP);
             'Custom additional URLs to be used for cache warming',
         );
         $this->addOption(
+            'config',
+            null,
+            Console\Input\InputOption::VALUE_REQUIRED,
+            'Path to configuration file',
+        );
+        $this->addOption(
             'exclude',
             'e',
             Console\Input\InputOption::VALUE_REQUIRED | Console\Input\InputOption::VALUE_IS_ARRAY,
@@ -303,21 +326,38 @@ HELP);
             null,
             Console\Input\InputOption::VALUE_REQUIRED,
             'Run cache warmup in endless loop and repeat x seconds after each run',
+            0,
         );
     }
 
     /**
+     * @throws Exception\UnsupportedConfigFileException
      * @throws Exception\UnsupportedFormatterException
      * @throws Exception\UnsupportedLogLevelException
      */
     protected function initialize(Console\Input\InputInterface $input, Console\Output\OutputInterface $output): void
     {
-        $this->io = new Console\Style\SymfonyStyle($input, $output);
-        $this->formatter = (new Formatter\FormatterFactory($this->io))->get($input->getOption('format'));
+        $configFile = $input->getOption('config');
+        $configFileFromEnv = getenv('CACHE_WARMUP_CONFIG');
+        $configAdapters = [
+            new Config\Adapter\ConsoleInputConfigAdapter($input),
+            new Config\Adapter\EnvironmentVariablesConfigAdapter(),
+        ];
 
-        $logLevel = $input->getOption('log-level');
-        $logFile = $input->getOption('log-file');
-        $stopOnFailure = $input->getOption('stop-on-failure');
+        if (null !== $configFile) {
+            array_unshift($configAdapters, $this->loadConfigFromFile($configFile));
+        }
+        if (false !== $configFileFromEnv) {
+            array_unshift($configAdapters, $this->loadConfigFromFile($configFileFromEnv));
+        }
+
+        $this->config = (new Config\Adapter\CompositeConfigAdapter($configAdapters))->get();
+        $this->io = new Console\Style\SymfonyStyle($input, $output);
+        $this->formatter = (new Formatter\FormatterFactory($this->io))->get($this->config->getFormat());
+
+        $logFile = $this->config->getLogFile();
+        $logLevel = $this->config->getLogLevel();
+        $stopOnFailure = $this->config->shouldStopOnFailure();
         $logger = null;
 
         // Create logger
@@ -333,8 +373,9 @@ HELP);
         // Use error output or disable output if formatter is non-verbose
         if (!$this->formatter->isVerbose()) {
             if ($output instanceof Console\Output\ConsoleOutputInterface) {
-                $input->setOption('progress', true);
                 $output = $output->getErrorOutput();
+
+                $this->config->enableProgressBar();
             } else {
                 $output = new Console\Output\NullOutput();
             }
@@ -346,7 +387,7 @@ HELP);
     protected function interact(Console\Input\InputInterface $input, Console\Output\OutputInterface $output): void
     {
         // Early return if sitemaps or URLs are already specified
-        if ([] !== $input->getArgument('sitemaps') || [] !== $input->getOption('urls')) {
+        if ([] !== $this->config->getSitemaps() || [] !== $this->config->getUrls()) {
             return;
         }
 
@@ -368,14 +409,17 @@ HELP);
             throw new Console\Exception\RuntimeException('You must enter at least one sitemap URL.', 1604258903);
         }
 
-        $input->setArgument('sitemaps', $sitemaps);
+        $this->config->setSitemaps($sitemaps);
     }
 
+    /**
+     * @throws Exception\UnsupportedConfigFileException
+     */
     protected function execute(Console\Input\InputInterface $input, Console\Output\OutputInterface $output): int
     {
-        $sitemaps = $input->getArgument('sitemaps');
-        $urls = $input->getOption('urls');
-        $repeatAfter = (int) $input->getOption('repeat-after');
+        $sitemaps = $this->config->getSitemaps();
+        $urls = $this->config->getUrls();
+        $repeatAfter = $this->config->getRepeatAfter();
 
         // Throw exception if neither sitemaps nor URLs are defined
         if ([] === $sitemaps && [] === $urls) {
@@ -394,8 +438,8 @@ HELP);
         }
 
         // Initialize components
-        $crawler = $this->initializeCrawler($input);
-        $cacheWarmer = $this->timeTracker->track(fn () => $this->initializeCacheWarmer($input, $crawler));
+        $crawler = $this->initializeCrawler();
+        $cacheWarmer = $this->timeTracker->track(fn () => $this->initializeCacheWarmer($crawler));
 
         // Print formatted parser result
         $this->formatter->formatParserResult(
@@ -417,7 +461,7 @@ HELP);
         $this->formatter->formatCacheWarmupResult($result, $this->timeTracker->getLastDuration());
 
         // Early return if parsing or crawling failed
-        if (!$input->getOption('allow-failures')
+        if (!$this->config->areFailuresAllowed()
             && ([] !== $cacheWarmer->getFailedSitemaps() || !$result->isSuccessful())
         ) {
             return self::FAILED;
@@ -454,38 +498,38 @@ HELP);
         return $result;
     }
 
-    private function initializeCacheWarmer(
-        Console\Input\InputInterface $input,
-        Crawler\CrawlerInterface $crawler,
-    ): CacheWarmer {
+    private function initializeCacheWarmer(Crawler\CrawlerInterface $crawler): CacheWarmer
+    {
         if ($this->formatter->isVerbose()) {
             $this->io->write('Parsing sitemaps... ');
         }
 
         // Initialize crawling strategy
-        $strategy = match ($input->getOption('strategy')) {
-            Crawler\Strategy\SortByChangeFrequencyStrategy::getName() => new Crawler\Strategy\SortByChangeFrequencyStrategy(),
-            Crawler\Strategy\SortByLastModificationDateStrategy::getName() => new Crawler\Strategy\SortByLastModificationDateStrategy(),
-            Crawler\Strategy\SortByPriorityStrategy::getName() => new Crawler\Strategy\SortByPriorityStrategy(),
-            null => null,
-            default => throw new Console\Exception\RuntimeException('The given crawling strategy is invalid.', 1677618007),
-        };
+        $strategy = $this->config->getStrategy();
+        if (is_string($strategy)) {
+            $strategy = match ($strategy) {
+                Crawler\Strategy\SortByChangeFrequencyStrategy::getName() => new Crawler\Strategy\SortByChangeFrequencyStrategy(),
+                Crawler\Strategy\SortByLastModificationDateStrategy::getName() => new Crawler\Strategy\SortByLastModificationDateStrategy(),
+                Crawler\Strategy\SortByPriorityStrategy::getName() => new Crawler\Strategy\SortByPriorityStrategy(),
+                default => throw new Console\Exception\RuntimeException('The given crawling strategy is invalid.', 1677618007),
+            };
+        }
 
         // Initialize cache warmer
         $cacheWarmer = new CacheWarmer(
-            (int) $input->getOption('limit'),
+            $this->config->getLimit(),
             $this->client,
             $crawler,
             $strategy,
-            !$input->getOption('allow-failures'),
-            $input->getOption('exclude'),
+            !$this->config->areFailuresAllowed(),
+            $this->config->getExcludePatterns(),
         );
 
         // Add and parse XML sitemaps
-        $cacheWarmer->addSitemaps([...$input->getArgument('sitemaps')]);
+        $cacheWarmer->addSitemaps($this->config->getSitemaps());
 
         // Add URLs
-        foreach ($input->getOption('urls') as $url) {
+        foreach ($this->config->getUrls() as $url) {
             $cacheWarmer->addUrl($url);
         }
 
@@ -496,23 +540,24 @@ HELP);
         return $cacheWarmer;
     }
 
-    private function initializeCrawler(Console\Input\InputInterface $input): Crawler\CrawlerInterface
+    private function initializeCrawler(): Crawler\CrawlerInterface
     {
-        /** @var class-string<Crawler\CrawlerInterface>|null $crawlerClass */
-        $crawlerClass = $input->getOption('crawler');
-        $crawlerOptions = $this->crawlerFactory->parseCrawlerOptions($input->getOption('crawler-options'));
-        $stopOnFailure = $input->getOption('stop-on-failure');
+        $crawler = $this->config->getCrawler();
+        $crawlerOptions = $this->crawlerFactory->parseCrawlerOptions($this->config->getCrawlerOptions());
+        $stopOnFailure = $this->config->shouldStopOnFailure();
 
         // Select default crawler
-        if (null === $crawlerClass) {
-            $crawlerClass = $input->getOption('progress')
+        if (null === $crawler) {
+            $crawler = $this->config->isProgressBarEnabled()
                 ? Crawler\OutputtingCrawler::class
                 : Crawler\ConcurrentCrawler::class
             ;
         }
 
         // Initialize crawler
-        $crawler = $this->crawlerFactory->get($crawlerClass, $crawlerOptions);
+        if (is_string($crawler)) {
+            $crawler = $this->crawlerFactory->get($crawler, $crawlerOptions);
+        }
 
         // Print crawler options
         if ($crawler instanceof Crawler\ConfigurableCrawlerInterface) {
@@ -539,6 +584,21 @@ HELP);
         return $crawler;
     }
 
+    /**
+     * @throws Exception\UnsupportedConfigFileException
+     */
+    private function loadConfigFromFile(string $configFile): Config\Adapter\ConfigAdapter
+    {
+        $configFile = Helper\FilesystemHelper::resolveRelativePath($configFile);
+        $extension = Filesystem\Path::getExtension($configFile, true);
+
+        return match ($extension) {
+            'php' => new Config\Adapter\PhpConfigAdapter($configFile),
+            'json', 'yaml', 'yml' => new Config\Adapter\FileConfigAdapter($configFile),
+            default => throw Exception\UnsupportedConfigFileException::create($configFile),
+        };
+    }
+
     private function showEndlessModeWarning(int $interval): void
     {
         $this->formatter->logMessage(
@@ -557,7 +617,7 @@ HELP);
             return null;
         }
 
-        return new Sitemap\Sitemap(new Psr7\Uri($input));
+        return Sitemap\Sitemap::createFromString($input);
     }
 
     private function printHeader(): void

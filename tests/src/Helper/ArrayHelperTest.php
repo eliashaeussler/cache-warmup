@@ -76,4 +76,43 @@ final class ArrayHelperTest extends Framework\TestCase
             $subject,
         );
     }
+
+    #[Framework\Attributes\Test]
+    public function mergeRecursiveMergesGivenArrayIntoOriginalArray(): void
+    {
+        $subject = [
+            'foo' => [
+                'baz',
+                'bar' => [
+                    'hello world',
+                ],
+            ],
+        ];
+
+        $other = [
+            'baz' => 'hello world',
+            'foo' => [
+                'hello world',
+                'bar' => [
+                    'foo',
+                ],
+            ],
+        ];
+
+        $expected = [
+            'foo' => [
+                'baz',
+                'bar' => [
+                    'hello world',
+                    'foo',
+                ],
+                'hello world',
+            ],
+            'baz' => 'hello world',
+        ];
+
+        Src\Helper\ArrayHelper::mergeRecursive($subject, $other);
+
+        self::assertSame($expected, $subject);
+    }
 }

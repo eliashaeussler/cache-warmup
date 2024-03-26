@@ -26,18 +26,12 @@ namespace EliasHaeussler\CacheWarmup;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Psr7;
-use Psr\Http\Message;
 
 use function array_key_exists;
 use function array_values;
 use function count;
-use function fnmatch;
 use function is_array;
 use function is_string;
-use function preg_match;
-use function str_contains;
-use function str_starts_with;
 
 /**
  * CacheWarmer.
@@ -75,7 +69,7 @@ final class CacheWarmer
     private array $excludedUrls = [];
 
     /**
-     * @param array<string> $excludePatterns
+     * @param list<Config\Option\ExcludePattern> $excludePatterns
      */
     public function __construct(
         private readonly int $limit = 0,
@@ -124,8 +118,7 @@ final class CacheWarmer
         foreach ($sitemaps as $sitemap) {
             // Parse sitemap URL to valid sitemap object
             if (is_string($sitemap)) {
-                $sitemapUri = $this->resolveSitemapUri($sitemap);
-                $sitemap = new Sitemap\Sitemap($sitemapUri);
+                $sitemap = Sitemap\Sitemap::createFromString($sitemap);
             }
 
             // Throw exception if sitemap is invalid
@@ -196,19 +189,6 @@ final class CacheWarmer
         return $this;
     }
 
-    private function resolveSitemapUri(string $sitemap): Message\UriInterface
-    {
-        // Sitemap is a remote URL
-        if (str_contains($sitemap, '://')) {
-            return new Psr7\Uri($sitemap);
-        }
-
-        // Sitemap is a local file
-        $file = Helper\FilesystemHelper::resolveRelativePath($sitemap);
-
-        return new Psr7\Uri('file://'.$file);
-    }
-
     private function exceededLimit(): bool
     {
         return $this->limit > 0 && count($this->urls) >= $this->limit;
@@ -217,11 +197,7 @@ final class CacheWarmer
     private function isExcluded(string $url): bool
     {
         foreach ($this->excludePatterns as $pattern) {
-            if (fnmatch($pattern, $url)) {
-                return true;
-            }
-
-            if (str_starts_with($pattern, '#') && 1 === preg_match($pattern, $url)) {
+            if ($pattern->matches($url)) {
                 return true;
             }
         }

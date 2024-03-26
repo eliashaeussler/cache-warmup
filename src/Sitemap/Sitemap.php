@@ -25,6 +25,8 @@ namespace EliasHaeussler\CacheWarmup\Sitemap;
 
 use DateTimeInterface;
 use EliasHaeussler\CacheWarmup\Exception;
+use EliasHaeussler\CacheWarmup\Helper;
+use GuzzleHttp\Psr7;
 use Psr\Http\Message;
 use Stringable;
 
@@ -47,6 +49,23 @@ class Sitemap implements Stringable
         protected ?self $origin = null,
     ) {
         $this->validateUri();
+    }
+
+    /**
+     * @throws Exception\InvalidUrlException
+     */
+    public static function createFromString(string $sitemap): self
+    {
+        if (str_contains($sitemap, '://')) {
+            // Sitemap is a remote URL
+            $uri = new Psr7\Uri($sitemap);
+        } else {
+            // Sitemap is a local file
+            $file = Helper\FilesystemHelper::resolveRelativePath($sitemap);
+            $uri = new Psr7\Uri('file://'.$file);
+        }
+
+        return new self($uri);
     }
 
     public function getUri(): Message\UriInterface

@@ -30,8 +30,10 @@ use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
 use Symfony\Component\Console;
 
+use function dirname;
 use function file_get_contents;
 use function implode;
+use function putenv;
 use function sys_get_temp_dir;
 use function uniqid;
 
@@ -57,6 +59,84 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         $application->add($command);
 
         $this->commandTester = new Console\Tester\CommandTester($command);
+    }
+
+    #[Framework\Attributes\Test]
+    public function initializeThrowsExceptionIfUnsupportedConfigFileIsGiven(): void
+    {
+        $configFile = dirname(__DIR__).'/Fixtures/ConfigFiles/invalid_config.txt';
+
+        $this->expectExceptionObject(Src\Exception\UnsupportedConfigFileException::create($configFile));
+
+        $this->commandTester->execute(['--config' => $configFile]);
+    }
+
+    #[Framework\Attributes\Test]
+    public function initializeResolvesRelativeConfigFilePath(): void
+    {
+        $this->mockSitemapRequest('valid_sitemap_2');
+
+        $this->commandTester->execute(['--config' => 'tests/src/Fixtures/ConfigFiles/valid_config.php']);
+
+        self::assertStringContainsString('3/3', $this->commandTester->getDisplay());
+    }
+
+    #[Framework\Attributes\Test]
+    #[Framework\Attributes\DataProvider('initializeLoadsConfigFromGivenFileDataProvider')]
+    public function initializeLoadsConfigFromGivenFile(string $configFile): void
+    {
+        $this->mockSitemapRequest('valid_sitemap_2');
+        $this->mockSitemapRequest('valid_sitemap_2');
+
+        $this->commandTester->execute(['--config' => $configFile, '--progress' => true]);
+
+        self::assertStringContainsString('3/3', $this->commandTester->getDisplay());
+    }
+
+    #[Framework\Attributes\Test]
+    public function initializeOverwritesConfigFromGivenFileWithCommandOptions(): void
+    {
+        $this->mockSitemapRequest('valid_sitemap_2');
+
+        $this->commandTester->execute([
+            '--config' => dirname(__DIR__).'/Fixtures/ConfigFiles/valid_config.php',
+            '--limit' => 1,
+        ]);
+
+        self::assertStringContainsString('1/1', $this->commandTester->getDisplay());
+    }
+
+    #[Framework\Attributes\Test]
+    public function initializeOverwritesConfigFromGivenFileDefinedAsEnvironmentVariable(): void
+    {
+        $this->mockSitemapRequest('valid_sitemap_2');
+
+        putenv('CACHE_WARMUP_CONFIG='.dirname(__DIR__).'/Fixtures/ConfigFiles/valid_config.php');
+
+        $this->commandTester->execute([
+            '--limit' => 1,
+        ]);
+
+        putenv('CACHE_WARMUP_CONFIG');
+
+        self::assertStringContainsString('1/1', $this->commandTester->getDisplay());
+    }
+
+    #[Framework\Attributes\Test]
+    public function initializeOverwritesConfigFromGivenFileAndCommandOptionsWithEnvironmentVariables(): void
+    {
+        $this->mockSitemapRequest('valid_sitemap_2');
+
+        putenv('CACHE_WARMUP_LIMIT=2');
+
+        $this->commandTester->execute([
+            '--config' => dirname(__DIR__).'/Fixtures/ConfigFiles/valid_config.php',
+            '--limit' => 1,
+        ]);
+
+        putenv('CACHE_WARMUP_LIMIT');
+
+        self::assertStringContainsString('2/2', $this->commandTester->getDisplay());
     }
 
     #[Framework\Attributes\Test]
@@ -91,7 +171,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
-    public function initializeWritesImplicitlyEnablesProgressForErrorOutputIfGivenFormatterIsNotVerbose(): void
+    public function initializeImplicitlyEnablesProgressForErrorOutputIfGivenFormatterIsNotVerbose(): void
     {
         $this->mockSitemapRequest('valid_sitemap_3');
 
@@ -436,6 +516,43 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    public function executeThrowsExceptionIfConfiguredCrawlingStrategyIsInvalid(): void
+    {
+        $this->expectException(Console\Exception\RuntimeException::class);
+        $this->expectExceptionMessage('The given crawling strategy is invalid.');
+        $this->expectExceptionCode(1677618007);
+
+        $this->commandTester->execute([
+            'sitemaps' => [
+                'https://www.example.com/sitemap.xml',
+            ],
+            '--strategy' => 'foo',
+        ]);
+    }
+
+    #[Framework\Attributes\Test]
+    public function executeCrawlsUrlsWithConfiguredStrategy(): void
+    {
+        $this->mockSitemapRequest('valid_sitemap_5');
+
+        $this->commandTester->execute([
+            'sitemaps' => [
+                'https://www.example.com/sitemap.xml',
+            ],
+            '--crawler' => Tests\Fixtures\Classes\DummyCrawler::class,
+            '--strategy' => Src\Crawler\Strategy\SortByChangeFrequencyStrategy::getName(),
+        ]);
+
+        $expected = [
+            'https://www.example.org/baz',
+            'https://www.example.org/foo',
+            'https://www.example.org/',
+        ];
+
+        self::assertSame($expected, array_map('strval', Tests\Fixtures\Classes\DummyCrawler::$crawledUrls));
+    }
+
+    #[Framework\Attributes\Test]
     public function executeAppliesOutputToVerboseCrawler(): void
     {
         $this->mockSitemapRequest('valid_sitemap_3');
@@ -591,6 +708,19 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         );
         self::assertStringContainsString('[OK] Successfully warmed up caches for 2 URLs.', $output);
         self::assertStringContainsString('[ERROR] Failed to warm up caches for 2 URLs.', $output);
+    }
+
+    /**
+     * @return Generator<string, array{string}>
+     */
+    public static function initializeLoadsConfigFromGivenFileDataProvider(): Generator
+    {
+        $fixturesPath = dirname(__DIR__).'/Fixtures/ConfigFiles';
+
+        yield 'json' => [$fixturesPath.'/valid_config_sitemaps_only.json'];
+        yield 'php' => [$fixturesPath.'/valid_config_sitemaps_only.php'];
+        yield 'yaml' => [$fixturesPath.'/valid_config_sitemaps_only.yaml'];
+        yield 'yml' => [$fixturesPath.'/valid_config_sitemaps_only.yml'];
     }
 
     /**

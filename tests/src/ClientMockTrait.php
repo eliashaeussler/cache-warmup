@@ -46,7 +46,7 @@ trait ClientMockTrait
 
     protected function mockSitemapRequest(string $fixture, string $extension = 'xml'): void
     {
-        $fixtureFile = __DIR__.'/Fixtures/Files/'.$fixture.'.'.$extension;
+        $fixtureFile = __DIR__.'/Fixtures/Sitemaps/'.$fixture.'.'.$extension;
 
         self::assertFileExists($fixtureFile);
 
