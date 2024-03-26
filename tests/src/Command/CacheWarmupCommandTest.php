@@ -493,7 +493,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         $output = $this->commandTester->getDisplay();
 
         self::assertNotEmpty($output);
-        self::assertStringContainsString('You passed crawler options for a non-configurable crawler.', $output);
+        self::assertStringContainsString('You passed crawler options to a non-configurable crawler.', $output);
     }
 
     #[Framework\Attributes\Test]
@@ -512,7 +512,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         $output = $this->commandTester->getDisplay();
 
         self::assertNotEmpty($output);
-        self::assertStringContainsString('You passed --stop-on-failure to a non-stoppable crawler.', $output);
+        self::assertStringContainsString('You configured "stop on failure" for a non-stoppable crawler.', $output);
     }
 
     #[Framework\Attributes\Test]
