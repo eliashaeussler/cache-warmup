@@ -568,7 +568,7 @@ HELP);
             }
         } elseif ([] !== $crawlerOptions) {
             $this->formatter->logMessage(
-                'You passed crawler options for a non-configurable crawler.',
+                'You passed crawler options to a non-configurable crawler.',
                 Formatter\MessageSeverity::Warning,
             );
         }
@@ -576,7 +576,7 @@ HELP);
         // Show notice on unsupported stoppable crawler feature
         if ($stopOnFailure && !($crawler instanceof Crawler\StoppableCrawlerInterface)) {
             $this->formatter->logMessage(
-                'You passed --stop-on-failure to a non-stoppable crawler.',
+                'You configured "stop on failure" for a non-stoppable crawler.',
                 Formatter\MessageSeverity::Warning,
             );
         }
