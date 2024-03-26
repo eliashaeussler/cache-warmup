@@ -59,7 +59,6 @@ final class OutputtingCrawler extends AbstractConfigurableCrawler implements Log
         'client_config' => [],
     ];
 
-    private readonly ClientInterface $client;
     private Console\Output\OutputInterface $output;
     private ?Log\LoggerInterface $logger = null;
 
@@ -71,11 +70,9 @@ final class OutputtingCrawler extends AbstractConfigurableCrawler implements Log
 
     public function __construct(
         array $options = [],
-        ?ClientInterface $client = null,
+        private readonly ?ClientInterface $client = null,
     ) {
         parent::__construct($options);
-
-        $this->client = $client ?? new Client($this->options['client_config']);
         $this->output = new Console\Output\ConsoleOutput();
     }
 
@@ -101,8 +98,11 @@ final class OutputtingCrawler extends AbstractConfigurableCrawler implements Log
             $handlers[] = $logHandler;
         }
 
+        // Create new client
+        $client = $this->client ?? new Client($this->options['client_config']);
+
         // Create request pool
-        $pool = $this->createPool($urls, $this->client, $handlers, $this->stopOnFailure);
+        $pool = $this->createPool($urls, $client, $handlers, $this->stopOnFailure);
 
         // Start crawling
         try {

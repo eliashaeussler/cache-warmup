@@ -60,7 +60,7 @@ final class OutputtingCrawlerTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
-    public function constructorInstantiatesClientWithGivenClientConfig(): void
+    public function crawlInstantiatesClientWithGivenClientConfig(): void
     {
         $this->mockHandler->append(new Psr7\Response());
 
@@ -81,7 +81,7 @@ final class OutputtingCrawlerTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
-    public function constructorIgnoresGivenClientConfigIfInstantiatedClientIsPassed(): void
+    public function crawlIgnoresGivenClientConfigIfInstantiatedClientIsPassed(): void
     {
         $subject = new Src\Crawler\OutputtingCrawler(
             [
