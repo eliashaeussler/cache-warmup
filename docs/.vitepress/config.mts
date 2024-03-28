@@ -9,6 +9,9 @@ export default defineConfig({
     head: [
         ['link', {rel: 'icon', href: '/favicon.ico'}],
     ],
+    sitemap: {
+        hostname: 'https://cache-warmup.haeussler.dev',
+    },
     themeConfig: {
         logo: '/img/logo.svg',
         nav: [
