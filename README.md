@@ -1,6 +1,6 @@
 <div align="center">
 
-[![Screenshot](docs/img/screenshot.png)](https://cache-warmup.haeussler.dev/)
+[![Screenshot](docs/public/img/screenshot.png)](https://cache-warmup.haeussler.dev/)
 
 # Cache Warmup
 
