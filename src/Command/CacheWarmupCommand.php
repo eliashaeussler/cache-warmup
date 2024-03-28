@@ -344,11 +344,11 @@ HELP);
             new Config\Adapter\EnvironmentVariablesConfigAdapter(),
         ];
 
-        if (null !== $configFile) {
-            array_unshift($configAdapters, $this->loadConfigFromFile($configFile));
-        }
         if (false !== $configFileFromEnv) {
             array_unshift($configAdapters, $this->loadConfigFromFile($configFileFromEnv));
+        }
+        if (null !== $configFile) {
+            array_unshift($configAdapters, $this->loadConfigFromFile($configFile));
         }
 
         $this->config = (new Config\Adapter\CompositeConfigAdapter($configAdapters))->get();
