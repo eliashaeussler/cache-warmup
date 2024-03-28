@@ -76,7 +76,7 @@ Both default crawlers are implemented as configurable crawlers:
 
 The following configuration options are currently available for both crawlers:
 
-### `client_config`
+### `client_config` <Badge type="tip" text="1.2.0+" />
 
 <small>🎨 Type: `array<string, mixed>` &middot; 🐝 Default: `[]`</small>
 
@@ -106,7 +106,7 @@ return static function (CacheWarmup\Config\CacheWarmupConfig $config) {
 
 :::
 
-### `concurrency`
+### `concurrency` <Badge type="tip" text="0.7.13+" />
 
 <small>🎨 Type: `integer` &middot; 🐝 Default: `3`</small>
 
@@ -154,7 +154,7 @@ CACHE_WARMUP_CRAWLER_OPTIONS='{"concurrency": 5}'
 
 :::
 
-### `request_headers`
+### `request_headers` <Badge type="tip" text="0.7.13+" />
 
 <small>🎨 Type: `array<string, mixed>` &middot; 🐝 Default: `['User-Agent' => '<default user-agent>']`</small>
 
@@ -209,7 +209,7 @@ CACHE_WARMUP_CRAWLER_OPTIONS='{"request_headers": {"X-Foo": "bar", "User-Agent":
 
 :::
 
-### `request_method`
+### `request_method` <Badge type="tip" text="0.7.13+" />
 
 <small>🎨 Type: `string` &middot; 🐝 Default: `HEAD`</small>
 
@@ -251,7 +251,7 @@ CACHE_WARMUP_CRAWLER_OPTIONS='{"request_method": "GET"}'
 
 :::
 
-### `request_options`
+### `request_options` <Badge type="tip" text="2.0+" />
 
 <small>🎨 Type: `array<string, mixed>` &middot; 🐝 Default: `[]`</small>
 
