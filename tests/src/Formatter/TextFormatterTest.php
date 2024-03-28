@@ -62,9 +62,9 @@ final class TextFormatterTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
-    public function formatParserResultPrintsSuccessfulSitemapsIfOutputIsVerbose(): void
+    public function formatParserResultPrintsSuccessfulSitemapsIfOutputIsVeryVerbose(): void
     {
-        $this->output->setVerbosity(Console\Output\OutputInterface::VERBOSITY_VERBOSE);
+        $this->output->setVerbosity(Console\Output\OutputInterface::VERBOSITY_VERY_VERBOSE);
 
         $url = 'https://www.example.com';
         $successful = new Src\Result\ParserResult(

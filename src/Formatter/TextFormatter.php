@@ -56,7 +56,7 @@ final class TextFormatter implements Formatter
         $urlsShown = false;
 
         // Add successful sitemaps
-        if ($this->io->isVerbose()) {
+        if ($this->io->isVeryVerbose()) {
             foreach ($successful->getSitemaps() as $successfulSitemap) {
                 $sitemaps[] = sprintf('<success> DONE </> <href=%1$s>%1$s</>', (string) $successfulSitemap->getUri());
             }
