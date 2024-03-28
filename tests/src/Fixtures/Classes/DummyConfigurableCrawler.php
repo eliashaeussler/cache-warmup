@@ -25,6 +25,7 @@ namespace EliasHaeussler\CacheWarmup\Tests\Fixtures\Classes;
 
 use EliasHaeussler\CacheWarmup\Crawler;
 use EliasHaeussler\CacheWarmup\Result;
+use Symfony\Component\OptionsResolver;
 
 /**
  * DummyConfigurableCrawler.
@@ -38,11 +39,6 @@ use EliasHaeussler\CacheWarmup\Result;
  */
 final class DummyConfigurableCrawler extends Crawler\AbstractConfigurableCrawler
 {
-    protected static array $defaultOptions = [
-        'foo' => 'hello world',
-        'bar' => 42,
-    ];
-
     public function crawl(array $urls): Result\CacheWarmupResult
     {
         return new Result\CacheWarmupResult();
@@ -54,5 +50,18 @@ final class DummyConfigurableCrawler extends Crawler\AbstractConfigurableCrawler
     public function getOptions(): array
     {
         return $this->options;
+    }
+
+    protected function configureOptions(OptionsResolver\OptionsResolver $optionsResolver): void
+    {
+        $optionsResolver->define('foo')
+            ->allowedTypes('string')
+            ->default('hello world')
+        ;
+
+        $optionsResolver->define('bar')
+            ->allowedTypes('int')
+            ->default(42)
+        ;
     }
 }

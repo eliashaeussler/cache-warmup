@@ -26,10 +26,7 @@ namespace EliasHaeussler\CacheWarmup\Exception;
 use EliasHaeussler\CacheWarmup\Crawler;
 use RuntimeException;
 
-use function array_pop;
-use function count;
 use function get_debug_type;
-use function implode;
 use function sprintf;
 
 /**
@@ -45,28 +42,6 @@ final class InvalidCrawlerOptionException extends RuntimeException
         return new self(
             sprintf('The crawler option "%s" is invalid or not supported by crawler "%s".', $option, $crawler::class),
             1659120894,
-        );
-    }
-
-    /**
-     * @param list<string> $options
-     */
-    public static function createForAll(Crawler\ConfigurableCrawlerInterface $crawler, array $options): self
-    {
-        if (1 === count($options)) {
-            return self::create($crawler, $options[0]);
-        }
-
-        $lastOption = array_pop($options);
-
-        return new self(
-            sprintf(
-                'The crawler options "%s" and "%s" are invalid or not supported by crawler "%s".',
-                implode('", "', $options),
-                $lastOption,
-                $crawler::class,
-            ),
-            1659206995,
         );
     }
 

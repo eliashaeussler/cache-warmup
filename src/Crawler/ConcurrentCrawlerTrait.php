@@ -30,6 +30,7 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Psr7;
 use Psr\Http\Message;
+use Symfony\Component\OptionsResolver;
 
 use function sprintf;
 
@@ -41,6 +42,36 @@ use function sprintf;
  */
 trait ConcurrentCrawlerTrait
 {
+    protected function configureOptions(OptionsResolver\OptionsResolver $optionsResolver): void
+    {
+        $optionsResolver->define('concurrency')
+            ->allowedTypes('int')
+            ->required()
+            ->default(5)
+        ;
+
+        $optionsResolver->define('request_method')
+            ->allowedTypes('string')
+            ->required()
+            ->default('HEAD')
+        ;
+
+        $optionsResolver->define('request_headers')
+            ->allowedTypes('array')
+            ->default([])
+        ;
+
+        $optionsResolver->define('request_options')
+            ->allowedTypes('array')
+            ->default([])
+        ;
+
+        $optionsResolver->define('client_config')
+            ->allowedTypes('array')
+            ->default([])
+        ;
+    }
+
     /**
      * @param list<Message\UriInterface>                          $urls
      * @param list<Http\Message\Handler\ResponseHandlerInterface> $handlers

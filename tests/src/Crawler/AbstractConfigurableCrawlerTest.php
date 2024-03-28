@@ -26,6 +26,7 @@ namespace EliasHaeussler\CacheWarmup\Tests\Crawler;
 use EliasHaeussler\CacheWarmup as Src;
 use EliasHaeussler\CacheWarmup\Tests;
 use PHPUnit\Framework;
+use Symfony\Component\OptionsResolver;
 
 /**
  * AbstractConfigurableCrawlerTest.
@@ -57,11 +58,7 @@ final class AbstractConfigurableCrawlerTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function setOptionsThrowsExceptionIfInvalidOptionsAreGiven(): void
     {
-        $this->expectException(Src\Exception\InvalidCrawlerOptionException::class);
-        $this->expectExceptionCode(1659206995);
-        $this->expectExceptionMessage(
-            'The crawler options "dummy" and "blub" are invalid or not supported by crawler "'.$this->subject::class.'".',
-        );
+        $this->expectException(OptionsResolver\Exception\UndefinedOptionsException::class);
 
         $this->subject->setOptions([
             'foo' => 'bar',

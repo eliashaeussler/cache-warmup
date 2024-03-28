@@ -21,7 +21,7 @@ parameters:
 			path: src/Config/CacheWarmupConfig.php
 
 		-
-			message: "#^Property EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\AbstractConfigurableCrawler\\<TOptions of array\\<string, mixed\\>\\>\\:\\:\\$options \\(TOptions of array\\<string, mixed\\>\\) does not accept array\\<string, mixed\\>\\.$#"
+			message: "#^Property EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\AbstractConfigurableCrawler\\<TOptions of array\\<string, mixed\\>\\>\\:\\:\\$options \\(TOptions of array\\<string, mixed\\>\\) does not accept array\\.$#"
 			count: 1
 			path: src/Crawler/AbstractConfigurableCrawler.php
 
