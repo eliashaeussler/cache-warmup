@@ -25,6 +25,10 @@ jobs:
           tools: composer:v2, composer-require-checker, composer-unused
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
       # Validation
       - name: Validate composer.json
@@ -33,12 +37,20 @@ jobs:
       # Install dependencies
       - name: Install Composer dependencies
         uses: ramsey/composer-install@v2
+      - name: Install Frontend dependencies
+        run: npm ci
 
-      # Check Composer dependencies
-      - name: Check dependencies
+      # Audit packages
+      - name: Audit Frontend dependencies
+        run: npm audit
+
+      # Check dependencies
+      - name: Check Composer dependencies
         run: composer-require-checker check
-      - name: Check for unused dependencies
+      - name: Check for unused Composer dependencies
         run: composer-unused
+      - name: Check for unused Frontend dependencies
+        run: npm run check-dependencies
 
       # Linting
       - name: Lint composer.json
