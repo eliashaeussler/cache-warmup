@@ -123,6 +123,41 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    public function initializeRespectsConfigFileDefinedAsEnvironmentVariableAndCommandOption(): void
+    {
+        $this->mockSitemapRequest('valid_sitemap_2');
+        $this->mockSitemapRequest('valid_sitemap_4');
+        $this->mockSitemapRequest('valid_sitemap_5');
+        $this->mockSitemapRequest('valid_sitemap_3');
+
+        putenv('CACHE_WARMUP_CONFIG='.dirname(__DIR__).'/Fixtures/ConfigFiles/valid_config.php');
+
+        $this->commandTester->execute([
+            '--config' => dirname(__DIR__).'/Fixtures/ConfigFiles/valid_config_sitemaps_only.php',
+            '--crawler' => Tests\Fixtures\Classes\DummyCrawler::class,
+        ]);
+
+        putenv('CACHE_WARMUP_CONFIG');
+
+        $expected = [
+            'https://www.example.org/',
+            'https://www.example.org/foo',
+            'https://www.example.org/baz',
+            'https://www.example.com/',
+            'https://www.example.com/foo',
+        ];
+
+        $actual = Tests\Fixtures\Classes\DummyCrawler::$crawledUrls;
+
+        foreach ($expected as $i => $expectedUrl) {
+            $actualUrl = $actual[$i] ?? null;
+
+            self::assertInstanceOf(Src\Sitemap\Url::class, $actualUrl);
+            self::assertSame($expectedUrl, (string) $actualUrl);
+        }
+    }
+
+    #[Framework\Attributes\Test]
     public function initializeOverwritesConfigFromGivenFileAndCommandOptionsWithEnvironmentVariables(): void
     {
         $this->mockSitemapRequest('valid_sitemap_2');
