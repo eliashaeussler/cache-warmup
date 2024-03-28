@@ -23,15 +23,13 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Crawler;
 
-use Symfony\Component\Console;
-
 /**
- * VerboseCrawlerInterface.
+ * StoppableCrawler.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-interface VerboseCrawlerInterface extends CrawlerInterface
+interface StoppableCrawler extends Crawler
 {
-    public function setOutput(Console\Output\OutputInterface $output): void;
+    public function stopOnFailure(bool $stopOnFailure = true): void;
 }

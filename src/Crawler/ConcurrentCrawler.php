@@ -44,7 +44,7 @@ use Psr\Log;
  *     client_config: array<string, mixed>,
  * }>
  */
-final class ConcurrentCrawler extends AbstractConfigurableCrawler implements LoggingCrawlerInterface, StoppableCrawlerInterface
+final class ConcurrentCrawler extends AbstractConfigurableCrawler implements LoggingCrawler, StoppableCrawler
 {
     use ConcurrentCrawlerTrait;
 

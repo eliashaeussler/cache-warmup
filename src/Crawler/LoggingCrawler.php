@@ -23,19 +23,20 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Crawler;
 
-use EliasHaeussler\CacheWarmup\Result;
-use Psr\Http\Message;
+use Psr\Log;
 
 /**
- * CrawlerInterface.
+ * LoggingCrawler.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-interface CrawlerInterface
+interface LoggingCrawler extends Crawler
 {
+    public function setLogger(Log\LoggerInterface $logger): void;
+
     /**
-     * @param list<Message\UriInterface> $urls
+     * @phpstan-param Log\LogLevel::* $logLevel
      */
-    public function crawl(array $urls): Result\CacheWarmupResult;
+    public function setLogLevel(string $logLevel): void;
 }

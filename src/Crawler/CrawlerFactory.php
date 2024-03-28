@@ -52,31 +52,31 @@ final class CrawlerFactory
     ) {}
 
     /**
-     * @param class-string<CrawlerInterface> $crawler
-     * @param array<string, mixed>           $options
+     * @param class-string<Crawler> $crawler
+     * @param array<string, mixed>  $options
      *
      * @throws Exception\InvalidCrawlerException
      */
-    public function get(string $crawler, array $options = []): CrawlerInterface
+    public function get(string $crawler, array $options = []): Crawler
     {
         $this->validateCrawler($crawler);
 
         $crawler = new $crawler();
 
-        if ($crawler instanceof VerboseCrawlerInterface) {
+        if ($crawler instanceof VerboseCrawler) {
             $crawler->setOutput($this->output);
         }
 
-        if ($crawler instanceof ConfigurableCrawlerInterface) {
+        if ($crawler instanceof ConfigurableCrawler) {
             $crawler->setOptions($options);
         }
 
-        if ($crawler instanceof LoggingCrawlerInterface && null !== $this->logger) {
+        if ($crawler instanceof LoggingCrawler && null !== $this->logger) {
             $crawler->setLogger($this->logger);
             $crawler->setLogLevel($this->logLevel);
         }
 
-        if ($crawler instanceof StoppableCrawlerInterface) {
+        if ($crawler instanceof StoppableCrawler) {
             $crawler->stopOnFailure($this->stopOnFailure);
         }
 
@@ -127,7 +127,7 @@ final class CrawlerFactory
             throw Exception\InvalidCrawlerException::forMissingClass($crawler);
         }
 
-        if (!is_subclass_of($crawler, CrawlerInterface::class)) {
+        if (!is_subclass_of($crawler, Crawler::class)) {
             throw Exception\InvalidCrawlerException::forUnsupportedClass($crawler);
         }
     }

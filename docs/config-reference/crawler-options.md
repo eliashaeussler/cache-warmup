@@ -10,7 +10,7 @@ outline: [2,3]
 
 ::: info
 These options only apply to crawlers implementing
-[`EliasHaeussler\CacheWarmup\Crawler\ConfigurableCrawlerInterface`](https://github.com/eliashaeussler/cache-warmup/blob/main/src/Crawler/ConfigurableCrawlerInterface.php).
+[`EliasHaeussler\CacheWarmup\Crawler\ConfigurableCrawler`](https://github.com/eliashaeussler/cache-warmup/blob/main/src/Crawler/ConfigurableCrawler.php).
 If the configured crawler does not implement this interface, a warning is
 shown in case crawler options are configured.
 :::

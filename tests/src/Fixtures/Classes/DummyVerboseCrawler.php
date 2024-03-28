@@ -34,7 +34,7 @@ use Symfony\Component\Console;
  *
  * @internal
  */
-final class DummyVerboseCrawler extends DummyCrawler implements Crawler\VerboseCrawlerInterface
+final class DummyVerboseCrawler extends DummyCrawler implements Crawler\VerboseCrawler
 {
     public static ?Console\Output\OutputInterface $output = null;
 

@@ -23,16 +23,15 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Crawler;
 
+use Symfony\Component\Console;
+
 /**
- * ConfigurableCrawlerInterface.
+ * VerboseCrawler.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-interface ConfigurableCrawlerInterface extends CrawlerInterface
+interface VerboseCrawler extends Crawler
 {
-    /**
-     * @param array<string, mixed> $options
-     */
-    public function setOptions(array $options): void;
+    public function setOutput(Console\Output\OutputInterface $output): void;
 }

@@ -32,10 +32,10 @@ Check out all available [options](options.md) and
 [methods](methods.md) to get an overview about possible API
 opportunities.
 
-## `CrawlerInterface`
+## `Crawler`
 
 URLs in XML sitemaps are processed by crawlers implementing
-[`EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface`](https://github.com/eliashaeussler/cache-warmup/blob/main/src/Crawler/CrawlerInterface.php).
+[`EliasHaeussler\CacheWarmup\Crawler\Crawler`](https://github.com/eliashaeussler/cache-warmup/blob/main/src/Crawler/Crawler.php).
 Read more about how to [create a custom crawler](crawler.md).
 
 In addition, there exist different variations of crawler

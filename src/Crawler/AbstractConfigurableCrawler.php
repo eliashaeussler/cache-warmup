@@ -33,7 +33,7 @@ use Symfony\Component\OptionsResolver;
  *
  * @template TOptions of array<string, mixed>
  */
-abstract class AbstractConfigurableCrawler implements ConfigurableCrawlerInterface
+abstract class AbstractConfigurableCrawler implements ConfigurableCrawler
 {
     protected OptionsResolver\OptionsResolver $optionsResolver;
 

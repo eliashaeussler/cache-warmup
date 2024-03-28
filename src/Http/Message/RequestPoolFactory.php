@@ -50,7 +50,7 @@ final class RequestPoolFactory
     private array $options = [];
 
     /**
-     * @var list<Handler\ResponseHandlerInterface>
+     * @var list<Handler\ResponseHandler>
      */
     private array $handlers = [];
     private bool $stopOnFailure = false;
@@ -157,7 +157,7 @@ final class RequestPoolFactory
     /**
      * @phpstan-impure
      */
-    public function withResponseHandler(Handler\ResponseHandlerInterface ...$handler): self
+    public function withResponseHandler(Handler\ResponseHandler ...$handler): self
     {
         $clone = clone $this;
         $clone->handlers = [...$clone->handlers, ...array_values($handler)];

@@ -33,7 +33,7 @@ use Throwable;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class ResultCollectorHandler implements ResponseHandlerInterface
+final class ResultCollectorHandler implements ResponseHandler
 {
     private readonly Result\CacheWarmupResult $result;
 

@@ -33,7 +33,7 @@ use Throwable;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class CompactProgressHandler implements ResponseHandlerInterface
+final class CompactProgressHandler implements ResponseHandler
 {
     private const PROGRESS_BAR_FORMAT = ' %current%/%max% [%bar%] %percent:3s%% -- <%fail_tag%>%fail_count% %failures%</>';
 

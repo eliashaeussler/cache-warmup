@@ -27,12 +27,12 @@ use Psr\Http\Message;
 use Throwable;
 
 /**
- * ResponseHandlerInterface.
+ * ResponseHandler.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-interface ResponseHandlerInterface
+interface ResponseHandler
 {
     public function onSuccess(Message\ResponseInterface $response, Message\UriInterface $uri): void;
 
