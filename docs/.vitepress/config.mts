@@ -18,6 +18,7 @@ export default defineConfig({
                 text: version,
                 items: [
                     {text: 'Release Notes', link: 'https://github.com/eliashaeussler/cache-warmup/releases/latest'},
+                    {text: 'Download', link: 'https://github.com/eliashaeussler/cache-warmup/releases/latest/download/cache-warmup.phar'},
                 ],
             },
         ],
