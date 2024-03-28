@@ -1,5 +1,8 @@
-/Dockerfile
+/.build
+/docs/.vitepress/cache
+/docs/.vitepress/dist
+/node_modules
 /vendor
 /.php-cs-fixer.cache
 /.phpunit.result.cache
-/.build
+/Dockerfile

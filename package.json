@@ -1,0 +1,24 @@
+{
+	"name": "@eliashaeussler/cache-warmup",
+	"description": "Composer package to warm up website caches, based on a given XML sitemap",
+	"version": "2.7.1",
+	"license": "GPL-3.0-or-later",
+	"repository": "https://github.com/eliashaeussler/cache-warmup.git",
+	"private": true,
+	"author": {
+		"name": "Elias Häußler",
+		"email": "elias@haeussler.dev",
+		"url": "https://haeussler.dev"
+	},
+	"homepage": "https://cache-warmup.haeussler.dev/",
+	"devDependencies": {
+		"depcheck": "^1.4.7",
+		"vitepress": "^1.0.0"
+	},
+	"scripts": {
+		"check-dependencies": "depcheck",
+		"docs:dev": "vitepress dev docs",
+		"docs:build": "vitepress build docs",
+		"docs:preview": "vitepress preview docs"
+	}
+}

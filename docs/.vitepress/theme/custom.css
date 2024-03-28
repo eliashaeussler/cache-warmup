@@ -1,0 +1,16 @@
+:root {
+    --vp-c-brand-1: var(--vp-c-red-1);
+    --vp-c-brand-2: var(--vp-c-red-2);
+    --vp-c-brand-3: var(--vp-c-red-3);
+    --vp-c-brand-soft: var(--vp-c-red-soft);
+
+    --vp-home-hero-name-background: -webkit-linear-gradient(120deg, var(--vp-c-red-1) 30%, var(--vp-c-red-3));
+    --vp-home-hero-name-color: transparent;
+}
+
+/* Show badges in one row */
+p:has(a > img[src*="shields"]) {
+    display: flex;
+    flex-flow: wrap;
+    gap: 5px;
+}
