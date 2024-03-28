@@ -331,9 +331,9 @@ HELP);
     }
 
     /**
-     * @throws Exception\UnsupportedConfigFileException
-     * @throws Exception\UnsupportedFormatterException
-     * @throws Exception\UnsupportedLogLevelException
+     * @throws Exception\ConfigFileIsNotSupported
+     * @throws Exception\FormatterIsNotSupported
+     * @throws Exception\LogLevelIsNotSupported
      */
     protected function initialize(Console\Input\InputInterface $input, Console\Output\OutputInterface $output): void
     {
@@ -367,7 +367,7 @@ HELP);
 
         // Validate log level
         if (!in_array($logLevel, Log\LogLevel::getAll(), true)) {
-            throw Exception\UnsupportedLogLevelException::create($logLevel);
+            throw new Exception\LogLevelIsNotSupported($logLevel);
         }
 
         // Use error output or disable output if formatter is non-verbose
@@ -413,7 +413,7 @@ HELP);
     }
 
     /**
-     * @throws Exception\UnsupportedConfigFileException
+     * @throws Exception\ConfigFileIsNotSupported
      */
     protected function execute(Console\Input\InputInterface $input, Console\Output\OutputInterface $output): int
     {
@@ -585,7 +585,7 @@ HELP);
     }
 
     /**
-     * @throws Exception\UnsupportedConfigFileException
+     * @throws Exception\ConfigFileIsNotSupported
      */
     private function loadConfigFromFile(string $configFile): Config\Adapter\ConfigAdapter
     {
@@ -595,7 +595,7 @@ HELP);
         return match ($extension) {
             'php' => new Config\Adapter\PhpConfigAdapter($configFile),
             'json', 'yaml', 'yml' => new Config\Adapter\FileConfigAdapter($configFile),
-            default => throw Exception\UnsupportedConfigFileException::create($configFile),
+            default => throw new Exception\ConfigFileIsNotSupported($configFile),
         };
     }
 

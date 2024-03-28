@@ -42,7 +42,7 @@ final class PhpConfigAdapterTest extends Framework\TestCase
     {
         $subject = new Src\Config\Adapter\PhpConfigAdapter('foo');
 
-        $this->expectExceptionObject(Src\Exception\MissingConfigFileException::create('foo'));
+        $this->expectExceptionObject(new Src\Exception\ConfigFileIsMissing('foo'));
 
         $subject->get();
     }
@@ -53,7 +53,7 @@ final class PhpConfigAdapterTest extends Framework\TestCase
         $file = dirname(__DIR__, 2).'/Fixtures/ConfigFiles/valid_config.json';
         $subject = new Src\Config\Adapter\PhpConfigAdapter($file);
 
-        $this->expectExceptionObject(Src\Exception\UnsupportedConfigFileException::create($file));
+        $this->expectExceptionObject(new Src\Exception\ConfigFileIsNotSupported($file));
 
         $subject->get();
     }
@@ -64,7 +64,7 @@ final class PhpConfigAdapterTest extends Framework\TestCase
         $file = dirname(__DIR__, 2).'/Fixtures/ConfigFiles/invalid_config.php';
         $subject = new Src\Config\Adapter\PhpConfigAdapter($file);
 
-        $this->expectExceptionObject(Src\Exception\UnsupportedConfigFileException::create($file));
+        $this->expectExceptionObject(new Src\Exception\ConfigFileIsNotSupported($file));
 
         $subject->get();
     }

@@ -50,38 +50,38 @@ final class FileConfigAdapter implements ConfigAdapter
     }
 
     /**
-     * @throws Exception\InvalidConfigFileException
-     * @throws Exception\MissingConfigFileException
-     * @throws Exception\UnsupportedConfigFileException
+     * @throws Exception\ConfigFileIsInvalid
+     * @throws Exception\ConfigFileIsMissing
+     * @throws Exception\ConfigFileIsNotSupported
      */
     public function get(): Config\CacheWarmupConfig
     {
         if (!file_exists($this->file)) {
-            throw Exception\MissingConfigFileException::create($this->file);
+            throw new Exception\ConfigFileIsMissing($this->file);
         }
 
         $source = match (Filesystem\Path::getExtension($this->file, true)) {
             'json' => Valinor\Mapper\Source\Source::file(new SplFileObject($this->file)),
             'yaml', 'yml' => $this->parseYamlSource(),
-            default => throw Exception\UnsupportedConfigFileException::create($this->file),
+            default => throw new Exception\ConfigFileIsNotSupported($this->file),
         };
 
         try {
             return $this->mapper->map(Config\CacheWarmupConfig::class, $source);
         } catch (Valinor\Mapper\MappingError $error) {
-            throw Exception\InvalidConfigFileException::create($this->file, $error);
+            throw new Exception\ConfigFileIsInvalid($this->file, $error);
         }
     }
 
     /**
-     * @throws Exception\UnsupportedConfigFileException
+     * @throws Exception\ConfigFileIsNotSupported
      */
     private function parseYamlSource(): Valinor\Mapper\Source\Source
     {
         $yaml = Yaml\Yaml::parseFile($this->file);
 
         if (!is_iterable($yaml)) {
-            throw Exception\UnsupportedConfigFileException::create($this->file);
+            throw new Exception\ConfigFileIsNotSupported($this->file);
         }
 
         return Valinor\Mapper\Source\Source::iterable($yaml);

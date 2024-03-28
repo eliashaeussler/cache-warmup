@@ -43,23 +43,23 @@ final class PhpConfigAdapter implements ConfigAdapter
     ) {}
 
     /**
-     * @throws Exception\MissingConfigFileException
-     * @throws Exception\UnsupportedConfigFileException
+     * @throws Exception\ConfigFileIsMissing
+     * @throws Exception\ConfigFileIsNotSupported
      */
     public function get(): Config\CacheWarmupConfig
     {
         if (!file_exists($this->file)) {
-            throw Exception\MissingConfigFileException::create($this->file);
+            throw new Exception\ConfigFileIsMissing($this->file);
         }
 
         if ('php' !== Filesystem\Path::getExtension($this->file, true)) {
-            throw Exception\UnsupportedConfigFileException::create($this->file);
+            throw new Exception\ConfigFileIsNotSupported($this->file);
         }
 
         $closure = require $this->file;
 
         if (!is_callable($closure)) {
-            throw Exception\UnsupportedConfigFileException::create($this->file);
+            throw new Exception\ConfigFileIsNotSupported($this->file);
         }
 
         $config = new Config\CacheWarmupConfig();

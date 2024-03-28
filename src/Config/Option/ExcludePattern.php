@@ -53,7 +53,7 @@ final class ExcludePattern
     }
 
     /**
-     * @throws Exception\InvalidRegularExpressionException
+     * @throws Exception\RegularExpressionIsInvalid
      */
     public static function create(string $pattern): self
     {
@@ -72,16 +72,16 @@ final class ExcludePattern
     }
 
     /**
-     * @throws Exception\InvalidRegularExpressionException
+     * @throws Exception\RegularExpressionIsInvalid
      */
     public static function createFromRegularExpression(string $regex): self
     {
         if (!str_starts_with($regex, '#') || !str_ends_with($regex, '#')) {
-            throw Exception\InvalidRegularExpressionException::create($regex);
+            throw new Exception\RegularExpressionIsInvalid($regex);
         }
 
         if (false === @preg_match($regex, '')) {
-            throw Exception\InvalidRegularExpressionException::create($regex);
+            throw new Exception\RegularExpressionIsInvalid($regex);
         }
 
         return new self(

@@ -62,7 +62,7 @@ final class FormatterFactoryTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function getThrowsExceptionIfGivenTypeIsUnsupported(): void
     {
-        $this->expectExceptionObject(Src\Exception\UnsupportedFormatterException::create('foo'));
+        $this->expectExceptionObject(new Src\Exception\FormatterIsNotSupported('foo'));
 
         $this->subject->get('foo');
     }

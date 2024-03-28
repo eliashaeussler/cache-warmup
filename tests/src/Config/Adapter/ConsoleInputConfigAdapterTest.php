@@ -52,7 +52,7 @@ final class ConsoleInputConfigAdapterTest extends Framework\TestCase
             '--crawler-options' => 'foo',
         ]);
 
-        $this->expectExceptionObject(Src\Exception\InvalidCrawlerOptionException::forInvalidType('foo'));
+        $this->expectExceptionObject(new Src\Exception\CrawlerOptionIsInvalid('foo'));
 
         $subject->get();
     }
@@ -64,7 +64,7 @@ final class ConsoleInputConfigAdapterTest extends Framework\TestCase
             '--crawler' => 'foo',
         ]);
 
-        $this->expectExceptionObject(Src\Exception\InvalidCrawlerException::forMissingClass('foo'));
+        $this->expectExceptionObject(new Src\Exception\CrawlerDoesNotExist('foo'));
 
         $subject->get();
     }
@@ -145,7 +145,7 @@ final class ConsoleInputConfigAdapterTest extends Framework\TestCase
             '--limit' => 'foo',
         ]);
 
-        $this->expectException(Src\Exception\InvalidCommandParametersException::class);
+        $this->expectException(Src\Exception\CommandParametersAreInvalid::class);
         $this->expectExceptionCode(1708712872);
 
         $subject->get();

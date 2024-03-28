@@ -139,7 +139,7 @@ final class XmlParserTest extends Framework\TestCase
     {
         $this->mockSitemapRequest('invalid_sitemap_1');
 
-        $this->expectException(Src\Exception\InvalidSitemapException::class);
+        $this->expectException(Src\Exception\SitemapCannotBeParsed::class);
         $this->expectExceptionCode(1660668799);
         $this->expectExceptionMessage(
             implode(PHP_EOL, [
@@ -156,7 +156,7 @@ final class XmlParserTest extends Framework\TestCase
     {
         $this->mockSitemapRequest('invalid_sitemap_2');
 
-        $this->expectException(Src\Exception\InvalidSitemapException::class);
+        $this->expectException(Src\Exception\SitemapCannotBeParsed::class);
         $this->expectExceptionCode(1660668799);
         $this->expectExceptionMessage(
             implode(PHP_EOL, [
@@ -192,7 +192,7 @@ final class XmlParserTest extends Framework\TestCase
     {
         $sitemap = new Src\Sitemap\Sitemap(new Psr7\Uri('file:///foo'));
 
-        $this->expectException(Src\Exception\FilesystemFailureException::class);
+        $this->expectException(Src\Exception\FileIsMissing::class);
         $this->expectExceptionCode(1698427082);
         $this->expectExceptionMessage('The file "/foo" does not exist or is not readable');
 

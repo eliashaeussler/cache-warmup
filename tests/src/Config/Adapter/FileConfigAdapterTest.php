@@ -45,7 +45,7 @@ final class FileConfigAdapterTest extends Framework\TestCase
     {
         $subject = new Src\Config\Adapter\FileConfigAdapter('foo');
 
-        $this->expectExceptionObject(Src\Exception\MissingConfigFileException::create('foo'));
+        $this->expectExceptionObject(new Src\Exception\ConfigFileIsMissing('foo'));
 
         $subject->get();
     }
@@ -55,7 +55,7 @@ final class FileConfigAdapterTest extends Framework\TestCase
     {
         $subject = new Src\Config\Adapter\FileConfigAdapter(__FILE__);
 
-        $this->expectExceptionObject(Src\Exception\UnsupportedConfigFileException::create(__FILE__));
+        $this->expectExceptionObject(new Src\Exception\ConfigFileIsNotSupported(__FILE__));
 
         $subject->get();
     }
@@ -66,7 +66,7 @@ final class FileConfigAdapterTest extends Framework\TestCase
         $file = dirname(__DIR__, 2).'/Fixtures/ConfigFiles/invalid_config.yaml';
         $subject = new Src\Config\Adapter\FileConfigAdapter($file);
 
-        $this->expectExceptionObject(Src\Exception\UnsupportedConfigFileException::create($file));
+        $this->expectExceptionObject(new Src\Exception\ConfigFileIsNotSupported($file));
 
         $subject->get();
     }
@@ -112,7 +112,7 @@ final class FileConfigAdapterTest extends Framework\TestCase
         $file = dirname(__DIR__, 2).'/Fixtures/ConfigFiles/invalid_config.json';
         $subject = new Src\Config\Adapter\FileConfigAdapter($file);
 
-        $this->expectException(Src\Exception\InvalidConfigFileException::class);
+        $this->expectException(Src\Exception\ConfigFileIsInvalid::class);
         $this->expectExceptionCode(1708631576);
 
         $subject->get();
