@@ -48,7 +48,7 @@ final class FilesystemHelper
         $cwd = realpath((string) getcwd());
 
         if (false === $cwd) {
-            throw Exception\FilesystemFailureException::forUnresolvableWorkingDirectory();
+            throw new Exception\WorkingDirectoryCannotBeResolved();
         }
 
         return Filesystem\Path::canonicalize($cwd);

@@ -91,7 +91,7 @@ final class CacheWarmerTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function addSitemapsThrowsExceptionIfInvalidSitemapsAreGiven(): void
     {
-        $this->expectException(Src\Exception\InvalidSitemapException::class);
+        $this->expectException(Src\Exception\SitemapIsInvalid::class);
         $this->expectExceptionCode(1604055096);
         $this->expectExceptionMessage(sprintf('Sitemaps must be of type string or %s, bool given.', Src\Sitemap\Sitemap::class));
 
@@ -105,7 +105,7 @@ final class CacheWarmerTest extends Framework\TestCase
 
         $sitemap = new Src\Sitemap\Sitemap(new Psr7\Uri('https://www.example.com/sitemap.xml'));
 
-        $this->expectException(Src\Exception\InvalidSitemapException::class);
+        $this->expectException(Src\Exception\SitemapCannotBeParsed::class);
         $this->expectExceptionCode(1660668799);
         $this->expectExceptionMessage(
             implode(PHP_EOL, [

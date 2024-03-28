@@ -58,7 +58,7 @@ final class CrawlerFactoryTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function getThrowsExceptionIfGivenCrawlerClassIsInvalid(): void
     {
-        $this->expectExceptionObject(Src\Exception\InvalidCrawlerException::forMissingClass('foo'));
+        $this->expectExceptionObject(new Src\Exception\CrawlerDoesNotExist('foo'));
 
         $this->subject->get('foo');
     }
@@ -66,7 +66,7 @@ final class CrawlerFactoryTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function getThrowsExceptionIfGivenCrawlerClassIsUnsupported(): void
     {
-        $this->expectExceptionObject(Src\Exception\InvalidCrawlerException::forUnsupportedClass(self::class));
+        $this->expectExceptionObject(new Src\Exception\CrawlerIsInvalid(self::class));
 
         $this->subject->get(self::class);
     }
@@ -137,7 +137,7 @@ final class CrawlerFactoryTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function parseCrawlerOptionsThrowsExceptionOnMalformedJson(): void
     {
-        $this->expectExceptionObject(Src\Exception\InvalidCrawlerOptionException::forInvalidType(''));
+        $this->expectExceptionObject(new Src\Exception\CrawlerOptionIsInvalid(''));
 
         $this->subject->parseCrawlerOptions('');
     }
@@ -145,7 +145,7 @@ final class CrawlerFactoryTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function parseCrawlerOptionsThrowsExceptionIfJsonEncodedOptionsAreInvalid(): void
     {
-        $this->expectExceptionObject(Src\Exception\InvalidCrawlerOptionException::forInvalidType('"foo"'));
+        $this->expectExceptionObject(new Src\Exception\CrawlerOptionIsInvalid('"foo"'));
 
         $this->subject->parseCrawlerOptions('"foo"');
     }
@@ -153,7 +153,7 @@ final class CrawlerFactoryTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function parseCrawlerOptionsThrowsExceptionOnNonAssociativeArray(): void
     {
-        $this->expectExceptionObject(Src\Exception\InvalidCrawlerOptionException::forInvalidType(['foo']));
+        $this->expectExceptionObject(new Src\Exception\CrawlerOptionIsInvalid(['foo']));
 
         $this->subject->parseCrawlerOptions(['foo']);
     }

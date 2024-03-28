@@ -41,7 +41,8 @@ class Sitemap implements Stringable
     use UriValidationTrait;
 
     /**
-     * @throws Exception\InvalidUrlException
+     * @throws Exception\UrlIsEmpty
+     * @throws Exception\UrlIsInvalid
      */
     public function __construct(
         protected Message\UriInterface $uri,
@@ -52,7 +53,8 @@ class Sitemap implements Stringable
     }
 
     /**
-     * @throws Exception\InvalidUrlException
+     * @throws Exception\UrlIsEmpty
+     * @throws Exception\UrlIsInvalid
      */
     public static function createFromString(string $sitemap): self
     {

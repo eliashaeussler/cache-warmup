@@ -96,10 +96,12 @@ final class CacheWarmer
     /**
      * @param list<string|Sitemap\Sitemap>|string|Sitemap\Sitemap $sitemaps
      *
-     * @throws Exception\FilesystemFailureException
-     * @throws Exception\InvalidSitemapException
-     * @throws Exception\InvalidUrlException
-     * @throws Exception\MalformedXmlException
+     * @throws Exception\FileIsMissing
+     * @throws Exception\SitemapIsInvalid
+     * @throws Exception\UrlIsEmpty
+     * @throws Exception\XmlIsMalformed
+     * @throws Exception\SitemapCannotBeParsed
+     * @throws Exception\UrlIsInvalid
      * @throws GuzzleException
      */
     public function addSitemaps(array|string|Sitemap\Sitemap $sitemaps): self
@@ -123,7 +125,7 @@ final class CacheWarmer
 
             // Throw exception if sitemap is invalid
             if (!($sitemap instanceof Sitemap\Sitemap)) {
-                throw Exception\InvalidSitemapException::forInvalidType($sitemap);
+                throw new Exception\SitemapIsInvalid($sitemap);
             }
 
             // Skip sitemap if exclude pattern matches
@@ -136,7 +138,7 @@ final class CacheWarmer
             // Parse sitemap object
             try {
                 $result = $this->parser->parse($sitemap);
-            } catch (GuzzleException|Exception\FilesystemFailureException|Exception\InvalidSitemapException|Exception\MalformedXmlException $exception) {
+            } catch (GuzzleException|Exception\FileIsMissing|Exception\SitemapCannotBeParsed|Exception\XmlIsMalformed $exception) {
                 // Exit early if running in strict mode
                 if ($this->strict) {
                     throw $exception;

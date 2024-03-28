@@ -63,8 +63,10 @@ final class EnvironmentVariablesConfigAdapter implements ConfigAdapter
     }
 
     /**
-     * @throws Exception\InvalidCrawlerException
-     * @throws Exception\InvalidEnvironmentVariablesException
+     * @throws Exception\CrawlerDoesNotExist
+     * @throws Exception\CrawlerIsInvalid
+     * @throws Exception\CrawlerOptionIsInvalid
+     * @throws Exception\EnvironmentVariablesAreInvalid
      */
     public function get(): Config\CacheWarmupConfig
     {
@@ -93,7 +95,7 @@ final class EnvironmentVariablesConfigAdapter implements ConfigAdapter
                 Valinor\Mapper\Source\Source::array($resolvedVariables),
             );
         } catch (Valinor\Mapper\MappingError $error) {
-            throw Exception\InvalidEnvironmentVariablesException::create($error, $nameMapping);
+            throw new Exception\EnvironmentVariablesAreInvalid($error, $nameMapping);
         }
     }
 
@@ -105,7 +107,9 @@ final class EnvironmentVariablesConfigAdapter implements ConfigAdapter
     /**
      * @return array<mixed>|bool|string
      *
-     * @throws Exception\InvalidCrawlerException
+     * @throws Exception\CrawlerDoesNotExist
+     * @throws Exception\CrawlerIsInvalid
+     * @throws Exception\CrawlerOptionIsInvalid
      */
     private function processValue(string $envVarValue, mixed $defaultValue, string $name): array|bool|string
     {
