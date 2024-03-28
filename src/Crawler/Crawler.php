@@ -23,13 +23,19 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Crawler;
 
+use EliasHaeussler\CacheWarmup\Result;
+use Psr\Http\Message;
+
 /**
- * StoppableCrawlerInterface.
+ * Crawler.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-interface StoppableCrawlerInterface extends CrawlerInterface
+interface Crawler
 {
-    public function stopOnFailure(bool $stopOnFailure = true): void;
+    /**
+     * @param list<Message\UriInterface> $urls
+     */
+    public function crawl(array $urls): Result\CacheWarmupResult;
 }

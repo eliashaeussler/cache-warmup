@@ -5,8 +5,8 @@ outline: [2,3]
 # Stoppable Crawler
 
 In terms of error handling it might be useful to define the
-behavior in case a cache warmup failure occurs. You can implement the
-[`EliasHaeussler\CacheWarmup\Crawler\StoppableCrawlerInterface`](https://github.com/eliashaeussler/cache-warmup/blob/main/src/Crawler/StoppableCrawlerInterface.php)
+behavior in case a cache warmup failure occurs. You can implement
+[`EliasHaeussler\CacheWarmup\Crawler\StoppableCrawler`](https://github.com/eliashaeussler/cache-warmup/blob/main/src/Crawler/StoppableCrawler.php)
 to make this sort of error handling configurable:
 
 ```php
@@ -14,8 +14,8 @@ namespace Vendor\Crawler;
 
 use EliasHaeussler\CacheWarmup;
 
-final class MyCustomCrawler implements CacheWarmup\Crawler\CrawlerInterface // [!code --]
-final class MyCustomCrawler implements CacheWarmup\Crawler\StoppableCrawlerInterface // [!code ++]
+final class MyCustomCrawler implements CacheWarmup\Crawler\Crawler // [!code --]
+final class MyCustomCrawler implements CacheWarmup\Crawler\StoppableCrawler // [!code ++]
 {
     // ...
 }
@@ -36,7 +36,7 @@ namespace Vendor\Crawler;
 use EliasHaeussler\CacheWarmup;
 use Psr\Http\Message;
 
-final class MyCustomCrawler implements CacheWarmup\Crawler\StoppableCrawlerInterface
+final class MyCustomCrawler implements CacheWarmup\Crawler\StoppableCrawler
 {
     private bool $stopOnFailure = false; // [!code ++]
 
@@ -65,7 +65,7 @@ namespace Vendor\Crawler;
 use EliasHaeussler\CacheWarmup;
 use Psr\Http\Message;
 
-final class MyCustomCrawler implements CacheWarmup\Crawler\StoppableCrawlerInterface
+final class MyCustomCrawler implements CacheWarmup\Crawler\StoppableCrawler
 {
     private bool $stopOnFailure = false;
 

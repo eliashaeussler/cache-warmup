@@ -34,7 +34,7 @@ use Psr\Log;
  *
  * @internal
  */
-final class DummyLoggingCrawler extends DummyCrawler implements Crawler\LoggingCrawlerInterface
+final class DummyLoggingCrawler extends DummyCrawler implements Crawler\LoggingCrawler
 {
     public static ?Log\LoggerInterface $logger = null;
 

@@ -45,13 +45,13 @@ use function property_exists;
 final class CacheWarmupConfig
 {
     /**
-     * @param list<Sitemap\Sitemap>                                                $sitemaps
-     * @param list<Sitemap\Url>                                                    $urls
-     * @param list<Option\ExcludePattern>                                          $excludePatterns
-     * @param int<0, max>                                                          $limit
-     * @param Crawler\CrawlerInterface|class-string<Crawler\CrawlerInterface>|null $crawler
-     * @param array<string, mixed>                                                 $crawlerOptions
-     * @param int<0, max>                                                          $repeatAfter
+     * @param list<Sitemap\Sitemap>                              $sitemaps
+     * @param list<Sitemap\Url>                                  $urls
+     * @param list<Option\ExcludePattern>                        $excludePatterns
+     * @param int<0, max>                                        $limit
+     * @param Crawler\Crawler|class-string<Crawler\Crawler>|null $crawler
+     * @param array<string, mixed>                               $crawlerOptions
+     * @param int<0, max>                                        $repeatAfter
      */
     public function __construct(
         private array $sitemaps = [],
@@ -59,7 +59,7 @@ final class CacheWarmupConfig
         private array $excludePatterns = [],
         private int $limit = 0,
         private bool $progress = false,
-        private Crawler\CrawlerInterface|string|null $crawler = null,
+        private Crawler\Crawler|string|null $crawler = null,
         private array $crawlerOptions = [],
         private Crawler\Strategy\CrawlingStrategy|string|null $strategy = null,
         private string $format = 'text',
@@ -198,17 +198,17 @@ final class CacheWarmupConfig
     }
 
     /**
-     * @return Crawler\CrawlerInterface|class-string<Crawler\CrawlerInterface>|null
+     * @return Crawler\Crawler|class-string<Crawler\Crawler>|null
      */
-    public function getCrawler(): Crawler\CrawlerInterface|string|null
+    public function getCrawler(): Crawler\Crawler|string|null
     {
         return $this->crawler;
     }
 
     /**
-     * @param Crawler\CrawlerInterface|class-string<Crawler\CrawlerInterface> $crawler
+     * @param Crawler\Crawler|class-string<Crawler\Crawler> $crawler
      */
-    public function setCrawler(Crawler\CrawlerInterface|string $crawler): self
+    public function setCrawler(Crawler\Crawler|string $crawler): self
     {
         $this->crawler = $crawler;
 

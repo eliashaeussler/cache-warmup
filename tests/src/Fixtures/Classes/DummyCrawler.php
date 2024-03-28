@@ -37,7 +37,7 @@ use function array_shift;
  *
  * @internal
  */
-class DummyCrawler implements Crawler\CrawlerInterface
+class DummyCrawler implements Crawler\Crawler
 {
     /**
      * @var list<Message\UriInterface>

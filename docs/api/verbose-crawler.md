@@ -6,16 +6,16 @@ outline: [2,3]
 
 When cache warmup is performed from the command line, it might
 be helpful to provide user-oriented output such as progress bars
-or error messages. In this case, you can implement the
-[`EliasHaeussler\CacheWarmup\Crawler\VerboseCrawlerInterface`](https://github.com/eliashaeussler/cache-warmup/blob/main/src/Crawler/VerboseCrawlerInterface.php):
+or error messages. In this case, you can implement
+[`EliasHaeussler\CacheWarmup\Crawler\VerboseCrawler`](https://github.com/eliashaeussler/cache-warmup/blob/main/src/Crawler/VerboseCrawler.php):
 
 ```php
 namespace Vendor\Crawler;
 
 use EliasHaeussler\CacheWarmup;
 
-final class MyCustomCrawler implements CacheWarmup\Crawler\CrawlerInterface // [!code --]
-final class MyCustomCrawler implements CacheWarmup\Crawler\VerboseCrawlerInterface // [!code ++]
+final class MyCustomCrawler implements CacheWarmup\Crawler\Crawler // [!code --]
+final class MyCustomCrawler implements CacheWarmup\Crawler\VerboseCrawler // [!code ++]
 {
     // ...
 }
@@ -36,7 +36,7 @@ use EliasHaeussler\CacheWarmup;
 use Psr\Http\Message;
 use Symfony\Component\Console;
 
-final class MyCustomCrawler implements CacheWarmup\Crawler\VerboseCrawlerInterface
+final class MyCustomCrawler implements CacheWarmup\Crawler\VerboseCrawler
 {
     private ?Console\Output\OutputInterface $output = null; // [!code ++]
 
@@ -66,7 +66,7 @@ use EliasHaeussler\CacheWarmup;
 use Psr\Http\Message;
 use Symfony\Component\Console;
 
-final class MyCustomCrawler implements CacheWarmup\Crawler\VerboseCrawlerInterface
+final class MyCustomCrawler implements CacheWarmup\Crawler\VerboseCrawler
 {
     private ?Console\Output\OutputInterface $output = null;
 

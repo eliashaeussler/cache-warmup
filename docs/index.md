@@ -33,5 +33,5 @@ features:
   - icon: 🤖
     title: Custom Crawlers
     details: Integrate custom crawlers for specialized cache warmup tailored to your website's needs.
-    link: /api/#crawlerinterface
+    link: /api/#crawler
 ---

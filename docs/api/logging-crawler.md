@@ -5,16 +5,16 @@ outline: [2,3]
 # Logging Crawler
 
 In some cases it might be helpful to log parts of the cache
-warmup process. For this, your crawler should implement the
-[`EliasHaeussler\CacheWarmup\Crawler\LoggingCrawlerInterface`](https://github.com/eliashaeussler/cache-warmup/blob/main/src/Crawler/LoggingCrawlerInterface.php):
+warmup process. For this, your crawler should implement
+[`EliasHaeussler\CacheWarmup\Crawler\LoggingCrawler`](https://github.com/eliashaeussler/cache-warmup/blob/main/src/Crawler/LoggingCrawler.php):
 
 ```php
 namespace Vendor\Crawler;
 
 use EliasHaeussler\CacheWarmup;
 
-final class MyCustomCrawler implements CacheWarmup\Crawler\CrawlerInterface // [!code --]
-final class MyCustomCrawler implements CacheWarmup\Crawler\LoggingCrawlerInterface // [!code ++]
+final class MyCustomCrawler implements CacheWarmup\Crawler\Crawler // [!code --]
+final class MyCustomCrawler implements CacheWarmup\Crawler\LoggingCrawler // [!code ++]
 {
     // ...
 }
@@ -36,7 +36,7 @@ use EliasHaeussler\CacheWarmup;
 use Psr\Http\Message;
 use Psr\Log; // [!code ++]
 
-final class MyCustomCrawler implements CacheWarmup\Crawler\LoggingCrawlerInterface
+final class MyCustomCrawler implements CacheWarmup\Crawler\LoggingCrawler
 {
     private ?Log\LoggerInterface $logger = null; // [!code ++]
 
@@ -71,7 +71,7 @@ use EliasHaeussler\CacheWarmup;
 use Psr\Http\Message;
 use Psr\Log;
 
-final class MyCustomCrawler implements CacheWarmup\Crawler\LoggingCrawlerInterface
+final class MyCustomCrawler implements CacheWarmup\Crawler\LoggingCrawler
 {
     private ?Log\LoggerInterface $logger = null;
     private string $logLevel = CacheWarmup\Log\LogLevel::ERROR; // [!code ++]
@@ -107,7 +107,7 @@ use EliasHaeussler\CacheWarmup;
 use Psr\Http\Message;
 use Psr\Log;
 
-final class MyCustomCrawler implements CacheWarmup\Crawler\LoggingCrawlerInterface
+final class MyCustomCrawler implements CacheWarmup\Crawler\LoggingCrawler
 {
     private ?Log\LoggerInterface $logger = null;
     private string $logLevel = CacheWarmup\Log\LogLevel::ERROR;

@@ -6,15 +6,15 @@ outline: [2,3]
 
 Crawlers are the core component of the library. They are used
 to perform the actual requests for all configured URLs to warm
-up their website caches. Each crawler must implement the
-[`EliasHaeussler\CacheWarmup\Crawler\CrawlerInterface`](https://github.com/eliashaeussler/cache-warmup/blob/main/src/Crawler/CrawlerInterface.php):
+up their website caches. Each crawler must implement
+[`EliasHaeussler\CacheWarmup\Crawler\Crawler`](https://github.com/eliashaeussler/cache-warmup/blob/main/src/Crawler/Crawler.php):
 
 ```php
 namespace Vendor\Crawler;
 
 use EliasHaeussler\CacheWarmup;
 
-final class MyCustomCrawler implements CacheWarmup\Crawler\CrawlerInterface
+final class MyCustomCrawler implements CacheWarmup\Crawler\Crawler
 {
     // ...
 }
@@ -35,7 +35,7 @@ namespace Vendor\Crawler;
 use EliasHaeussler\CacheWarmup;
 use Psr\Http\Message; // [!code ++]
 
-final class MyCustomCrawler implements CacheWarmup\Crawler\CrawlerInterface
+final class MyCustomCrawler implements CacheWarmup\Crawler\Crawler
 {
     public function crawl(array $urls): CacheWarmup\Result\CacheWarmupResult // [!code ++]
     { // [!code ++]

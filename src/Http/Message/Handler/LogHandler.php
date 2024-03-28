@@ -35,7 +35,7 @@ use Throwable;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class LogHandler implements ResponseHandlerInterface
+final class LogHandler implements ResponseHandler
 {
     /**
      * @phpstan-param LogLevel::* $logLevel
