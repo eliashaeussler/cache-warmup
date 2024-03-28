@@ -10,6 +10,8 @@
 /CODEOWNERS               export-ignore
 /composer.lock            export-ignore
 /CONTRIBUTING.md          export-ignore
+/package.json             export-ignore
+/package-lock.json        export-ignore
 /phpstan.php              export-ignore
 /phpstan-baseline.neon    export-ignore
 /phpunit.xml              export-ignore
