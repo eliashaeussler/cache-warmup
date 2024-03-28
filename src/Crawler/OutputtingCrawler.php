@@ -51,14 +51,6 @@ final class OutputtingCrawler extends AbstractConfigurableCrawler implements Log
 {
     use ConcurrentCrawlerTrait;
 
-    protected static array $defaultOptions = [
-        'concurrency' => 5,
-        'request_method' => 'HEAD',
-        'request_headers' => [],
-        'request_options' => [],
-        'client_config' => [],
-    ];
-
     private Console\Output\OutputInterface $output;
     private ?Log\LoggerInterface $logger = null;
 

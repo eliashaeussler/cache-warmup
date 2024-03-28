@@ -23,9 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Crawler;
 
-use EliasHaeussler\CacheWarmup\Exception;
-
-use function array_diff_key;
+use Symfony\Component\OptionsResolver;
 
 /**
  * AbstractConfigurableCrawler.
@@ -37,10 +35,7 @@ use function array_diff_key;
  */
 abstract class AbstractConfigurableCrawler implements ConfigurableCrawlerInterface
 {
-    /**
-     * @var TOptions
-     */
-    protected static array $defaultOptions = [];
+    protected OptionsResolver\OptionsResolver $optionsResolver;
 
     /**
      * @var TOptions
@@ -52,20 +47,18 @@ abstract class AbstractConfigurableCrawler implements ConfigurableCrawlerInterfa
      */
     public function __construct(array $options = [])
     {
+        $this->optionsResolver = new OptionsResolver\OptionsResolver();
+        $this->configureOptions($this->optionsResolver);
         $this->setOptions($options);
     }
+
+    abstract protected function configureOptions(OptionsResolver\OptionsResolver $optionsResolver): void;
 
     /**
      * @param array<string, mixed> $options
      */
     public function setOptions(array $options): void
     {
-        $invalidOptions = array_diff_key($options, static::$defaultOptions);
-
-        if ([] !== $invalidOptions) {
-            throw Exception\InvalidCrawlerOptionException::createForAll($this, array_keys($invalidOptions));
-        }
-
-        $this->options = [...static::$defaultOptions, ...$options];
+        $this->options = $this->optionsResolver->resolve($options);
     }
 }
