@@ -68,8 +68,10 @@ final class ConsoleInputConfigAdapter implements ConfigAdapter
     }
 
     /**
-     * @throws Exception\InvalidCommandParametersException
-     * @throws Exception\InvalidCrawlerException
+     * @throws Exception\CommandParametersAreInvalid
+     * @throws Exception\CrawlerDoesNotExist
+     * @throws Exception\CrawlerIsInvalid
+     * @throws Exception\CrawlerOptionIsInvalid
      */
     public function get(): Config\CacheWarmupConfig
     {
@@ -84,14 +86,16 @@ final class ConsoleInputConfigAdapter implements ConfigAdapter
                 Valinor\Mapper\Source\Source::array($parameters),
             );
         } catch (Valinor\Mapper\MappingError $error) {
-            throw Exception\InvalidCommandParametersException::create($error, $nameMapping);
+            throw new Exception\CommandParametersAreInvalid($error, $nameMapping);
         }
     }
 
     /**
      * @return array<string, mixed>
      *
-     * @throws Exception\InvalidCrawlerException
+     * @throws Exception\CrawlerDoesNotExist
+     * @throws Exception\CrawlerIsInvalid
+     * @throws Exception\CrawlerOptionIsInvalid
      */
     private function resolveParameters(): array
     {

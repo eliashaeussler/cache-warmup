@@ -63,7 +63,7 @@ final class ExcludePatternTest extends Framework\TestCase
     #[Framework\Attributes\DataProvider('createFromRegularExpressionThrowsExceptionOnInvalidRegularExpressionDataProvider')]
     public function createFromRegularExpressionThrowsExceptionOnInvalidRegularExpression(string $regex): void
     {
-        $this->expectExceptionObject(Src\Exception\InvalidRegularExpressionException::create($regex));
+        $this->expectExceptionObject(new Src\Exception\RegularExpressionIsInvalid($regex));
 
         Src\Config\Option\ExcludePattern::createFromRegularExpression($regex);
     }

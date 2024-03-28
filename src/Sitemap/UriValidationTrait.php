@@ -37,18 +37,19 @@ trait UriValidationTrait
     abstract protected function getUri(): Message\UriInterface;
 
     /**
-     * @throws Exception\InvalidUrlException
+     * @throws Exception\UrlIsEmpty
+     * @throws Exception\UrlIsInvalid
      */
     protected function validateUri(): void
     {
         $url = (string) $this->getUri();
 
         if ('' === trim($url)) {
-            throw Exception\InvalidUrlException::forEmptyUrl();
+            throw new Exception\UrlIsEmpty();
         }
 
         if (false === filter_var($url, FILTER_VALIDATE_URL)) {
-            throw Exception\InvalidUrlException::create($url);
+            throw new Exception\UrlIsInvalid($url);
         }
     }
 }

@@ -39,14 +39,14 @@ final class FormatterFactory
     ) {}
 
     /**
-     * @throws Exception\UnsupportedFormatterException
+     * @throws Exception\FormatterIsNotSupported
      */
     public function get(string $type): Formatter
     {
         return match ($type) {
             JsonFormatter::getType() => new JsonFormatter($this->io),
             TextFormatter::getType() => new TextFormatter($this->io),
-            default => throw Exception\UnsupportedFormatterException::create($type),
+            default => throw new Exception\FormatterIsNotSupported($type),
         };
     }
 }

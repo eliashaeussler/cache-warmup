@@ -42,7 +42,7 @@ final class XmlSourceTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function fromXmlThrowsExceptionIfGivenXmlIsMalformed(): void
     {
-        $this->expectException(Src\Exception\MalformedXmlException::class);
+        $this->expectException(Src\Exception\XmlIsMalformed::class);
         $this->expectExceptionCode(1670962571);
         $this->expectExceptionMessageMatches('/^The string "foo" does not contain valid XML/');
 

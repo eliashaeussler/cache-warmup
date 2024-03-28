@@ -39,7 +39,8 @@ class Url extends Psr7\Uri
     use UriValidationTrait;
 
     /**
-     * @throws Exception\InvalidUrlException
+     * @throws Exception\UrlIsEmpty
+     * @throws Exception\UrlIsInvalid
      */
     public function __construct(
         protected string $uri,

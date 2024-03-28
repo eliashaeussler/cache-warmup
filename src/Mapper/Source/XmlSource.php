@@ -52,7 +52,7 @@ final class XmlSource implements IteratorAggregate
     ) {}
 
     /**
-     * @throws Exception\MalformedXmlException
+     * @throws Exception\XmlIsMalformed
      */
     public static function fromXml(string $xml): self
     {
@@ -89,10 +89,10 @@ final class XmlSource implements IteratorAggregate
     }
 
     /**
-     * @throws Exception\MalformedXmlException
+     * @throws Exception\XmlIsMalformed
      */
     private static function handleParseError(string $xml, string $message): never
     {
-        throw Exception\MalformedXmlException::create($xml, $message);
+        throw new Exception\XmlIsMalformed($xml, $message);
     }
 }

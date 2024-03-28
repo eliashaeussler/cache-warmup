@@ -59,9 +59,9 @@ final class XmlParser
     }
 
     /**
-     * @throws Exception\FilesystemFailureException
-     * @throws Exception\InvalidSitemapException
-     * @throws Exception\MalformedXmlException
+     * @throws Exception\FileIsMissing
+     * @throws Exception\XmlIsMalformed
+     * @throws Exception\SitemapCannotBeParsed
      * @throws GuzzleException
      */
     public function parse(Sitemap\Sitemap $sitemap): Result\ParserResult
@@ -98,7 +98,7 @@ final class XmlParser
         try {
             $result = $this->mapper->map(Result\ParserResult::class, $source);
         } catch (Valinor\Mapper\MappingError $error) {
-            throw Exception\InvalidSitemapException::create($sitemap, $error);
+            throw new Exception\SitemapCannotBeParsed($sitemap, $error);
         }
 
         // Apply origin to sitemaps and urls
@@ -113,7 +113,7 @@ final class XmlParser
     }
 
     /**
-     * @throws Exception\FilesystemFailureException
+     * @throws Exception\FileIsMissing
      */
     private function fetchLocalFile(Message\UriInterface $uri): string
     {
@@ -121,7 +121,7 @@ final class XmlParser
         $filename = substr((string) $uri, 7);
 
         if (!file_exists($filename) || !is_readable($filename)) {
-            throw Exception\FilesystemFailureException::forMissingFile($filename);
+            throw new Exception\FileIsMissing($filename);
         }
 
         return (string) file_get_contents($filename);
@@ -149,7 +149,7 @@ final class XmlParser
             ->allowSuperfluousKeys()
             ->filterExceptions(
                 static function (Throwable $exception) {
-                    if ($exception instanceof Exception\InvalidUrlException) {
+                    if ($exception instanceof Exception\UrlIsEmpty || $exception instanceof Exception\UrlIsInvalid) {
                         return Valinor\Mapper\Tree\Message\MessageBuilder::from($exception);
                     }
 

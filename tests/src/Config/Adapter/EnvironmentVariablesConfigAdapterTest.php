@@ -64,7 +64,7 @@ final class EnvironmentVariablesConfigAdapterTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function getThrowsExceptionIfConfiguredCrawlerOptionsAreInvalid(): void
     {
-        $this->expectExceptionObject(Src\Exception\InvalidCrawlerOptionException::forInvalidType('foo'));
+        $this->expectExceptionObject(new Src\Exception\CrawlerOptionIsInvalid('foo'));
 
         $this->testWithEnvironment(
             fn () => $this->subject->get(),
@@ -77,7 +77,7 @@ final class EnvironmentVariablesConfigAdapterTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function getThrowsExceptionIfConfiguredCrawlerIsInvalid(): void
     {
-        $this->expectExceptionObject(Src\Exception\InvalidCrawlerException::forMissingClass('foo'));
+        $this->expectExceptionObject(new Src\Exception\CrawlerDoesNotExist('foo'));
 
         $this->testWithEnvironment(
             fn () => $this->subject->get(),
@@ -169,7 +169,7 @@ final class EnvironmentVariablesConfigAdapterTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function getThrowsExceptionOnInvalidEnvironmentVariables(): void
     {
-        $this->expectException(Src\Exception\InvalidEnvironmentVariablesException::class);
+        $this->expectException(Src\Exception\EnvironmentVariablesAreInvalid::class);
         $this->expectExceptionCode(1708635629);
 
         $this->testWithEnvironment(

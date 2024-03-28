@@ -66,7 +66,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     {
         $configFile = dirname(__DIR__).'/Fixtures/ConfigFiles/invalid_config.txt';
 
-        $this->expectExceptionObject(Src\Exception\UnsupportedConfigFileException::create($configFile));
+        $this->expectExceptionObject(new Src\Exception\ConfigFileIsNotSupported($configFile));
 
         $this->commandTester->execute(['--config' => $configFile]);
     }
@@ -177,7 +177,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function initializeThrowsExceptionIfGivenFormatterIsUnsupported(): void
     {
-        $this->expectExceptionObject(Src\Exception\UnsupportedFormatterException::create('foo'));
+        $this->expectExceptionObject(new Src\Exception\FormatterIsNotSupported('foo'));
 
         $this->commandTester->execute(['--format' => 'foo']);
     }
@@ -185,7 +185,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function initializeThrowsExceptionIfGivenLogLevelIsUnsupported(): void
     {
-        $this->expectExceptionObject(Src\Exception\UnsupportedLogLevelException::create('foo'));
+        $this->expectExceptionObject(new Src\Exception\LogLevelIsNotSupported('foo'));
 
         $this->commandTester->execute(['--log-level' => 'foo']);
     }
@@ -426,7 +426,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function executeThrowsExceptionIfGivenCrawlerClassDoesNotExist(): void
     {
-        $this->expectExceptionObject(Src\Exception\InvalidCrawlerException::forMissingClass('foo'));
+        $this->expectExceptionObject(new Src\Exception\CrawlerDoesNotExist('foo'));
 
         $this->commandTester->execute([
             'sitemaps' => [
@@ -439,7 +439,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function executeThrowsExceptionIfGivenCrawlerClassIsNotValid(): void
     {
-        $this->expectExceptionObject(Src\Exception\InvalidCrawlerException::forUnsupportedClass(self::class));
+        $this->expectExceptionObject(new Src\Exception\CrawlerIsInvalid(self::class));
 
         $this->commandTester->execute([
             'sitemaps' => [
@@ -474,7 +474,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function executeThrowsExceptionIfCrawlerOptionsAreInvalid(): void
     {
-        $this->expectExceptionObject(Src\Exception\InvalidCrawlerOptionException::forInvalidType('foo'));
+        $this->expectExceptionObject(new Src\Exception\CrawlerOptionIsInvalid('foo'));
 
         $this->commandTester->execute([
             'sitemaps' => [
@@ -648,7 +648,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     {
         $this->mockSitemapRequest('invalid_sitemap_1');
 
-        $this->expectException(Src\Exception\InvalidSitemapException::class);
+        $this->expectException(Src\Exception\SitemapCannotBeParsed::class);
         $this->expectExceptionCode(1660668799);
         $this->expectExceptionMessage(
             implode(PHP_EOL, [

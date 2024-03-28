@@ -55,7 +55,8 @@ final class CrawlerFactory
      * @param class-string<Crawler> $crawler
      * @param array<string, mixed>  $options
      *
-     * @throws Exception\InvalidCrawlerException
+     * @throws Exception\CrawlerDoesNotExist
+     * @throws Exception\CrawlerIsInvalid
      */
     public function get(string $crawler, array $options = []): Crawler
     {
@@ -88,7 +89,7 @@ final class CrawlerFactory
      *
      * @return array<string, mixed>
      *
-     * @throws Exception\InvalidCrawlerOptionException
+     * @throws Exception\CrawlerOptionIsInvalid
      */
     public function parseCrawlerOptions(string|array|null $crawlerOptions): array
     {
@@ -101,34 +102,35 @@ final class CrawlerFactory
             try {
                 $crawlerOptions = json_decode($crawlerOptions, true, 512, JSON_THROW_ON_ERROR);
             } catch (JsonException) {
-                throw Exception\InvalidCrawlerOptionException::forInvalidType($crawlerOptions);
+                throw new Exception\CrawlerOptionIsInvalid($crawlerOptions);
             }
         }
 
         // Handle non-array crawler options
         if (!is_array($crawlerOptions)) {
-            throw Exception\InvalidCrawlerOptionException::forInvalidType($crawlerOptions);
+            throw new Exception\CrawlerOptionIsInvalid($crawlerOptions);
         }
 
         // Handle non-associative-array crawler options
         if ($crawlerOptions !== array_filter($crawlerOptions, 'is_string', ARRAY_FILTER_USE_KEY)) {
-            throw Exception\InvalidCrawlerOptionException::forInvalidType($crawlerOptions);
+            throw new Exception\CrawlerOptionIsInvalid($crawlerOptions);
         }
 
         return $crawlerOptions;
     }
 
     /**
-     * @throws Exception\InvalidCrawlerException
+     * @throws Exception\CrawlerDoesNotExist
+     * @throws Exception\CrawlerIsInvalid
      */
     private function validateCrawler(string $crawler): void
     {
         if (!class_exists($crawler)) {
-            throw Exception\InvalidCrawlerException::forMissingClass($crawler);
+            throw new Exception\CrawlerDoesNotExist($crawler);
         }
 
         if (!is_subclass_of($crawler, Crawler::class)) {
-            throw Exception\InvalidCrawlerException::forUnsupportedClass($crawler);
+            throw new Exception\CrawlerIsInvalid($crawler);
         }
     }
 }

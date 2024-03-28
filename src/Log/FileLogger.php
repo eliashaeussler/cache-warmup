@@ -66,7 +66,7 @@ final class FileLogger extends Log\AbstractLogger
      *
      * @param array<string, mixed> $context
      *
-     * @throws Exception\FilesystemFailureException
+     * @throws Exception\FileStreamResultIsUnexpected
      */
     public function log($level, Stringable|string $message, array $context = []): void
     {
@@ -82,7 +82,7 @@ final class FileLogger extends Log\AbstractLogger
     /**
      * @return resource
      *
-     * @throws Exception\FilesystemFailureException
+     * @throws Exception\FileStreamResultIsUnexpected
      */
     private function openStream()
     {
@@ -91,7 +91,7 @@ final class FileLogger extends Log\AbstractLogger
         $stream = fopen($this->file, 'a');
 
         if (!is_resource($stream)) {
-            throw Exception\FilesystemFailureException::forUnexpectedFileStreamResult($this->file);
+            throw new Exception\FileStreamResultIsUnexpected($this->file);
         }
 
         return $stream;

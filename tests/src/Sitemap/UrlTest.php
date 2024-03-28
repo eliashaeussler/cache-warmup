@@ -40,7 +40,7 @@ final class UrlTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function constructorThrowsExceptionIfGivenUriIsEmpty(): void
     {
-        $this->expectException(Src\Exception\InvalidUrlException::class);
+        $this->expectException(Src\Exception\UrlIsEmpty::class);
         $this->expectExceptionCode(1604055264);
         $this->expectExceptionMessage('The given URL must not be empty.');
 
@@ -50,7 +50,7 @@ final class UrlTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function constructorThrowsExceptionIfGivenUriIsNotValid(): void
     {
-        $this->expectException(Src\Exception\InvalidUrlException::class);
+        $this->expectException(Src\Exception\UrlIsInvalid::class);
         $this->expectExceptionCode(1604055334);
         $this->expectExceptionMessage('The given URL "foo" is not valid.');
 
