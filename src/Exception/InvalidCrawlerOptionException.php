@@ -37,7 +37,7 @@ use function sprintf;
  */
 final class InvalidCrawlerOptionException extends RuntimeException
 {
-    public static function create(Crawler\ConfigurableCrawlerInterface $crawler, string $option): self
+    public static function create(Crawler\ConfigurableCrawler $crawler, string $option): self
     {
         return new self(
             sprintf('The crawler option "%s" is invalid or not supported by crawler "%s".', $option, $crawler::class),

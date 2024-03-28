@@ -33,7 +33,7 @@ use EliasHaeussler\CacheWarmup\Crawler;
  *
  * @internal
  */
-final class DummyStoppableCrawler extends DummyCrawler implements Crawler\StoppableCrawlerInterface
+final class DummyStoppableCrawler extends DummyCrawler implements Crawler\StoppableCrawler
 {
     public static bool $stopOnFailure = false;
 

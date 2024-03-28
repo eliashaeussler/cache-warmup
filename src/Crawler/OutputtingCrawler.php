@@ -47,7 +47,7 @@ use function count;
  *     client_config: array<string, mixed>,
  * }>
  */
-final class OutputtingCrawler extends AbstractConfigurableCrawler implements LoggingCrawlerInterface, StoppableCrawlerInterface, VerboseCrawlerInterface
+final class OutputtingCrawler extends AbstractConfigurableCrawler implements LoggingCrawler, StoppableCrawler, VerboseCrawler
 {
     use ConcurrentCrawlerTrait;
 

@@ -74,7 +74,7 @@ final class CacheWarmer
     public function __construct(
         private readonly int $limit = 0,
         private readonly ClientInterface $client = new Client(),
-        private readonly Crawler\CrawlerInterface $crawler = new Crawler\ConcurrentCrawler(),
+        private readonly Crawler\Crawler $crawler = new Crawler\ConcurrentCrawler(),
         private readonly ?Crawler\Strategy\CrawlingStrategy $strategy = null,
         private readonly bool $strict = true,
         private readonly array $excludePatterns = [],

@@ -36,7 +36,7 @@ use function sprintf;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class VerboseProgressHandler implements ResponseHandlerInterface
+final class VerboseProgressHandler implements ResponseHandler
 {
     private readonly Console\Output\ConsoleSectionOutput $logSection;
     private readonly Console\Output\ConsoleSectionOutput $progressBarSection;

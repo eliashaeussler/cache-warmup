@@ -73,8 +73,8 @@ trait ConcurrentCrawlerTrait
     }
 
     /**
-     * @param list<Message\UriInterface>                          $urls
-     * @param list<Http\Message\Handler\ResponseHandlerInterface> $handlers
+     * @param list<Message\UriInterface>                 $urls
+     * @param list<Http\Message\Handler\ResponseHandler> $handlers
      */
     protected function createPool(
         array $urls,

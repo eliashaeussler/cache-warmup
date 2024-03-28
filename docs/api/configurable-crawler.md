@@ -5,16 +5,16 @@ outline: [2,3]
 # Configurable Crawler
 
 Whenever you want to allow a custom behavior of your crawler, it
-should implement the
-[`EliasHaeussler\CacheWarmup\Crawler\ConfigurableCrawlerInterface`](https://github.com/eliashaeussler/cache-warmup/blob/main/src/Crawler/ConfigurableCrawlerInterface.php):
+should implement
+[`EliasHaeussler\CacheWarmup\Crawler\ConfigurableCrawler`](https://github.com/eliashaeussler/cache-warmup/blob/main/src/Crawler/ConfigurableCrawler.php):
 
 ```php
 namespace Vendor\Crawler;
 
 use EliasHaeussler\CacheWarmup;
 
-final class MyCustomCrawler implements CacheWarmup\Crawler\CrawlerInterface // [!code --]
-final class MyCustomCrawler implements CacheWarmup\Crawler\ConfigurableCrawlerInterface // [!code ++]
+final class MyCustomCrawler implements CacheWarmup\Crawler\Crawler // [!code --]
+final class MyCustomCrawler implements CacheWarmup\Crawler\ConfigurableCrawler // [!code ++]
 {
     // ...
 }
@@ -38,7 +38,7 @@ namespace Vendor\Crawler;
 use EliasHaeussler\CacheWarmup;
 use Psr\Http\Message;
 
-final class MyCustomCrawler implements CacheWarmup\Crawler\ConfigurableCrawlerInterface
+final class MyCustomCrawler implements CacheWarmup\Crawler\ConfigurableCrawler
 {
     private array $options = [ // [!code ++]
         'request_method' => 'GET', // [!code ++]
@@ -75,7 +75,7 @@ use EliasHaeussler\CacheWarmup;
 use GuzzleHttp\ClientInterface;
 use Psr\Http\Message;
 
-final class MyCustomCrawler implements CacheWarmup\Crawler\ConfigurableCrawlerInterface
+final class MyCustomCrawler implements CacheWarmup\Crawler\ConfigurableCrawler
 {
     private array $options = [
         'request_method' => 'GET',

@@ -23,20 +23,16 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Crawler;
 
-use Psr\Log;
-
 /**
- * LoggingCrawlerInterface.
+ * ConfigurableCrawler.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-interface LoggingCrawlerInterface extends CrawlerInterface
+interface ConfigurableCrawler extends Crawler
 {
-    public function setLogger(Log\LoggerInterface $logger): void;
-
     /**
-     * @phpstan-param Log\LogLevel::* $logLevel
+     * @param array<string, mixed> $options
      */
-    public function setLogLevel(string $logLevel): void;
+    public function setOptions(array $options): void;
 }

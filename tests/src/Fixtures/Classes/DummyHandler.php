@@ -35,7 +35,7 @@ use Throwable;
  *
  * @internal
  */
-final class DummyHandler implements Http\Message\Handler\ResponseHandlerInterface
+final class DummyHandler implements Http\Message\Handler\ResponseHandler
 {
     /**
      * @var list<Message\UriInterface>
