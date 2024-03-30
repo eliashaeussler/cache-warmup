@@ -80,7 +80,6 @@ return static function (CacheWarmup\Config\CacheWarmupConfig $config) {
 
 ```yaml [YAML]
 sitemaps:
-  - https://www.example.org/sitemap.xml
   - /var/www/html/sitemap.xml
 ```
 
