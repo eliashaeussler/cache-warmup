@@ -14,7 +14,7 @@ hero:
       link: /config-reference/
     - theme: alt
       text: GitHub
-      link: https://github.com/eliashaeussler/cache-warmup/releases/latest
+      link: https://github.com/eliashaeussler/cache-warmup
       rel: nofollow
 
 features:
