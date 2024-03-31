@@ -100,7 +100,7 @@ to see a detailed explanation of all available command parameters.
 
 Several configuration options can also be configured using environment
 variables. Each environment variable is prefixed with `CACHE_WARMUP_`,
-followed by the configuration option in upper camel case.
+followed by the configuration option in *SCREAMING_SNAKE_CASE*.
 
 Example:
 
