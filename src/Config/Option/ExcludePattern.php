@@ -57,7 +57,7 @@ final class ExcludePattern
      */
     public static function create(string $pattern): self
     {
-        if (str_starts_with($pattern, '#') && str_ends_with($pattern, '#')) {
+        if (self::isRegularExpression($pattern)) {
             return self::createFromRegularExpression($pattern);
         }
 
@@ -76,7 +76,7 @@ final class ExcludePattern
      */
     public static function createFromRegularExpression(string $regex): self
     {
-        if (!str_starts_with($regex, '#') || !str_ends_with($regex, '#')) {
+        if (!self::isRegularExpression($regex)) {
             throw new Exception\RegularExpressionIsInvalid($regex);
         }
 
@@ -92,5 +92,10 @@ final class ExcludePattern
     public function matches(string|Stringable $url): bool
     {
         return ($this->matchFunction)((string) $url);
+    }
+
+    private static function isRegularExpression(string $pattern): bool
+    {
+        return str_starts_with($pattern, '#') && str_ends_with($pattern, '#');
     }
 }
