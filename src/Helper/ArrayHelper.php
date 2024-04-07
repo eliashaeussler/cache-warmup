@@ -25,6 +25,8 @@ namespace EliasHaeussler\CacheWarmup\Helper;
 
 use function array_filter;
 use function array_key_exists;
+use function array_map;
+use function array_values;
 use function explode;
 use function is_array;
 use function is_int;
@@ -43,7 +45,7 @@ final class ArrayHelper
      */
     public static function getValueByPath(iterable $subject, string $path, string $delimiter = '/'): mixed
     {
-        $pathSegments = array_filter(explode($delimiter, $path));
+        $pathSegments = self::trimExplode($path, $delimiter);
         $reference = &$subject;
 
         foreach ($pathSegments as $pathSegment) {
@@ -63,7 +65,7 @@ final class ArrayHelper
      */
     public static function setValueByPath(iterable &$subject, string $path, mixed $value, string $delimiter = '/'): void
     {
-        $pathSegments = array_filter(explode($delimiter, $path));
+        $pathSegments = self::trimExplode($path, $delimiter);
         $reference = &$subject;
 
         foreach ($pathSegments as $pathSegment) {
@@ -109,6 +111,24 @@ final class ArrayHelper
                 self::mergeRecursive($originalValue, $value);
             }
         }
+    }
+
+    /**
+     * @param non-empty-string $delimiter
+     *
+     * @return list<non-empty-string>
+     */
+    public static function trimExplode(string $subject, string $delimiter = ','): array
+    {
+        return array_values(
+            array_filter(
+                array_map(
+                    'trim',
+                    explode($delimiter, $subject),
+                ),
+                static fn (string $value) => '' !== $value,
+            ),
+        );
     }
 
     private static function pathSegmentExists(mixed $subject, string $pathSegment): bool

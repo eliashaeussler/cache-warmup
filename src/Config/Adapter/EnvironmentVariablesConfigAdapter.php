@@ -27,10 +27,8 @@ use CuyZ\Valinor;
 use EliasHaeussler\CacheWarmup\Config;
 use EliasHaeussler\CacheWarmup\Crawler;
 use EliasHaeussler\CacheWarmup\Exception;
+use EliasHaeussler\CacheWarmup\Helper;
 
-use function array_filter;
-use function array_map;
-use function explode;
 use function getenv;
 use function gettype;
 use function in_array;
@@ -121,12 +119,7 @@ final class EnvironmentVariablesConfigAdapter implements ConfigAdapter
         return match (gettype($defaultValue)) {
             'array' => match ($name) {
                 'crawlerOptions' => $this->crawlerFactory->parseCrawlerOptions($envVarValue),
-                default => array_filter(
-                    array_map(
-                        'trim',
-                        explode(',', $envVarValue),
-                    ),
-                ),
+                default => Helper\ArrayHelper::trimExplode($envVarValue),
             },
             'boolean' => in_array(trim($envVarValue), self::BOOLEAN_VALUES, true),
             default => $envVarValue,
