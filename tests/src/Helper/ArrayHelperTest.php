@@ -115,4 +115,17 @@ final class ArrayHelperTest extends Framework\TestCase
 
         self::assertSame($expected, $subject);
     }
+
+    #[Framework\Attributes\Test]
+    public function trimExplodeReturnsExplodedArrayWithNonEmptyValues(): void
+    {
+        $subject = 'foo||baz|  |hello world';
+        $expected = [
+            'foo',
+            'baz',
+            'hello world',
+        ];
+
+        self::assertSame($expected, Src\Helper\ArrayHelper::trimExplode($subject, '|'));
+    }
 }
