@@ -11,7 +11,7 @@
 			"role": "Maintainer"
 		}
 	],
-	"homepage": "https://cache-warmup.haeussler.dev/",
+	"homepage": "https://cache-warmup.dev/",
 	"require": {
 		"php": "~8.1.0 || ~8.2.0 || ~8.3.0",
 		"ext-filter": "*",

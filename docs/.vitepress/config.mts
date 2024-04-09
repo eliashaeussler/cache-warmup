@@ -10,7 +10,7 @@ export default defineConfig({
         ['link', {rel: 'icon', href: '/favicon.ico'}],
     ],
     sitemap: {
-        hostname: 'https://cache-warmup.haeussler.dev',
+        hostname: 'https://cache-warmup.dev',
     },
     themeConfig: {
         logo: '/img/logo.svg',
