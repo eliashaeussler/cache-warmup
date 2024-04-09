@@ -10,7 +10,7 @@
 		"email": "elias@haeussler.dev",
 		"url": "https://haeussler.dev"
 	},
-	"homepage": "https://cache-warmup.haeussler.dev/",
+	"homepage": "https://cache-warmup.dev/",
 	"devDependencies": {
 		"depcheck": "^1.4.7",
 		"vitepress": "^1.0.0"

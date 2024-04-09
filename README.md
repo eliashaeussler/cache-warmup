@@ -1,6 +1,6 @@
 <div align="center">
 
-[![Screenshot](docs/public/img/screenshot.png)](https://cache-warmup.haeussler.dev/)
+[![Screenshot](docs/public/img/screenshot.png)](https://cache-warmup.dev/)
 
 # Cache Warmup
 
@@ -42,13 +42,13 @@ chmod +x cache-warmup.phar
 ./cache-warmup.phar "https://www.example.com/sitemap.xml"
 ```
 
-Find more [installation methods](https://cache-warmup.haeussler.dev/installation.html)
+Find more [installation methods](https://cache-warmup.dev/installation.html)
 in the official documentation.
 
 ## 📕 Documentation
 
 Find all available installation methods, configuration options and customization
-opportunities in the [official documentation](https://cache-warmup.haeussler.dev/).
+opportunities in the [official documentation](https://cache-warmup.dev/).
 
 ## 🧑‍💻 Contributing
 
