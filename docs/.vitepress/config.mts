@@ -2,15 +2,36 @@ import {defineConfig} from 'vitepress';
 // @ts-ignore
 import {version} from '../../package.json';
 
+const hostname: string = 'https://cache-warmup.dev';
+const title: string = 'Cache Warmup';
+const description: string = 'Library to warm up website caches of URLs located in XML sitemaps. Highly customizable and written in PHP.';
+const image: string = `${hostname}/img/social-media.png`;
+const imageAltText: string = 'Screenshot from a terminal window running the "cache-warmup" command on the XML sitemap from Google.';
+
 export default defineConfig({
-    title: 'Cache Warmup',
-    description: 'Library to warm up website caches of URLs located in XML sitemaps. Highly customizable and written in PHP.',
+    title: title,
+    description: description,
     lang: 'en',
     head: [
         ['link', {rel: 'icon', href: '/favicon.ico'}],
+
+        // OpenGraph
+        ['meta', {property: 'og:title', content: title}],
+        ['meta', {property: 'og:description', content: description}],
+        ['meta', {property: 'og:image', content: image}],
+        ['meta', {property: 'og:image:alt', content: imageAltText}],
+        ['meta', {property: 'og:type', content: 'website'}],
+
+        // X/Twitter
+        ['meta', {name: 'twitter:title', content: title}],
+        ['meta', {name: 'twitter:description', content: description}],
+        ['meta', {name: 'twitter:image', content: image}],
+        ['meta', {name: 'twitter:image:alt', content: imageAltText}],
+        ['meta', {name: 'twitter:card', content: 'summary_large_image'}],
+        ['meta', {name: 'twitter:creator', content: '@elias_haeussler'}],
     ],
     sitemap: {
-        hostname: 'https://cache-warmup.dev',
+        hostname: hostname,
     },
     themeConfig: {
         logo: '/img/logo.svg',
