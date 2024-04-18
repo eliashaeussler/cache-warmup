@@ -440,14 +440,7 @@ HELP);
         // Initialize components
         $crawler = $this->initializeCrawler();
         $cacheWarmer = $this->timeTracker->track(fn () => $this->initializeCacheWarmer($crawler));
-
-        // Print formatted parser result
-        $this->formatter->formatParserResult(
-            new Result\ParserResult($cacheWarmer->getSitemaps(), $cacheWarmer->getUrls()),
-            new Result\ParserResult($cacheWarmer->getFailedSitemaps()),
-            new Result\ParserResult($cacheWarmer->getExcludedSitemaps(), $cacheWarmer->getExcludedUrls()),
-            $this->timeTracker->getLastDuration(),
-        );
+        $parseTime = $this->timeTracker->getLastDuration();
 
         // Start crawling
         $result = $this->timeTracker->track(
@@ -455,6 +448,14 @@ HELP);
                 $cacheWarmer,
                 $crawler instanceof Crawler\VerboseCrawler,
             ),
+        );
+
+        // Print formatted parser result
+        $this->formatter->formatParserResult(
+            new Result\ParserResult($cacheWarmer->getSitemaps(), $cacheWarmer->getUrls()),
+            new Result\ParserResult($cacheWarmer->getFailedSitemaps()),
+            new Result\ParserResult($cacheWarmer->getExcludedSitemaps(), $cacheWarmer->getExcludedUrls()),
+            $parseTime,
         );
 
         // Print formatted cache warmup result
