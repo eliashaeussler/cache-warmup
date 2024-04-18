@@ -12,7 +12,7 @@ the whole set of available [configuration options](../config-reference/index.md)
 
 ## `CacheWarmer`
 
-The [`EliasHaeussler\CacheWarmup\CacheWarmer`](https://github.com/eliashaeussler/cache-warmup/blob/main/src/CacheWarmer.php)
+The [`EliasHaeussler\CacheWarmup\CacheWarmer`](../../src/CacheWarmer.php)
 class serves as main entrypoint for the PHP API.
 
 ```php
@@ -35,7 +35,7 @@ opportunities.
 ## `Crawler`
 
 URLs in XML sitemaps are processed by crawlers implementing
-[`EliasHaeussler\CacheWarmup\Crawler\Crawler`](https://github.com/eliashaeussler/cache-warmup/blob/main/src/Crawler/Crawler.php).
+[`EliasHaeussler\CacheWarmup\Crawler\Crawler`](../../src/Crawler/Crawler.php).
 Read more about how to [create a custom crawler](crawler.md).
 
 In addition, there exist different variations of crawler
@@ -61,8 +61,8 @@ Enhances the cache warmup process with user-oriented output.
 
 The library ships with two default crawlers:
 
-* [`EliasHaeussler\CacheWarmup\Crawler\ConcurrentCrawler`](https://github.com/eliashaeussler/cache-warmup/blob/main/src/Crawler/ConcurrentCrawler.php)
-* [`EliasHaeussler\CacheWarmup\Crawler\OutputtingCrawler`](https://github.com/eliashaeussler/cache-warmup/blob/main/src/Crawler/OutputtingCrawler.php)
+* [`EliasHaeussler\CacheWarmup\Crawler\ConcurrentCrawler`](../../src/Crawler/ConcurrentCrawler.php)
+* [`EliasHaeussler\CacheWarmup\Crawler\OutputtingCrawler`](../../src/Crawler/OutputtingCrawler.php)
 
 You can find all available crawler options in the
 [`crawlerOptions`](../config-reference/crawler-options.md#option-reference)

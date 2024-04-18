@@ -7,9 +7,9 @@
 ::: info
 The default crawler depends on whether the configuration option
 [`progress`](progress.md) is set. In this case the
-[`OutputtingCrawler`](https://github.com/eliashaeussler/cache-warmup/blob/main/src/Crawler/OutputtingCrawler.php)
+[`OutputtingCrawler`](../../src/Crawler/OutputtingCrawler.php)
 is used, otherwise the
-[`ConcurrentCrawler`](https://github.com/eliashaeussler/cache-warmup/blob/main/src/Crawler/ConcurrentCrawler.php).
+[`ConcurrentCrawler`](../../src/Crawler/ConcurrentCrawler.php).
 :::
 
 ::: tip

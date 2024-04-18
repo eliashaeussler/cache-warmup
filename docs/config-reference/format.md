@@ -53,7 +53,7 @@ The resulting JSON object includes the following properties:
 | `time`              | Lists all tracked times during cache warmup (`crawl`, `parse`)                                                         |
 
 The complete JSON structure can be found in the provided
-[JSON schema](https://github.com/eliashaeussler/cache-warmup/blob/main/res/cache-warmup-result.schema.json).
+[JSON schema](../../res/cache-warmup-result.schema.json).
 
 
 ## Text formatter: `text`

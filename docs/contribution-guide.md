@@ -78,5 +78,5 @@ the problem you're trying to solve.
 
 All described code quality tools are automatically executed on each pull request
 for all currently supported PHP versions. Take a look at the appropriate
-[workflows](https://github.com/eliashaeussler/cache-warmup/tree/main/.github/workflows)
+[workflows](../.github/workflows)
 to get a detailed overview.

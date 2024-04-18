@@ -12,7 +12,9 @@
 	},
 	"homepage": "https://cache-warmup.dev/",
 	"devDependencies": {
+		"@types/node": "^20.12.7",
 		"depcheck": "^1.4.7",
+		"markdown-it-replace-link": "^1.2.1",
 		"vitepress": "^1.0.0"
 	},
 	"scripts": {
