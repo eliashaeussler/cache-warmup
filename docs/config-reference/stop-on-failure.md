@@ -6,7 +6,7 @@
 
 ::: info
 This option only apply to crawlers implementing
-[`EliasHaeussler\CacheWarmup\Crawler\StoppableCrawler`](https://github.com/eliashaeussler/cache-warmup/blob/main/src/Crawler/StoppableCrawler.php).
+[`EliasHaeussler\CacheWarmup\Crawler\StoppableCrawler`](../../src/Crawler/StoppableCrawler.php).
 If the configured crawler does not implement this interface, a warning is
 shown in case this flag is enabled.
 :::

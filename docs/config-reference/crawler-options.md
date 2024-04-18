@@ -10,7 +10,7 @@ outline: [2,3]
 
 ::: info
 These options only apply to crawlers implementing
-[`EliasHaeussler\CacheWarmup\Crawler\ConfigurableCrawler`](https://github.com/eliashaeussler/cache-warmup/blob/main/src/Crawler/ConfigurableCrawler.php).
+[`EliasHaeussler\CacheWarmup\Crawler\ConfigurableCrawler`](../../src/Crawler/ConfigurableCrawler.php).
 If the configured crawler does not implement this interface, a warning is
 shown in case crawler options are configured.
 :::
@@ -71,8 +71,8 @@ CACHE_WARMUP_CRAWLER_OPTIONS='{"concurrency": 3, "request_options": {"delay": 30
 
 Both default crawlers are implemented as configurable crawlers:
 
-* [`EliasHaeussler\CacheWarmup\Crawler\ConcurrentCrawler`](https://github.com/eliashaeussler/cache-warmup/blob/main/src/Crawler/ConcurrentCrawler.php)
-* [`EliasHaeussler\CacheWarmup\Crawler\OutputtingCrawler`](https://github.com/eliashaeussler/cache-warmup/blob/main/src/Crawler/OutputtingCrawler.php)
+* [`EliasHaeussler\CacheWarmup\Crawler\ConcurrentCrawler`](../../src/Crawler/ConcurrentCrawler.php)
+* [`EliasHaeussler\CacheWarmup\Crawler\OutputtingCrawler`](../../src/Crawler/OutputtingCrawler.php)
 
 The following configuration options are currently available for both crawlers:
 
@@ -116,7 +116,7 @@ return static function (CacheWarmup\Config\CacheWarmupConfig $config) {
 Internally, Guzzle's [Pool](https://docs.guzzlephp.org/en/stable/quickstart.html#concurrent-requests)
 feature is used to send multiple requests  concurrently using asynchronous
 requests. You may also have a look at how  this is implemented in the library's
-[`RequestPoolFactory`](https://github.com/eliashaeussler/cache-warmup/blob/main/src/Http/Message/RequestPoolFactory.php).
+[`RequestPoolFactory`](../../src/Http/Message/RequestPoolFactory.php).
 :::
 
 ::: code-group
@@ -163,7 +163,7 @@ CACHE_WARMUP_CRAWLER_OPTIONS='{"concurrency": 5}'
 
 ::: info
 The default User-Agent is built in
-[`ConcurrentCrawlerTrait::getRequestHeaders()`](https://github.com/eliashaeussler/cache-warmup/blob/main/src/Crawler/ConcurrentCrawlerTrait.php).
+[`ConcurrentCrawlerTrait::getRequestHeaders()`](../../src/Crawler/ConcurrentCrawlerTrait.php).
 :::
 
 ::: code-group

@@ -1,12 +1,25 @@
 import {defineConfig} from 'vitepress';
 // @ts-ignore
+import markdownItReplaceLink from 'markdown-it-replace-link';
+// @ts-ignore
+import path from 'path';
+// @ts-ignore
+import {RepoLinkReplacer} from './repo-link-replacer.mts';
+// @ts-ignore
 import {version} from '../../package.json';
 
+// General information
 const hostname: string = 'https://cache-warmup.dev';
 const title: string = 'Cache Warmup';
 const description: string = 'Library to warm up website caches of URLs located in XML sitemaps. Highly customizable and written in PHP.';
 const image: string = `${hostname}/img/social-media.png`;
 const imageAltText: string = 'Screenshot from a terminal window running the "cache-warmup" command on the XML sitemap from Google.';
+
+// GitHub repository
+const repoUrl: string = 'https://github.com/eliashaeussler/cache-warmup';
+// @ts-ignore
+const rootPath: string = path.resolve(__dirname, '..');
+const replacer = new RepoLinkReplacer(repoUrl, rootPath);
 
 export default defineConfig({
     title: title,
@@ -43,12 +56,12 @@ export default defineConfig({
                 items: [
                     {
                         text: 'Release Notes',
-                        link: 'https://github.com/eliashaeussler/cache-warmup/releases/latest',
+                        link: `${repoUrl}/releases/latest`,
                         rel: 'nofollow',
                     },
                     {
                         text: 'Download',
-                        link: 'https://github.com/eliashaeussler/cache-warmup/releases/latest/download/cache-warmup.phar',
+                        link: `${repoUrl}/releases/latest/download/cache-warmup.phar`,
                         rel: 'nofollow',
                     },
                 ],
@@ -143,10 +156,10 @@ export default defineConfig({
             },
         ],
         socialLinks: [
-            {icon: 'github', link: 'https://github.com/eliashaeussler/cache-warmup'},
+            {icon: 'github', link: repoUrl},
         ],
         editLink: {
-            pattern: 'https://github.com/eliashaeussler/cache-warmup/edit/main/docs/:path',
+            pattern: `${repoUrl}/edit/main/docs/:path`,
         },
         footer: {
             message: 'Released under the GNU General Public License 3.0 (or later)',
@@ -154,6 +167,13 @@ export default defineConfig({
         },
         search: {
             provider: 'local',
+        },
+    },
+    markdown: {
+        preConfig: (md) => {
+            md.use(markdownItReplaceLink, {
+                replaceLink: (link, {relativePath}) => replacer.replaceLink(link, relativePath),
+            });
         },
     },
 });

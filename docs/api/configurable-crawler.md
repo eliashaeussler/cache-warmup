@@ -6,7 +6,7 @@ outline: [2,3]
 
 Whenever you want to allow a custom behavior of your crawler, it
 should implement
-[`EliasHaeussler\CacheWarmup\Crawler\ConfigurableCrawler`](https://github.com/eliashaeussler/cache-warmup/blob/main/src/Crawler/ConfigurableCrawler.php):
+[`EliasHaeussler\CacheWarmup\Crawler\ConfigurableCrawler`](../../src/Crawler/ConfigurableCrawler.php):
 
 ```php
 namespace Vendor\Crawler;
