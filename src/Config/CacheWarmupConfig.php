@@ -361,6 +361,13 @@ final class CacheWarmupConfig
         return $this;
     }
 
+    public function disableEndlessMode(): self
+    {
+        $this->repeatAfter = 0;
+
+        return $this;
+    }
+
     public function merge(self $other): self
     {
         $parameters = $this->toArray(true);

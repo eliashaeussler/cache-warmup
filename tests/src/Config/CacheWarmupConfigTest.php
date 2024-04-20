@@ -159,6 +159,14 @@ final class CacheWarmupConfigTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    public function disableEndlessModeSetsEndlessModeToZero(): void
+    {
+        $this->subject->disableEndlessMode();
+
+        self::assertSame(0, $this->subject->getRepeatAfter());
+    }
+
+    #[Framework\Attributes\Test]
     public function mergeMergesGivenConfigIntoCurrentConfigObject(): void
     {
         $other = new Src\Config\CacheWarmupConfig(
