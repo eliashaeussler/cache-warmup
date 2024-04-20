@@ -50,7 +50,7 @@
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"EliasHaeussler\\CacheWarmup\\Tests\\": "tests/src"
+			"EliasHaeussler\\CacheWarmup\\Tests\\": "tests/unit"
 		}
 	},
 	"bin": [
@@ -88,7 +88,14 @@
 			"@sca:php"
 		],
 		"sca:php": "phpstan analyse -c phpstan.php",
-		"test": "@test:coverage --no-coverage",
-		"test:coverage": "phpunit -c phpunit.xml"
+		"test": [
+			"@test:e2e",
+			"@test:unit"
+		],
+		"test:e2e": "tests/e2e/run.sh",
+		"test:e2e:docker": "@test:e2e docker",
+		"test:e2e:phar": "@test:e2e phar",
+		"test:unit": "@test:unit:coverage --no-coverage",
+		"test:unit:coverage": "phpunit -c phpunit.xml"
 	}
 }

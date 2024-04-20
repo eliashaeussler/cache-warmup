@@ -58,24 +58,24 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$sitemaps of method EliasHaeussler\\\\CacheWarmup\\\\CacheWarmer\\:\\:addSitemaps\\(\\) expects list\\<EliasHaeussler\\\\CacheWarmup\\\\Sitemap\\\\Sitemap\\|string\\>\\|EliasHaeussler\\\\CacheWarmup\\\\Sitemap\\\\Sitemap\\|string, array\\{false\\} given\\.$#"
 			count: 1
-			path: tests/src/CacheWarmerTest.php
+			path: tests/unit/CacheWarmerTest.php
 
 		-
 			message: "#^Parameter \\#1 \\$limit of method EliasHaeussler\\\\CacheWarmup\\\\Config\\\\CacheWarmupConfig\\:\\:setLimit\\(\\) expects int\\<0, max\\>, \\-10 given\\.$#"
 			count: 1
-			path: tests/src/Config/CacheWarmupConfigTest.php
+			path: tests/unit/Config/CacheWarmupConfigTest.php
 
 		-
 			message: "#^Parameter \\#1 \\$crawler of method EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\CrawlerFactory\\:\\:get\\(\\) expects class\\-string\\<EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\Crawler\\>, string given\\.$#"
 			count: 2
-			path: tests/src/Crawler/CrawlerFactoryTest.php
+			path: tests/unit/Crawler/CrawlerFactoryTest.php
 
 		-
 			message: "#^Parameter \\#1 \\$crawlerOptions of method EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\CrawlerFactory\\:\\:parseCrawlerOptions\\(\\) expects array\\<string, mixed\\>\\|string\\|null, array\\<int, string\\> given\\.$#"
 			count: 1
-			path: tests/src/Crawler/CrawlerFactoryTest.php
+			path: tests/unit/Crawler/CrawlerFactoryTest.php
 
 		-
 			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with 'foo' and 'foo' will always evaluate to true\\.$#"
 			count: 1
-			path: tests/src/Time/TimeTrackerTest.php
+			path: tests/unit/Time/TimeTrackerTest.php

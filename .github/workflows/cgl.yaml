@@ -59,6 +59,8 @@ jobs:
         run: composer lint:editorconfig
       - name: Lint PHP
         run: composer lint:php
+      - name: Lint shell files
+        run: bash -c 'shopt -s globstar nullglob; shellcheck tests/e2e/**/*.sh'
 
       # SCA
       - name: SCA PHP
