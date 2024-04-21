@@ -17,7 +17,7 @@ directory**.
 ::: code-group
 
 ```bash [CLI]
-./cache-warmup.phar --log-file cache-warmup.log
+./cache-warmup.phar --log-file "cache-warmup.log"
 ```
 
 ```json [JSON]
@@ -41,7 +41,7 @@ logFile: cache-warmup.log
 ```
 
 ```bash [.env]
-CACHE_WARMUP_LOG_FILE=cache-warmup.log
+CACHE_WARMUP_LOG_FILE="cache-warmup.log"
 ```
 
 :::

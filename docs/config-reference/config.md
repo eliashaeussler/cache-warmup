@@ -15,8 +15,8 @@ Provided config files can be relative to the current working directory.
 ::: code-group
 
 ```bash [CLI]
-./cache-warmup.phar -c cache-warmup.json
-./cache-warmup.phar --config cache-warmup.json
+./cache-warmup.phar -c "cache-warmup.json"
+./cache-warmup.phar --config "cache-warmup.json"
 ```
 
 ```bash [.env]
@@ -32,8 +32,8 @@ You can also provide the absolute path to a config file.
 ::: code-group
 
 ```bash [CLI]
-./cache-warmup.phar -c /path/to/cache-warmup.json
-./cache-warmup.phar --config /path/to/cache-warmup.json
+./cache-warmup.phar -c "/path/to/cache-warmup.json"
+./cache-warmup.phar --config "/path/to/cache-warmup.json"
 ```
 
 ```bash [.env]

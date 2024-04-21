@@ -55,7 +55,7 @@ logLevel: error
 ```
 
 ```bash [.env]
-CACHE_WARMUP_LOG_LEVEL=error
+CACHE_WARMUP_LOG_LEVEL="error"
 ```
 
 :::
@@ -91,7 +91,7 @@ logLevel: info
 ```
 
 ```bash [.env]
-CACHE_WARMUP_LOG_LEVEL=info
+CACHE_WARMUP_LOG_LEVEL="info"
 ```
 
 :::
