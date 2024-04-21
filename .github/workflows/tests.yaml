@@ -38,7 +38,7 @@ jobs:
 
       # Run tests
       - name: Run tests
-        run: composer test
+        run: composer test:unit
 
   coverage:
     name: Test coverage
@@ -64,7 +64,7 @@ jobs:
       - name: Build coverage directory
         run: mkdir -p .build/coverage
       - name: Run tests with coverage
-        run: composer test:coverage
+        run: composer test:unit:coverage
 
       # Upload artifact
       - name: Fix coverage path
@@ -112,8 +112,6 @@ jobs:
   e2e:
     name: Tests (E2E)
     runs-on: ubuntu-latest
-    env:
-      DOCKER_TAG: eliashaeussler/cache-warmup:testing
     steps:
       - uses: actions/checkout@v4
         with:
@@ -124,36 +122,8 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.3
-          tools: composer:v2,phive
+          tools: composer:v2
 
-      # Compile PHAR
-      - name: Install box
-        run: phive install --trust-gpg-keys 2DF45277AEF09A2F humbug/box
-      - name: Install Composer dependencies
-        uses: ramsey/composer-install@v2
-        with:
-          composer-options: "--no-dev"
-      - name: Compile PHAR
-        run: ./tools/box compile --with-docker
-
-      # Build Docker image
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Build Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          load: true
-          tags: ${{ env.DOCKER_TAG }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      # Run test with PHAR
-      - name: Test PHAR
-        run: .build/cache-warmup.phar https://www.google.com/sitemap.xml --limit 1
-
-      # Run test with Docker
-      - name: Test Docker
-        run: docker run --rm ${{ env.DOCKER_TAG }} https://www.google.com/sitemap.xml --limit 1
+      # Run tests
+      - name: Run tests
+        run: composer test:e2e

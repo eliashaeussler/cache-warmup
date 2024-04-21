@@ -2,6 +2,7 @@
 /docs/.vitepress/cache
 /docs/.vitepress/dist
 /node_modules
+/tests/e2e/tools
 /vendor
 /.php-cs-fixer.cache
 /.phpunit.result.cache

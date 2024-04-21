@@ -76,7 +76,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     {
         $this->mockSitemapRequest('valid_sitemap_2');
 
-        $this->commandTester->execute(['--config' => 'tests/src/Fixtures/ConfigFiles/valid_config.php']);
+        $this->commandTester->execute(['--config' => 'tests/unit/Fixtures/ConfigFiles/valid_config.php']);
 
         self::assertStringContainsString('3/3', $this->commandTester->getDisplay());
     }

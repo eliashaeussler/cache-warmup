@@ -8,6 +8,9 @@ all steps below.
 
 - PHP >= 8.1
 - Composer >= 2.1
+- Docker (when running E2E tests)
+- GPG (when running E2E tests)
+- [`jq`](https://github.com/jqlang/jq) (when running E2E tests)
 
 ## Preparation
 
@@ -56,8 +59,16 @@ composer sca:php
 # All tests
 composer test
 
-# All tests with code coverage
-composer test:coverage
+# E2E tests
+composer test:e2e
+composer test:e2e:docker
+composer test:e2e:phar
+
+# Unit tests
+composer test:unit
+
+# Unit tests with code coverage
+composer test:unit:coverage
 ```
 
 ### Test reports
