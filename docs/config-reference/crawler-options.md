@@ -9,17 +9,16 @@ outline: [2,3]
 > Additional options for configurable crawlers.
 
 ::: info
-These options only apply to crawlers implementing
-[`EliasHaeussler\CacheWarmup\Crawler\ConfigurableCrawler`](../../src/Crawler/ConfigurableCrawler.php).
-If the configured crawler does not implement this interface, a warning is
-shown in case crawler options are configured.
+These options only apply to [configurable crawlers](../api/configurable-crawler.md).
+If the configured crawler does not implement the required interface, a warning is
+shown.
 :::
 
 ## Example
 
 Pass crawler options in the expected input format.
 
-::: warning
+::: warning IMPORTANT
 When passing crawler options as **command parameter** or **environment variable**,
 make sure to pass them as **JSON-encoded string**.
 :::

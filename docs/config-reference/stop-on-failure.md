@@ -9,10 +9,9 @@ next: 'API Reference'
 > Cancel further cache warmup requests on failure.
 
 ::: info
-This option only apply to crawlers implementing
-[`EliasHaeussler\CacheWarmup\Crawler\StoppableCrawler`](../../src/Crawler/StoppableCrawler.php).
-If the configured crawler does not implement this interface, a warning is
-shown in case this flag is enabled.
+This option only apply to [stoppable crawlers](../api/stoppable-crawler.md).
+If the configured crawler does not implement the required interface, a warning
+is shown.
 :::
 
 ## Example
