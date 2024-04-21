@@ -137,7 +137,7 @@ export default defineConfig({
                         text: 'Crawler',
                         collapsed: true,
                         items: [
-                            {text: 'Create a custom Crawler', link: '/api/crawler'},
+                            {text: 'Create a custom crawler', link: '/api/crawler'},
                             {text: 'Configurable Crawler', link: '/api/configurable-crawler'},
                             {text: 'Logging Crawler', link: '/api/logging-crawler'},
                             {text: 'Stoppable Crawler', link: '/api/stoppable-crawler'},
@@ -170,7 +170,7 @@ export default defineConfig({
         },
     },
     markdown: {
-        preConfig: (md) => {
+        config(md) {
             md.use(markdownItReplaceLink, {
                 replaceLink: (link, {relativePath}) => replacer.replaceLink(link, relativePath),
             });

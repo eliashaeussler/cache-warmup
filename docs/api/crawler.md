@@ -2,7 +2,7 @@
 outline: [2,3]
 ---
 
-# Create a custom Crawler
+# Create a custom crawler
 
 Crawlers are the core component of the library. They are used
 to perform the actual requests for all configured URLs to warm
