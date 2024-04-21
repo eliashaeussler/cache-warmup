@@ -38,6 +38,25 @@ composer require eliashaeussler/cache-warmup
 
 :::
 
+::: info PHAR: Verify downloaded file (recommended)
+It is recommended to verify the downloaded PHAR file before executing it.
+Each GitHub release provides an additional signature file which can be
+downloaded and used to verify the integrity of the downloaded PHAR file
+using your local GPG installation:
+
+```bash
+# Download GPG signature
+curl -LO https://github.com/eliashaeussler/cache-warmup/releases/latest/download/cache-warmup.phar.asc
+
+# Import public GPG key
+gpg --keyserver keys.openpgp.org --recv-keys E73F20790A629A2CEF2E9AE57C1C5363490E851E
+
+# Verify PHAR file
+gpg --verify cache-warmup.phar.asc cache-warmup.phar
+```
+
+:::
+
 ## First steps
 
 Once downloaded, you can start by passing the URL to an XML sitemap:
