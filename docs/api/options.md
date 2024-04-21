@@ -26,7 +26,7 @@ $cacheWarmer->run();
 
 <small>🐝&nbsp;Default: `new GuzzleHttp\Client()`</small>
 
-> A preconfigured Guzzle client to use for parsing XML sitemaps.
+> A preconfigured Guzzle client to use when parsing XML sitemaps.
 
 ```php
 use EliasHaeussler\CacheWarmup;
@@ -73,8 +73,7 @@ $cacheWarmer->run();
 
 <small>🐝&nbsp;Default: `true`</small>
 
-> *Same as the opposite of the [`allowFailures`](../config-reference/allow-failures.md)
-> configuration option.*
+> *Opposite of the [`allowFailures`](../config-reference/allow-failures.md) configuration option.*
 
 ```php
 use EliasHaeussler\CacheWarmup;
