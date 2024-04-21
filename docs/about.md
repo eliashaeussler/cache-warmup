@@ -19,31 +19,31 @@ strategy. It is even possible to write custom crawlers that take care of cache w
 
 ## Features
 
-::: info 🚀
+::: info 🚀 XML sitemaps
 Warm up caches of URLs located in [XML sitemaps](config-reference/sitemaps.md)
 :::
 
-::: info 🖥️
+::: info 🖥️ Console command
 [Console command](installation.md) and [PHP API](api/index.md) for cache warmup
 :::
 
-::: info 🔀
+::: info 🔀 Sitemap indexes
 Out-of-the-box support for [sitemap indexes](https://www.sitemaps.org/protocol.html#index)
 :::
 
-::: info 🎯
+::: info 🎯 Exclude patterns
 [Exclusion patterns](config-reference/exclude.md) for sitemaps and URLs
 :::
 
-::: info 🧪
+::: info 🧪 Crawling strategies
 Various crawling [strategies](config-reference/strategy.md) to modify crawling behavior
 :::
 
-::: info 📦
+::: info 📦 `gzip` support
 Support for gzipped XML sitemaps
 :::
 
-::: info 🧑‍💻
+::: info 🧑‍💻 Customizable
 Interface for [custom crawler](api/index.md#crawler) implementations
 :::
 
