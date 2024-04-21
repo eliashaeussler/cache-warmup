@@ -1,3 +1,7 @@
+---
+prev: 'API Reference'
+---
+
 # Option Reference
 
 The `CacheWarmer` class accepts a limited set of configuration
