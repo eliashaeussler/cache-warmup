@@ -43,7 +43,7 @@ final class MyCustomCrawler implements CacheWarmup\Crawler\ConfigurableCrawler
     private array $options = [ // [!code ++]
         'request_method' => 'GET', // [!code ++]
     ]; // [!code ++]
-
+​// [!code ++]
     public function __construct(array $options = []) // [!code ++]
     { // [!code ++]
         $this->setOptions($options); // [!code ++]
@@ -68,7 +68,7 @@ final class MyCustomCrawler implements CacheWarmup\Crawler\ConfigurableCrawler
 
 ## Example
 
-```php {9-11,13-16,35-38,43}
+```php {9-16,35-38,43}
 namespace Vendor\Crawler;
 
 use EliasHaeussler\CacheWarmup;
