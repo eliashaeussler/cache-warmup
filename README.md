@@ -35,7 +35,7 @@ strategy. It is even possible to write custom crawlers that take care of cache w
 
 ```bash
 # Download latest release
-curl -sSLO https://github.com/eliashaeussler/cache-warmup/releases/latest/download/cache-warmup.phar
+curl -LO https://github.com/eliashaeussler/cache-warmup/releases/latest/download/cache-warmup.phar
 chmod +x cache-warmup.phar
 
 # Run cache warmup

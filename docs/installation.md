@@ -16,7 +16,7 @@ cache-warmup library:
 ::: code-group
 
 ```bash [PHAR]
-curl -sSLO https://github.com/eliashaeussler/cache-warmup/releases/latest/download/cache-warmup.phar
+curl -LO https://github.com/eliashaeussler/cache-warmup/releases/latest/download/cache-warmup.phar
 chmod +x cache-warmup.phar
 ```
 
@@ -25,11 +25,11 @@ phive install cache-warmup
 ```
 
 ```bash [Docker]
-# Use image from Docker Hub
-docker run --rm -it eliashaeussler/cache-warmup
+# Docker Hub
+docker pull eliashaeussler/cache-warmup
 
-# Use image from GitHub Container Registry
-docker run --rm -it ghcr.io/eliashaeussler/cache-warmup
+# GitHub Container Registry
+docker pull ghcr.io/eliashaeussler/cache-warmup
 ```
 
 ```bash [Composer]
@@ -50,21 +50,21 @@ to the cache-warmup library:
 ```
 
 ```bash [PHIVE]
-tools/cache-warmup "https://www.example.com/sitemap.xml"
+./tools/cache-warmup "https://www.example.com/sitemap.xml"
 ```
 
 ```bash [Docker]
-# Use image from Docker Hub
+# Docker Hub
 docker run --rm -it eliashaeussler/cache-warmup \
     "https://www.example.com/sitemap.xml"
 
-# Use image from GitHub Container Registry
+# GitHub Container Registry
 docker run --rm -it ghcr.io/eliashaeussler/cache-warmup \
     "https://www.example.com/sitemap.xml"
 ```
 
 ```bash [Composer]
-vendor/bin/cache-warmup "https://www.example.com/sitemap.xml"
+./vendor/bin/cache-warmup "https://www.example.com/sitemap.xml"
 ```
 
 :::
