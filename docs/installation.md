@@ -4,14 +4,14 @@
 [![Docker pulls](https://img.shields.io/docker/pulls/eliashaeussler/cache-warmup?label=Docker+pulls&logo=docker)](https://hub.docker.com/r/eliashaeussler/cache-warmup)
 [![Packagist downloads](https://img.shields.io/packagist/dt/eliashaeussler/cache-warmup?label=Packagist+downloads&logo=packagist)](https://packagist.org/packages/eliashaeussler/cache-warmup)
 
-There are various installation methods for the cache warmup library.
+There are various installation methods for the *Cache Warmup* library.
 Choose the one that suits you best. We recommend using the PHAR file
 because it is the easiest to integrate into your project.
 
 ## Download
 
 Choose one of the following installation methods to download the
-cache-warmup library:
+*Cache Warmup* library:
 
 ::: code-group
 
@@ -40,8 +40,7 @@ composer require eliashaeussler/cache-warmup
 
 ## First steps
 
-Once downloaded, you can start by passing the URL to an XML sitemap
-to the cache-warmup library:
+Once downloaded, you can start by passing the URL to an XML sitemap:
 
 ::: code-group
 

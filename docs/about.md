@@ -1,6 +1,6 @@
 # About this project
 
-`eliashaeussler/cache-warmup` is a library to warm up website caches of URLs
+*Cache Warmup* is a library to warm up website caches of URLs
 located in XML sitemaps. It is written in PHP and was first published back in 2020.
 
 Cache warmup is performed by concurrently sending simple `HEAD` requests to those

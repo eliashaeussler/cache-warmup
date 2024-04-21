@@ -78,7 +78,7 @@ return static function (CacheWarmup\Config\CacheWarmupConfig $config) {
 
 ## Command parameters
 
-The `cache-warmup` command accepts a various set of command parameters. Each
+The library accepts a various set of command parameters. Each
 command parameter reflects an available configuration option:
 
 ```bash
@@ -93,7 +93,7 @@ In addition, the [`--config`](config-reference/config.md) option allow to provid
 ```
 
 All available command parameters are reflected in the
-[configuration reference](config-reference/index.md). You can also run `cache-warmup --help`
+[configuration reference](config-reference/index.md). You can also run the command with `--help`
 to see a detailed explanation of all available command parameters.
 
 ## Environment variables
