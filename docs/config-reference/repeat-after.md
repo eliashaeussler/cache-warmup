@@ -1,6 +1,6 @@
 # Endless mode <Badge type="tip" text="2.0+" />
 
-<small>📝 Name: `repeatAfter` &middot; 🖥️ Option: `--repeat-after` &middot; 🐝 Default: `0`</small>
+<small>📝&nbsp;Name: `repeatAfter` &middot; 🖥️&nbsp;Option: `--repeat-after` &middot; 🐝&nbsp;Default: `0`</small>
 
 > Run cache warmup in endless loop and repeat *x* seconds after each run.
 
@@ -42,6 +42,43 @@ repeatAfter: 300
 
 ```bash [.env]
 CACHE_WARMUP_REPEAT_AFTER=300
+```
+
+:::
+
+## Disable endless mode
+
+By default, endless mode is disabled. This can also be explicitly achieved by
+passing `0` as configuration value.
+
+::: code-group
+
+```bash [CLI]
+./cache-warmup.phar --repeat-after 0
+```
+
+```json [JSON]
+{
+    "repeatAfter": 0
+}
+```
+
+```php [PHP]
+use EliasHaeussler\CacheWarmup;
+
+return static function (CacheWarmup\Config\CacheWarmupConfig $config) {
+    $config->disableEndlessMode();
+
+    return $config;
+};
+```
+
+```yaml [YAML]
+repeatAfter: 0
+```
+
+```bash [.env]
+CACHE_WARMUP_REPEAT_AFTER=0
 ```
 
 :::

@@ -6,16 +6,21 @@ configuration options on this page.
 
 ## Config adapters
 
-Each configuration option can be provided by a dedicated
-*config adapter*. At the moment, the following adapters are available:
+Each configuration option can be set by a dedicated *config adapter*.
+At the moment, the following adapters are supported:
 
-1. [Configuration file](#configuration-file) (if present)
+1. [Configuration file](#configuration-file)
 2. [Command parameters](#command-parameters)
 3. [Environment variables](#environment-variables)
 
-The adapters are loaded from top to bottom. That means, adapters which are
-loaded later receive higher priority and may override configuration options
-provided by previously loaded configuration adapters.
+::: warning IMPORTANT
+
+Config adapters are loaded from **top to bottom**. That means, adapters
+which are loaded later receive **higher priority** and may
+**override configuration options** provided by previously loaded config
+adapters.
+
+:::
 
 ## Configuration file
 
@@ -29,12 +34,13 @@ You can provide configuration files in the following formats:
 
 For JSON and YAML files, the name of each configuration option
 can be looked up in the [configuration reference](config-reference/index.md).
-It must be written in camel case, e.g. the [`--crawler-options`](config-reference/crawler-options.md)
-command parameter must be configured as `crawlerOptions`.
+It must be written in *lowerCamelCase*, e.g. the
+[`--crawler-options`](config-reference/crawler-options.md) command
+parameter must be configured as `crawlerOptions`:
 
 ::: code-group
 
-```json [JSON example]
+```json [JSON]
 {
     "sitemaps": [
         "https://www.example.org/sitemap.xml"
@@ -45,7 +51,7 @@ command parameter must be configured as `crawlerOptions`.
 }
 ```
 
-```yaml [YAML example]
+```yaml [YAML]
 sitemaps:
   - https://www.example.org/sitemap.xml
 exclude:
@@ -78,14 +84,14 @@ return static function (CacheWarmup\Config\CacheWarmupConfig $config) {
 
 ## Command parameters
 
-The `cache-warmup` command accepts a various set of command parameters. Each
+The library accepts a various set of command parameters. Each
 command parameter reflects an available configuration option:
 
 ```bash
 ./cache-warmup.phar "https://www.example.org/sitemap.xml" --exclude "*foo*"
 ```
 
-In addition, the [`--config`](config-reference/config.md) option allow to provides the path to a
+In addition, the [`--config`](config-reference/config.md) option allows to provide the path to a
 [configuration file](#configuration-file):
 
 ```bash
@@ -93,7 +99,7 @@ In addition, the [`--config`](config-reference/config.md) option allow to provid
 ```
 
 All available command parameters are reflected in the
-[configuration reference](config-reference/index.md). You can also run `cache-warmup --help`
+[configuration reference](config-reference/index.md). You can also run the command with `--help`
 to see a detailed explanation of all available command parameters.
 
 ## Environment variables

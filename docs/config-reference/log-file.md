@@ -1,6 +1,6 @@
 # Log file <Badge type="tip" text="2.4.0+" />
 
-<small>📝 Name: `logFile` &middot; 🖥️ Option: `--log-file`</small>
+<small>📝&nbsp;Name: `logFile` &middot; 🖥️&nbsp;Option: `--log-file`</small>
 
 > A file where to log crawling results.
 
@@ -17,7 +17,7 @@ directory**.
 ::: code-group
 
 ```bash [CLI]
-./cache-warmup.phar --log-file cache-warmup.log
+./cache-warmup.phar --log-file "cache-warmup.log"
 ```
 
 ```json [JSON]
@@ -41,7 +41,7 @@ logFile: cache-warmup.log
 ```
 
 ```bash [.env]
-CACHE_WARMUP_LOG_FILE=cache-warmup.log
+CACHE_WARMUP_LOG_FILE="cache-warmup.log"
 ```
 
 :::

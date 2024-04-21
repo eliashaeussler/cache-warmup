@@ -11,6 +11,20 @@ Read [Configuration](../configuration.md) to get a quick overview about
 how to pass configuration options to the library.
 :::
 
+::: details Legend
+The configuration reference provides various attributes for each
+configuration option:
+
+| Attribute                                 | Description                                                                                                                                |
+|-------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| 🐝&nbsp;Default                           | Default value of the configuration option, used if no explicit value is configured                                                         |
+| 📚&nbsp;Multiple&nbsp;values&nbsp;allowed | Allows multiple values for the configuration options                                                                                       |
+| 📝&nbsp;Name                              | Internal name of the configuration option, especially necessary for [JSON and YAML](../configuration.md#json-and-yaml) configuration files |
+| 🖥️&nbsp;Option                           | Name of the [command parameters](../configuration.md#command-parameters) used to define the configuration option                           |
+| 🚨&nbsp;Required                          | Requires an explicit value for the configuration option                                                                                    |
+| 🎨&nbsp;Type                              | Expected type of a special configuration option value in PHP notation                                                                      |
+:::
+
 ## Input
 
 Lists all configuration options used to determine a list of URLs to be

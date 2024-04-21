@@ -1,6 +1,6 @@
 # URLs <Badge type="tip" text="0.1.0+" />
 
-<small>📝 Name: `urls` &middot; 🖥️ Option: `-u`, `--urls` &middot; 📚 Multiple values allowed</small>
+<small>📝&nbsp;Name: `urls` &middot; 🖥️&nbsp;Option: `-u`, `--urls` &middot; 📚&nbsp;Multiple&nbsp;values&nbsp;allowed</small>
 
 > Additional URLs to be warmed up.
 

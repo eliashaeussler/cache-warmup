@@ -1,6 +1,10 @@
+---
+prev: 'Configuration Reference'
+---
+
 # Sitemaps <Badge type="tip" text="0.1.0+" />
 
-<small>📝 Name: `sitemaps` &middot; 🚨 Required &middot; 📚 Multiple values allowed</small>
+<small>📝&nbsp;Name: `sitemaps` &middot; 🚨&nbsp;Required &middot; 📚&nbsp;Multiple&nbsp;values&nbsp;allowed</small>
 
 > URLs or local filenames of XML sitemaps to be warmed up.
 
@@ -55,13 +59,17 @@ directory**.
 ::: code-group
 
 ```bash [CLI]
+# Absolute path
 ./cache-warmup.phar "/var/www/html/sitemap.xml"
+# Relative path
+./cache-warmup.phar "sitemap.xml"
 ```
 
 ```json [JSON]
 {
     "sitemaps": [
-        "/var/www/html/sitemap.xml"
+        "/var/www/html/sitemap.xml",
+        "sitemap.xml"
     ]
 }
 ```
@@ -70,8 +78,13 @@ directory**.
 use EliasHaeussler\CacheWarmup;
 
 return static function (CacheWarmup\Config\CacheWarmupConfig $config) {
+    // Absolute path
     $config->addSitemap(
         CacheWarmup\Sitemap\Sitemap::createFromString('/var/www/html/sitemap.xml'),
+    );
+    // Relative path
+    $config->addSitemap(
+        CacheWarmup\Sitemap\Sitemap::createFromString('sitemap.xml'),
     );
 
     return $config;
@@ -80,11 +93,17 @@ return static function (CacheWarmup\Config\CacheWarmupConfig $config) {
 
 ```yaml [YAML]
 sitemaps:
+  # Absolute path
   - /var/www/html/sitemap.xml
+  # Relative path
+  - sitemap.xml
 ```
 
 ```bash [.env]
+# Absolute path
 CACHE_WARMUP_SITEMAPS="/var/www/html/sitemap.xml"
+# Relative path
+CACHE_WARMUP_SITEMAPS="sitemap.xml"
 ```
 
 :::

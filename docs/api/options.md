@@ -1,3 +1,7 @@
+---
+prev: 'API Reference'
+---
+
 # Option Reference
 
 The `CacheWarmer` class accepts a limited set of configuration
@@ -5,7 +9,7 @@ options. They can be provided as constructor parameters.
 
 ## `limit`
 
-<small>🐝 Default: `0`</small>
+<small>🐝&nbsp;Default: `0`</small>
 
 > *Same as the [`limit`](../config-reference/limit.md) configuration option.*
 
@@ -20,9 +24,9 @@ $cacheWarmer->run();
 
 ## `client`
 
-<small>🐝 Default: `new GuzzleHttp\Client()`</small>
+<small>🐝&nbsp;Default: `new GuzzleHttp\Client()`</small>
 
-> A preconfigured Guzzle client to use for parsing XML sitemaps.
+> A preconfigured Guzzle client to use when parsing XML sitemaps.
 
 ```php
 use EliasHaeussler\CacheWarmup;
@@ -37,7 +41,7 @@ $cacheWarmer->run();
 
 ## `crawler`
 
-<small>🐝 Default: `new EliasHaeussler\CacheWarmup\Crawler\ConcurrentCrawler()`</small>
+<small>🐝&nbsp;Default: `new EliasHaeussler\CacheWarmup\Crawler\ConcurrentCrawler()`</small>
 
 > *Same as the [`crawler`](../config-reference/crawler.md) configuration option.*
 
@@ -52,7 +56,7 @@ $cacheWarmer->run();
 
 ## `strategy`
 
-<small>🐝 Default: `null`</small>
+<small>🐝&nbsp;Default: `null`</small>
 
 > *Same as the [`strategy`](../config-reference/strategy.md) configuration option.*
 
@@ -67,10 +71,9 @@ $cacheWarmer->run();
 
 ## `strict`
 
-<small>🐝 Default: `true`</small>
+<small>🐝&nbsp;Default: `true`</small>
 
-> *Same as the opposite of the [`allowFailures`](../config-reference/allow-failures.md)
-> configuration option.*
+> *Opposite of the [`allowFailures`](../config-reference/allow-failures.md) configuration option.*
 
 ```php
 use EliasHaeussler\CacheWarmup;
@@ -83,7 +86,7 @@ $cacheWarmer->run();
 
 ## `excludePatterns`
 
-<small>🐝 Default: `[]`</small>
+<small>🐝&nbsp;Default: `[]`</small>
 
 > *Same as the [`exclude`](../config-reference/exclude.md) configuration option.*
 

@@ -34,7 +34,9 @@ foreach $result->getFailed() as $failedResult) {
 Parses a given XML sitemap or list of XML sitemaps and configures
 the resulting URLs to be crawled when running cache warmup. In case
 a [limit](options.md#limit) is configured, the given XML sitemaps
-may be skipped if the limit is already reached.
+may be skipped if the limit is already reached. If the given XML
+sitemap matches a configured [exclude pattern](options.md#excludepatterns),
+it may be skipped as well.
 
 ```php
 use EliasHaeussler\CacheWarmup;

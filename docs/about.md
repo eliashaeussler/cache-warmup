@@ -1,6 +1,10 @@
+---
+next: 'Configuration Reference'
+---
+
 # About this project
 
-`eliashaeussler/cache-warmup` is a library to warm up website caches of URLs
+*Cache Warmup* is a library to warm up website caches of URLs
 located in XML sitemaps. It is written in PHP and was first published back in 2020.
 
 Cache warmup is performed by concurrently sending simple `HEAD` requests to those
@@ -11,35 +15,35 @@ The whole warmup process is highly customizable, e.g. by defining a crawling lim
 excluding sitemaps and URLs by exclusion patterns or by using a specific crawling
 strategy. It is even possible to write custom crawlers that take care of cache warmup.
 
-![Screenshot](public/img/screenshot.png)
+![Screenshot](img/screenshot.png)
 
 ## Features
 
-::: info 🚀
+::: info 🚀 XML sitemaps
 Warm up caches of URLs located in [XML sitemaps](config-reference/sitemaps.md)
 :::
 
-::: info 🖥️
+::: info 🖥️ Console command
 [Console command](installation.md) and [PHP API](api/index.md) for cache warmup
 :::
 
-::: info 🔀
+::: info 🔀 Sitemap indexes
 Out-of-the-box support for [sitemap indexes](https://www.sitemaps.org/protocol.html#index)
 :::
 
-::: info 🎯
+::: info 🎯 Exclude patterns
 [Exclusion patterns](config-reference/exclude.md) for sitemaps and URLs
 :::
 
-::: info 🧪
+::: info 🧪 Crawling strategies
 Various crawling [strategies](config-reference/strategy.md) to modify crawling behavior
 :::
 
-::: info 📦
+::: info 📦 `gzip` support
 Support for gzipped XML sitemaps
 :::
 
-::: info 🧑‍💻
+::: info 🧑‍💻 Customizable
 Interface for [custom crawler](api/index.md#crawler) implementations
 :::
 

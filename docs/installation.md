@@ -4,19 +4,19 @@
 [![Docker pulls](https://img.shields.io/docker/pulls/eliashaeussler/cache-warmup?label=Docker+pulls&logo=docker)](https://hub.docker.com/r/eliashaeussler/cache-warmup)
 [![Packagist downloads](https://img.shields.io/packagist/dt/eliashaeussler/cache-warmup?label=Packagist+downloads&logo=packagist)](https://packagist.org/packages/eliashaeussler/cache-warmup)
 
-There are various installation methods for the cache warmup library.
+There are various installation methods for the *Cache Warmup* library.
 Choose the one that suits you best. We recommend using the PHAR file
 because it is the easiest to integrate into your project.
 
 ## Download
 
 Choose one of the following installation methods to download the
-cache-warmup library:
+*Cache Warmup* library:
 
 ::: code-group
 
 ```bash [PHAR]
-curl -sSLO https://github.com/eliashaeussler/cache-warmup/releases/latest/download/cache-warmup.phar
+curl -LO https://github.com/eliashaeussler/cache-warmup/releases/latest/download/cache-warmup.phar
 chmod +x cache-warmup.phar
 ```
 
@@ -25,11 +25,11 @@ phive install cache-warmup
 ```
 
 ```bash [Docker]
-# Use image from Docker Hub
-docker run --rm -it eliashaeussler/cache-warmup
+# Docker Hub
+docker pull eliashaeussler/cache-warmup
 
-# Use image from GitHub Container Registry
-docker run --rm -it ghcr.io/eliashaeussler/cache-warmup
+# GitHub Container Registry
+docker pull ghcr.io/eliashaeussler/cache-warmup
 ```
 
 ```bash [Composer]
@@ -38,10 +38,28 @@ composer require eliashaeussler/cache-warmup
 
 :::
 
+::: info PHAR: Verify downloaded file (recommended)
+It is recommended to verify the downloaded PHAR file before executing it.
+Each GitHub release provides an additional signature file which can be
+downloaded and used to verify the integrity of the downloaded PHAR file
+using your local GPG installation:
+
+```bash
+# Download GPG signature
+curl -LO https://github.com/eliashaeussler/cache-warmup/releases/latest/download/cache-warmup.phar.asc
+
+# Import public GPG key
+gpg --keyserver keys.openpgp.org --recv-keys E73F20790A629A2CEF2E9AE57C1C5363490E851E
+
+# Verify PHAR file
+gpg --verify cache-warmup.phar.asc cache-warmup.phar
+```
+
+:::
+
 ## First steps
 
-Once downloaded, you can start by passing the URL to an XML sitemap
-to the cache-warmup library:
+Once downloaded, you can start by passing the URL to an XML sitemap:
 
 ::: code-group
 
@@ -50,21 +68,21 @@ to the cache-warmup library:
 ```
 
 ```bash [PHIVE]
-tools/cache-warmup "https://www.example.com/sitemap.xml"
+./tools/cache-warmup "https://www.example.com/sitemap.xml"
 ```
 
 ```bash [Docker]
-# Use image from Docker Hub
+# Docker Hub
 docker run --rm -it eliashaeussler/cache-warmup \
     "https://www.example.com/sitemap.xml"
 
-# Use image from GitHub Container Registry
+# GitHub Container Registry
 docker run --rm -it ghcr.io/eliashaeussler/cache-warmup \
     "https://www.example.com/sitemap.xml"
 ```
 
 ```bash [Composer]
-vendor/bin/cache-warmup "https://www.example.com/sitemap.xml"
+./vendor/bin/cache-warmup "https://www.example.com/sitemap.xml"
 ```
 
 :::

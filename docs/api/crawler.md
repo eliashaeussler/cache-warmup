@@ -2,7 +2,7 @@
 outline: [2,3]
 ---
 
-# Create a custom Crawler
+# Create a custom crawler
 
 Crawlers are the core component of the library. They are used
 to perform the actual requests for all configured URLs to warm
@@ -40,20 +40,20 @@ final class MyCustomCrawler implements CacheWarmup\Crawler\Crawler
     public function crawl(array $urls): CacheWarmup\Result\CacheWarmupResult // [!code ++]
     { // [!code ++]
         $result = new CacheWarmup\Result\CacheWarmupResult(); // [!code ++]
-
+​// [!code ++]
         foreach ($urls as $url) { // [!code ++]
             if ($this->warmUp($url)) { // [!code ++]
                 $crawlingResult = CacheWarmup\Result\CrawlingResult::createSuccessful($url); // [!code ++]
             } else { // [!code ++]
                 $crawlingResult = CacheWarmup\Result\CrawlingResult::createFailed($url); // [!code ++]
             } // [!code ++]
-
+​// [!code ++]
             $result->addResult($crawlingResult); // [!code ++]
         } // [!code ++]
-
+​// [!code ++]
         return $result; // [!code ++]
     } // [!code ++]
-
+​// [!code ++]
     private function warmUp(Message\UriInterface $url): bool // [!code ++]
     { // [!code ++]
         // ... // [!code ++]

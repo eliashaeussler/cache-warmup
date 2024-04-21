@@ -1,6 +1,6 @@
 # Exclude patterns <Badge type="tip" text="2.0+" />
 
-<small>📝 Name: `exclude` &middot; 🖥️ Option: `-e`, `--exclude` &middot; 📚 Multiple values allowed</small>
+<small>📝&nbsp;Name: `exclude` &middot; 🖥️&nbsp;Option: `-e`, `--exclude` &middot; 📚&nbsp;Multiple&nbsp;values&nbsp;allowed</small>
 
 > Patterns of URLs to be excluded from cache warmup.
 
