@@ -55,6 +55,64 @@ The resulting JSON object includes the following properties:
 The complete JSON structure can be found in the provided
 [JSON schema](../../res/cache-warmup-result.schema.json).
 
+::: details Example output
+```json
+{
+    "cacheWarmupResult": {
+        "cancelled": [
+            "https://www.google.com/intl/de/forms/about/",
+            "https://www.google.com/intl/cs/forms/about/",
+            "https://www.google.com/intl/et/forms/about/",
+            "https://www.google.com/intl/es/forms/about/",
+            "https://www.google.com/intl/es-419/forms/about/"
+        ],
+        "failure": [
+            "https://www.google.com/intl/en-gb/forms/about/"
+        ],
+        "success": [
+            "https://www.google.com/forms/about/",
+            "https://www.google.com/intl/af/forms/about/",
+            "https://www.google.com/intl/ca/forms/about/",
+            "https://www.google.com/intl/id/forms/about/",
+            "https://www.google.com/intl/ms/forms/about/",
+            "https://www.google.com/intl/da/forms/about/"
+        ]
+    },
+    "parserResult": {
+        "excluded": {
+            "sitemaps": [
+                "https://www.google.com/gmail/sitemap.xml"
+            ]
+        },
+        "failure": {
+            "urls": [
+                "https://www.google.com/intl/zu/forms/about/"
+            ]
+        },
+        "success": {
+            "sitemaps": [
+                "https://www.google.com/sitemap.xml",
+                "https://www.google.com/forms/sitemaps.xml"
+            ],
+            "urls": [
+                "https://www.google.com/forms/about/",
+                "https://www.google.com/intl/af/forms/about/",
+                "https://www.google.com/intl/id/forms/about/",
+                "https://www.google.com/intl/ca/forms/about/",
+                "https://www.google.com/intl/da/forms/about/",
+                "https://www.google.com/intl/ms/forms/about/",
+                "https://www.google.com/intl/en-gb/forms/about/"
+            ]
+        }
+    },
+    "time": {
+        "parse": "0.18s",
+        "crawl": "0.212s"
+    }
+}
+
+```
+:::
 
 ## Text formatter: `text`
 
