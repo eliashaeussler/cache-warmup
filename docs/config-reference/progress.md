@@ -1,6 +1,6 @@
 # Progress bar <Badge type="tip" text="0.1.0+" />
 
-<small>📝 Name: `progress` &middot; 🖥️ Option: `-p`, `--progress`</small>
+<small>📝&nbsp;Name: `progress` &middot; 🖥️&nbsp;Option: `-p`, `--progress`</small>
 
 > Show a progress bar during cache warmup.
 

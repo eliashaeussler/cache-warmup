@@ -1,6 +1,6 @@
 # Crawling strategy <Badge type="tip" text="2.0+" />
 
-<small>📝 Name: `strategy` &middot; 🖥️ Option: `-s`, `--strategy`</small>
+<small>📝&nbsp;Name: `strategy` &middot; 🖥️&nbsp;Option: `-s`, `--strategy`</small>
 
 > Optional crawling strategy to prepare URLs before crawling them.
 

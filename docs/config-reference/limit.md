@@ -1,6 +1,6 @@
 # Limit <Badge type="tip" text="0.1.0+" />
 
-<small>📝 Name: `limit` &middot; 🖥️ Option: `-l`, `--limit` &middot; 🐝 Default: `0`</small>
+<small>📝&nbsp;Name: `limit` &middot; 🖥️&nbsp;Option: `-l`, `--limit` &middot; 🐝&nbsp;Default: `0`</small>
 
 > Limit the number of URLs to be processed.
 

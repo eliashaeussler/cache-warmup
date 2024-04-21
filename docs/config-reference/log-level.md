@@ -1,6 +1,6 @@
 # Log level <Badge type="tip" text="2.4.0+" />
 
-<small>📝 Name: `logLevel` &middot; 🖥️ Option: `--log-level` &middot; 🐝 Default: `error`</small>
+<small>📝&nbsp;Name: `logLevel` &middot; 🖥️&nbsp;Option: `--log-level` &middot; 🐝&nbsp;Default: `error`</small>
 
 > The log level used to determine which crawling results to log.
 

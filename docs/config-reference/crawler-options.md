@@ -4,7 +4,7 @@ outline: [2,3]
 
 # Crawler options <Badge type="tip" text="0.7.13+" />
 
-<small>📝 Name: `crawlerOptions` &middot; 🖥️ Option: `--crawler-options`</small>
+<small>📝&nbsp;Name: `crawlerOptions` &middot; 🖥️&nbsp;Option: `--crawler-options`</small>
 
 > Additional options for configurable crawlers.
 
@@ -78,7 +78,7 @@ The following configuration options are currently available for both crawlers:
 
 ### `client_config` <Badge type="tip" text="1.2.0+" />
 
-<small>🎨 Type: `array<string, mixed>` &middot; 🐝 Default: `[]`</small>
+<small>🎨&nbsp;Type: `array<string, mixed>` &middot; 🐝&nbsp;Default: `[]`</small>
 
 > Optional [configuration](https://docs.guzzlephp.org/en/stable/quickstart.html#creating-a-client)
 > used when instantiating a new Guzzle client.
@@ -108,7 +108,7 @@ return static function (CacheWarmup\Config\CacheWarmupConfig $config) {
 
 ### `concurrency` <Badge type="tip" text="0.7.13+" />
 
-<small>🎨 Type: `integer` &middot; 🐝 Default: `3`</small>
+<small>🎨&nbsp;Type: `integer` &middot; 🐝&nbsp;Default: `3`</small>
 
 > Define how many URLs are crawled concurrently.
 
@@ -156,7 +156,7 @@ CACHE_WARMUP_CRAWLER_OPTIONS='{"concurrency": 5}'
 
 ### `request_headers` <Badge type="tip" text="0.7.13+" />
 
-<small>🎨 Type: `array<string, mixed>` &middot; 🐝 Default: `['User-Agent' => '<default user-agent>']`</small>
+<small>🎨&nbsp;Type: `array<string, mixed>` &middot; 🐝&nbsp;Default: `['User-Agent' => '<default user-agent>']`</small>
 
 > A list of [HTTP headers](https://docs.guzzlephp.org/en/stable/request-options.html#headers)
 > to send with each cache warmup request.
@@ -211,7 +211,7 @@ CACHE_WARMUP_CRAWLER_OPTIONS='{"request_headers": {"X-Foo": "bar", "User-Agent":
 
 ### `request_method` <Badge type="tip" text="0.7.13+" />
 
-<small>🎨 Type: `string` &middot; 🐝 Default: `HEAD`</small>
+<small>🎨&nbsp;Type: `string` &middot; 🐝&nbsp;Default: `HEAD`</small>
 
 > The [HTTP method](https://docs.guzzlephp.org/en/stable/psr7.html#request-methods)
 > used to perform cache warmup requests.
@@ -253,7 +253,7 @@ CACHE_WARMUP_CRAWLER_OPTIONS='{"request_method": "GET"}'
 
 ### `request_options` <Badge type="tip" text="2.0+" />
 
-<small>🎨 Type: `array<string, mixed>` &middot; 🐝 Default: `[]`</small>
+<small>🎨&nbsp;Type: `array<string, mixed>` &middot; 🐝&nbsp;Default: `[]`</small>
 
 > Additional [request options](https://docs.guzzlephp.org/en/stable/request-options.html)
 > used for each cache warmup request.

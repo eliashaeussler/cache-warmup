@@ -1,6 +1,6 @@
 # Stop on failure <Badge type="tip" text="2.7.0+" />
 
-<small>📝 Name: `stopOnFailure` &middot; 🖥️ Option: `--stop-on-failure`</small>
+<small>📝&nbsp;Name: `stopOnFailure` &middot; 🖥️&nbsp;Option: `--stop-on-failure`</small>
 
 > Cancel further cache warmup requests on failure.
 

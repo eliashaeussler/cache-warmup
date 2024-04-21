@@ -1,6 +1,6 @@
 # Crawler <Badge type="tip" text="0.1.0+" />
 
-<small>📝 Name: `crawler` &middot; 🖥️ Option: `-c`, `--crawler`</small>
+<small>📝&nbsp;Name: `crawler` &middot; 🖥️&nbsp;Option: `-c`, `--crawler`</small>
 
 > FQCN of the crawler to use for cache warmup.
 

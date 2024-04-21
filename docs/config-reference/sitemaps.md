@@ -1,6 +1,6 @@
 # Sitemaps <Badge type="tip" text="0.1.0+" />
 
-<small>📝 Name: `sitemaps` &middot; 🚨 Required &middot; 📚 Multiple values allowed</small>
+<small>📝&nbsp;Name: `sitemaps` &middot; 🚨&nbsp;Required &middot; 📚&nbsp;Multiple&nbsp;values&nbsp;allowed</small>
 
 > URLs or local filenames of XML sitemaps to be warmed up.
 

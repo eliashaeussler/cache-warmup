@@ -1,6 +1,6 @@
 # Allow failures <Badge type="tip" text="0.7.10+" />
 
-<small>📝 Name: `allowFailures` &middot; 🖥️ Option: `--allow-failures`</small>
+<small>📝&nbsp;Name: `allowFailures` &middot; 🖥️&nbsp;Option: `--allow-failures`</small>
 
 > Allow failures during URL crawling and exit with zero.
 

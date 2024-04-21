@@ -1,6 +1,6 @@
 # Configuration file <Badge type="tip" text="3.0+" />
 
-<small>🖥️ Option: `-c`, `--config`</small>
+<small>🖥️&nbsp;Option: `-c`, `--config`</small>
 
 > Path to an external configuration file.
 

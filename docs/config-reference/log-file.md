@@ -1,6 +1,6 @@
 # Log file <Badge type="tip" text="2.4.0+" />
 
-<small>📝 Name: `logFile` &middot; 🖥️ Option: `--log-file`</small>
+<small>📝&nbsp;Name: `logFile` &middot; 🖥️&nbsp;Option: `--log-file`</small>
 
 > A file where to log crawling results.
 

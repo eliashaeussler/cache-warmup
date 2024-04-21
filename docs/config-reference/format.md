@@ -1,6 +1,6 @@
 # Format <Badge type="tip" text="2.0+" />
 
-<small>📝 Name: `format` &middot; 🚨 Required &middot; 🖥️ Option: `-f`, `--format` &middot; 🐝 Default: `text`</small>
+<small>📝&nbsp;Name: `format` &middot; 🚨&nbsp;Required &middot; 🖥️&nbsp;Option: `-f`, `--format` &middot; 🐝&nbsp;Default: `text`</small>
 
 > The formatter used to print the cache warmup result.
 
