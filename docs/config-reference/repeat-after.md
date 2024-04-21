@@ -45,3 +45,40 @@ CACHE_WARMUP_REPEAT_AFTER=300
 ```
 
 :::
+
+## Disable endless mode
+
+By default, endless mode is disabled. This can also be explicitly achieved by
+passing `0` as configuration value.
+
+::: code-group
+
+```bash [CLI]
+./cache-warmup.phar --repeat-after 0
+```
+
+```json [JSON]
+{
+    "repeatAfter": 0
+}
+```
+
+```php [PHP]
+use EliasHaeussler\CacheWarmup;
+
+return static function (CacheWarmup\Config\CacheWarmupConfig $config) {
+    $config->disableEndlessMode();
+
+    return $config;
+};
+```
+
+```yaml [YAML]
+repeatAfter: 0
+```
+
+```bash [.env]
+CACHE_WARMUP_REPEAT_AFTER=0
+```
+
+:::
