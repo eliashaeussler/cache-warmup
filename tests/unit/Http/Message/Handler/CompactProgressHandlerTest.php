@@ -55,7 +55,7 @@ final class CompactProgressHandlerTest extends Framework\TestCase
         $output = $this->output->fetch();
 
         self::assertNotEmpty($output);
-        self::assertMatchesRegularExpression('#^\s*0/10 \S+\s+0% -- no failures$#m', $output);
+        self::assertMatchesRegularExpression('#^\s*0/10 \S+\s+0% -- no failures#m', $output);
     }
 
     #[Framework\Attributes\Test]
@@ -67,8 +67,8 @@ final class CompactProgressHandlerTest extends Framework\TestCase
         $output = $this->output->fetch();
 
         self::assertNotEmpty($output);
-        self::assertMatchesRegularExpression('#^\s*0/10 \S+\s+0% -- no failures$#m', $output);
-        self::assertMatchesRegularExpression('#^\s*10/10 \S+\s+100% -- no failures$#m', $output);
+        self::assertMatchesRegularExpression('#^\s*0/10 \S+\s+0% -- no failures#m', $output);
+        self::assertMatchesRegularExpression('#^\s*10/10 \S+\s+100% -- no failures#m', $output);
     }
 
     #[Framework\Attributes\Test]
@@ -83,7 +83,7 @@ final class CompactProgressHandlerTest extends Framework\TestCase
         $output = $this->output->fetch();
 
         self::assertNotEmpty($output);
-        self::assertMatchesRegularExpression('#^\s*1/10 \S+\s+10% -- no failures$#m', $output);
+        self::assertMatchesRegularExpression('#^\s*1/10 \S+\s+10% -- no failures#m', $output);
     }
 
     #[Framework\Attributes\Test]
@@ -99,7 +99,7 @@ final class CompactProgressHandlerTest extends Framework\TestCase
         $output = $this->output->fetch();
 
         self::assertNotEmpty($output);
-        self::assertMatchesRegularExpression('#^\s*1/10 \S+\s+10% -- 1 failure$#m', $output);
-        self::assertMatchesRegularExpression('#^\s*2/10 \S+\s+20% -- 2 failures$#m', $output);
+        self::assertMatchesRegularExpression('#^\s*1/10 \S+\s+10% -- 1 failure#m', $output);
+        self::assertMatchesRegularExpression('#^\s*2/10 \S+\s+20% -- 2 failures#m', $output);
     }
 }

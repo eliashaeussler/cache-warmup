@@ -10,13 +10,21 @@ on:
 
 jobs:
   tests:
-    name: Tests (PHP ${{ matrix.php-version }} & ${{ matrix.dependencies }} dependencies)
-    runs-on: ubuntu-latest
+    name: Tests (PHP ${{ matrix.php-version }}, ${{ matrix.os }} & ${{ matrix.dependencies }} dependencies)
+    runs-on: ${{ matrix.os }}-latest
     strategy:
       fail-fast: false
       matrix:
         php-version: ["8.1", "8.2", "8.3"]
         dependencies: ["locked", "highest", "lowest"]
+        os: ["Ubuntu"]
+        include:
+          - php-version: "8.3"
+            dependencies: "highest"
+            os: "macOS"
+          - php-version: "8.3"
+            dependencies: "highest"
+            os: "Windows"
     steps:
       - uses: actions/checkout@v4
         with:

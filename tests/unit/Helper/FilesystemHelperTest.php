@@ -49,7 +49,7 @@ final class FilesystemHelperTest extends Framework\TestCase
     {
         $currentWorkingDirectory = getcwd();
         $projectRootPath = __DIR__.'/..';
-        $expected = dirname(__DIR__).'/foo/baz';
+        $expected = Src\Helper\FilesystemHelper::joinPathSegments(dirname(__DIR__).'/foo/baz');
 
         self::assertNotFalse($currentWorkingDirectory, 'Unable to get current working directory.');
 
