@@ -69,9 +69,6 @@ final class XmlSource implements IteratorAggregate
         return new self($source);
     }
 
-    /**
-     * @phpstan-impure
-     */
     public function asCollection(string $node): self
     {
         $clone = clone $this;

@@ -6,6 +6,16 @@ parameters:
 			path: src/CacheWarmer.php
 
 		-
+			message: "#^Parameter \\#2 \\.\\.\\.\\$constructors of method CuyZ\\\\Valinor\\\\MapperBuilder\\:\\:registerConstructor\\(\\) expects \\(pure\\-callable\\(\\)\\: mixed\\)\\|class\\-string, Closure\\(string\\)\\: EliasHaeussler\\\\CacheWarmup\\\\Sitemap\\\\Sitemap given\\.$#"
+			count: 1
+			path: src/Config/Adapter/ConfigMapperFactory.php
+
+		-
+			message: "#^Parameter \\#3 \\.\\.\\.\\$constructors of method CuyZ\\\\Valinor\\\\MapperBuilder\\:\\:registerConstructor\\(\\) expects \\(pure\\-callable\\(\\)\\: mixed\\)\\|class\\-string, Closure\\(string\\)\\: EliasHaeussler\\\\CacheWarmup\\\\Sitemap\\\\Url given\\.$#"
+			count: 1
+			path: src/Config/Adapter/ConfigMapperFactory.php
+
+		-
 			message: "#^Parameter \\#1 \\$crawler of method EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\CrawlerFactory\\:\\:get\\(\\) expects class\\-string\\<EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\Crawler\\>, string given\\.$#"
 			count: 1
 			path: src/Config/Adapter/ConsoleInputConfigAdapter.php

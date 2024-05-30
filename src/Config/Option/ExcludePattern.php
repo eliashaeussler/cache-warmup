@@ -45,6 +45,8 @@ final class ExcludePattern
     private $matchFunction;
 
     /**
+     * @pure
+     *
      * @param callable(string): bool $matchFunction
      */
     private function __construct(callable $matchFunction)
@@ -53,6 +55,8 @@ final class ExcludePattern
     }
 
     /**
+     * @pure
+     *
      * @throws Exception\RegularExpressionIsInvalid
      */
     public static function create(string $pattern): self
@@ -64,6 +68,9 @@ final class ExcludePattern
         return self::createFromPattern($pattern);
     }
 
+    /**
+     * @pure
+     */
     public static function createFromPattern(string $pattern): self
     {
         return new self(
@@ -72,6 +79,8 @@ final class ExcludePattern
     }
 
     /**
+     * @pure
+     *
      * @throws Exception\RegularExpressionIsInvalid
      */
     public static function createFromRegularExpression(string $regex): self
@@ -80,6 +89,7 @@ final class ExcludePattern
             throw new Exception\RegularExpressionIsInvalid($regex);
         }
 
+        /* @phpstan-ignore possiblyImpure.functionCall */
         if (false === @preg_match($regex, '')) {
             throw new Exception\RegularExpressionIsInvalid($regex);
         }
@@ -94,6 +104,9 @@ final class ExcludePattern
         return ($this->matchFunction)((string) $url);
     }
 
+    /**
+     * @pure
+     */
     private static function isRegularExpression(string $pattern): bool
     {
         return str_starts_with($pattern, '#') && str_ends_with($pattern, '#');
