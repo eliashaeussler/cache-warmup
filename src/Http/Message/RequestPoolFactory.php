@@ -119,9 +119,6 @@ final class RequestPoolFactory
         }
     }
 
-    /**
-     * @phpstan-impure
-     */
     public function withClient(ClientInterface $client): self
     {
         $clone = clone $this;
@@ -130,9 +127,6 @@ final class RequestPoolFactory
         return $clone;
     }
 
-    /**
-     * @phpstan-impure
-     */
     public function withConcurrency(int $concurrency): self
     {
         $clone = clone $this;
@@ -143,8 +137,6 @@ final class RequestPoolFactory
 
     /**
      * @param array<string, mixed> $options
-     *
-     * @phpstan-impure
      */
     public function withOptions(array $options): self
     {
@@ -154,9 +146,6 @@ final class RequestPoolFactory
         return $clone;
     }
 
-    /**
-     * @phpstan-impure
-     */
     public function withResponseHandler(Handler\ResponseHandler ...$handler): self
     {
         $clone = clone $this;
@@ -165,9 +154,6 @@ final class RequestPoolFactory
         return $clone;
     }
 
-    /**
-     * @phpstan-impure
-     */
     public function withStopOnFailure(bool $stopOnFailure = true): self
     {
         $clone = clone $this;
