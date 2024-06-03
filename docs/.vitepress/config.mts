@@ -73,6 +73,7 @@ export default defineConfig({
                 items: [
                     {text: 'Installation', link: '/installation'},
                     {text: 'Configuration', link: '/configuration'},
+                    {text: 'Usage in CI/CD', link: '/ci'},
                     {text: 'About this project', link: '/about'},
                 ],
             },
