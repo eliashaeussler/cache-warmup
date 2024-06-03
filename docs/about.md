@@ -1,7 +1,3 @@
----
-next: 'Configuration Reference'
----
-
 # About this project
 
 *Cache Warmup* is a library to warm up website caches of URLs

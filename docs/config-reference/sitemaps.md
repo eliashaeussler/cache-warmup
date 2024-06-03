@@ -1,7 +1,3 @@
----
-prev: 'Configuration Reference'
----
-
 # Sitemaps <Badge type="tip" text="0.1.0+" />
 
 <small>📝&nbsp;Name: `sitemaps` &middot; 🚨&nbsp;Required &middot; 📚&nbsp;Multiple&nbsp;values&nbsp;allowed</small>

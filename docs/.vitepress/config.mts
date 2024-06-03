@@ -80,7 +80,7 @@ export default defineConfig({
             {
                 text: 'Configuration Reference',
                 items: [
-                    {text: 'Overview', link: '/config-reference/'},
+                    {text: 'Overview', link: '/config-reference/', docFooterText: 'Configuration Reference'},
                     {
                         text: 'Input',
                         collapsed: true,
@@ -125,7 +125,7 @@ export default defineConfig({
             {
                 text: 'API Reference',
                 items: [
-                    {text: 'Overview', link: '/api/'},
+                    {text: 'Overview', link: '/api/', docFooterText: 'API Reference'},
                     {
                         text: 'CacheWarmer',
                         collapsed: true,
