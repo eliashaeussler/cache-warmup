@@ -25,6 +25,9 @@ jobs:
   cache-warmup:
     runs-on: ubuntu-latest
     steps:
+      # Checkout is only required when using a config file
+      # - uses: actions/checkout@v4
+
       - name: Set up environment
         uses: shivammathur/setup-php@v2
         with:
