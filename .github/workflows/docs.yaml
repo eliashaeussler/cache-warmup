@@ -33,6 +33,11 @@ jobs:
         with:
           node-version: 20
           cache: npm
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+          coverage: none
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
@@ -52,3 +57,11 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      # Warm up cache
+      - name: Run cache warmup
+        uses: eliashaeussler/cache-warmup-action@v1
+        with:
+          sitemaps: ${{ steps.deployment.outputs.page_url }}/sitemap.xml
+          progress: true
+          verbosity: v
