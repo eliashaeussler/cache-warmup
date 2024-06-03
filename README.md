@@ -1,27 +1,27 @@
 <div align="center">
 
-[![Screenshot](docs/img/screenshot.png)](https://cache-warmup.dev/)
+[![Header with logo](docs/img/header.svg)](https://cache-warmup.dev/)
 
-# Cache Warmup
+[![PHAR downloads](https://img.shields.io/github/downloads/eliashaeussler/cache-warmup/total?label=PHAR&logo=github&logoColor=white)](https://github.com/eliashaeussler/cache-warmup/releases)
+[![Docker pulls](https://img.shields.io/docker/pulls/eliashaeussler/cache-warmup?label=Docker&logo=docker&logoColor=white)](https://hub.docker.com/r/eliashaeussler/cache-warmup)
+[![Packagist downloads](https://img.shields.io/packagist/dt/eliashaeussler/cache-warmup?label=Packagist&logo=packagist&logoColor=white)](https://packagist.org/packages/eliashaeussler/cache-warmup)
+[![License](https://img.shields.io/github/license/eliashaeussler/cache-warmup?label=License)](LICENSE.md)
 
-[![Coverage](https://img.shields.io/coverallsCoverage/github/eliashaeussler/cache-warmup?logo=coveralls)](https://coveralls.io/github/eliashaeussler/cache-warmup)
-[![Maintainability](https://img.shields.io/codeclimate/maintainability/eliashaeussler/cache-warmup?logo=codeclimate)](https://codeclimate.com/github/eliashaeussler/cache-warmup/maintainability)
-[![CGL](https://img.shields.io/github/actions/workflow/status/eliashaeussler/cache-warmup/cgl.yaml?label=cgl&logo=github)](https://github.com/eliashaeussler/cache-warmup/actions/workflows/cgl.yaml)
-[![Tests](https://img.shields.io/github/actions/workflow/status/eliashaeussler/cache-warmup/tests.yaml?label=tests&logo=github)](https://github.com/eliashaeussler/cache-warmup/actions/workflows/tests.yaml)
-[![Supported PHP Versions](https://img.shields.io/packagist/dependency-v/eliashaeussler/cache-warmup/php?logo=php)](https://packagist.org/packages/eliashaeussler/cache-warmup)
+# Cache Warmup: Sitemap Crawler & Cache Warmer
+
+A PHP library to warm up website caches of URLs located in XML sitemaps.
+
+[**Explore the docs &raquo;**](https://cache-warmup.dev/)
+
+[Report Bug](https://github.com/eliashaeussler/cache-warmup/issues/new?template=bug_report.yml&title=%5BBUG%5D) &middot;
+[Request Feature](https://github.com/eliashaeussler/cache-warmup/issues/new?template=feature_request.yml&title=%5BFEATURE%5D) &middot;
+[Join Discussions](https://github.com/eliashaeussler/cache-warmup/discussions) &middot;
+[Latest Release](https://github.com/eliashaeussler/cache-warmup/releases/latest) &middot;
+[Sponsor](https://cache-warmup.dev/sponsor.html)
 
 </div>
 
-A library to warm up website caches of URLs located in XML sitemaps. It is
-written in PHP and was first released back in 2020.
-
-Cache warmup is performed by concurrently sending simple HEAD requests to those
-URLs, either from the command line or by using the provided PHP API. The whole
-warmup process is highly customizable, e.g. by defining a crawling limit,
-excluding sitemaps and URLs by exclusion patterns or by using a specific crawling
-strategy. It is even possible to write custom crawlers that take care of cache warmup.
-
-## 🚀 Features
+## ✨ Features
 
 * Warm up caches of URLs located in XML sitemaps
 * Console command and PHP API for cache warmup
@@ -31,7 +31,7 @@ strategy. It is even possible to write custom crawlers that take care of cache w
 * Support for gzipped XML sitemaps
 * Interface for custom crawler implementations
 
-## 🔥 Quickstart
+## 🚀 Getting Started
 
 ```bash
 # Download latest release
