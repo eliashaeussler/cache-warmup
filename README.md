@@ -1,13 +1,13 @@
 <div align="center">
 
-[![Header with logo](docs/img/header.svg)](https://cache-warmup.dev/)
+[![Header with logo](docs/img/header.png)](https://cache-warmup.dev/)
 
-[![PHAR downloads](https://img.shields.io/github/downloads/eliashaeussler/cache-warmup/total?label=PHAR&logo=github&logoColor=white)](https://github.com/eliashaeussler/cache-warmup/releases)
-[![Docker pulls](https://img.shields.io/docker/pulls/eliashaeussler/cache-warmup?label=Docker&logo=docker&logoColor=white)](https://hub.docker.com/r/eliashaeussler/cache-warmup)
-[![Packagist downloads](https://img.shields.io/packagist/dt/eliashaeussler/cache-warmup?label=Packagist&logo=packagist&logoColor=white)](https://packagist.org/packages/eliashaeussler/cache-warmup)
-[![License](https://img.shields.io/github/license/eliashaeussler/cache-warmup?label=License)](LICENSE.md)
+[![PHAR downloads](https://img.shields.io/github/downloads/eliashaeussler/cache-warmup/total?label=PHAR+downloads&logo=github&logoColor=white)](https://github.com/eliashaeussler/cache-warmup/releases)
+[![Docker pulls](https://img.shields.io/docker/pulls/eliashaeussler/cache-warmup?label=Docker+pulls&logo=docker&logoColor=white)](https://hub.docker.com/r/eliashaeussler/cache-warmup)
+[![Packagist downloads](https://img.shields.io/packagist/dt/eliashaeussler/cache-warmup?label=Packagist+downloads&logo=packagist&logoColor=white)](https://packagist.org/packages/eliashaeussler/cache-warmup)
+[![License](https://img.shields.io/github/license/eliashaeussler/cache-warmup?label=License&logo=gnu&logoColor=white)](LICENSE.md)
 
-# Cache Warmup: Sitemap Crawler & Cache Warmer
+# Sitemap Crawler & Cache Warmer
 
 A PHP library to warm up website caches of URLs located in XML sitemaps.
 
