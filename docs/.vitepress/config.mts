@@ -46,6 +46,7 @@ export default defineConfig({
     sitemap: {
         hostname: hostname,
     },
+    lastUpdated: true,
     themeConfig: {
         logo: '/img/logo.svg',
         nav: [
