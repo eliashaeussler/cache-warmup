@@ -49,6 +49,7 @@ export default defineConfig({
     lastUpdated: true,
     themeConfig: {
         logo: '/img/logo.svg',
+        outline: [2, 3],
         nav: [
             {text: 'Home', link: '/'},
             {text: '💰', link: '/sponsor'},
