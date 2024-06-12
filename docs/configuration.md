@@ -60,6 +60,24 @@ exclude:
 
 :::
 
+#### JSON schema
+
+To make it easier for you to compose your configuration files,
+you can reference the available [JSON schema](../res/cache-warmup-config.schema.json)
+in your JSON file and enable autocompletion in your IDE:
+
+```json{2}
+{
+    "$schema": "https://cache-warmup.dev/config.schema.json",
+    "sitemaps": [
+        "https://www.example.org/sitemap.xml"
+    ],
+    "exclude": [
+        "*foo*"
+    ]
+}
+```
+
 ### PHP
 
 PHP configuration files must return a closure which receives the
