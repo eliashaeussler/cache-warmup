@@ -90,7 +90,7 @@ final class XmlParserTest extends Framework\TestCase
             new Src\Sitemap\Url(
                 uri: 'https://www.example.org/foo',
                 priority: 0.5,
-                lastModificationDate: new DateTimeImmutable('2021-06-07T20:01:25+02:00'),
+                lastModificationDate: new DateTimeImmutable('2021-06-07T20:01:25+00:00'),
                 changeFrequency: Src\Sitemap\ChangeFrequency::Monthly,
                 origin: $this->sitemap,
             ),

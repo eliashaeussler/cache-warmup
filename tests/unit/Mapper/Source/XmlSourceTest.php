@@ -65,7 +65,7 @@ final class XmlSourceTest extends Framework\TestCase
                 [
                     'loc' => 'https://www.example.org/foo',
                     'priority' => '0.5',
-                    'lastmod' => '2021-06-07T20:01:25+02:00',
+                    'lastmod' => '2021-06-07T20:01:25.000Z',
                     'changefreq' => 'monthly',
                 ],
                 [
