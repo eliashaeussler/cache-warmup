@@ -9,7 +9,7 @@
     <url>
         <loc>https://www.example.org/foo</loc>
         <priority>0.5</priority>
-        <lastmod>2021-06-07T20:01:25+02:00</lastmod>
+        <lastmod>2021-06-07T20:01:25.000Z</lastmod>
         <changefreq>monthly</changefreq>
     </url>
     <url>

@@ -158,6 +158,7 @@ final class XmlParser
             )
             ->supportDateFormats(
                 DateTimeInterface::W3C,
+                'Y-m-d\TH:i:s.v\Z',
                 '!Y-m-d',
             )
             ->mapper()
