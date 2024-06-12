@@ -1,0 +1,113 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"type": "object",
+	"title": "Cache warmup config",
+	"properties": {
+		"$schema": {
+			"type": "string",
+			"title": "JSON schema reference"
+		},
+		"sitemaps": {
+			"type": "array",
+			"title": "Sitemaps",
+			"description": "URLs or local filenames of XML sitemaps to be warmed up.",
+			"items": {
+				"type": "string"
+			}
+		},
+		"urls": {
+			"type": "array",
+			"title": "URLs",
+			"description": "Additional URLs to be warmed up.",
+			"items": {
+				"type": "string",
+				"format": "uri"
+			}
+		},
+		"excludePatterns": {
+			"type": "array",
+			"title": "Exclude patterns",
+			"description": "Patterns of URLs to be excluded from cache warmup.",
+			"items": {
+				"type": "string"
+			}
+		},
+		"limit": {
+			"type": "integer",
+			"title": "Limit",
+			"description": "Limit the number of URLs to be processed.",
+			"minimum": 0
+		},
+		"progress": {
+			"type": "boolean",
+			"title": "Progress bar",
+			"description": "Show a progress bar during cache warmup."
+		},
+		"crawler": {
+			"type": "string",
+			"title": "Crawler",
+			"description": "FQCN of the crawler to use for cache warmup."
+		},
+		"crawlerOptions": {
+			"type": "object",
+			"title": "Crawler options",
+			"description": "Additional options for configurable crawlers."
+		},
+		"strategy": {
+			"type": "string",
+			"title": "Crawling strategy",
+			"description": "Optional crawling strategy to prepare URLs before crawling them.",
+			"enum": [
+				"sort-by-changefreq",
+				"sort-by-lastmod",
+				"sort-by-priority"
+			]
+		},
+		"format": {
+			"type": "string",
+			"title": "Format",
+			"description": "The formatter used to print the cache warmup result.",
+			"enum": [
+				"json",
+				"text"
+			]
+		},
+		"logFile": {
+			"type": "string",
+			"title": "Log file",
+			"description": "A file where to log crawling results."
+		},
+		"logLevel": {
+			"type": "string",
+			"title": "Log level",
+			"description": "The log level used to determine which crawling results to log.",
+			"enum": [
+				"emergency",
+				"alert",
+				"critical",
+				"error",
+				"warning",
+				"notice",
+				"info",
+				"debug"
+			]
+		},
+		"allowFailures": {
+			"type": "boolean",
+			"title": "Allow failures",
+			"description": "Allow failures during URL crawling and exit with zero."
+		},
+		"stopOnFailure": {
+			"type": "boolean",
+			"title": "Stop on failure",
+			"description": "Cancel further cache warmup requests on failure."
+		},
+		"repeatAfter": {
+			"type": "integer",
+			"title": "Endless mode",
+			"description": "Run cache warmup in endless loop and repeat x seconds after each run.",
+			"minimum": 0
+		}
+	},
+	"additionalProperties": false
+}
