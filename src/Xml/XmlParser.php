@@ -26,9 +26,9 @@ namespace EliasHaeussler\CacheWarmup\Xml;
 use CuyZ\Valinor;
 use DateTimeInterface;
 use EliasHaeussler\CacheWarmup\Exception;
-use EliasHaeussler\CacheWarmup\Mapper;
 use EliasHaeussler\CacheWarmup\Result;
 use EliasHaeussler\CacheWarmup\Sitemap;
+use EliasHaeussler\ValinorXml;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
@@ -60,9 +60,11 @@ final class XmlParser
 
     /**
      * @throws Exception\FileIsMissing
-     * @throws Exception\XmlIsMalformed
      * @throws Exception\SitemapCannotBeParsed
      * @throws GuzzleException
+     * @throws ValinorXml\Exception\ArrayPathHasUnexpectedType
+     * @throws ValinorXml\Exception\ArrayPathIsInvalid
+     * @throws ValinorXml\Exception\XmlIsMalformed
      */
     public function parse(Sitemap\Sitemap $sitemap): Result\ParserResult
     {
@@ -81,7 +83,7 @@ final class XmlParser
         }
 
         // Initialize XML source
-        $xml = Mapper\Source\XmlSource::fromXml($contents)
+        $xml = ValinorXml\Mapper\Source\XmlSource::fromXmlString($contents)
             ->asCollection('sitemap')
             ->asCollection('url');
         $source = Valinor\Mapper\Source\Source::iterable($xml)->map([
