@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup;
 
+use EliasHaeussler\ValinorXml;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
@@ -99,10 +100,12 @@ final class CacheWarmer
      * @throws Exception\FileIsMissing
      * @throws Exception\SitemapIsInvalid
      * @throws Exception\UrlIsEmpty
-     * @throws Exception\XmlIsMalformed
      * @throws Exception\SitemapCannotBeParsed
      * @throws Exception\UrlIsInvalid
      * @throws GuzzleException
+     * @throws ValinorXml\Exception\ArrayPathHasUnexpectedType
+     * @throws ValinorXml\Exception\ArrayPathIsInvalid
+     * @throws ValinorXml\Exception\XmlIsMalformed
      */
     public function addSitemaps(array|string|Sitemap\Sitemap $sitemaps): self
     {
@@ -138,7 +141,7 @@ final class CacheWarmer
             // Parse sitemap object
             try {
                 $result = $this->parser->parse($sitemap);
-            } catch (GuzzleException|Exception\FileIsMissing|Exception\SitemapCannotBeParsed|Exception\XmlIsMalformed $exception) {
+            } catch (GuzzleException|Exception\FileIsMissing|Exception\SitemapCannotBeParsed|ValinorXml\Exception\Exception $exception) {
                 // Exit early if running in strict mode
                 if ($this->strict) {
                     throw $exception;

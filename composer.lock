@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "08e5cfdf4a585894e534573fe8cfa498",
+    "content-hash": "ba2528a9073285c5fc4c5f3b1166fcbb",
     "packages": [
         {
             "name": "cuyz/valinor",
@@ -78,6 +78,61 @@
                 }
             ],
             "time": "2024-04-04T16:42:55+00:00"
+        },
+        {
+            "name": "eliashaeussler/valinor-xml",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/eliashaeussler/valinor-xml.git",
+                "reference": "24f62dfb1a06f306abfd3c47aa734193028b436b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eliashaeussler/valinor-xml/zipball/24f62dfb1a06f306abfd3c47aa734193028b436b",
+                "reference": "24f62dfb1a06f306abfd3c47aa734193028b436b",
+                "shasum": ""
+            },
+            "require": {
+                "cuyz/valinor": "^1.3",
+                "ext-mbstring": "*",
+                "mtownsend/xml-to-array": "^2.0",
+                "php": "~8.1.0 || ~8.2.0 || ~8.3.0"
+            },
+            "require-dev": {
+                "armin/editorconfig-cli": "^1.8 || ^2.0",
+                "eliashaeussler/php-cs-fixer-config": "^2.0",
+                "eliashaeussler/phpstan-config": "^2.0",
+                "eliashaeussler/rector-config": "^3.0",
+                "ergebnis/composer-normalize": "^2.30",
+                "phpstan/extension-installer": "^1.2",
+                "phpstan/phpstan-phpunit": "^1.1",
+                "phpunit/phpunit": "^10.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "EliasHaeussler\\ValinorXml\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Elias Häußler",
+                    "email": "elias@haeussler.dev",
+                    "homepage": "https://haeussler.dev",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "XML source for cuyz/valinor",
+            "support": {
+                "issues": "https://github.com/eliashaeussler/valinor-xml/issues",
+                "source": "https://github.com/eliashaeussler/valinor-xml/tree/1.0.0"
+            },
+            "time": "2024-06-14T15:38:29+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
