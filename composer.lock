@@ -2811,16 +2811,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v3.58.1",
+            "version": "v3.59.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer.git",
-                "reference": "04e9424025677a86914b9a4944dbbf4060bb0aff"
+                "reference": "756fa7852c2e961cba4ea39e3e510e1c020f2123"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/04e9424025677a86914b9a4944dbbf4060bb0aff",
-                "reference": "04e9424025677a86914b9a4944dbbf4060bb0aff",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/756fa7852c2e961cba4ea39e3e510e1c020f2123",
+                "reference": "756fa7852c2e961cba4ea39e3e510e1c020f2123",
                 "shasum": ""
             },
             "require": {
@@ -2899,7 +2899,7 @@
             ],
             "support": {
                 "issues": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/issues",
-                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.58.1"
+                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.59.1"
             },
             "funding": [
                 {
@@ -2907,7 +2907,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-05-29T16:39:07+00:00"
+            "time": "2024-06-15T12:19:07+00:00"
         },
         {
             "name": "idiosyncratic/editorconfig",
@@ -3969,16 +3969,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "10.5.20",
+            "version": "10.5.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "547d314dc24ec1e177720d45c6263fb226cc2ae3"
+                "reference": "ac837816fa52078f7a5e17ed774f256a72a51af6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/547d314dc24ec1e177720d45c6263fb226cc2ae3",
-                "reference": "547d314dc24ec1e177720d45c6263fb226cc2ae3",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/ac837816fa52078f7a5e17ed774f256a72a51af6",
+                "reference": "ac837816fa52078f7a5e17ed774f256a72a51af6",
                 "shasum": ""
             },
             "require": {
@@ -4050,7 +4050,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.20"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.21"
             },
             "funding": [
                 {
@@ -4066,7 +4066,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-04-24T06:32:35+00:00"
+            "time": "2024-06-15T09:13:15+00:00"
         },
         {
             "name": "psr/event-dispatcher",
