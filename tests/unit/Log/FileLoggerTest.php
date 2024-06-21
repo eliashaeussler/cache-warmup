@@ -26,11 +26,10 @@ namespace EliasHaeussler\CacheWarmup\Tests\Log;
 use EliasHaeussler\CacheWarmup as Src;
 use PHPUnit\Framework;
 use Psr\Log;
+use Symfony\Component\Filesystem;
 
 use function dirname;
-use function file_exists;
 use function file_get_contents;
-use function rmdir;
 use function sys_get_temp_dir;
 use function uniqid;
 use function unlink;
@@ -86,9 +85,10 @@ final class FileLoggerTest extends Framework\TestCase
 
     protected function tearDown(): void
     {
-        if (file_exists($this->logFile)) {
-            unlink($this->logFile);
-            rmdir(dirname($this->logFile));
-        }
+        // Run subject destruction to close log file stream
+        unset($this->subject);
+
+        $filesystem = new Filesystem\Filesystem();
+        $filesystem->remove(dirname($this->logFile));
     }
 }

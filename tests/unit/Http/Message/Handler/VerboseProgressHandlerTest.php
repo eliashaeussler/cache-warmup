@@ -55,7 +55,7 @@ final class VerboseProgressHandlerTest extends Framework\TestCase
         $output = $this->output->fetch();
 
         self::assertNotEmpty($output);
-        self::assertMatchesRegularExpression('#^\s*0/10 \S+\s+0%$#m', $output);
+        self::assertMatchesRegularExpression('#^\s*0/10 \S+\s+0%#m', $output);
     }
 
     #[Framework\Attributes\Test]
@@ -67,7 +67,7 @@ final class VerboseProgressHandlerTest extends Framework\TestCase
         $output = $this->output->fetch();
 
         self::assertNotEmpty($output);
-        self::assertMatchesRegularExpression('#^\s*10/10 \S+\s+100%$#m', $output);
+        self::assertMatchesRegularExpression('#^\s*10/10 \S+\s+100%#m', $output);
     }
 
     #[Framework\Attributes\Test]
@@ -83,7 +83,7 @@ final class VerboseProgressHandlerTest extends Framework\TestCase
 
         self::assertNotEmpty($output);
         self::assertStringContainsString(' DONE  '.$uri, $output);
-        self::assertMatchesRegularExpression('#^\s*1/10 \S+\s+10%$#m', $output);
+        self::assertMatchesRegularExpression('#^\s*1/10 \S+\s+10%#m', $output);
     }
 
     #[Framework\Attributes\Test]
@@ -99,6 +99,6 @@ final class VerboseProgressHandlerTest extends Framework\TestCase
 
         self::assertNotEmpty($output);
         self::assertStringContainsString(' FAIL  '.$uri, $output);
-        self::assertMatchesRegularExpression('#^\s*1/10 \S+\s+10%$#m', $output);
+        self::assertMatchesRegularExpression('#^\s*1/10 \S+\s+10%#m', $output);
     }
 }
