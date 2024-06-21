@@ -286,8 +286,8 @@ final class CacheWarmerTest extends Framework\TestCase
         $origin2 = new Src\Sitemap\Sitemap(new Psr7\Uri('https://www.example.com/sitemap.xml'));
         $origin3 = new Src\Sitemap\Sitemap(new Psr7\Uri('https://www.example.org/sitemap_en.xml'), origin: $origin2);
 
-        $localFile = __DIR__.'/Fixtures/Sitemaps/valid_sitemap_2.xml';
-        $originLocal = new Src\Sitemap\Sitemap(new Psr7\Uri('file://'.$localFile));
+        $localFile = Src\Helper\FilesystemHelper::joinPathSegments(__DIR__.'/Fixtures/Sitemaps/valid_sitemap_2.xml');
+        $originLocal = Src\Sitemap\Sitemap::createFromString($localFile);
 
         yield 'empty sitemaps' => [
             [],

@@ -171,8 +171,10 @@ final class XmlParserTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function parseParsesLocalFile(): void
     {
-        $filename = dirname(__DIR__).'/Fixtures/Sitemaps/valid_sitemap_4.xml';
-        $sitemap = new Src\Sitemap\Sitemap(new Psr7\Uri('file://'.$filename));
+        $filename = Src\Helper\FilesystemHelper::joinPathSegments(
+            dirname(__DIR__).'/Fixtures/Sitemaps/valid_sitemap_4.xml',
+        );
+        $sitemap = Src\Sitemap\Sitemap::createFromString($filename);
 
         $result = $this->subject->parse($sitemap);
 
@@ -190,7 +192,7 @@ final class XmlParserTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function parseThrowsExceptionOnMissingLocalFile(): void
     {
-        $sitemap = new Src\Sitemap\Sitemap(new Psr7\Uri('file:///foo'));
+        $sitemap = Src\Sitemap\Sitemap::createFromString('/foo');
 
         $this->expectException(Src\Exception\FileIsMissing::class);
         $this->expectExceptionCode(1698427082);
