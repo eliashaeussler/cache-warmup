@@ -24,7 +24,10 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Tests\Helper;
 
 use EliasHaeussler\CacheWarmup as Src;
+use Generator;
 use PHPUnit\Framework;
+
+use function implode;
 
 /**
  * FilesystemHelperTest.
@@ -69,5 +72,30 @@ final class FilesystemHelperTest extends Framework\TestCase
         self::assertSame(__DIR__, Src\Helper\FilesystemHelper::getWorkingDirectory());
 
         chdir($cwd);
+    }
+
+    /**
+     * @param list<string> $pathSegments
+     */
+    #[Framework\Attributes\Test]
+    #[Framework\Attributes\DataProvider('joinPathSegmentsMergesGivenPathSegmentsWithGlobalDirectorySeparatorDataProvider')]
+    public function joinPathSegmentsMergesGivenPathSegmentsWithGlobalDirectorySeparator(
+        array $pathSegments,
+        string $expected,
+    ): void {
+        self::assertSame($expected, Src\Helper\FilesystemHelper::joinPathSegments(...$pathSegments));
+    }
+
+    /**
+     * @return Generator<string, array{list<string>, string}>
+     */
+    public static function joinPathSegmentsMergesGivenPathSegmentsWithGlobalDirectorySeparatorDataProvider(): Generator
+    {
+        $expected = DIRECTORY_SEPARATOR.implode(DIRECTORY_SEPARATOR, ['foo', 'baz']);
+
+        yield 'no path segments' => [[], ''];
+        yield 'single path segment' => [['/foo/baz'], $expected];
+        yield 'multiple path segments' => [['/foo', 'baz'], $expected];
+        yield 'with empty path segments' => [['/foo', '', 'baz', ''], $expected];
     }
 }

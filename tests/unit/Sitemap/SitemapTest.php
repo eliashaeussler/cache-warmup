@@ -29,6 +29,9 @@ use Generator;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
 
+use function dirname;
+use function urlencode;
+
 /**
  * SitemapTest.
  *
@@ -38,6 +41,37 @@ use PHPUnit\Framework;
 #[Framework\Attributes\CoversClass(Src\Sitemap\Sitemap::class)]
 final class SitemapTest extends Framework\TestCase
 {
+    #[Framework\Attributes\Test]
+    public function constructorConvertsLegacyLocalFileNotation(): void
+    {
+        $uri = 'local://file?path='.urlencode('/foo/baz');
+        $subject = new Src\Sitemap\Sitemap(new Psr7\Uri('file:///foo/baz'));
+
+        self::assertSame($uri, (string) $subject->getUri());
+        self::assertTrue($subject->isLocalFile());
+        self::assertSame('/foo/baz', $subject->getLocalFilePath());
+    }
+
+    #[Framework\Attributes\Test]
+    public function constructorThrowsExceptionIfMultiplePathsAreConfigured(): void
+    {
+        $uri = 'local://file?path[0]=/foo&path[1]=/baz';
+
+        $this->expectException(Src\Exception\UrlIsInvalid::class);
+
+        new Src\Sitemap\Sitemap(new Psr7\Uri($uri));
+    }
+
+    #[Framework\Attributes\Test]
+    public function constructorThrowsExceptionIfPathIsEmpty(): void
+    {
+        $uri = 'local://file?path=';
+
+        $this->expectException(Src\Exception\LocalFilePathIsMissingInUrl::class);
+
+        new Src\Sitemap\Sitemap(new Psr7\Uri($uri));
+    }
+
     #[Framework\Attributes\Test]
     public function constructorThrowsExceptionIfGivenUriIsEmpty(): void
     {
@@ -95,6 +129,16 @@ final class SitemapTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    public function isLocalFileReturnsFalseIfSitemapIsNotALocalFile(): void
+    {
+        $uri = new Psr7\Uri('https://foo.baz');
+        $subject = new Src\Sitemap\Sitemap($uri);
+
+        self::assertFalse($subject->isLocalFile());
+        self::assertNull($subject->getLocalFilePath());
+    }
+
+    #[Framework\Attributes\Test]
     public function getRootOriginReturnsRootOrigin(): void
     {
         $origin = new Src\Sitemap\Sitemap(new Psr7\Uri('https://baz.foo'));
@@ -133,7 +177,9 @@ final class SitemapTest extends Framework\TestCase
      */
     public static function createFromStringReturnsSitemapObjectDataProvider(): Generator
     {
-        $localFile = dirname(__DIR__).'/Fixtures/Sitemaps/valid_sitemap_1.xml';
+        $localFile = Src\Helper\FilesystemHelper::joinPathSegments(
+            dirname(__DIR__).'/Fixtures/Sitemaps/valid_sitemap_1.xml',
+        );
 
         yield 'sitemap url' => [
             'https://www.example.org/sitemap.xml',
@@ -141,7 +187,7 @@ final class SitemapTest extends Framework\TestCase
         ];
         yield 'local sitemap file' => [
             $localFile,
-            new Src\Sitemap\Sitemap(new Psr7\Uri('file://'.$localFile)),
+            new Src\Sitemap\Sitemap(new Psr7\Uri('local://file?path='.urlencode($localFile))),
         ];
     }
 }

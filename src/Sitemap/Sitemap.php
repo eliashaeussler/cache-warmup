@@ -30,6 +30,14 @@ use GuzzleHttp\Psr7;
 use Psr\Http\Message;
 use Stringable;
 
+use function is_array;
+use function parse_str;
+use function str_starts_with;
+use function substr;
+use function trim;
+use function urldecode;
+use function urlencode;
+
 /**
  * Sitemap.
  *
@@ -40,7 +48,10 @@ class Sitemap implements Stringable
 {
     use UriValidationTrait;
 
+    protected ?string $localFilePath = null;
+
     /**
+     * @throws Exception\LocalFilePathIsMissingInUrl
      * @throws Exception\UrlIsEmpty
      * @throws Exception\UrlIsInvalid
      */
@@ -49,23 +60,31 @@ class Sitemap implements Stringable
         protected ?DateTimeInterface $lastModificationDate = null,
         protected ?self $origin = null,
     ) {
+        // BC layer: Convert file:// URIs to local files
+        if ('file' === $uri->getScheme()) {
+            $this->uri = self::convertLegacyFileUri((string) $this->uri);
+        }
+
+        $this->localFilePath = $this->extractLocalFilePath();
+
         $this->validateUri();
     }
 
     /**
+     * @throws Exception\LocalFilePathIsMissingInUrl
      * @throws Exception\UrlIsEmpty
      * @throws Exception\UrlIsInvalid
      */
     public static function createFromString(string $sitemap): self
     {
+        // Sitemap is a remote URL
         if (str_contains($sitemap, '://')) {
-            // Sitemap is a remote URL
-            $uri = new Psr7\Uri($sitemap);
-        } else {
-            // Sitemap is a local file
-            $file = Helper\FilesystemHelper::resolveRelativePath($sitemap);
-            $uri = new Psr7\Uri('file://'.$file);
+            return new self(new Psr7\Uri($sitemap));
         }
+
+        // Sitemap is a local file
+        $file = Helper\FilesystemHelper::resolveRelativePath($sitemap);
+        $uri = self::convertLegacyFileUri('file://'.$file);
 
         return new self($uri);
     }
@@ -73,6 +92,19 @@ class Sitemap implements Stringable
     public function getUri(): Message\UriInterface
     {
         return $this->uri;
+    }
+
+    /**
+     * @phpstan-assert-if-true !null $this->getLocalFilePath()
+     */
+    public function isLocalFile(): bool
+    {
+        return null !== $this->localFilePath;
+    }
+
+    public function getLocalFilePath(): ?string
+    {
+        return $this->localFilePath;
     }
 
     public function getLastModificationDate(): ?DateTimeInterface
@@ -100,5 +132,51 @@ class Sitemap implements Stringable
     public function __toString(): string
     {
         return (string) $this->uri;
+    }
+
+    /**
+     * @throws Exception\LocalFilePathIsMissingInUrl
+     * @throws Exception\UrlIsInvalid
+     */
+    protected function extractLocalFilePath(): ?string
+    {
+        $uri = (string) $this->uri;
+
+        // Early return if URI is not supported
+        if ('local' !== $this->uri->getScheme() || 'file' !== $this->uri->getHost()) {
+            return null;
+        }
+
+        parse_str($this->uri->getQuery(), $queryParams);
+
+        $filePath = $queryParams['path'] ?? null;
+
+        // Treat local file URIs with associative "path" query parameter as invalid
+        if (is_array($filePath)) {
+            throw new Exception\UrlIsInvalid($uri);
+        }
+
+        // Fail if path is not properly defined
+        if (null === $filePath) {
+            throw new Exception\LocalFilePathIsMissingInUrl($uri);
+        }
+
+        // Fail if path is empty
+        if ('' === trim($filePath)) {
+            throw new Exception\LocalFilePathIsMissingInUrl($uri);
+        }
+
+        return urldecode($filePath);
+    }
+
+    protected static function convertLegacyFileUri(string $uri): Message\UriInterface
+    {
+        if (!str_starts_with($uri, 'file://')) {
+            return new Psr7\Uri($uri);
+        }
+
+        $file = substr($uri, 7);
+
+        return new Psr7\Uri('local://file?path='.urlencode($file));
     }
 }

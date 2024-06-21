@@ -98,9 +98,10 @@ final class CacheWarmer
      * @param list<string|Sitemap\Sitemap>|string|Sitemap\Sitemap $sitemaps
      *
      * @throws Exception\FileIsMissing
+     * @throws Exception\LocalFilePathIsMissingInUrl
+     * @throws Exception\SitemapCannotBeParsed
      * @throws Exception\SitemapIsInvalid
      * @throws Exception\UrlIsEmpty
-     * @throws Exception\SitemapCannotBeParsed
      * @throws Exception\UrlIsInvalid
      * @throws GuzzleException
      * @throws ValinorXml\Exception\ArrayPathHasUnexpectedType
@@ -141,7 +142,7 @@ final class CacheWarmer
             // Parse sitemap object
             try {
                 $result = $this->parser->parse($sitemap);
-            } catch (GuzzleException|Exception\FileIsMissing|Exception\SitemapCannotBeParsed|ValinorXml\Exception\Exception $exception) {
+            } catch (GuzzleException|Exception\FileIsMissing|Exception\SitemapCannotBeParsed|Exception\UrlIsInvalid|ValinorXml\Exception\Exception $exception) {
                 // Exit early if running in strict mode
                 if ($this->strict) {
                     throw $exception;

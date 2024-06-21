@@ -26,6 +26,10 @@ namespace EliasHaeussler\CacheWarmup\Helper;
 use EliasHaeussler\CacheWarmup\Exception;
 use Symfony\Component\Filesystem;
 
+use function implode;
+use function preg_replace;
+use function rtrim;
+
 /**
  * FilesystemHelper.
  *
@@ -40,7 +44,9 @@ final class FilesystemHelper
             return $relativePath;
         }
 
-        return Filesystem\Path::makeAbsolute($relativePath, self::getWorkingDirectory());
+        return self::joinPathSegments(
+            Filesystem\Path::makeAbsolute($relativePath, self::getWorkingDirectory()),
+        );
     }
 
     public static function getWorkingDirectory(): string
@@ -51,6 +57,20 @@ final class FilesystemHelper
             throw new Exception\WorkingDirectoryCannotBeResolved();
         }
 
-        return Filesystem\Path::canonicalize($cwd);
+        return self::joinPathSegments(
+            Filesystem\Path::canonicalize($cwd),
+        );
+    }
+
+    public static function joinPathSegments(string ...$pathSegments): string
+    {
+        return rtrim(
+            (string) preg_replace(
+                '#[/\\\]+#',
+                DIRECTORY_SEPARATOR,
+                implode(DIRECTORY_SEPARATOR, $pathSegments),
+            ),
+            '/\\',
+        );
     }
 }

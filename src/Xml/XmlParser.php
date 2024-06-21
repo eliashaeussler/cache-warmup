@@ -39,8 +39,6 @@ use Throwable;
 use function file_exists;
 use function file_get_contents;
 use function is_readable;
-use function str_starts_with;
-use function substr;
 
 /**
  * XmlParser.
@@ -61,6 +59,7 @@ final class XmlParser
     /**
      * @throws Exception\FileIsMissing
      * @throws Exception\SitemapCannotBeParsed
+     * @throws Exception\UrlIsInvalid
      * @throws GuzzleException
      * @throws ValinorXml\Exception\ArrayPathHasUnexpectedType
      * @throws ValinorXml\Exception\ArrayPathIsInvalid
@@ -71,8 +70,8 @@ final class XmlParser
         $uri = $sitemap->getUri();
 
         // Fetch XML source
-        if (str_starts_with((string) $uri, 'file://')) {
-            $contents = $this->fetchLocalFile($uri);
+        if ($sitemap->isLocalFile()) {
+            $contents = $this->fetchLocalFile($sitemap->getLocalFilePath());
         } else {
             $contents = $this->fetchUrl($uri);
         }
@@ -117,11 +116,8 @@ final class XmlParser
     /**
      * @throws Exception\FileIsMissing
      */
-    private function fetchLocalFile(Message\UriInterface $uri): string
+    private function fetchLocalFile(string $filename): string
     {
-        // Remove file:// prefix
-        $filename = substr((string) $uri, 7);
-
         if (!file_exists($filename) || !is_readable($filename)) {
             throw new Exception\FileIsMissing($filename);
         }
