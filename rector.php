@@ -24,7 +24,6 @@ declare(strict_types=1);
 use EliasHaeussler\RectorConfig\Config\Config;
 use Rector\Config\RectorConfig;
 use Rector\Php80\Rector\Class_\AnnotationToAttributeRector;
-use Rector\Privatization\Rector\Class_\FinalizeClassesWithoutChildrenRector;
 use Rector\ValueObject\PhpVersion;
 
 return static function (RectorConfig $rectorConfig): void {
@@ -39,16 +38,6 @@ return static function (RectorConfig $rectorConfig): void {
             [
                 __DIR__.'/src/Formatter/JsonFormatter.php',
                 __DIR__.'/src/Helper/VersionHelper.php',
-            ],
-        )
-        ->skip(
-            FinalizeClassesWithoutChildrenRector::class,
-            [
-                __DIR__.'/src/Sitemap/Sitemap.php',
-                __DIR__.'/src/Sitemap/Url.php',
-                // For some reason Rector does not recognize child classes
-                // of this fixture class, therefore we need to skip it here
-                __DIR__.'/tests/unit/Fixtures/Classes/DummyCrawler.php',
             ],
         )
         ->apply()
