@@ -584,7 +584,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
             'https://www.example.org/',
         ];
 
-        self::assertSame($expected, array_map('strval', Tests\Fixtures\Classes\DummyCrawler::$crawledUrls));
+        self::assertSame($expected, array_map(strval(...), Tests\Fixtures\Classes\DummyCrawler::$crawledUrls));
     }
 
     #[Framework\Attributes\Test]
