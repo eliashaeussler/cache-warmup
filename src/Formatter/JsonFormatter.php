@@ -158,7 +158,7 @@ final class JsonFormatter implements Formatter
             Helper\ArrayHelper::setValueByPath($this->json, $path, $value);
         }
         if (is_array($value) && [] !== $value) {
-            Helper\ArrayHelper::setValueByPath($this->json, $path, array_map('strval', $value));
+            Helper\ArrayHelper::setValueByPath($this->json, $path, array_map(strval(...), $value));
         }
     }
 

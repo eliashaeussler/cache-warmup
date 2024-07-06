@@ -123,7 +123,7 @@ final class ArrayHelper
         return array_values(
             array_filter(
                 array_map(
-                    'trim',
+                    trim(...),
                     explode($delimiter, $subject),
                 ),
                 static fn (string $value) => '' !== $value,
