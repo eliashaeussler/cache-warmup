@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of the Composer package "eliashaeussler/cache-warmup".
  *
- * Copyright (C) 2023 Elias Häußler <elias@haeussler.dev>
+ * Copyright (C) 2024 Elias Häußler <elias@haeussler.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -382,7 +382,7 @@ final class CacheWarmupCommandTest extends TestCase
     }
 
     /**
-     * @return \Generator<string, array{bool, int}>
+     * @return Generator<string, array{bool, int}>
      */
     public function executeFailsIfSitemapCannotBeCrawledDataProvider(): Generator
     {

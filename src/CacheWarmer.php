@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of the Composer package "eliashaeussler/cache-warmup".
  *
- * Copyright (C) 2023 Elias Häußler <elias@haeussler.dev>
+ * Copyright (C) 2024 Elias Häußler <elias@haeussler.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -69,14 +69,14 @@ final class CacheWarmer
     /**
      * @param string[]|Sitemap[]|string|Sitemap|null $sitemaps
      */
-    public function __construct($sitemaps = null, int $limit = 0, ClientInterface $client = null)
+    public function __construct($sitemaps = null, int $limit = 0, ?ClientInterface $client = null)
     {
         $this->limit = $limit;
         $this->client = $client ?? new Client();
         $this->addSitemaps($sitemaps);
     }
 
-    public function run(CrawlerInterface $crawler = null): CrawlerInterface
+    public function run(?CrawlerInterface $crawler = null): CrawlerInterface
     {
         $crawler = $crawler ?? new ConcurrentCrawler();
         $crawler->crawl($this->urls);

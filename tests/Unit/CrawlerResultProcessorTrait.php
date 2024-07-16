@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of the Composer package "eliashaeussler/cache-warmup".
  *
- * Copyright (C) 2023 Elias Häußler <elias@haeussler.dev>
+ * Copyright (C) 2024 Elias Häußler <elias@haeussler.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ trait CrawlerResultProcessorTrait
     /**
      * @return UriInterface[]
      */
-    protected function getProcessedUrlsFromCrawler(CrawlerInterface $crawler, int $state = null): array
+    protected function getProcessedUrlsFromCrawler(CrawlerInterface $crawler, ?int $state = null): array
     {
         $urls = [];
         $crawledUrls = array_merge($crawler->getSuccessfulUrls(), $crawler->getFailedUrls());

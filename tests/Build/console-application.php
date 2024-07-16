@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of the Composer package "eliashaeussler/cache-warmup".
  *
- * Copyright (C) 2023 Elias Häußler <elias@haeussler.dev>
+ * Copyright (C) 2024 Elias Häußler <elias@haeussler.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 require_once __DIR__.'/../../vendor/autoload.php';
 
-$application = new \Symfony\Component\Console\Application();
-$application->add(new \EliasHaeussler\CacheWarmup\Command\CacheWarmupCommand());
+$application = new Symfony\Component\Console\Application();
+$application->add(new EliasHaeussler\CacheWarmup\Command\CacheWarmupCommand());
 
 return $application;

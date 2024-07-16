@@ -1,8 +1,8 @@
 {
-    "compactors": [
-        "KevinGH\\Box\\Compactor\\Json",
-        "KevinGH\\Box\\Compactor\\Php"
-    ],
-    "compression": "GZ",
-    "output": ".build/cache-warmup.phar"
+	"compactors": [
+		"KevinGH\\Box\\Compactor\\Json",
+		"KevinGH\\Box\\Compactor\\Php"
+	],
+	"compression": "GZ",
+	"output": ".build/cache-warmup.phar"
 }
