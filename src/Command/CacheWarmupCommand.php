@@ -171,7 +171,7 @@ Also make sure the crawler implements <comment>{$crawler}</comment>.
 <info>Crawler options</info>
 <info>===============</info>
 For crawlers implementing <comment>{$configurableCrawler}</comment>,
-it is possible to pass a JSON-encoded array of crawler options by using the <comment>--crawler-options</comment> option:
+it is possible to pass a JSON-encoded string of crawler options by using the <comment>--crawler-options</comment> option:
 
    <comment>%command.full_name% --crawler-options '{"concurrency": 3}'</comment>
 
