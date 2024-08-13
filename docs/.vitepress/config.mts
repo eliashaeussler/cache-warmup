@@ -58,12 +58,12 @@ export default defineConfig({
                 items: [
                     {
                         text: 'Release Notes',
-                        link: `${repoUrl}/releases/latest`,
+                        link: `${repoUrl}/releases/${version}`,
                         rel: 'nofollow',
                     },
                     {
                         text: 'Download',
-                        link: `${repoUrl}/releases/latest/download/cache-warmup.phar`,
+                        link: `${repoUrl}/releases/download/${version}/cache-warmup.phar`,
                         rel: 'nofollow',
                     },
                 ],
