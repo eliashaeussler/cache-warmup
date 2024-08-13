@@ -150,8 +150,8 @@ export default defineConfig({
                 ],
             },
             {
-                text: 'Contributing',
                 items: [
+                    {text: 'Frequently Asked Questions (FAQ)', link: '/faq'},
                     {text: 'Contribution guide', link: '/contribution-guide'},
                     {text: 'Sponsor this project', link: '/sponsor'},
                     {text: 'License', link: '/license'},
