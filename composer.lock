@@ -2127,16 +2127,16 @@
         },
         {
             "name": "eliashaeussler/phpstan-config",
-            "version": "2.5.0",
+            "version": "2.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/phpstan-config.git",
-                "reference": "96e3b09ba73b2432edccaa159a788ff8d365d6a3"
+                "reference": "145c61edf3517fcdd09c55ba6f9f276196bef6eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/phpstan-config/zipball/96e3b09ba73b2432edccaa159a788ff8d365d6a3",
-                "reference": "96e3b09ba73b2432edccaa159a788ff8d365d6a3",
+                "url": "https://api.github.com/repos/eliashaeussler/phpstan-config/zipball/145c61edf3517fcdd09c55ba6f9f276196bef6eb",
+                "reference": "145c61edf3517fcdd09c55ba6f9f276196bef6eb",
                 "shasum": ""
             },
             "require": {
@@ -2180,9 +2180,9 @@
             "description": "My personal configuration for PHPStan",
             "support": {
                 "issues": "https://github.com/eliashaeussler/phpstan-config/issues",
-                "source": "https://github.com/eliashaeussler/phpstan-config/tree/2.5.0"
+                "source": "https://github.com/eliashaeussler/phpstan-config/tree/2.5.1"
             },
-            "time": "2024-03-12T18:56:15+00:00"
+            "time": "2024-08-24T12:00:14+00:00"
         },
         {
             "name": "eliashaeussler/rector-config",
@@ -3376,16 +3376,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.11.11",
+            "version": "1.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "707c2aed5d8d0075666e673a5e71440c1d01a5a3"
+                "reference": "384af967d35b2162f69526c7276acadce534d0e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/707c2aed5d8d0075666e673a5e71440c1d01a5a3",
-                "reference": "707c2aed5d8d0075666e673a5e71440c1d01a5a3",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/384af967d35b2162f69526c7276acadce534d0e1",
+                "reference": "384af967d35b2162f69526c7276acadce534d0e1",
                 "shasum": ""
             },
             "require": {
@@ -3430,7 +3430,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-08-19T14:37:29+00:00"
+            "time": "2024-08-27T09:18:05+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
