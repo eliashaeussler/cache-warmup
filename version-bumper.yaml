@@ -1,0 +1,10 @@
+filesToModify:
+  - path: package.json
+    patterns:
+      - '"version": "{%version%}"'
+  - path: package-lock.json
+    patterns:
+      - '"name": "@eliashaeussler/cache-warmup",\s+"version": "{%version%}"'
+  - path: src/CacheWarmer.php
+    patterns:
+      - public const VERSION = '{%version%}'

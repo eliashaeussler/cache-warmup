@@ -18,7 +18,6 @@
 		"ext-json": "*",
 		"ext-mbstring": "*",
 		"ext-zlib": "*",
-		"composer-runtime-api": "^2.1",
 		"cuyz/valinor": "^1.3",
 		"eliashaeussler/valinor-xml": "^1.0",
 		"guzzlehttp/guzzle": "^7.0",
@@ -37,6 +36,7 @@
 		"eliashaeussler/phpstan-config": "^2.0",
 		"eliashaeussler/rector-config": "^3.0",
 		"eliashaeussler/transient-logger": "^1.0",
+		"eliashaeussler/version-bumper": "^1.0",
 		"ergebnis/composer-normalize": "^2.28",
 		"phpstan/extension-installer": "^1.2",
 		"phpstan/phpstan-phpunit": "^1.1",
@@ -58,6 +58,7 @@
 	],
 	"config": {
 		"allow-plugins": {
+			"eliashaeussler/version-bumper": true,
 			"ergebnis/composer-normalize": true,
 			"phpstan/extension-installer": true
 		},

@@ -23,8 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Helper;
 
-use Composer\InstalledVersions;
-use OutOfBoundsException;
+use EliasHaeussler\CacheWarmup\CacheWarmer;
 
 /**
  * VersionHelper.
@@ -36,12 +35,13 @@ use OutOfBoundsException;
  */
 final class VersionHelper
 {
-    public static function getCurrentVersion(): ?string
+    /**
+     * @deprecated since v3.1.4, use {@see CacheWarmer::VERSION} constant instead.
+     *
+     * @todo Remove with next major release
+     */
+    public static function getCurrentVersion(): string
     {
-        try {
-            return InstalledVersions::getPrettyVersion('eliashaeussler/cache-warmup');
-        } catch (OutOfBoundsException) {
-            return null;
-        }
+        return CacheWarmer::VERSION;
     }
 }

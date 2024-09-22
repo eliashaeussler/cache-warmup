@@ -22,8 +22,8 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use EliasHaeussler\CacheWarmup\CacheWarmer;
 use EliasHaeussler\CacheWarmup\Command;
-use EliasHaeussler\CacheWarmup\Helper;
 use Symfony\Component\Console;
 
 // Check Composer autoloader
@@ -46,7 +46,7 @@ unset($autoloadFile, $file);
 
 // Run application
 $command = new Command\CacheWarmupCommand();
-$application = new Console\Application('cache-warmup', Helper\VersionHelper::getCurrentVersion() ?? 'UNKNOWN');
+$application = new Console\Application('cache-warmup', CacheWarmer::VERSION);
 $application->add($command);
 $application->setDefaultCommand('cache-warmup', true);
 $application->run();
