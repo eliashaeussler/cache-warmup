@@ -42,6 +42,8 @@ use function is_string;
  */
 final class CacheWarmer
 {
+    public const VERSION = '3.1.3';
+
     private readonly Xml\XmlParser $parser;
 
     /**

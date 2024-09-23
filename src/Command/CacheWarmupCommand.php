@@ -623,12 +623,10 @@ HELP);
 
     private function printHeader(): void
     {
-        $currentVersion = Helper\VersionHelper::getCurrentVersion();
-
         $this->io->writeln(
             sprintf(
-                'Running <info>cache warmup</info>%s by Elias Häußler and contributors.',
-                null !== $currentVersion ? ' <comment>'.$currentVersion.'</comment>' : '',
+                'Running <info>cache warmup</info> <comment>%s</comment> by Elias Häußler and contributors.',
+                CacheWarmer::VERSION,
             ),
         );
     }

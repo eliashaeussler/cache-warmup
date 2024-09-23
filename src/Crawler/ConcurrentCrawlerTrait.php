@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Crawler;
 
-use EliasHaeussler\CacheWarmup\Helper;
+use EliasHaeussler\CacheWarmup\CacheWarmer;
 use EliasHaeussler\CacheWarmup\Http;
 use Generator;
 use GuzzleHttp\ClientInterface;
@@ -113,8 +113,10 @@ trait ConcurrentCrawlerTrait
      */
     protected function getRequestHeaders(): array
     {
-        $currentVersion = Helper\VersionHelper::getCurrentVersion() ?? '1.0';
-        $userAgent = sprintf('EliasHaeussler-CacheWarmup/%s (https://github.com/eliashaeussler/cache-warmup)', $currentVersion);
+        $userAgent = sprintf(
+            'EliasHaeussler-CacheWarmup/%s (https://github.com/eliashaeussler/cache-warmup)',
+            CacheWarmer::VERSION,
+        );
 
         return [
             'User-Agent' => $userAgent,

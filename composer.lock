@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ba2528a9073285c5fc4c5f3b1166fcbb",
+    "content-hash": "65110a7aa2962ec0ddbcfa4254de0ae7",
     "packages": [
         {
             "name": "cuyz/valinor",
@@ -2299,6 +2299,68 @@
                 "source": "https://github.com/eliashaeussler/transient-logger/tree/1.0.0"
             },
             "time": "2023-11-23T09:41:00+00:00"
+        },
+        {
+            "name": "eliashaeussler/version-bumper",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/eliashaeussler/version-bumper.git",
+                "reference": "24203510b5667d35cc6cfe3f3266316cc763fe5e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eliashaeussler/version-bumper/zipball/24203510b5667d35cc6cfe3f3266316cc763fe5e",
+                "reference": "24203510b5667d35cc6cfe3f3266316cc763fe5e",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^2.0",
+                "cuyz/valinor": "^1.0",
+                "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
+                "symfony/console": "^5.4 || ^6.4 || ^7.0",
+                "symfony/filesystem": "^5.4 || ^6.4 || ^7.0",
+                "symfony/yaml": "^5.4 || ^6.4 || ^7.0"
+            },
+            "require-dev": {
+                "armin/editorconfig-cli": "^1.8 || ^2.0",
+                "composer/composer": "^2.2",
+                "eliashaeussler/php-cs-fixer-config": "^2.0",
+                "eliashaeussler/phpstan-config": "^2.0",
+                "eliashaeussler/rector-config": "^3.0",
+                "ergebnis/composer-normalize": "^2.30",
+                "phpstan/extension-installer": "^1.2",
+                "phpstan/phpstan-phpunit": "^1.1",
+                "phpstan/phpstan-symfony": "^1.4",
+                "phpunit/phpunit": "^10.2 || ^11.0"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "EliasHaeussler\\VersionBumper\\VersionBumperPlugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "EliasHaeussler\\VersionBumper\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Elias Häußler",
+                    "email": "elias@haeussler.dev",
+                    "homepage": "https://haeussler.dev",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "Composer plugin to bump project versions during release preparations",
+            "support": {
+                "issues": "https://github.com/eliashaeussler/version-bumper/issues",
+                "source": "https://github.com/eliashaeussler/version-bumper/tree/1.0.0"
+            },
+            "time": "2024-09-23T15:29:10+00:00"
         },
         {
             "name": "ergebnis/composer-normalize",
@@ -6361,8 +6423,7 @@
         "ext-filter": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
-        "ext-zlib": "*",
-        "composer-runtime-api": "^2.1"
+        "ext-zlib": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.6.0"
