@@ -147,6 +147,10 @@ export default defineConfig({
                             {text: 'Verbose Crawler', link: '/api/verbose-crawler'},
                         ],
                     },
+                    {
+                        text: 'Events',
+                        link: '/api/events',
+                    },
                 ],
             },
             {

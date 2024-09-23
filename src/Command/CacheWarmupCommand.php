@@ -26,6 +26,7 @@ namespace EliasHaeussler\CacheWarmup\Command;
 use EliasHaeussler\CacheWarmup\CacheWarmer;
 use EliasHaeussler\CacheWarmup\Config;
 use EliasHaeussler\CacheWarmup\Crawler;
+use EliasHaeussler\CacheWarmup\Event;
 use EliasHaeussler\CacheWarmup\Exception;
 use EliasHaeussler\CacheWarmup\Formatter;
 use EliasHaeussler\CacheWarmup\Helper;
@@ -35,8 +36,10 @@ use EliasHaeussler\CacheWarmup\Sitemap;
 use EliasHaeussler\CacheWarmup\Time;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\Console;
+use Symfony\Component\EventDispatcher;
 use Symfony\Component\Filesystem;
 
 use function array_map;
@@ -71,6 +74,7 @@ final class CacheWarmupCommand extends Console\Command\Command
 
     public function __construct(
         private readonly ClientInterface $client = new Client(),
+        private readonly EventDispatcherInterface $eventDispatcher = new EventDispatcher\EventDispatcher(),
     ) {
         parent::__construct('cache-warmup');
         $this->timeTracker = new Time\TimeTracker();
@@ -352,6 +356,8 @@ HELP);
         }
 
         $this->config = (new Config\Adapter\CompositeConfigAdapter($configAdapters))->get();
+        $this->eventDispatcher->dispatch(new Event\ConfigResolved($this->config));
+
         $this->io = new Console\Style\SymfonyStyle($input, $output);
         $this->formatter = (new Formatter\FormatterFactory($this->io))->get($this->config->getFormat());
 
@@ -524,6 +530,7 @@ HELP);
             $strategy,
             !$this->config->areFailuresAllowed(),
             $this->config->getExcludePatterns(),
+            $this->eventDispatcher,
         );
 
         // Add and parse XML sitemaps

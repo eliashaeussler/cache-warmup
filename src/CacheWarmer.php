@@ -27,6 +27,8 @@ use EliasHaeussler\ValinorXml;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher;
 
 use function array_key_exists;
 use function array_values;
@@ -81,6 +83,7 @@ final class CacheWarmer
         private readonly ?Crawler\Strategy\CrawlingStrategy $strategy = null,
         private readonly bool $strict = true,
         private readonly array $excludePatterns = [],
+        private readonly EventDispatcherInterface $eventDispatcher = new EventDispatcher\EventDispatcher(),
     ) {
         $this->parser = new Xml\XmlParser($this->client);
     }
@@ -91,9 +94,14 @@ final class CacheWarmer
 
         if (null !== $this->strategy) {
             $urls = $this->strategy->prepareUrls($urls);
+            $this->eventDispatcher->dispatch(new Event\UrlsPrepared($this->strategy, $urls));
         }
 
-        return $this->crawler->crawl($urls);
+        $this->eventDispatcher->dispatch(new Event\CrawlingStarted($urls, $this->crawler));
+        $result = $this->crawler->crawl($urls);
+        $this->eventDispatcher->dispatch(new Event\CrawlingFinished($urls, $this->crawler, $result));
+
+        return $result;
     }
 
     /**
@@ -137,6 +145,7 @@ final class CacheWarmer
             // Skip sitemap if exclude pattern matches
             if ($this->isExcluded((string) $sitemap->getUri())) {
                 $this->excludedSitemaps[] = $sitemap;
+                $this->eventDispatcher->dispatch(new Event\SitemapExcluded($sitemap));
 
                 continue;
             }
@@ -144,7 +153,10 @@ final class CacheWarmer
             // Parse sitemap object
             try {
                 $result = $this->parser->parse($sitemap);
+                $this->eventDispatcher->dispatch(new Event\SitemapParsed($sitemap, $result));
             } catch (GuzzleException|Exception\FileIsMissing|Exception\SitemapCannotBeParsed|Exception\UrlIsInvalid|ValinorXml\Exception\Exception $exception) {
+                $this->eventDispatcher->dispatch(new Event\SitemapParsingFailed($sitemap, $exception));
+
                 // Exit early if running in strict mode
                 if ($this->strict) {
                     throw $exception;
@@ -173,6 +185,7 @@ final class CacheWarmer
     {
         if (!array_key_exists((string) $sitemap, $this->sitemaps)) {
             $this->sitemaps[(string) $sitemap] = $sitemap;
+            $this->eventDispatcher->dispatch(new Event\SitemapAdded($sitemap));
         }
 
         return $this;
@@ -186,12 +199,14 @@ final class CacheWarmer
 
         if ($this->isExcluded((string) $url)) {
             $this->excludedUrls[] = $url;
+            $this->eventDispatcher->dispatch(new Event\UrlExcluded($url));
 
             return $this;
         }
 
         if (!$this->exceededLimit() && !array_key_exists((string) $url, $this->urls)) {
             $this->urls[(string) $url] = $url;
+            $this->eventDispatcher->dispatch(new Event\UrlAdded($url));
         }
 
         return $this;

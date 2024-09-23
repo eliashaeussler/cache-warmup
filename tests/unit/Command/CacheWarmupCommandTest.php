@@ -48,13 +48,15 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 {
     use Tests\ClientMockTrait;
 
+    private Tests\Fixtures\Classes\DummyEventDispatcher $eventDispatcher;
     private Console\Tester\CommandTester $commandTester;
 
     protected function setUp(): void
     {
         $this->client = $this->createClient();
+        $this->eventDispatcher = new Tests\Fixtures\Classes\DummyEventDispatcher();
 
-        $command = new Src\Command\CacheWarmupCommand($this->client);
+        $command = new Src\Command\CacheWarmupCommand($this->client, $this->eventDispatcher);
         $application = new Console\Application();
         $application->add($command);
 
@@ -172,6 +174,20 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         putenv('CACHE_WARMUP_LIMIT');
 
         self::assertStringContainsString('2/2', $this->commandTester->getDisplay());
+    }
+
+    #[Framework\Attributes\Test]
+    public function initializeDispatchesConfigResolvedEvent(): void
+    {
+        $this->mockSitemapRequest('valid_sitemap_3');
+
+        $this->commandTester->execute([
+            'sitemaps' => [
+                'https://www.example.com/sitemap.xml',
+            ],
+        ]);
+
+        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\ConfigResolved::class));
     }
 
     #[Framework\Attributes\Test]
