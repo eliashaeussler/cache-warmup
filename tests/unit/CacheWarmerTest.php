@@ -43,12 +43,14 @@ final class CacheWarmerTest extends Framework\TestCase
     use CacheWarmupResultProcessorTrait;
     use ClientMockTrait;
 
+    private Fixtures\Classes\DummyEventDispatcher $eventDispatcher;
     private Src\CacheWarmer $subject;
 
     protected function setUp(): void
     {
         $this->client = $this->createClient();
-        $this->subject = new Src\CacheWarmer(client: $this->client);
+        $this->eventDispatcher = new Fixtures\Classes\DummyEventDispatcher();
+        $this->subject = new Src\CacheWarmer(client: $this->client, eventDispatcher: $this->eventDispatcher);
     }
 
     /**
@@ -89,6 +91,45 @@ final class CacheWarmerTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    public function runDispatchesUrlsPreparedEvent(): void
+    {
+        $crawler = new Fixtures\Classes\DummyCrawler();
+        $subject = new Src\CacheWarmer(
+            crawler: $crawler,
+            strategy: new Src\Crawler\Strategy\SortByPriorityStrategy(),
+            eventDispatcher: $this->eventDispatcher,
+        );
+
+        $url1 = new Src\Sitemap\Url('https://www.example.org/foo', 0.75);
+        $url2 = new Src\Sitemap\Url('https://www.example.org/', 0.5);
+        $url3 = new Src\Sitemap\Url('https://www.example.org/baz', 1.0);
+
+        foreach ([$url1, $url2, $url3] as $url) {
+            $subject->addUrl($url);
+        }
+
+        $subject->run();
+
+        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\UrlsPrepared::class));
+    }
+
+    #[Framework\Attributes\Test]
+    public function runDispatchesCrawlingStartedEvent(): void
+    {
+        $this->subject->run();
+
+        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\CrawlingStarted::class));
+    }
+
+    #[Framework\Attributes\Test]
+    public function runDispatchesCrawlingFinishedEvent(): void
+    {
+        $this->subject->run();
+
+        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\CrawlingFinished::class));
+    }
+
+    #[Framework\Attributes\Test]
     public function addSitemapsThrowsExceptionIfInvalidSitemapsAreGiven(): void
     {
         $this->expectException(Src\Exception\SitemapIsInvalid::class);
@@ -115,6 +156,22 @@ final class CacheWarmerTest extends Framework\TestCase
         );
 
         $this->subject->addSitemaps([$sitemap]);
+    }
+
+    #[Framework\Attributes\Test]
+    public function addSitemapsDispatchesSitemapParsingFailedEventIfGivenSitemapCannotBeParsed(): void
+    {
+        $this->mockSitemapRequest('invalid_sitemap_1');
+
+        $subject = new Src\CacheWarmer(
+            client: $this->client,
+            strict: false,
+            eventDispatcher: $this->eventDispatcher,
+        );
+
+        $subject->addSitemaps('https://www.example.com/sitemap.xml');
+
+        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\SitemapParsingFailed::class));
     }
 
     #[Framework\Attributes\Test]
@@ -198,6 +255,22 @@ final class CacheWarmerTest extends Framework\TestCase
         );
     }
 
+    #[Framework\Attributes\Test]
+    public function addSitemapsDispatchesSitemapExcludedEventIfExcludePatternMatches(): void
+    {
+        $subject = new Src\CacheWarmer(
+            client: $this->client,
+            excludePatterns: [
+                Src\Config\Option\ExcludePattern::createFromRegularExpression('#www\\.example\\.com#'),
+            ],
+            eventDispatcher: $this->eventDispatcher,
+        );
+
+        $subject->addSitemaps('https://www.example.com/sitemap.xml');
+
+        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\SitemapExcluded::class));
+    }
+
     /**
      * @param list<string|Src\Sitemap\Sitemap>|string|Src\Sitemap\Sitemap $sitemaps
      * @param list<Src\Sitemap\Sitemap>                                   $expectedSitemaps
@@ -223,11 +296,39 @@ final class CacheWarmerTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    public function addSitemapsDispatchesSitemapParsedEvent(): void
+    {
+        $this->mockSitemapRequest('valid_sitemap_2');
+
+        $this->subject->addSitemaps('https://www.example.org/sitemap.xml');
+
+        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\SitemapParsed::class));
+        self::assertSame(1, $this->eventDispatcher->numberOfDispatchedEventsFor(Src\Event\SitemapAdded::class));
+        self::assertSame(3, $this->eventDispatcher->numberOfDispatchedEventsFor(Src\Event\UrlAdded::class));
+    }
+
+    #[Framework\Attributes\Test]
     public function addUrlAddsGivenUrlToListOfUrls(): void
     {
         $url = new Src\Sitemap\Url('https://www.example.org/sitemap.xml');
 
         self::assertSame([$url], $this->subject->addUrl($url)->getUrls());
+    }
+
+    #[Framework\Attributes\Test]
+    public function addUrlDispatchesUrlExcludedEventIfExcludePatternMatches(): void
+    {
+        $subject = new Src\CacheWarmer(
+            client: $this->client,
+            excludePatterns: [
+                Src\Config\Option\ExcludePattern::createFromRegularExpression('#www\\.example\\.com#'),
+            ],
+            eventDispatcher: $this->eventDispatcher,
+        );
+
+        $subject->addUrl('https://www.example.com/');
+
+        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\UrlExcluded::class));
     }
 
     #[Framework\Attributes\Test]
