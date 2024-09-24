@@ -38,7 +38,7 @@
 		"eliashaeussler/phpstan-config": "^2.0",
 		"eliashaeussler/rector-config": "^3.0",
 		"eliashaeussler/transient-logger": "^1.0",
-		"eliashaeussler/version-bumper": "^1.0",
+		"eliashaeussler/version-bumper": "^1.1",
 		"ergebnis/composer-normalize": "^2.28",
 		"phpstan/extension-installer": "^1.2",
 		"phpstan/phpstan-phpunit": "^1.1",

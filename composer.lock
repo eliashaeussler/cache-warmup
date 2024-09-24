@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "96e1c93e390907a14d540b4ec6e3ef0c",
+    "content-hash": "6b69901c9031149093b4abc320f87a09",
     "packages": [
         {
             "name": "cuyz/valinor",
@@ -2508,16 +2508,16 @@
         },
         {
             "name": "eliashaeussler/version-bumper",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/version-bumper.git",
-                "reference": "24203510b5667d35cc6cfe3f3266316cc763fe5e"
+                "reference": "2db6a8d2439a2bcc62357b8972f7c5e003108603"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/version-bumper/zipball/24203510b5667d35cc6cfe3f3266316cc763fe5e",
-                "reference": "24203510b5667d35cc6cfe3f3266316cc763fe5e",
+                "url": "https://api.github.com/repos/eliashaeussler/version-bumper/zipball/2db6a8d2439a2bcc62357b8972f7c5e003108603",
+                "reference": "2db6a8d2439a2bcc62357b8972f7c5e003108603",
                 "shasum": ""
             },
             "require": {
@@ -2564,9 +2564,9 @@
             "description": "Composer plugin to bump project versions during release preparations",
             "support": {
                 "issues": "https://github.com/eliashaeussler/version-bumper/issues",
-                "source": "https://github.com/eliashaeussler/version-bumper/tree/1.0.0"
+                "source": "https://github.com/eliashaeussler/version-bumper/tree/1.1.0"
             },
-            "time": "2024-09-23T15:29:10+00:00"
+            "time": "2024-09-24T09:56:26+00:00"
         },
         {
             "name": "ergebnis/composer-normalize",
