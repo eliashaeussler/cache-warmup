@@ -16,12 +16,12 @@ parameters:
 			path: src/Config/Adapter/ConfigMapperFactory.php
 
 		-
-			message: "#^Parameter \\#1 \\$crawler of method EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\CrawlerFactory\\:\\:get\\(\\) expects class\\-string\\<EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\Crawler\\>, string given\\.$#"
+			message: "#^Parameter \\#1 \\$crawlerClass of method EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\CrawlerFactory\\:\\:get\\(\\) expects class\\-string\\<EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\Crawler\\>, string given\\.$#"
 			count: 1
 			path: src/Config/Adapter/ConsoleInputConfigAdapter.php
 
 		-
-			message: "#^Parameter \\#1 \\$crawler of method EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\CrawlerFactory\\:\\:get\\(\\) expects class\\-string\\<EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\Crawler\\>, string given\\.$#"
+			message: "#^Parameter \\#1 \\$crawlerClass of method EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\CrawlerFactory\\:\\:get\\(\\) expects class\\-string\\<EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\Crawler\\>, string given\\.$#"
 			count: 1
 			path: src/Config/Adapter/EnvironmentVariablesConfigAdapter.php
 
@@ -81,7 +81,7 @@ parameters:
 			path: tests/unit/Config/CacheWarmupConfigTest.php
 
 		-
-			message: "#^Parameter \\#1 \\$crawler of method EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\CrawlerFactory\\:\\:get\\(\\) expects class\\-string\\<EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\Crawler\\>, string given\\.$#"
+			message: "#^Parameter \\#1 \\$crawlerClass of method EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\CrawlerFactory\\:\\:get\\(\\) expects class\\-string\\<EliasHaeussler\\\\CacheWarmup\\\\Crawler\\\\Crawler\\>, string given\\.$#"
 			count: 2
 			path: tests/unit/Crawler/CrawlerFactoryTest.php
 

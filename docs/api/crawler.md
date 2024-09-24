@@ -20,6 +20,20 @@ final class MyCustomCrawler implements CacheWarmup\Crawler\Crawler
 }
 ```
 
+## Dependency Injection <Badge type="tip" text="3.2+" />
+
+When a crawler is created using
+[`EliasHaeussler\CacheWarmup\Crawler\CrawlerFactory`](../../src/Crawler/CrawlerFactory.php),
+a limited service container is built to instantiate the crawler.
+This allows custom crawlers to define dependencies to a limited
+set of services, including:
+
+* Current output (implementation of `OutputInterface`)
+* Current logger (implementation of `LoggerInterface`), only
+  available if the [`--log-file`](../config-reference/log-file.md)
+  command option is passed
+* Current event dispatcher (implementation of `EventDispatcherInterface`)
+
 ## Method Reference
 
 The default crawler describes the following method:

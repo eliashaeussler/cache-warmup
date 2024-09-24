@@ -25,6 +25,7 @@ namespace EliasHaeussler\CacheWarmup\Tests\Fixtures\Classes;
 
 use EliasHaeussler\CacheWarmup\Crawler;
 use EliasHaeussler\CacheWarmup\Result;
+use Psr\EventDispatcher;
 use Psr\Http\Message;
 
 use function array_shift;
@@ -48,6 +49,10 @@ class DummyCrawler implements Crawler\Crawler
      * @var list<Result\CrawlingState>
      */
     public static array $resultStack = [];
+
+    public function __construct(
+        public readonly EventDispatcher\EventDispatcherInterface $eventDispatcher,
+    ) {}
 
     public function crawl(array $urls): Result\CacheWarmupResult
     {
