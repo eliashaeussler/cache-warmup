@@ -48,8 +48,6 @@ final class ConcurrentCrawler extends AbstractConfigurableCrawler implements Log
 {
     use ConcurrentCrawlerTrait;
 
-    private ?Log\LoggerInterface $logger = null;
-
     /**
      * @phpstan-var Log\LogLevel::*
      */
@@ -59,6 +57,7 @@ final class ConcurrentCrawler extends AbstractConfigurableCrawler implements Log
     public function __construct(
         array $options = [],
         private readonly ?ClientInterface $client = null,
+        private ?Log\LoggerInterface $logger = null,
     ) {
         parent::__construct($options);
     }

@@ -51,9 +51,6 @@ final class OutputtingCrawler extends AbstractConfigurableCrawler implements Log
 {
     use ConcurrentCrawlerTrait;
 
-    private Console\Output\OutputInterface $output;
-    private ?Log\LoggerInterface $logger = null;
-
     /**
      * @phpstan-var Log\LogLevel::*
      */
@@ -63,9 +60,10 @@ final class OutputtingCrawler extends AbstractConfigurableCrawler implements Log
     public function __construct(
         array $options = [],
         private readonly ?ClientInterface $client = null,
+        private Console\Output\OutputInterface $output = new Console\Output\ConsoleOutput(),
+        private ?Log\LoggerInterface $logger = null,
     ) {
         parent::__construct($options);
-        $this->output = new Console\Output\ConsoleOutput();
     }
 
     public function crawl(array $urls): Result\CacheWarmupResult

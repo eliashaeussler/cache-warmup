@@ -387,7 +387,13 @@ HELP);
             }
         }
 
-        $this->crawlerFactory = new Crawler\CrawlerFactory($output, $logger, $logLevel, $stopOnFailure);
+        $this->crawlerFactory = new Crawler\CrawlerFactory(
+            $output,
+            $logger,
+            $logLevel,
+            $stopOnFailure,
+            $this->eventDispatcher,
+        );
     }
 
     protected function interact(Console\Input\InputInterface $input, Console\Output\OutputInterface $output): void

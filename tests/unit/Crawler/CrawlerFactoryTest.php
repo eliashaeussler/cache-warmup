@@ -41,17 +41,20 @@ final class CrawlerFactoryTest extends Framework\TestCase
 {
     private Console\Output\BufferedOutput $output;
     private TransientLogger\TransientLogger $logger;
+    private Tests\Fixtures\Classes\DummyEventDispatcher $eventDispatcher;
     private Src\Crawler\CrawlerFactory $subject;
 
     protected function setUp(): void
     {
         $this->output = new Console\Output\BufferedOutput();
         $this->logger = new TransientLogger\TransientLogger();
+        $this->eventDispatcher = new Tests\Fixtures\Classes\DummyEventDispatcher();
         $this->subject = new Src\Crawler\CrawlerFactory(
             $this->output,
             $this->logger,
             Log\LogLevel::ERROR,
             true,
+            $this->eventDispatcher,
         );
     }
 
@@ -74,10 +77,10 @@ final class CrawlerFactoryTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function getReturnsCrawler(): void
     {
-        self::assertInstanceOf(
-            Tests\Fixtures\Classes\DummyCrawler::class,
-            $this->subject->get(Tests\Fixtures\Classes\DummyCrawler::class),
-        );
+        $actual = $this->subject->get(Tests\Fixtures\Classes\DummyCrawler::class);
+
+        self::assertInstanceOf(Tests\Fixtures\Classes\DummyCrawler::class, $actual);
+        self::assertSame($this->eventDispatcher, $actual->eventDispatcher);
     }
 
     #[Framework\Attributes\Test]

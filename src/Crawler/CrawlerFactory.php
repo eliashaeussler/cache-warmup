@@ -25,8 +25,11 @@ namespace EliasHaeussler\CacheWarmup\Crawler;
 
 use EliasHaeussler\CacheWarmup\Exception;
 use JsonException;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log;
 use Symfony\Component\Console;
+use Symfony\Component\DependencyInjection;
+use Symfony\Component\EventDispatcher;
 
 use function class_exists;
 use function is_string;
@@ -49,20 +52,23 @@ final class CrawlerFactory
         private readonly ?Log\LoggerInterface $logger = null,
         private readonly string $logLevel = Log\LogLevel::ERROR,
         private readonly bool $stopOnFailure = false,
+        private readonly EventDispatcherInterface $eventDispatcher = new EventDispatcher\EventDispatcher(),
     ) {}
 
     /**
-     * @param class-string<Crawler> $crawler
+     * @param class-string<Crawler> $crawlerClass
      * @param array<string, mixed>  $options
      *
      * @throws Exception\CrawlerDoesNotExist
      * @throws Exception\CrawlerIsInvalid
      */
-    public function get(string $crawler, array $options = []): Crawler
+    public function get(string $crawlerClass, array $options = []): Crawler
     {
-        $this->validateCrawler($crawler);
+        $this->validateCrawler($crawlerClass);
 
-        $crawler = new $crawler();
+        $container = $this->buildLimitedContainerForCrawler($crawlerClass);
+        /** @var Crawler $crawler */
+        $crawler = $container->get($crawlerClass);
 
         if ($crawler instanceof VerboseCrawler) {
             $crawler->setOutput($this->output);
@@ -132,5 +138,47 @@ final class CrawlerFactory
         if (!is_subclass_of($crawler, Crawler::class)) {
             throw new Exception\CrawlerIsInvalid($crawler);
         }
+    }
+
+    /**
+     * @param class-string<Crawler> $crawlerClass
+     */
+    private function buildLimitedContainerForCrawler(string $crawlerClass): DependencyInjection\ContainerInterface
+    {
+        $container = new DependencyInjection\ContainerBuilder();
+
+        // Register crawler as public service
+        $container->register($crawlerClass)
+            ->setPublic(true)
+            ->setAutowired(true)
+        ;
+
+        // Register output as runtime service
+        $container->register($this->output::class)->setSynthetic(true);
+        $container->setAlias(Console\Output\OutputInterface::class, $this->output::class);
+
+        // Register logger as runtime service
+        if (null !== $this->logger) {
+            $container->register($this->logger::class)->setSynthetic(true);
+            $container->setAlias(Log\LoggerInterface::class, $this->logger::class);
+        }
+
+        // Register event dispatcher as runtime service
+        $container->register(EventDispatcher\EventDispatcher::class)->setSynthetic(true);
+        $container->setAlias(EventDispatcherInterface::class, EventDispatcher\EventDispatcher::class);
+
+        // Compile container
+        $container->compile();
+
+        // Inject runtime services
+        $container->set($this->output::class, $this->output);
+        $container->set(EventDispatcher\EventDispatcher::class, $this->eventDispatcher);
+
+        // Inject logger runtime service
+        if (null !== $this->logger) {
+            $container->set($this->logger::class, $this->logger);
+        }
+
+        return $container;
     }
 }
