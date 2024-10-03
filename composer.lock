@@ -2438,6 +2438,58 @@
             "time": "2024-05-06T16:37:16+00:00"
         },
         {
+            "name": "czproject/git-php",
+            "version": "v4.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/czproject/git-php.git",
+                "reference": "f7fe85cc526c5f8e7ed809f7f9c68f2696940a8a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/czproject/git-php/zipball/f7fe85cc526c5f8e7ed809f7f9c68f2696940a8a",
+                "reference": "f7fe85cc526c5f8e7ed809f7f9c68f2696940a8a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "nette/tester": "^2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Jan Pecha",
+                    "email": "janpecha@email.cz"
+                }
+            ],
+            "description": "Library for work with Git repository in PHP.",
+            "keywords": [
+                "git"
+            ],
+            "support": {
+                "issues": "https://github.com/czproject/git-php/issues",
+                "source": "https://github.com/czproject/git-php/tree/v4.3.0"
+            },
+            "funding": [
+                {
+                    "url": "https://www.janpecha.cz/donate/git-php/",
+                    "type": "other"
+                }
+            ],
+            "time": "2024-08-05T13:28:31+00:00"
+        },
+        {
             "name": "eliashaeussler/php-cs-fixer-config",
             "version": "2.2.0",
             "source": {
@@ -2666,21 +2718,22 @@
         },
         {
             "name": "eliashaeussler/version-bumper",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/version-bumper.git",
-                "reference": "2db6a8d2439a2bcc62357b8972f7c5e003108603"
+                "reference": "08708bc0b5c07a8233b6510c4677ad3ad112d5d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/version-bumper/zipball/2db6a8d2439a2bcc62357b8972f7c5e003108603",
-                "reference": "2db6a8d2439a2bcc62357b8972f7c5e003108603",
+                "url": "https://api.github.com/repos/eliashaeussler/version-bumper/zipball/08708bc0b5c07a8233b6510c4677ad3ad112d5d4",
+                "reference": "08708bc0b5c07a8233b6510c4677ad3ad112d5d4",
                 "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^2.0",
                 "cuyz/valinor": "^1.0",
+                "czproject/git-php": "^4.3",
                 "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
                 "symfony/console": "^5.4 || ^6.4 || ^7.0",
                 "symfony/filesystem": "^5.4 || ^6.4 || ^7.0",
@@ -2722,9 +2775,9 @@
             "description": "Composer plugin to bump project versions during release preparations",
             "support": {
                 "issues": "https://github.com/eliashaeussler/version-bumper/issues",
-                "source": "https://github.com/eliashaeussler/version-bumper/tree/1.1.0"
+                "source": "https://github.com/eliashaeussler/version-bumper/tree/1.2.0"
             },
-            "time": "2024-09-24T09:56:26+00:00"
+            "time": "2024-10-03T18:33:04+00:00"
         },
         {
             "name": "ergebnis/composer-normalize",
