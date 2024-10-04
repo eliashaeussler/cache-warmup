@@ -11,3 +11,6 @@ filesToModify:
     patterns:
       - public const VERSION = '{%version%}'
     reportUnmatched: true
+releaseOptions:
+  commitMessage: '[RELEASE] Release of cache-warmup {%version%}'
+  signTag: true
