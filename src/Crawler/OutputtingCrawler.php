@@ -28,6 +28,7 @@ use EliasHaeussler\CacheWarmup\Result;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Promise;
+use Psr\EventDispatcher;
 use Psr\Log;
 use Symfony\Component\Console;
 
@@ -62,6 +63,7 @@ final class OutputtingCrawler extends AbstractConfigurableCrawler implements Log
         private readonly ?ClientInterface $client = null,
         private Console\Output\OutputInterface $output = new Console\Output\ConsoleOutput(),
         private ?Log\LoggerInterface $logger = null,
+        private readonly ?EventDispatcher\EventDispatcherInterface $eventDispatcher = null,
     ) {
         parent::__construct($options);
     }
@@ -69,7 +71,7 @@ final class OutputtingCrawler extends AbstractConfigurableCrawler implements Log
     public function crawl(array $urls): Result\CacheWarmupResult
     {
         $numberOfUrls = count($urls);
-        $resultHandler = new Http\Message\Handler\ResultCollectorHandler();
+        $resultHandler = new Http\Message\Handler\ResultCollectorHandler($this->eventDispatcher);
         $result = $resultHandler->getResult();
 
         // Create progress response handler (depends on the available output)

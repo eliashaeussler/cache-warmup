@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Tests\Http\Message\Handler;
 
 use EliasHaeussler\CacheWarmup as Src;
+use EliasHaeussler\CacheWarmup\Tests;
 use Exception;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
@@ -37,11 +38,24 @@ use PHPUnit\Framework;
 #[Framework\Attributes\CoversClass(Src\Http\Message\Handler\ResultCollectorHandler::class)]
 final class ResultCollectorHandlerTest extends Framework\TestCase
 {
+    private Tests\Fixtures\Classes\DummyEventDispatcher $eventDispatcher;
     private Src\Http\Message\Handler\ResultCollectorHandler $subject;
 
     protected function setUp(): void
     {
-        $this->subject = new Src\Http\Message\Handler\ResultCollectorHandler();
+        $this->eventDispatcher = new Tests\Fixtures\Classes\DummyEventDispatcher();
+        $this->subject = new Src\Http\Message\Handler\ResultCollectorHandler($this->eventDispatcher);
+    }
+
+    #[Framework\Attributes\Test]
+    public function onSuccessDispatchesUrlCrawlingSucceededEvent(): void
+    {
+        $response = new Psr7\Response();
+        $uri = new Psr7\Uri('https://www.example.com');
+
+        $this->subject->onSuccess($response, $uri);
+
+        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\UrlCrawlingSucceeded::class));
     }
 
     #[Framework\Attributes\Test]
@@ -62,6 +76,37 @@ final class ResultCollectorHandlerTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    public function onSuccessAddsCrawlingResultFromCrawlingSucceededEvent(): void
+    {
+        $response = new Psr7\Response();
+        $exception = new Exception('foo');
+        $uri = new Psr7\Uri('https://www.example.com');
+
+        $expected = Src\Result\CrawlingResult::createFailed($uri, ['exception' => $exception]);
+
+        $this->eventDispatcher->addListener(
+            Src\Event\UrlCrawlingSucceeded::class,
+            static fn (Src\Event\UrlCrawlingSucceeded $event) => $event->setResult($expected),
+        );
+
+        $this->subject->onSuccess($response, $uri);
+
+        self::assertSame([], $this->subject->getResult()->getSuccessful());
+        self::assertSame([$expected], $this->subject->getResult()->getFailed());
+    }
+
+    #[Framework\Attributes\Test]
+    public function onFailureDispatchesUrlCrawlingFailedEvent(): void
+    {
+        $exception = new Exception('foo');
+        $uri = new Psr7\Uri('https://www.example.com');
+
+        $this->subject->onFailure($exception, $uri);
+
+        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\UrlCrawlingFailed::class));
+    }
+
+    #[Framework\Attributes\Test]
     public function onFailureAddsFailedCrawlingResult(): void
     {
         $exception = new Exception('foo');
@@ -76,5 +121,25 @@ final class ResultCollectorHandlerTest extends Framework\TestCase
 
         self::assertSame([], $this->subject->getResult()->getSuccessful());
         self::assertEquals([$expected], $this->subject->getResult()->getFailed());
+    }
+
+    #[Framework\Attributes\Test]
+    public function onFailureAddsCrawlingResultFromCrawlingFailedEvent(): void
+    {
+        $response = new Psr7\Response();
+        $exception = new Exception('foo');
+        $uri = new Psr7\Uri('https://www.example.com');
+
+        $expected = Src\Result\CrawlingResult::createSuccessful($uri, ['response' => $response]);
+
+        $this->eventDispatcher->addListener(
+            Src\Event\UrlCrawlingFailed::class,
+            static fn (Src\Event\UrlCrawlingFailed $event) => $event->setResult($expected),
+        );
+
+        $this->subject->onFailure($exception, $uri);
+
+        self::assertSame([$expected], $this->subject->getResult()->getSuccessful());
+        self::assertSame([], $this->subject->getResult()->getFailed());
     }
 }

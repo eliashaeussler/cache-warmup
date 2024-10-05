@@ -28,6 +28,7 @@ use EliasHaeussler\CacheWarmup\Result;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Promise;
+use Psr\EventDispatcher;
 use Psr\Log;
 
 /**
@@ -58,13 +59,14 @@ final class ConcurrentCrawler extends AbstractConfigurableCrawler implements Log
         array $options = [],
         private readonly ?ClientInterface $client = null,
         private ?Log\LoggerInterface $logger = null,
+        private readonly ?EventDispatcher\EventDispatcherInterface $eventDispatcher = null,
     ) {
         parent::__construct($options);
     }
 
     public function crawl(array $urls): Result\CacheWarmupResult
     {
-        $resultHandler = new Http\Message\Handler\ResultCollectorHandler();
+        $resultHandler = new Http\Message\Handler\ResultCollectorHandler($this->eventDispatcher);
         $result = $resultHandler->getResult();
         $handlers = [$resultHandler];
 
