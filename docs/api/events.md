@@ -68,6 +68,28 @@ actions. This page lists all currently available events.
 
 > Dispatched right before crawling is started.
 
+### [`UrlCrawlingSucceeded`](../../src/Event/UrlCrawlingSucceeded.php) <Badge type="tip" text="3.2+" />
+
+<small>✅&nbsp;Console command &middot; ✅&nbsp;PHP API</small>
+
+> Dispatched when crawling of a single URL was successful.
+
+::: warning IMPORTANT
+This event is only dispatched if the configured crawler utilizes the
+[`ResultCollectionHandler`](../../src/Http/Message/Handler/ResultCollectorHandler.php).
+:::
+
+### [`UrlCrawlingFailed`](../../src/Event/UrlCrawlingFailed.php) <Badge type="tip" text="3.2+" />
+
+<small>✅&nbsp;Console command &middot; ✅&nbsp;PHP API</small>
+
+> Dispatched when crawling of a single URL failed.
+
+::: warning IMPORTANT
+This event is only dispatched if the configured crawler utilizes the
+[`ResultCollectionHandler`](../../src/Http/Message/Handler/ResultCollectorHandler.php).
+:::
+
 ### [`CrawlingFinished`](../../src/Event/CrawlingFinished.php) <Badge type="tip" text="3.2+" />
 
 <small>✅&nbsp;Console command &middot; ✅&nbsp;PHP API</small>

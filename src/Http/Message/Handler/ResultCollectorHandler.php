@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Http\Message\Handler;
 
+use EliasHaeussler\CacheWarmup\Event;
 use EliasHaeussler\CacheWarmup\Result;
+use Psr\EventDispatcher;
 use Psr\Http\Message;
 use Throwable;
 
@@ -37,27 +39,34 @@ final class ResultCollectorHandler implements ResponseHandler
 {
     private readonly Result\CacheWarmupResult $result;
 
-    public function __construct()
-    {
+    public function __construct(
+        private readonly ?EventDispatcher\EventDispatcherInterface $eventDispatcher = null,
+    ) {
         $this->result = new Result\CacheWarmupResult();
     }
 
     public function onSuccess(Message\ResponseInterface $response, Message\UriInterface $uri): void
     {
-        $this->result->addResult(
-            Result\CrawlingResult::createSuccessful($uri, [
-                'response' => $response,
-            ]),
-        );
+        $result = Result\CrawlingResult::createSuccessful($uri, [
+            'response' => $response,
+        ]);
+
+        $event = new Event\UrlCrawlingSucceeded($uri, $response, $result);
+        $this->eventDispatcher?->dispatch($event);
+
+        $this->result->addResult($event->result());
     }
 
     public function onFailure(Throwable $exception, Message\UriInterface $uri): void
     {
-        $this->result->addResult(
-            Result\CrawlingResult::createFailed($uri, [
-                'exception' => $exception,
-            ]),
-        );
+        $result = Result\CrawlingResult::createFailed($uri, [
+            'exception' => $exception,
+        ]);
+
+        $event = new Event\UrlCrawlingFailed($uri, $exception, $result);
+        $this->eventDispatcher?->dispatch($event);
+
+        $this->result->addResult($event->result());
     }
 
     public function getResult(): Result\CacheWarmupResult
