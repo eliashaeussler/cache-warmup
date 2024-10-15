@@ -3,6 +3,7 @@
 [![Header with logo](docs/img/header.png)](https://cache-warmup.dev/)
 
 [![PHAR downloads](https://img.shields.io/github/downloads/eliashaeussler/cache-warmup/total?label=PHAR+downloads&logo=github&logoColor=white)](https://github.com/eliashaeussler/cache-warmup/releases)
+[![GHCR pulls](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fipitio.github.io%2Fbackage%2Feliashaeussler%2Fcache-warmup%2Fcache-warmup.json&query=%24.downloads&logo=github&label=GHCR%20pulls)](https://github.com/eliashaeussler/cache-warmup/pkgs/container/cache-warmup)
 [![Docker pulls](https://img.shields.io/docker/pulls/eliashaeussler/cache-warmup?label=Docker+pulls&logo=docker&logoColor=white)](https://hub.docker.com/r/eliashaeussler/cache-warmup)
 [![Packagist downloads](https://img.shields.io/packagist/dt/eliashaeussler/cache-warmup?label=Packagist+downloads&logo=packagist&logoColor=white)](https://packagist.org/packages/eliashaeussler/cache-warmup)
 [![License](https://img.shields.io/github/license/eliashaeussler/cache-warmup?label=License&logo=gnu&logoColor=white)](LICENSE.md)
