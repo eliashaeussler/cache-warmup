@@ -33,7 +33,7 @@ jobs:
       - name: Install box
         run: phive install --trust-gpg-keys 2DF45277AEF09A2F humbug/box
       - name: Install Composer dependencies
-        uses: ramsey/composer-install@v2
+        uses: ramsey/composer-install@v3
         with:
           composer-options: "--no-dev"
       - name: Compile PHAR
