@@ -17,7 +17,7 @@ Choose one of the following installation methods to download the
 ::: code-group
 
 ```bash [PHAR]
-curl -LO https://github.com/eliashaeussler/cache-warmup/releases/latest/download/cache-warmup.phar
+curl -O https://cache-warmup.dev/cache-warmup.phar
 chmod +x cache-warmup.phar
 ```
 
@@ -47,7 +47,7 @@ using your local GPG installation:
 
 ```bash
 # Download GPG signature
-curl -LO https://github.com/eliashaeussler/cache-warmup/releases/latest/download/cache-warmup.phar.asc
+curl -O https://cache-warmup.dev/cache-warmup.phar.asc
 
 # Import public GPG key
 gpg --keyserver keys.openpgp.org --recv-keys E73F20790A629A2CEF2E9AE57C1C5363490E851E

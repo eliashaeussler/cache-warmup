@@ -35,7 +35,7 @@ A PHP library to warm up website caches of URLs located in XML sitemaps.
 
 ```bash
 # Download latest release
-curl -LO https://github.com/eliashaeussler/cache-warmup/releases/latest/download/cache-warmup.phar
+curl -O https://cache-warmup.dev/cache-warmup.phar
 chmod +x cache-warmup.phar
 
 # Run cache warmup
