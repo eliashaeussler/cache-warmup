@@ -2602,32 +2602,33 @@
         },
         {
             "name": "eliashaeussler/rector-config",
-            "version": "3.0.2",
+            "version": "3.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/rector-config.git",
-                "reference": "9f543887723c59e7c88ce52a2a0079b397d5fae4"
+                "reference": "143f26b0f10016e6655050240cd7afe5c2f8177c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/rector-config/zipball/9f543887723c59e7c88ce52a2a0079b397d5fae4",
-                "reference": "9f543887723c59e7c88ce52a2a0079b397d5fae4",
+                "url": "https://api.github.com/repos/eliashaeussler/rector-config/zipball/143f26b0f10016e6655050240cd7afe5c2f8177c",
+                "reference": "143f26b0f10016e6655050240cd7afe5c2f8177c",
                 "shasum": ""
             },
             "require": {
                 "composer-runtime-api": "^2.0",
                 "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
-                "rector/rector": "^1.2"
+                "rector/rector": "^1.2.9"
             },
             "require-dev": {
                 "armin/editorconfig-cli": "^1.8 || ^2.0",
                 "composer/composer": "^2.0",
                 "eliashaeussler/php-cs-fixer-config": "^2.0",
                 "eliashaeussler/phpstan-config": "^2.0",
+                "eliashaeussler/phpunit-attributes": "^1.0",
                 "ergebnis/composer-normalize": "^2.30",
                 "illuminate/container": "^10.39 || ^11.0",
                 "phpstan/extension-installer": "^1.2",
-                "phpunit/phpunit": "^10.1 || ^11.0",
+                "phpunit/phpunit": "^10.4 || ^11.0",
                 "ssch/typo3-rector": "^2.0",
                 "symfony/config": "^5.4 || ^6.0 || ^7.0",
                 "typo3/cms-core": "^12.4 || ^13.0"
@@ -2656,9 +2657,9 @@
             "description": "My personal configuration for Rector",
             "support": {
                 "issues": "https://github.com/eliashaeussler/rector-config/issues",
-                "source": "https://github.com/eliashaeussler/rector-config/tree/3.0.2"
+                "source": "https://github.com/eliashaeussler/rector-config/tree/3.0.3"
             },
-            "time": "2024-07-06T16:34:34+00:00"
+            "time": "2024-11-05T09:29:36+00:00"
         },
         {
             "name": "eliashaeussler/transient-logger",
@@ -5093,16 +5094,16 @@
         },
         {
             "name": "rector/rector",
-            "version": "1.2.8",
+            "version": "1.2.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "05755bf43617449c08ee8e50fb840c85ad3b1240"
+                "reference": "7923bd5e48f8c26a922df91f7174f5bca2b3671d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/05755bf43617449c08ee8e50fb840c85ad3b1240",
-                "reference": "05755bf43617449c08ee8e50fb840c85ad3b1240",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/7923bd5e48f8c26a922df91f7174f5bca2b3671d",
+                "reference": "7923bd5e48f8c26a922df91f7174f5bca2b3671d",
                 "shasum": ""
             },
             "require": {
@@ -5140,7 +5141,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/1.2.8"
+                "source": "https://github.com/rectorphp/rector/tree/1.2.9"
             },
             "funding": [
                 {
@@ -5148,7 +5149,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-10-18T11:54:27+00:00"
+            "time": "2024-11-04T18:26:57+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -6630,7 +6631,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
@@ -6640,6 +6641,6 @@
         "ext-mbstring": "*",
         "ext-zlib": "*"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }
