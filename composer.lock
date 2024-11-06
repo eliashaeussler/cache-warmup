@@ -8,21 +8,21 @@
     "packages": [
         {
             "name": "cuyz/valinor",
-            "version": "1.13.0",
+            "version": "1.14.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CuyZ/Valinor.git",
-                "reference": "4e0bc8b6a9ca4ce5350a8206f7c8d81664806a01"
+                "reference": "12033fccdcc6afa7e73b3e234e4d6656530f2bcb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CuyZ/Valinor/zipball/4e0bc8b6a9ca4ce5350a8206f7c8d81664806a01",
-                "reference": "4e0bc8b6a9ca4ce5350a8206f7c8d81664806a01",
+                "url": "https://api.github.com/repos/CuyZ/Valinor/zipball/12033fccdcc6afa7e73b3e234e4d6656530f2bcb",
+                "reference": "12033fccdcc6afa7e73b3e234e4d6656530f2bcb",
                 "shasum": ""
             },
             "require": {
                 "composer-runtime-api": "^2.0",
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
+                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
                 "psr/simple-cache": "^1.0 || ^2.0 || ^3.0"
             },
             "require-dev": {
@@ -69,7 +69,7 @@
             ],
             "support": {
                 "issues": "https://github.com/CuyZ/Valinor/issues",
-                "source": "https://github.com/CuyZ/Valinor/tree/1.13.0"
+                "source": "https://github.com/CuyZ/Valinor/tree/1.14.1"
             },
             "funding": [
                 {
@@ -77,7 +77,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-09-02T12:57:33+00:00"
+            "time": "2024-11-06T07:46:46+00:00"
         },
         {
             "name": "eliashaeussler/valinor-xml",
