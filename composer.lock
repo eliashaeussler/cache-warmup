@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "10d91a876d88904b54b6dd167b143055",
+    "content-hash": "bf66e49b209c36bf106146ed806cbbd1",
     "packages": [
         {
             "name": "cuyz/valinor",
@@ -81,16 +81,16 @@
         },
         {
             "name": "eliashaeussler/valinor-xml",
-            "version": "1.0.2",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/valinor-xml.git",
-                "reference": "1a3b996d3307a95a1a797846c81ac95b81a57f9c"
+                "reference": "7cf143d08be169edcb9101777df048e7b705c1c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/valinor-xml/zipball/1a3b996d3307a95a1a797846c81ac95b81a57f9c",
-                "reference": "1a3b996d3307a95a1a797846c81ac95b81a57f9c",
+                "url": "https://api.github.com/repos/eliashaeussler/valinor-xml/zipball/7cf143d08be169edcb9101777df048e7b705c1c5",
+                "reference": "7cf143d08be169edcb9101777df048e7b705c1c5",
                 "shasum": ""
             },
             "require": {
@@ -130,9 +130,9 @@
             "description": "XML source for cuyz/valinor",
             "support": {
                 "issues": "https://github.com/eliashaeussler/valinor-xml/issues",
-                "source": "https://github.com/eliashaeussler/valinor-xml/tree/1.0.2"
+                "source": "https://github.com/eliashaeussler/valinor-xml/tree/1.0.3"
             },
-            "time": "2024-11-26T20:42:24+00:00"
+            "time": "2024-11-26T20:59:11+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -6751,7 +6751,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
+        "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
         "ext-filter": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
