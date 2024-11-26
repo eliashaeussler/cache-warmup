@@ -2614,21 +2614,21 @@
         },
         {
             "name": "eliashaeussler/rector-config",
-            "version": "3.0.3",
+            "version": "3.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/rector-config.git",
-                "reference": "143f26b0f10016e6655050240cd7afe5c2f8177c"
+                "reference": "65e90e19b6a541f612df793fc5a07e6222ea9832"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/rector-config/zipball/143f26b0f10016e6655050240cd7afe5c2f8177c",
-                "reference": "143f26b0f10016e6655050240cd7afe5c2f8177c",
+                "url": "https://api.github.com/repos/eliashaeussler/rector-config/zipball/65e90e19b6a541f612df793fc5a07e6222ea9832",
+                "reference": "65e90e19b6a541f612df793fc5a07e6222ea9832",
                 "shasum": ""
             },
             "require": {
                 "composer-runtime-api": "^2.0",
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
+                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
                 "rector/rector": "^1.2.9"
             },
             "require-dev": {
@@ -2669,9 +2669,9 @@
             "description": "My personal configuration for Rector",
             "support": {
                 "issues": "https://github.com/eliashaeussler/rector-config/issues",
-                "source": "https://github.com/eliashaeussler/rector-config/tree/3.0.3"
+                "source": "https://github.com/eliashaeussler/rector-config/tree/3.0.4"
             },
-            "time": "2024-11-05T09:29:36+00:00"
+            "time": "2024-11-25T19:24:19+00:00"
         },
         {
             "name": "eliashaeussler/transient-logger",
