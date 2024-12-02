@@ -34,7 +34,6 @@ use ReflectionObject;
 use Symfony\Component\OptionsResolver;
 
 use function dirname;
-use function implode;
 
 /**
  * SitemapXmlParserTest.
@@ -139,17 +138,22 @@ final class SitemapXmlParserTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    public function parseThrowsExceptionOnInvalidXml(): void
+    {
+        $this->mockSitemapRequest('invalid_sitemap_3');
+
+        $this->expectException(Src\Exception\SitemapIsMalformed::class);
+
+        $this->subject->parse($this->sitemap);
+    }
+
+    #[Framework\Attributes\Test]
     public function parseThrowsExceptionOnInvalidSitemapIndex(): void
     {
         $this->mockSitemapRequest('invalid_sitemap_1');
 
-        $this->expectException(Src\Exception\SitemapCannotBeParsed::class);
-        $this->expectExceptionCode(1660668799);
-        $this->expectExceptionMessage(
-            implode(PHP_EOL, [
-                'The sitemap "https://www.example.org/sitemap.xml" is invalid and cannot be parsed due to the following errors:',
-                '  * sitemaps.0: The given URL must not be empty.',
-            ]),
+        $this->expectExceptionObject(
+            new Src\Exception\SitemapIsMalformed($this->sitemap),
         );
 
         $this->subject->parse($this->sitemap);
@@ -160,13 +164,8 @@ final class SitemapXmlParserTest extends Framework\TestCase
     {
         $this->mockSitemapRequest('invalid_sitemap_2');
 
-        $this->expectException(Src\Exception\SitemapCannotBeParsed::class);
-        $this->expectExceptionCode(1660668799);
-        $this->expectExceptionMessage(
-            implode(PHP_EOL, [
-                'The sitemap "https://www.example.org/sitemap.xml" is invalid and cannot be parsed due to the following errors:',
-                '  * urls.0: The given URL "foo" is not valid.',
-            ]),
+        $this->expectExceptionObject(
+            new Src\Exception\SitemapIsMalformed($this->sitemap, previous: new Src\Exception\UrlIsInvalid('foo')),
         );
 
         $this->subject->parse($this->sitemap);

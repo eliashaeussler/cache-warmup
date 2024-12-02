@@ -23,24 +23,32 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Xml;
 
-use CuyZ\Valinor;
-use DateTimeInterface;
 use EliasHaeussler\CacheWarmup\Exception;
+use EliasHaeussler\CacheWarmup\Helper;
 use EliasHaeussler\CacheWarmup\Http;
 use EliasHaeussler\CacheWarmup\Result;
 use EliasHaeussler\CacheWarmup\Sitemap;
-use EliasHaeussler\ValinorXml;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Psr7;
+use GuzzleHttp\RequestOptions;
 use Psr\Http\Message;
 use Symfony\Component\OptionsResolver;
-use Throwable;
 
-use function file_exists;
-use function file_get_contents;
+use function fclose;
+use function fopen;
+use function fread;
+use function is_file;
 use function is_readable;
+use function is_resource;
+use function libxml_clear_errors;
+use function libxml_get_errors;
+use function libxml_use_internal_errors;
+use function sha1;
+use function simplexml_load_file;
+use function sprintf;
+use function sys_get_temp_dir;
+use function unlink;
 
 /**
  * SitemapXmlParser.
@@ -57,7 +65,12 @@ use function is_readable;
 final class SitemapXmlParser implements ConfigurableParser
 {
     private readonly OptionsResolver\OptionsResolver $optionsResolver;
-    private readonly Valinor\Mapper\TreeMapper $mapper;
+    private readonly Node\SitemapNodeConverter $sitemapConverter;
+
+    /**
+     * @var list<string>
+     */
+    private array $temporaryFiles = [];
 
     /**
      * @var ParserOptions
@@ -72,65 +85,55 @@ final class SitemapXmlParser implements ConfigurableParser
         private readonly ?ClientInterface $client = null,
     ) {
         $this->optionsResolver = $this->createOptionsResolver();
-        $this->mapper = $this->createMapper();
+        $this->sitemapConverter = new Node\SitemapNodeConverter();
 
         $this->setOptions($options);
     }
 
     /**
      * @throws Exception\FileIsMissing
-     * @throws Exception\SitemapCannotBeParsed
+     * @throws Exception\FileIsNotReadable
+     * @throws Exception\SitemapIsMalformed
      * @throws GuzzleException
-     * @throws ValinorXml\Exception\ArrayPathHasUnexpectedType
-     * @throws ValinorXml\Exception\ArrayPathIsInvalid
-     * @throws ValinorXml\Exception\XmlIsMalformed
      */
     public function parse(Sitemap\Sitemap $sitemap): Result\ParserResult
     {
-        $uri = $sitemap->getUri();
+        $filename = $this->fetchSitemapFile($sitemap);
 
-        // Fetch XML source
-        if ($sitemap->isLocalFile()) {
-            $contents = $this->fetchLocalFile($sitemap->getLocalFilePath());
-        } else {
-            $contents = $this->fetchUrl($uri);
+        // Parse XML sitemap and collect possible errors
+        $useInternalErrors = libxml_use_internal_errors(true);
+        $xml = simplexml_load_file($filename, null, LIBXML_NOCDATA);
+        $errors = libxml_get_errors();
+
+        // Reset internal libxml state
+        libxml_clear_errors();
+        libxml_use_internal_errors($useInternalErrors);
+
+        // Throw exception if XML parsing failed
+        if ([] !== $errors || false === $xml) {
+            throw new Exception\SitemapIsMalformed($sitemap, $errors);
         }
 
-        // Decode gzipped sitemap
-        if (0 === mb_strpos($contents, "\x1f\x8b\x08")) {
-            $contents = (string) gzdecode($contents);
+        $sitemaps = [];
+        $urls = [];
+
+        if (isset($xml->sitemap)) {
+            foreach ($xml->sitemap as $node) {
+                /** @var array{loc?: string, lastmod?: string} $nodeArray */
+                $nodeArray = (array) $node;
+                $sitemaps[] = $this->sitemapConverter->convertSitemap($nodeArray, $sitemap);
+            }
         }
 
-        // Initialize XML source
-        $xml = ValinorXml\Mapper\Source\XmlSource::fromXmlString($contents)
-            ->asCollection('sitemap')
-            ->asCollection('url');
-        $source = Valinor\Mapper\Source\Source::iterable($xml)->map([
-            'sitemap' => 'sitemaps',
-            'sitemap.*.loc' => 'uri',
-            'sitemap.*.lastmod' => 'lastModificationDate',
-            'url' => 'urls',
-            'url.*.loc' => 'uri',
-            'url.*.lastmod' => 'lastModificationDate',
-            'url.*.changefreq' => 'changeFrequency',
-        ]);
-
-        // Map XML source
-        try {
-            $result = $this->mapper->map(Result\ParserResult::class, $source);
-        } catch (Valinor\Mapper\MappingError $error) {
-            throw new Exception\SitemapCannotBeParsed($sitemap, $error);
+        if (isset($xml->url)) {
+            foreach ($xml->url as $node) {
+                /** @var array{loc?: string, priority?: string, lastmod?: string, changefreq?: string} $nodeArray */
+                $nodeArray = (array) $node;
+                $urls[] = $this->sitemapConverter->convertUrl($nodeArray, $sitemap);
+            }
         }
 
-        // Apply origin to sitemaps and urls
-        foreach ($result->getSitemaps() as $parsedSitemap) {
-            $parsedSitemap->setOrigin($sitemap);
-        }
-        foreach ($result->getUrls() as $parsedUrl) {
-            $parsedUrl->setOrigin($sitemap);
-        }
-
-        return $result;
+        return new Result\ParserResult($sitemaps, $urls);
     }
 
     /**
@@ -144,28 +147,71 @@ final class SitemapXmlParser implements ConfigurableParser
 
     /**
      * @throws Exception\FileIsMissing
+     * @throws Exception\FileIsNotReadable
+     * @throws GuzzleException
      */
-    private function fetchLocalFile(string $filename): string
+    private function fetchSitemapFile(Sitemap\Sitemap $sitemap): string
     {
-        if (!file_exists($filename) || !is_readable($filename)) {
+        $uri = $sitemap->getUri();
+
+        // Fetch XML source
+        if ($sitemap->isLocalFile()) {
+            $filename = $sitemap->getLocalFilePath();
+        } else {
+            $filename = $this->downloadSitemap($uri);
+        }
+
+        // Check if file exists
+        if (!is_file($filename) || !is_readable($filename)) {
             throw new Exception\FileIsMissing($filename);
         }
 
-        return (string) file_get_contents($filename);
+        $file = fopen($filename, 'rb');
+
+        if (!is_resource($file)) {
+            throw new Exception\FileIsNotReadable($filename);
+        }
+
+        // Use built-in gzip decoding if necessary
+        if (0 === mb_strpos((string) fread($file, 10), "\x1f\x8b\x08")) {
+            $filename = 'compress.zlib://'.$filename;
+        }
+
+        fclose($file);
+
+        return $filename;
     }
 
     /**
      * @throws GuzzleException
      */
-    private function fetchUrl(Message\UriInterface $uri): string
+    private function downloadSitemap(Message\UriInterface $uri): string
     {
+        $filename = $this->createTemporaryFilename((string) $uri);
+
         $requestFactory = new Http\Message\RequestFactory('GET', $this->options['request_headers']);
         $request = $requestFactory->build($uri);
+        $requestOptions = $this->options['request_options'];
+        $requestOptions[RequestOptions::SINK] = $filename;
 
         $client = $this->client ?? new Client($this->options['client_config']);
-        $response = $client->send($request, $this->options['request_options']);
+        $client->send($request, $requestOptions);
 
-        return (string) $response->getBody();
+        return $filename;
+    }
+
+    private function createTemporaryFilename(string $identifier): string
+    {
+        $salt = 0;
+
+        do {
+            $file = Helper\FilesystemHelper::joinPathSegments(
+                sys_get_temp_dir(),
+                sprintf('sitemap_%s_%d.xml', sha1($identifier), $salt++),
+            );
+        } while (is_file($file));
+
+        return $this->temporaryFiles[] = $file;
     }
 
     private function createOptionsResolver(): OptionsResolver\OptionsResolver
@@ -190,30 +236,12 @@ final class SitemapXmlParser implements ConfigurableParser
         return $optionsResolver;
     }
 
-    private function createMapper(): Valinor\Mapper\TreeMapper
+    public function __destruct()
     {
-        return (new Valinor\MapperBuilder())
-            ->registerConstructor(
-                Sitemap\ChangeFrequency::fromCaseInsensitive(...),
-            )
-            ->infer(Message\UriInterface::class, static fn () => Psr7\Uri::class)
-            ->enableFlexibleCasting()
-            ->allowSuperfluousKeys()
-            ->filterExceptions(
-                static function (Throwable $exception) {
-                    if ($exception instanceof Exception\UrlIsEmpty || $exception instanceof Exception\UrlIsInvalid) {
-                        return Valinor\Mapper\Tree\Message\MessageBuilder::from($exception);
-                    }
-
-                    throw $exception;
-                },
-            )
-            ->supportDateFormats(
-                DateTimeInterface::W3C,
-                'Y-m-d\TH:i:s.v\Z',
-                '!Y-m-d',
-            )
-            ->mapper()
-        ;
+        foreach ($this->temporaryFiles as $temporaryFile) {
+            if (is_file($temporaryFile)) {
+                unlink($temporaryFile);
+            }
+        }
     }
 }

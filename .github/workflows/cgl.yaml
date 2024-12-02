@@ -49,7 +49,7 @@ jobs:
       - name: Check Composer dependencies
         run: composer-require-checker check
       - name: Check for unused Composer dependencies
-        run: composer-unused
+        run: composer-unused --excludePackage=ext-zlib
       - name: Check for unused Frontend dependencies
         run: npm run check-dependencies
 
