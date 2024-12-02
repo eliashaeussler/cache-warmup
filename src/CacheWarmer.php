@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup;
 
-use EliasHaeussler\ValinorXml;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher;
@@ -101,16 +100,8 @@ final class CacheWarmer
     /**
      * @param list<string|Sitemap\Sitemap>|string|Sitemap\Sitemap $sitemaps
      *
-     * @throws Exception\FileIsMissing
-     * @throws Exception\LocalFilePathIsMissingInUrl
-     * @throws Exception\SitemapCannotBeParsed
-     * @throws Exception\SitemapIsInvalid
-     * @throws Exception\UrlIsEmpty
-     * @throws Exception\UrlIsInvalid
+     * @throws Exception\Exception
      * @throws GuzzleException
-     * @throws ValinorXml\Exception\ArrayPathHasUnexpectedType
-     * @throws ValinorXml\Exception\ArrayPathIsInvalid
-     * @throws ValinorXml\Exception\XmlIsMalformed
      */
     public function addSitemaps(array|string|Sitemap\Sitemap $sitemaps): self
     {
@@ -148,7 +139,7 @@ final class CacheWarmer
             try {
                 $result = $this->parser->parse($sitemap);
                 $this->eventDispatcher->dispatch(new Event\SitemapParsed($sitemap, $result));
-            } catch (GuzzleException|Exception\FileIsMissing|Exception\SitemapCannotBeParsed|Exception\UrlIsInvalid|ValinorXml\Exception\Exception $exception) {
+            } catch (GuzzleException|Exception\Exception $exception) {
                 $this->eventDispatcher->dispatch(new Event\SitemapParsingFailed($sitemap, $exception));
 
                 // Exit early if running in strict mode
