@@ -32,7 +32,6 @@ use Symfony\Component\Console;
 
 use function dirname;
 use function file_get_contents;
-use function implode;
 use function putenv;
 use function sys_get_temp_dir;
 use function uniqid;
@@ -664,13 +663,10 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     {
         $this->mockSitemapRequest('invalid_sitemap_1');
 
-        $this->expectException(Src\Exception\SitemapCannotBeParsed::class);
-        $this->expectExceptionCode(1660668799);
-        $this->expectExceptionMessage(
-            implode(PHP_EOL, [
-                'The sitemap "https://www.example.com/sitemap.xml" is invalid and cannot be parsed due to the following errors:',
-                '  * The given URL must not be empty.',
-            ]),
+        $this->expectExceptionObject(
+            new Src\Exception\SitemapIsMalformed(
+                Src\Sitemap\Sitemap::createFromString('https://www.example.com/sitemap.xml'),
+            ),
         );
 
         $this->commandTester->execute([

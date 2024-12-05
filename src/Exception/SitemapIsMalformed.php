@@ -23,46 +23,28 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Exception;
 
-use CuyZ\Valinor;
 use EliasHaeussler\CacheWarmup\Sitemap;
+use Throwable;
 
-use function array_map;
-use function implode;
 use function sprintf;
 
 /**
- * SitemapCannotBeParsed.
+ * SitemapIsMalformed.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class SitemapCannotBeParsed extends Exception
+final class SitemapIsMalformed extends Exception
 {
-    public function __construct(Sitemap\Sitemap $sitemap, ?Valinor\Mapper\MappingError $error = null)
+    public function __construct(Sitemap\Sitemap $sitemap, ?Throwable $previous = null)
     {
-        $suffix = '.';
-
-        if (null !== $error) {
-            $suffix = ' due to the following errors:'.PHP_EOL.self::formatError($error);
-        }
-
         parent::__construct(
-            sprintf('The sitemap "%s" is invalid and cannot be parsed%s', $sitemap->getUri(), $suffix),
-            1660668799,
-            $error,
-        );
-    }
-
-    private static function formatError(Valinor\Mapper\MappingError $error): string
-    {
-        $messages = Valinor\Mapper\Tree\Message\Messages::flattenFromNode($error->node());
-
-        return implode(
-            PHP_EOL,
-            array_map(
-                static fn (Valinor\Mapper\Tree\Message\NodeMessage $message) => '  * '.$message->toString(),
-                $messages->toArray(),
+            sprintf(
+                'Sitemap "%s" is malformed and cannot be parsed.',
+                $sitemap->isLocalFile() ? $sitemap->getLocalFilePath() : (string) $sitemap,
             ),
+            1733161983,
+            $previous,
         );
     }
 }
