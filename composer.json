@@ -42,8 +42,8 @@
 		"eliashaeussler/version-bumper": "^1.1",
 		"ergebnis/composer-normalize": "^2.28",
 		"phpstan/extension-installer": "^1.2",
-		"phpstan/phpstan-phpunit": "^1.1",
-		"phpstan/phpstan-symfony": "^1.2.11",
+		"phpstan/phpstan-phpunit": "^2.0",
+		"phpstan/phpstan-symfony": "^2.0.0",
 		"phpunit/phpunit": "^10.1 || ^11.0"
 	},
 	"conflict": {
