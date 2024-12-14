@@ -49,7 +49,7 @@ final class ArrayHelper
         $reference = &$subject;
 
         foreach ($pathSegments as $pathSegment) {
-            if (!self::pathSegmentExists($reference, $pathSegment)) {
+            if (!is_array($reference) || !array_key_exists($pathSegment, $reference)) {
                 return null;
             }
 
@@ -69,7 +69,11 @@ final class ArrayHelper
         $reference = &$subject;
 
         foreach ($pathSegments as $pathSegment) {
-            if (!self::pathSegmentExists($reference, $pathSegment)) {
+            if (!is_array($reference)) {
+                return;
+            }
+
+            if (!array_key_exists($pathSegment, $reference)) {
                 $reference[$pathSegment] = [];
             }
 
@@ -129,10 +133,5 @@ final class ArrayHelper
                 static fn (string $value) => '' !== $value,
             ),
         );
-    }
-
-    private static function pathSegmentExists(mixed $subject, string $pathSegment): bool
-    {
-        return is_array($subject) && array_key_exists($pathSegment, $subject);
     }
 }
