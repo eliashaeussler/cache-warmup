@@ -38,12 +38,7 @@ final class ConfigFileIsInvalid extends Exception
 {
     public function __construct(string $configFile, Valinor\Mapper\MappingError $error)
     {
-        $errorMessages = [];
-        $errors = Valinor\Mapper\Tree\Message\Messages::flattenFromNode($error->node())->errors();
-
-        foreach ($errors as $propertyError) {
-            $errorMessages[] = sprintf('  * %s: %s', $propertyError->node()->path(), $propertyError->toString());
-        }
+        $errorMessages = $this->formatMappingError($error);
 
         parent::__construct(
             sprintf(

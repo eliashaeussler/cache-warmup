@@ -19,18 +19,6 @@ parameters:
 			path: src/Config/Adapter/ConfigMapperFactory.php
 
 		-
-			message: '#^Parameter \#1 \$crawlerClass of method EliasHaeussler\\CacheWarmup\\Crawler\\CrawlerFactory\:\:get\(\) expects class\-string\<EliasHaeussler\\CacheWarmup\\Crawler\\Crawler\>, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Config/Adapter/ConsoleInputConfigAdapter.php
-
-		-
-			message: '#^Parameter \#1 \$crawlerClass of method EliasHaeussler\\CacheWarmup\\Crawler\\CrawlerFactory\:\:get\(\) expects class\-string\<EliasHaeussler\\CacheWarmup\\Crawler\\Crawler\>, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Config/Adapter/EnvironmentVariablesConfigAdapter.php
-
-		-
 			message: '#^Variable property access on \$this\(EliasHaeussler\\CacheWarmup\\Config\\CacheWarmupConfig\)\.$#'
 			identifier: property.dynamicName
 			count: 1
@@ -100,12 +88,6 @@ parameters:
 			message: '#^Parameter \#1 \$crawlerClass of method EliasHaeussler\\CacheWarmup\\Crawler\\CrawlerFactory\:\:get\(\) expects class\-string\<EliasHaeussler\\CacheWarmup\\Crawler\\Crawler\>, string given\.$#'
 			identifier: argument.type
 			count: 2
-			path: tests/unit/Crawler/CrawlerFactoryTest.php
-
-		-
-			message: '#^Parameter \#1 \$crawlerOptions of method EliasHaeussler\\CacheWarmup\\Crawler\\CrawlerFactory\:\:parseCrawlerOptions\(\) expects array\<string, mixed\>\|string\|null, array\<int, string\> given\.$#'
-			identifier: argument.type
-			count: 1
 			path: tests/unit/Crawler/CrawlerFactoryTest.php
 
 		-

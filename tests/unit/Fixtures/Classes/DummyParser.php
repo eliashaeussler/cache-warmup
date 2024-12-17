@@ -21,38 +21,28 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Exception;
+namespace EliasHaeussler\CacheWarmup\Tests\Fixtures\Classes;
 
-use CuyZ\Valinor;
+use EliasHaeussler\CacheWarmup\Result;
 use EliasHaeussler\CacheWarmup\Sitemap;
-
-use function implode;
-use function sprintf;
+use EliasHaeussler\CacheWarmup\Xml;
 
 /**
- * SitemapCannotBeParsed.
+ * DummyParser.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
+ *
+ * @internal
  */
-final class SitemapCannotBeParsed extends Exception
+final class DummyParser implements Xml\Parser
 {
-    public function __construct(Sitemap\Sitemap $sitemap, ?Valinor\Mapper\MappingError $error = null)
+    public static ?Sitemap\Sitemap $parsedSitemap = null;
+
+    public function parse(Sitemap\Sitemap $sitemap): Result\ParserResult
     {
-        $suffix = '.';
+        self::$parsedSitemap = $sitemap;
 
-        if (null !== $error) {
-            $suffix = sprintf(
-                ' due to the following errors:%s%s',
-                PHP_EOL,
-                implode(PHP_EOL, $this->formatMappingError($error)),
-            );
-        }
-
-        parent::__construct(
-            sprintf('The sitemap "%s" is invalid and cannot be parsed%s', $sitemap->getUri(), $suffix),
-            1660668799,
-            $error,
-        );
+        return new Result\ParserResult();
     }
 }

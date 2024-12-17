@@ -23,10 +23,37 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Exception;
 
+use CuyZ\Valinor;
+
+use function sprintf;
+
 /**
  * Exception.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-abstract class Exception extends \Exception {}
+abstract class Exception extends \Exception
+{
+    /**
+     * @param array<string, string> $nodePathMapping
+     *
+     * @return list<non-empty-string>
+     */
+    protected function formatMappingError(Valinor\Mapper\MappingError $error, array $nodePathMapping = []): array
+    {
+        $messages = Valinor\Mapper\Tree\Message\Messages::flattenFromNode($error->node())->errors();
+        $errors = [];
+
+        foreach ($messages as $message) {
+            $path = $message->node()->path();
+            $errors[] = sprintf(
+                '  * %s: %s',
+                $nodePathMapping[$path] ?? $path,
+                $message->toString(),
+            );
+        }
+
+        return $errors;
+    }
+}

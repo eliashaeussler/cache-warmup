@@ -26,31 +26,35 @@ namespace EliasHaeussler\CacheWarmup\Tests\Xml;
 use DateTimeImmutable;
 use EliasHaeussler\CacheWarmup as Src;
 use EliasHaeussler\CacheWarmup\Tests;
+use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7;
+use GuzzleHttp\RequestOptions;
 use PHPUnit\Framework;
+use ReflectionObject;
+use Symfony\Component\OptionsResolver;
 
 use function dirname;
 use function implode;
 
 /**
- * XmlParserTest.
+ * SitemapXmlParserTest.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Src\Xml\XmlParser::class)]
-final class XmlParserTest extends Framework\TestCase
+#[Framework\Attributes\CoversClass(Src\Xml\SitemapXmlParser::class)]
+final class SitemapXmlParserTest extends Framework\TestCase
 {
     use Tests\ClientMockTrait;
 
     private Src\Sitemap\Sitemap $sitemap;
-    private Src\Xml\XmlParser $subject;
+    private Src\Xml\SitemapXmlParser $subject;
 
     protected function setUp(): void
     {
         $this->client = $this->createClient();
         $this->sitemap = new Src\Sitemap\Sitemap(new Psr7\Uri('https://www.example.org/sitemap.xml'));
-        $this->subject = new Src\Xml\XmlParser($this->client);
+        $this->subject = new Src\Xml\SitemapXmlParser(client: $this->client);
     }
 
     #[Framework\Attributes\Test]
@@ -144,7 +148,7 @@ final class XmlParserTest extends Framework\TestCase
         $this->expectExceptionMessage(
             implode(PHP_EOL, [
                 'The sitemap "https://www.example.org/sitemap.xml" is invalid and cannot be parsed due to the following errors:',
-                '  * The given URL must not be empty.',
+                '  * sitemaps.0: The given URL must not be empty.',
             ]),
         );
 
@@ -161,11 +165,61 @@ final class XmlParserTest extends Framework\TestCase
         $this->expectExceptionMessage(
             implode(PHP_EOL, [
                 'The sitemap "https://www.example.org/sitemap.xml" is invalid and cannot be parsed due to the following errors:',
-                '  * The given URL "foo" is not valid.',
+                '  * urls.0: The given URL "foo" is not valid.',
             ]),
         );
 
         $this->subject->parse($this->sitemap);
+    }
+
+    #[Framework\Attributes\Test]
+    public function parseRespectsConfiguredClientConfig(): void
+    {
+        $this->mockSitemapRequest('valid_sitemap_4');
+
+        $subject = new Src\Xml\SitemapXmlParser([
+            'client_config' => [
+                'handler' => HandlerStack::create($this->mockHandler),
+            ],
+        ]);
+
+        $subject->parse($this->sitemap);
+
+        self::assertNotNull($this->mockHandler->getLastRequest());
+    }
+
+    #[Framework\Attributes\Test]
+    public function parseRespectsConfiguredRequestHeaders(): void
+    {
+        $this->mockSitemapRequest('valid_sitemap_4');
+
+        $this->subject->setOptions([
+            'request_headers' => [
+                'X-Foo' => 'baz',
+            ],
+        ]);
+
+        $this->subject->parse($this->sitemap);
+
+        self::assertSame(['baz'], $this->mockHandler->getLastRequest()?->getHeader('X-Foo'));
+    }
+
+    #[Framework\Attributes\Test]
+    public function parseRespectsConfiguredRequestOptions(): void
+    {
+        $this->mockSitemapRequest('valid_sitemap_4');
+
+        $this->subject->setOptions([
+            'request_options' => [
+                RequestOptions::HEADERS => [
+                    'X-Foo' => 'baz',
+                ],
+            ],
+        ]);
+
+        $this->subject->parse($this->sitemap);
+
+        self::assertSame(['baz'], $this->mockHandler->getLastRequest()?->getHeader('X-Foo'));
     }
 
     #[Framework\Attributes\Test]
@@ -199,6 +253,40 @@ final class XmlParserTest extends Framework\TestCase
         $this->expectExceptionMessage('The file "/foo" does not exist or is not readable');
 
         $this->subject->parse($sitemap);
+    }
+
+    #[Framework\Attributes\Test]
+    public function setOptionsThrowsExceptionIfInvalidOptionsAreGiven(): void
+    {
+        $this->expectException(OptionsResolver\Exception\UndefinedOptionsException::class);
+
+        $this->subject->setOptions([
+            'client_config' => [],
+            'foo' => 'baz',
+        ]);
+    }
+
+    #[Framework\Attributes\Test]
+    public function setOptionsMergesGivenOptionsWithDefaultOptions(): void
+    {
+        $this->subject->setOptions([
+            'request_headers' => [
+                'foo' => 'baz',
+            ],
+        ]);
+
+        $expected = [
+            'client_config' => [],
+            'request_headers' => [
+                'foo' => 'baz',
+            ],
+            'request_options' => [],
+        ];
+
+        $reflection = new ReflectionObject($this->subject);
+        $actual = $reflection->getProperty('options')->getValue($this->subject);
+
+        self::assertSame($expected, $actual);
     }
 
     protected function tearDown(): void

@@ -27,22 +27,32 @@ crawler option in combination with one of the default crawlers.
 ## How can I configure basic auth credentials?
 
 This is possible by using the [`request_options`](config-reference/crawler-options.md#request-options)
-crawler option in combination with one of the default crawlers. This crawler option
-accepts all configurable Guzzle request options such as
-[`auth`](https://docs.guzzlephp.org/en/stable/request-options.html#auth) for basic auth.
+crawler option in combination with one of the default crawlers. In addition,
+the [`client_config`](config-reference/parser-options.md#client-config) parser
+option in combination with the default parser can be used. Both crawler option
+and parser option accept all configurable Guzzle request options such as
+[`auth`](https://docs.guzzlephp.org/en/stable/request-options.html#auth) for
+basic auth.
 
 Example:
 
 ::: code-group
 
 ```bash [CLI]
-./cache-warmup.phar --crawler-options '{"request_options": {"auth": ["username", "password"]}}'
+./cache-warmup.phar \
+    --crawler-options '{"request_options": {"auth": ["username", "password"]}}' \
+    --parser-options '{"client_config": {"auth": ["username", "password"]}}'
 ```
 
 ```json [JSON]
 {
     "crawlerOptions": {
         "request_options": {
+            "auth": ["username", "password"]
+        }
+    },
+    "parserOptions": {
+        "client_config": {
             "auth": ["username", "password"]
         }
     }
@@ -53,8 +63,13 @@ Example:
 use EliasHaeussler\CacheWarmup;
 
 return static function (CacheWarmup\Config\CacheWarmupConfig $config) {
+    $basicAuth = ['username', 'password'];
+
     $config->setCrawlerOption('request_options', [
-        'auth' => ['username', 'password'],
+        'auth' => $basicAuth,
+    ]);
+    $config->setParserOption('client_config', [
+        'auth' => $basicAuth,
     ]);
 
     return $config;
@@ -65,10 +80,14 @@ return static function (CacheWarmup\Config\CacheWarmupConfig $config) {
 crawlerOptions:
   request_options:
     auth: ['username', 'password']
+parserOptions:
+  client_config:
+    auth: ['username', 'password']
 ```
 
 ```bash [.env]
 CACHE_WARMUP_CRAWLER_OPTIONS='{"request_options": {"auth": ["username", "password"]}}'
+CACHE_WARMUP_PARSER_OPTIONS='{"client_config": {"auth": ["username", "password"]}}'
 ```
 
 :::
@@ -77,7 +96,10 @@ CACHE_WARMUP_CRAWLER_OPTIONS='{"request_options": {"auth": ["username", "passwor
 
 Yes, a custom `User-Agent` header can be configured by using the
 [`request_headers`](config-reference/crawler-options.md#request-headers) crawler
-option in combination with one of the default crawlers.
+option in combination with one of the default crawlers. In addition,
+it can be configured by using the
+[`request_headers`](config-reference/parser-options.md#request-headers) parser
+option in combination with the default parser.
 
 ## What does "default crawlers" actually mean?
 

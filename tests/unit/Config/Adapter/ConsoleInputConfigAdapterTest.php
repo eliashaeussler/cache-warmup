@@ -52,7 +52,7 @@ final class ConsoleInputConfigAdapterTest extends Framework\TestCase
             '--crawler-options' => 'foo',
         ]);
 
-        $this->expectExceptionObject(new Src\Exception\CrawlerOptionIsInvalid('foo'));
+        $this->expectExceptionObject(new Src\Exception\OptionsAreMalformed('foo'));
 
         $subject->get();
     }
@@ -80,6 +80,40 @@ final class ConsoleInputConfigAdapterTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    public function getThrowsExceptionIfConfiguredParserOptionsAreInvalid(): void
+    {
+        $subject = $this->getSubject([
+            '--parser-options' => 'foo',
+        ]);
+
+        $this->expectExceptionObject(new Src\Exception\OptionsAreMalformed('foo'));
+
+        $subject->get();
+    }
+
+    #[Framework\Attributes\Test]
+    public function getThrowsExceptionIfConfiguredParserIsInvalid(): void
+    {
+        $subject = $this->getSubject([
+            '--parser' => 'foo',
+        ]);
+
+        $this->expectExceptionObject(new Src\Exception\ParserDoesNotExist('foo'));
+
+        $subject->get();
+    }
+
+    #[Framework\Attributes\Test]
+    public function getParsesParserOptions(): void
+    {
+        $subject = $this->getSubject([
+            '--parser-options' => '{"foo":"baz"}',
+        ]);
+
+        self::assertSame(['foo' => 'baz'], $subject->get()->getParserOptions());
+    }
+
+    #[Framework\Attributes\Test]
     public function getMapsConsoleInputToCacheWarmupConfig(): void
     {
         $subject = $this->getSubject([
@@ -100,6 +134,8 @@ final class ConsoleInputConfigAdapterTest extends Framework\TestCase
             '--crawler' => Tests\Fixtures\Classes\DummyCrawler::class,
             '--crawler-options' => '{"foo":"baz"}',
             '--strategy' => Src\Crawler\Strategy\SortByChangeFrequencyStrategy::getName(),
+            '--parser' => Tests\Fixtures\Classes\DummyParser::class,
+            '--parser-options' => '{"foo":"baz"}',
             '--format' => Src\Formatter\JsonFormatter::getType(),
             '--log-file' => 'errors.log',
             '--log-level' => Log\LogLevel::DEBUG,
@@ -126,6 +162,8 @@ final class ConsoleInputConfigAdapterTest extends Framework\TestCase
             Tests\Fixtures\Classes\DummyCrawler::class,
             ['foo' => 'baz'],
             Src\Crawler\Strategy\SortByChangeFrequencyStrategy::getName(),
+            Tests\Fixtures\Classes\DummyParser::class,
+            ['foo' => 'baz'],
             Src\Formatter\JsonFormatter::getType(),
             'errors.log',
             Log\LogLevel::DEBUG,

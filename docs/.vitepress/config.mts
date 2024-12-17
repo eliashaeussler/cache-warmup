@@ -113,6 +113,14 @@ export default defineConfig({
                         ],
                     },
                     {
+                        text: 'Parsing',
+                        collapsed: true,
+                        items: [
+                            {text: 'Parser', link: '/config-reference/parser'},
+                            {text: 'Parser options', link: '/config-reference/parser-options'},
+                        ],
+                    },
+                    {
                         text: 'Logging & Error Handling',
                         collapsed: true,
                         items: [
@@ -145,6 +153,14 @@ export default defineConfig({
                             {text: 'Logging Crawler', link: '/api/logging-crawler'},
                             {text: 'Stoppable Crawler', link: '/api/stoppable-crawler'},
                             {text: 'Verbose Crawler', link: '/api/verbose-crawler'},
+                        ],
+                    },
+                    {
+                        text: 'Parser',
+                        collapsed: true,
+                        items: [
+                            {text: 'Create a custom parser', link: '/api/parser'},
+                            {text: 'Configurable Parser', link: '/api/configurable-parser'},
                         ],
                     },
                     {

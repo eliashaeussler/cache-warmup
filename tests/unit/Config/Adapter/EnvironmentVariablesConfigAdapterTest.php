@@ -64,7 +64,7 @@ final class EnvironmentVariablesConfigAdapterTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function getThrowsExceptionIfConfiguredCrawlerOptionsAreInvalid(): void
     {
-        $this->expectExceptionObject(new Src\Exception\CrawlerOptionIsInvalid('foo'));
+        $this->expectExceptionObject(new Src\Exception\OptionsAreMalformed('foo'));
 
         $this->testWithEnvironment(
             fn () => $this->subject->get(),
@@ -83,6 +83,54 @@ final class EnvironmentVariablesConfigAdapterTest extends Framework\TestCase
             fn () => $this->subject->get(),
             [
                 'CACHE_WARMUP_CRAWLER' => 'foo',
+            ],
+        );
+    }
+
+    #[Framework\Attributes\Test]
+    public function getParsesCrawlerOptions(): void
+    {
+        $this->testWithEnvironment(
+            fn () => self::assertSame(['foo' => 'baz'], $this->subject->get()->getCrawlerOptions()),
+            [
+                'CACHE_WARMUP_CRAWLER_OPTIONS' => '{"foo":"baz"}',
+            ],
+        );
+    }
+
+    #[Framework\Attributes\Test]
+    public function getThrowsExceptionIfConfiguredParserOptionsAreInvalid(): void
+    {
+        $this->expectExceptionObject(new Src\Exception\OptionsAreMalformed('foo'));
+
+        $this->testWithEnvironment(
+            fn () => $this->subject->get(),
+            [
+                'CACHE_WARMUP_PARSER_OPTIONS' => 'foo',
+            ],
+        );
+    }
+
+    #[Framework\Attributes\Test]
+    public function getThrowsExceptionIfConfiguredParserIsInvalid(): void
+    {
+        $this->expectExceptionObject(new Src\Exception\ParserDoesNotExist('foo'));
+
+        $this->testWithEnvironment(
+            fn () => $this->subject->get(),
+            [
+                'CACHE_WARMUP_PARSER' => 'foo',
+            ],
+        );
+    }
+
+    #[Framework\Attributes\Test]
+    public function getParsesParserOptions(): void
+    {
+        $this->testWithEnvironment(
+            fn () => self::assertSame(['foo' => 'baz'], $this->subject->get()->getParserOptions()),
+            [
+                'CACHE_WARMUP_PARSER_OPTIONS' => '{"foo":"baz"}',
             ],
         );
     }
@@ -126,6 +174,8 @@ final class EnvironmentVariablesConfigAdapterTest extends Framework\TestCase
             'CACHE_WARMUP_CRAWLER' => Tests\Fixtures\Classes\DummyCrawler::class,
             'CACHE_WARMUP_CRAWLER_OPTIONS' => '{"foo":"baz"}',
             'CACHE_WARMUP_STRATEGY' => Src\Crawler\Strategy\SortByChangeFrequencyStrategy::getName(),
+            'CACHE_WARMUP_PARSER' => Tests\Fixtures\Classes\DummyParser::class,
+            'CACHE_WARMUP_PARSER_OPTIONS' => '{"foo":"baz"}',
             'CACHE_WARMUP_FORMAT' => Src\Formatter\JsonFormatter::getType(),
             'CACHE_WARMUP_LOG_FILE' => 'errors.log',
             'CACHE_WARMUP_LOG_LEVEL' => Log\LogLevel::DEBUG,
@@ -152,6 +202,8 @@ final class EnvironmentVariablesConfigAdapterTest extends Framework\TestCase
             Tests\Fixtures\Classes\DummyCrawler::class,
             ['foo' => 'baz'],
             Src\Crawler\Strategy\SortByChangeFrequencyStrategy::getName(),
+            Tests\Fixtures\Classes\DummyParser::class,
+            ['foo' => 'baz'],
             Src\Formatter\JsonFormatter::getType(),
             'errors.log',
             Log\LogLevel::DEBUG,

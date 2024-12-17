@@ -24,38 +24,23 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Tests\Exception;
 
 use EliasHaeussler\CacheWarmup as Src;
-use EliasHaeussler\CacheWarmup\Tests;
 use PHPUnit\Framework;
 
-use function implode;
-
 /**
- * CommandParametersAreInvalidTest.
+ * ParserIsInvalidTest.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Src\Exception\CommandParametersAreInvalid::class)]
-final class CommandParametersAreInvalidTest extends Framework\TestCase
+#[Framework\Attributes\CoversClass(Src\Exception\ParserIsInvalid::class)]
+final class ParserIsInvalidTest extends Framework\TestCase
 {
-    use Tests\MappingErrorTrait;
-
     #[Framework\Attributes\Test]
-    public function constructorCreatesExceptionForGivenErrors(): void
+    public function constructorCreatesExceptionForGivenClass(): void
     {
-        $error = $this->buildMappingError();
-        $nameMapping = [
-            'foo' => '--foo',
-        ];
+        $actual = new Src\Exception\ParserIsInvalid('foo');
 
-        $expected = implode(PHP_EOL, [
-            'Some command parameters are invalid:',
-            '  * --foo: Value null is not a valid string.',
-        ]);
-
-        $actual = new Src\Exception\CommandParametersAreInvalid($error, $nameMapping);
-
-        self::assertSame($expected, $actual->getMessage());
-        self::assertSame(1708712872, $actual->getCode());
+        self::assertSame(1734202229, $actual->getCode());
+        self::assertSame('The specified parser "foo" is not valid.', $actual->getMessage());
     }
 }

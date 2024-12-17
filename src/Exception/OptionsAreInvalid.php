@@ -21,41 +21,40 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Tests\Exception;
+namespace EliasHaeussler\CacheWarmup\Exception;
 
-use EliasHaeussler\CacheWarmup as Src;
-use EliasHaeussler\CacheWarmup\Tests;
-use PHPUnit\Framework;
+use CuyZ\Valinor;
+use Throwable;
 
 use function implode;
+use function sprintf;
 
 /**
- * CommandParametersAreInvalidTest.
+ * OptionsAreInvalid.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Src\Exception\CommandParametersAreInvalid::class)]
-final class CommandParametersAreInvalidTest extends Framework\TestCase
+final class OptionsAreInvalid extends Exception
 {
-    use Tests\MappingErrorTrait;
-
-    #[Framework\Attributes\Test]
-    public function constructorCreatesExceptionForGivenErrors(): void
+    public function __construct(?Valinor\Mapper\MappingError $error = null, ?Throwable $previous = null)
     {
-        $error = $this->buildMappingError();
-        $nameMapping = [
-            'foo' => '--foo',
-        ];
+        $suffix = '.';
 
-        $expected = implode(PHP_EOL, [
-            'Some command parameters are invalid:',
-            '  * --foo: Value null is not a valid string.',
-        ]);
+        if (null !== $error) {
+            $suffix = sprintf(
+                ':%s%s',
+                PHP_EOL,
+                implode(PHP_EOL, $this->formatMappingError($error)),
+            );
+        } elseif (null !== $previous) {
+            $suffix = sprintf(':%s%s', PHP_EOL, $previous->getMessage());
+        }
 
-        $actual = new Src\Exception\CommandParametersAreInvalid($error, $nameMapping);
-
-        self::assertSame($expected, $actual->getMessage());
-        self::assertSame(1708712872, $actual->getCode());
+        parent::__construct(
+            sprintf('Some options are invalid%s', $suffix),
+            1677424305,
+            $previous,
+        );
     }
 }

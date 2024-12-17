@@ -21,26 +21,42 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Tests\Exception;
+namespace EliasHaeussler\CacheWarmup\Tests\Fixtures\Classes;
 
-use EliasHaeussler\CacheWarmup as Src;
-use PHPUnit\Framework;
+use EliasHaeussler\CacheWarmup\Result;
+use EliasHaeussler\CacheWarmup\Sitemap;
+use EliasHaeussler\CacheWarmup\Xml;
 
 /**
- * CrawlerOptionIsInvalidTest.
+ * DummyConfigurableParser.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
+ *
+ * @internal
  */
-#[Framework\Attributes\CoversClass(Src\Exception\CrawlerOptionIsInvalid::class)]
-final class CrawlerOptionIsInvalidTest extends Framework\TestCase
+final class DummyConfigurableParser implements Xml\ConfigurableParser
 {
-    #[Framework\Attributes\Test]
-    public function constructorCreatesExceptionForGivenOptions(): void
-    {
-        $actual = new Src\Exception\CrawlerOptionIsInvalid(null);
+    /**
+     * @var array<string, mixed>
+     */
+    private array $options = [];
 
-        self::assertSame(1677424305, $actual->getCode());
-        self::assertSame('The crawler options must be an associative array, null given.', $actual->getMessage());
+    public function parse(Sitemap\Sitemap $sitemap): Result\ParserResult
+    {
+        return new Result\ParserResult();
+    }
+
+    public function setOptions(array $options): void
+    {
+        $this->options = $options;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getOptions(): array
+    {
+        return $this->options;
     }
 }

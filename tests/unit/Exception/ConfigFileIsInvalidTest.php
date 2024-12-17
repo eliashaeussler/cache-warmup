@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Exception;
 
-use CuyZ\Valinor;
 use EliasHaeussler\CacheWarmup as Src;
+use EliasHaeussler\CacheWarmup\Tests;
 use PHPUnit\Framework;
 
 use function implode;
@@ -38,6 +38,8 @@ use function implode;
 #[Framework\Attributes\CoversClass(Src\Exception\ConfigFileIsInvalid::class)]
 final class ConfigFileIsInvalidTest extends Framework\TestCase
 {
+    use Tests\MappingErrorTrait;
+
     #[Framework\Attributes\Test]
     public function constructorCreatesExceptionForGivenConfigFileAndError(): void
     {
@@ -52,18 +54,5 @@ final class ConfigFileIsInvalidTest extends Framework\TestCase
 
         self::assertSame($expected, $actual->getMessage());
         self::assertSame(1708631576, $actual->getCode());
-    }
-
-    private function buildMappingError(): Valinor\Mapper\MappingError
-    {
-        try {
-            (new Valinor\MapperBuilder())
-                ->mapper()
-                ->map('array{foo: string}', ['foo' => null]);
-        } catch (Valinor\Mapper\MappingError $error) {
-            return $error;
-        }
-
-        self::fail('Unable to build mapping error.');
     }
 }

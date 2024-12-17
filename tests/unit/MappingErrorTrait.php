@@ -21,38 +21,31 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Exception;
+namespace EliasHaeussler\CacheWarmup\Tests;
 
 use CuyZ\Valinor;
-use EliasHaeussler\CacheWarmup\Sitemap;
-
-use function implode;
-use function sprintf;
 
 /**
- * SitemapCannotBeParsed.
+ * MappingErrorTrait.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class SitemapCannotBeParsed extends Exception
+trait MappingErrorTrait
 {
-    public function __construct(Sitemap\Sitemap $sitemap, ?Valinor\Mapper\MappingError $error = null)
+    /**
+     * @param array<string, mixed> $source
+     */
+    private function buildMappingError(array $source = ['foo' => null]): Valinor\Mapper\MappingError
     {
-        $suffix = '.';
-
-        if (null !== $error) {
-            $suffix = sprintf(
-                ' due to the following errors:%s%s',
-                PHP_EOL,
-                implode(PHP_EOL, $this->formatMappingError($error)),
-            );
+        try {
+            (new Valinor\MapperBuilder())
+                ->mapper()
+                ->map('array{foo: string}', $source);
+        } catch (Valinor\Mapper\MappingError $error) {
+            return $error;
         }
 
-        parent::__construct(
-            sprintf('The sitemap "%s" is invalid and cannot be parsed%s', $sitemap->getUri(), $suffix),
-            1660668799,
-            $error,
-        );
+        self::fail('Unable to build mapping error.');
     }
 }

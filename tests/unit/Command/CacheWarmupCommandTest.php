@@ -26,6 +26,7 @@ namespace EliasHaeussler\CacheWarmup\Tests\Command;
 use EliasHaeussler\CacheWarmup as Src;
 use EliasHaeussler\CacheWarmup\Tests;
 use Generator;
+use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
 use Symfony\Component\Console;
@@ -56,7 +57,15 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         $this->client = $this->createClient();
         $this->eventDispatcher = new Tests\Fixtures\Classes\DummyEventDispatcher();
 
-        $command = new Src\Command\CacheWarmupCommand($this->client, $this->eventDispatcher);
+        // Inject mock handler into parser client
+        $this->eventDispatcher->addListener(
+            Src\Event\ConfigResolved::class,
+            fn (Src\Event\ConfigResolved $event) => $event->config()->setParserOption('client_config', [
+                'handler' => HandlerStack::create($this->mockHandler),
+            ]),
+        );
+
+        $command = new Src\Command\CacheWarmupCommand($this->eventDispatcher);
         $application = new Console\Application();
         $application->add($command);
 
@@ -490,7 +499,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function executeThrowsExceptionIfCrawlerOptionsAreInvalid(): void
     {
-        $this->expectExceptionObject(new Src\Exception\CrawlerOptionIsInvalid('foo'));
+        $this->expectExceptionObject(new Src\Exception\OptionsAreMalformed('foo'));
 
         $this->commandTester->execute([
             'sitemaps' => [
@@ -619,6 +628,109 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    public function executeThrowsExceptionIfGivenParserClassDoesNotExist(): void
+    {
+        $this->expectExceptionObject(new Src\Exception\ParserDoesNotExist('foo'));
+
+        $this->commandTester->execute([
+            'sitemaps' => [
+                'https://www.example.com/sitemap.xml',
+            ],
+            '--parser' => 'foo',
+        ]);
+    }
+
+    #[Framework\Attributes\Test]
+    public function executeThrowsExceptionIfGivenParserClassIsNotValid(): void
+    {
+        $this->expectExceptionObject(new Src\Exception\ParserIsInvalid(self::class));
+
+        $this->commandTester->execute([
+            'sitemaps' => [
+                'https://www.example.com/sitemap.xml',
+            ],
+            '--parser' => self::class,
+        ]);
+    }
+
+    #[Framework\Attributes\Test]
+    public function executeUsesCustomParser(): void
+    {
+        $this->mockSitemapRequest('valid_sitemap_3');
+
+        $this->commandTester->execute([
+            'sitemaps' => [
+                'https://www.example.com/sitemap.xml',
+            ],
+            '--parser' => Tests\Fixtures\Classes\DummyParser::class,
+        ]);
+
+        $expected = new Src\Sitemap\Sitemap(new Psr7\Uri('https://www.example.com/sitemap.xml'));
+
+        self::assertEquals($expected, Tests\Fixtures\Classes\DummyParser::$parsedSitemap);
+    }
+
+    #[Framework\Attributes\Test]
+    public function executeThrowsExceptionIfParserOptionsAreInvalid(): void
+    {
+        $this->expectExceptionObject(new Src\Exception\OptionsAreMalformed('foo'));
+
+        $this->commandTester->execute([
+            'sitemaps' => [
+                'https://www.example.com/sitemap.xml',
+            ],
+            '--parser-options' => 'foo',
+        ]);
+    }
+
+    /**
+     * @param array{concurrency: int}|string $parserOptions
+     */
+    #[Framework\Attributes\Test]
+    #[Framework\Attributes\DataProvider('executeUsesParserOptionsDataProvider')]
+    public function executeUsesParserOptions(array|string $parserOptions): void
+    {
+        $this->mockSitemapRequest('valid_sitemap_3');
+
+        $this->commandTester->execute(
+            [
+                'sitemaps' => [
+                    'https://www.example.com/sitemap.xml',
+                ],
+                '--parser-options' => $parserOptions,
+            ],
+            [
+                'verbosity' => Console\Output\OutputInterface::VERBOSITY_VERBOSE,
+            ],
+        );
+
+        $output = $this->commandTester->getDisplay();
+
+        self::assertNotEmpty($output);
+        self::assertStringContainsString('Using custom parser options:', $output);
+        self::assertStringContainsString('"X-Foo": "Baz"', $output);
+    }
+
+    #[Framework\Attributes\Test]
+    public function executeShowsWarningIfParserOptionsArePassedToNonConfigurableParser(): void
+    {
+        $this->mockSitemapRequest('valid_sitemap_3');
+
+        $this->commandTester->execute([
+            'sitemaps' => [
+                'https://www.example.com/sitemap.xml',
+            ],
+            '--parser' => Tests\Fixtures\Classes\DummyParser::class,
+            '--parser-options' => ['foo' => 'bar'],
+        ]);
+
+        $output = $this->commandTester->getDisplay();
+
+        self::assertNotEmpty($output);
+        self::assertStringContainsString('You passed parser options to a non-configurable parser.', $output);
+    }
+
+    #[Framework\Attributes\Test]
     #[Framework\Attributes\DataProvider('executeFailsIfSitemapCannotBeCrawledDataProvider')]
     public function executeFailsIfSitemapCannotBeCrawled(bool $allowFailures, int $expected): void
     {
@@ -669,7 +781,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         $this->expectExceptionMessage(
             implode(PHP_EOL, [
                 'The sitemap "https://www.example.com/sitemap.xml" is invalid and cannot be parsed due to the following errors:',
-                '  * The given URL must not be empty.',
+                '  * sitemaps.0: The given URL must not be empty.',
             ]),
         );
 
@@ -784,6 +896,15 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     }
 
     /**
+     * @return Generator<string, array{array{request_headers: array<string, string>}|string}>
+     */
+    public static function executeUsesParserOptionsDataProvider(): Generator
+    {
+        yield 'array' => [['request_headers' => ['X-Foo' => 'Baz']]];
+        yield 'json string' => ['{"request_headers": {"X-Foo": "Baz"}}'];
+    }
+
+    /**
      * @return Generator<string, array{bool, int}>
      */
     public static function executeFailsIfSitemapCannotBeCrawledDataProvider(): Generator
@@ -797,5 +918,6 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         Tests\Fixtures\Classes\DummyCrawler::$crawledUrls = [];
         Tests\Fixtures\Classes\DummyCrawler::$resultStack = [];
         Tests\Fixtures\Classes\DummyVerboseCrawler::$output = null;
+        Tests\Fixtures\Classes\DummyParser::$parsedSitemap = null;
     }
 }

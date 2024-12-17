@@ -27,6 +27,7 @@ use EliasHaeussler\CacheWarmup\Crawler;
 use EliasHaeussler\CacheWarmup\Formatter;
 use EliasHaeussler\CacheWarmup\Helper;
 use EliasHaeussler\CacheWarmup\Sitemap;
+use EliasHaeussler\CacheWarmup\Xml;
 use Psr\Log;
 use ReflectionClass;
 
@@ -51,6 +52,8 @@ final class CacheWarmupConfig
      * @param int<0, max>                                        $limit
      * @param Crawler\Crawler|class-string<Crawler\Crawler>|null $crawler
      * @param array<string, mixed>                               $crawlerOptions
+     * @param Xml\Parser|class-string<Xml\Parser>|null           $parser
+     * @param array<string, mixed>                               $parserOptions
      * @param int<0, max>                                        $repeatAfter
      */
     public function __construct(
@@ -62,6 +65,8 @@ final class CacheWarmupConfig
         private Crawler\Crawler|string|null $crawler = null,
         private array $crawlerOptions = [],
         private Crawler\Strategy\CrawlingStrategy|string|null $strategy = null,
+        private Xml\Parser|string|null $parser = null,
+        private array $parserOptions = [],
         private string $format = 'text',
         private ?string $logFile = null,
         private string $logLevel = Log\LogLevel::ERROR,
@@ -255,6 +260,56 @@ final class CacheWarmupConfig
     public function setStrategy(Crawler\Strategy\CrawlingStrategy|string $strategy): self
     {
         $this->strategy = $strategy;
+
+        return $this;
+    }
+
+    /**
+     * @return Xml\Parser|class-string<Xml\Parser>|null
+     */
+    public function getParser(): Xml\Parser|string|null
+    {
+        return $this->parser;
+    }
+
+    /**
+     * @param Xml\Parser|class-string<Xml\Parser> $parser
+     */
+    public function setParser(Xml\Parser|string $parser): self
+    {
+        $this->parser = $parser;
+
+        return $this;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getParserOptions(): array
+    {
+        return $this->parserOptions;
+    }
+
+    /**
+     * @param array<string, mixed> $parserOptions
+     */
+    public function setParserOptions(array $parserOptions): self
+    {
+        $this->parserOptions = $parserOptions;
+
+        return $this;
+    }
+
+    public function setParserOption(string $name, mixed $value): self
+    {
+        $this->parserOptions[$name] = $value;
+
+        return $this;
+    }
+
+    public function removeParserOption(string $name): self
+    {
+        unset($this->parserOptions[$name]);
 
         return $this;
     }

@@ -63,7 +63,7 @@ final class SitemapCannotBeParsedTest extends Framework\TestCase
         self::assertSame(
             implode(PHP_EOL, [
                 'The sitemap "https://www.example.com" is invalid and cannot be parsed due to the following errors:',
-                '  * Cannot be empty and must be filled with a value matching type `string`.',
+                '  * foo: Cannot be empty and must be filled with a value matching type `string`.',
             ]),
             $actual->getMessage(),
         );

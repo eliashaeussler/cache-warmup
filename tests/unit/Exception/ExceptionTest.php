@@ -27,35 +27,47 @@ use EliasHaeussler\CacheWarmup as Src;
 use EliasHaeussler\CacheWarmup\Tests;
 use PHPUnit\Framework;
 
-use function implode;
-
 /**
- * CommandParametersAreInvalidTest.
+ * ExceptionTest.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Src\Exception\CommandParametersAreInvalid::class)]
-final class CommandParametersAreInvalidTest extends Framework\TestCase
+#[Framework\Attributes\CoversClass(Src\Exception\Exception::class)]
+final class ExceptionTest extends Framework\TestCase
 {
     use Tests\MappingErrorTrait;
 
-    #[Framework\Attributes\Test]
-    public function constructorCreatesExceptionForGivenErrors(): void
+    private Tests\Fixtures\Classes\DummyException $subject;
+
+    public function setUp(): void
     {
-        $error = $this->buildMappingError();
-        $nameMapping = [
-            'foo' => '--foo',
+        $this->subject = new Tests\Fixtures\Classes\DummyException();
+    }
+
+    #[Framework\Attributes\Test]
+    public function formatMappingErrorReturnsFormattedErrors(): void
+    {
+        $error = $this->buildMappingError(['foo' => null, 'baz' => false]);
+
+        $expected = [
+            '  * *root*: Unexpected key(s) `baz`, expected `foo`.',
+            '  * foo: Value null is not a valid string.',
         ];
 
-        $expected = implode(PHP_EOL, [
-            'Some command parameters are invalid:',
-            '  * --foo: Value null is not a valid string.',
-        ]);
+        self::assertSame($expected, $this->subject->formatMappingError($error));
+    }
 
-        $actual = new Src\Exception\CommandParametersAreInvalid($error, $nameMapping);
+    #[Framework\Attributes\Test]
+    public function formatMappingErrorReturnsFormattedErrorsWithNodePathMapping(): void
+    {
+        $error = $this->buildMappingError(['foo' => null, 'baz' => false]);
 
-        self::assertSame($expected, $actual->getMessage());
-        self::assertSame(1708712872, $actual->getCode());
+        $expected = [
+            '  * *root*: Unexpected key(s) `baz`, expected `foo`.',
+            '  * baz: Value null is not a valid string.',
+        ];
+
+        self::assertSame($expected, $this->subject->formatMappingError($error, ['foo' => 'baz']));
     }
 }

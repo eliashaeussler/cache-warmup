@@ -23,36 +23,21 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Exception;
 
-use CuyZ\Valinor;
-use EliasHaeussler\CacheWarmup\Sitemap;
-
-use function implode;
 use function sprintf;
 
 /**
- * SitemapCannotBeParsed.
+ * ParserDoesNotExist.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class SitemapCannotBeParsed extends Exception
+final class ParserDoesNotExist extends Exception
 {
-    public function __construct(Sitemap\Sitemap $sitemap, ?Valinor\Mapper\MappingError $error = null)
+    public function __construct(string $className)
     {
-        $suffix = '.';
-
-        if (null !== $error) {
-            $suffix = sprintf(
-                ' due to the following errors:%s%s',
-                PHP_EOL,
-                implode(PHP_EOL, $this->formatMappingError($error)),
-            );
-        }
-
         parent::__construct(
-            sprintf('The sitemap "%s" is invalid and cannot be parsed%s', $sitemap->getUri(), $suffix),
-            1660668799,
-            $error,
+            sprintf('The specified parser class "%s" does not exist.', $className),
+            1734202194,
         );
     }
 }

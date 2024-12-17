@@ -43,14 +43,19 @@ final class CacheWarmerTest extends Framework\TestCase
     use CacheWarmupResultProcessorTrait;
     use ClientMockTrait;
 
+    private Src\Xml\SitemapXmlParser $parser;
     private Fixtures\Classes\DummyEventDispatcher $eventDispatcher;
     private Src\CacheWarmer $subject;
 
     protected function setUp(): void
     {
         $this->client = $this->createClient();
+        $this->parser = new Src\Xml\SitemapXmlParser(client: $this->client);
         $this->eventDispatcher = new Fixtures\Classes\DummyEventDispatcher();
-        $this->subject = new Src\CacheWarmer(client: $this->client, eventDispatcher: $this->eventDispatcher);
+        $this->subject = new Src\CacheWarmer(
+            parser: $this->parser,
+            eventDispatcher: $this->eventDispatcher,
+        );
     }
 
     /**
@@ -151,7 +156,7 @@ final class CacheWarmerTest extends Framework\TestCase
         $this->expectExceptionMessage(
             implode(PHP_EOL, [
                 'The sitemap "https://www.example.com/sitemap.xml" is invalid and cannot be parsed due to the following errors:',
-                '  * The given URL must not be empty.',
+                '  * sitemaps.0: The given URL must not be empty.',
             ]),
         );
 
@@ -164,7 +169,7 @@ final class CacheWarmerTest extends Framework\TestCase
         $this->mockSitemapRequest('invalid_sitemap_1');
 
         $subject = new Src\CacheWarmer(
-            client: $this->client,
+            parser: $this->parser,
             strict: false,
             eventDispatcher: $this->eventDispatcher,
         );
@@ -177,7 +182,7 @@ final class CacheWarmerTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function addSitemapsIgnoresParserErrorsIfStrictModeIsDisabled(): void
     {
-        $subject = new Src\CacheWarmer(client: $this->client, strict: false);
+        $subject = new Src\CacheWarmer(parser: $this->parser, strict: false);
         $sitemap = new Src\Sitemap\Sitemap(new Psr7\Uri('https://www.example.com/sitemap.xml'));
 
         $this->mockSitemapRequest('invalid_sitemap_1');
@@ -194,7 +199,7 @@ final class CacheWarmerTest extends Framework\TestCase
     {
         $origin = new Src\Sitemap\Sitemap(new Psr7\Uri('https://www.example.org/sitemap.xml'));
 
-        $subject = new Src\CacheWarmer(limit: 1, client: $this->client);
+        $subject = new Src\CacheWarmer(limit: 1, parser: $this->parser);
         $expected = [
             new Src\Sitemap\Url('https://www.example.org/', origin: $origin),
         ];
@@ -216,7 +221,7 @@ final class CacheWarmerTest extends Framework\TestCase
         $origin = new Src\Sitemap\Sitemap(new Psr7\Uri('https://www.example.org/sitemap.xml'));
 
         $subject = new Src\CacheWarmer(
-            client: $this->client,
+            parser: $this->parser,
             excludePatterns: [
                 Src\Config\Option\ExcludePattern::createFromPattern('*/foo'),
                 Src\Config\Option\ExcludePattern::createFromRegularExpression('#www\\.example\\.com#'),
@@ -259,7 +264,7 @@ final class CacheWarmerTest extends Framework\TestCase
     public function addSitemapsDispatchesSitemapExcludedEventIfExcludePatternMatches(): void
     {
         $subject = new Src\CacheWarmer(
-            client: $this->client,
+            parser: $this->parser,
             excludePatterns: [
                 Src\Config\Option\ExcludePattern::createFromRegularExpression('#www\\.example\\.com#'),
             ],
@@ -319,7 +324,7 @@ final class CacheWarmerTest extends Framework\TestCase
     public function addUrlDispatchesUrlExcludedEventIfExcludePatternMatches(): void
     {
         $subject = new Src\CacheWarmer(
-            client: $this->client,
+            parser: $this->parser,
             excludePatterns: [
                 Src\Config\Option\ExcludePattern::createFromRegularExpression('#www\\.example\\.com#'),
             ],
@@ -345,7 +350,7 @@ final class CacheWarmerTest extends Framework\TestCase
         $url1 = new Src\Sitemap\Url('https://www.example.org/sitemap.xml');
         $url2 = new Src\Sitemap\Url('https://www.example.com/sitemap.xml');
 
-        $subject = new Src\CacheWarmer(limit: 1, client: $this->client);
+        $subject = new Src\CacheWarmer(limit: 1, parser: $this->parser);
         $subject->addUrl($url1)->addUrl($url2);
 
         self::assertSame([$url1], $subject->getUrls());

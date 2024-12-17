@@ -28,6 +28,7 @@ use EliasHaeussler\CacheWarmup\Config;
 use EliasHaeussler\CacheWarmup\Crawler;
 use EliasHaeussler\CacheWarmup\Exception;
 use EliasHaeussler\CacheWarmup\Helper;
+use EliasHaeussler\CacheWarmup\Xml;
 
 use function getenv;
 use function gettype;
@@ -52,19 +53,26 @@ final class EnvironmentVariablesConfigAdapter implements ConfigAdapter
     ];
 
     private readonly Crawler\CrawlerFactory $crawlerFactory;
+    private readonly Xml\ParserFactory $parserFactory;
+    private readonly Config\Component\OptionsParser $optionsParser;
     private readonly Valinor\Mapper\TreeMapper $mapper;
 
     public function __construct()
     {
         $this->crawlerFactory = new Crawler\CrawlerFactory();
+        $this->parserFactory = new Xml\ParserFactory();
+        $this->optionsParser = new Config\Component\OptionsParser();
         $this->mapper = (new ConfigMapperFactory())->get();
     }
 
     /**
      * @throws Exception\CrawlerDoesNotExist
      * @throws Exception\CrawlerIsInvalid
-     * @throws Exception\CrawlerOptionIsInvalid
      * @throws Exception\EnvironmentVariablesAreInvalid
+     * @throws Exception\OptionsAreInvalid
+     * @throws Exception\OptionsAreMalformed
+     * @throws Exception\ParserDoesNotExist
+     * @throws Exception\ParserIsInvalid
      */
     public function get(): Config\CacheWarmupConfig
     {
@@ -107,18 +115,26 @@ final class EnvironmentVariablesConfigAdapter implements ConfigAdapter
      *
      * @throws Exception\CrawlerDoesNotExist
      * @throws Exception\CrawlerIsInvalid
-     * @throws Exception\CrawlerOptionIsInvalid
+     * @throws Exception\OptionsAreInvalid
+     * @throws Exception\OptionsAreMalformed
+     * @throws Exception\ParserDoesNotExist
+     * @throws Exception\ParserIsInvalid
      */
     private function processValue(string $envVarValue, mixed $defaultValue, string $name): array|bool|string
     {
         // Test if given crawler is supported (throws exception if it's invalid)
         if ('crawler' === $name && '' !== trim($envVarValue)) {
-            $this->crawlerFactory->get($envVarValue);
+            $this->crawlerFactory->validate($envVarValue);
+        }
+
+        // Test if given parser is supported (throws exception if it's invalid)
+        if ('parser' === $name && '' !== trim($envVarValue)) {
+            $this->parserFactory->validate($envVarValue);
         }
 
         return match (gettype($defaultValue)) {
             'array' => match ($name) {
-                'crawlerOptions' => $this->crawlerFactory->parseCrawlerOptions($envVarValue),
+                'crawlerOptions', 'parserOptions' => $this->optionsParser->parse($envVarValue),
                 default => Helper\ArrayHelper::trimExplode($envVarValue),
             },
             'boolean' => in_array(trim($envVarValue), self::BOOLEAN_VALUES, true),

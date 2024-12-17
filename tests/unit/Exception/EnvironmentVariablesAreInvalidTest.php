@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Tests\Exception;
 
-use CuyZ\Valinor;
 use EliasHaeussler\CacheWarmup as Src;
+use EliasHaeussler\CacheWarmup\Tests;
 use PHPUnit\Framework;
 
 use function implode;
@@ -38,6 +38,8 @@ use function implode;
 #[Framework\Attributes\CoversClass(Src\Exception\EnvironmentVariablesAreInvalid::class)]
 final class EnvironmentVariablesAreInvalidTest extends Framework\TestCase
 {
+    use Tests\MappingErrorTrait;
+
     #[Framework\Attributes\Test]
     public function constructorCreatesExceptionForGivenErrors(): void
     {
@@ -55,18 +57,5 @@ final class EnvironmentVariablesAreInvalidTest extends Framework\TestCase
 
         self::assertSame($expected, $actual->getMessage());
         self::assertSame(1708635629, $actual->getCode());
-    }
-
-    private function buildMappingError(): Valinor\Mapper\MappingError
-    {
-        try {
-            (new Valinor\MapperBuilder())
-                ->mapper()
-                ->map('array{foo: string}', ['foo' => null]);
-        } catch (Valinor\Mapper\MappingError $error) {
-            return $error;
-        }
-
-        self::fail('Unable to build mapping error.');
     }
 }
