@@ -48,7 +48,7 @@ crawler: 'Vendor\\Crawler\\MyCustomCrawler'
 ```
 
 ```bash [.env]
-CACHE_WARMUP_LIMIT="Vendor\\Crawler\\MyCustomCrawler"
+CACHE_WARMUP_CRAWLER="Vendor\\Crawler\\MyCustomCrawler"
 ```
 
 :::
