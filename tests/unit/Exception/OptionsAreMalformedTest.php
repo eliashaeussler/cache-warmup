@@ -24,38 +24,32 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Tests\Exception;
 
 use EliasHaeussler\CacheWarmup as Src;
-use EliasHaeussler\CacheWarmup\Tests;
 use PHPUnit\Framework;
 
-use function implode;
-
 /**
- * CommandParametersAreInvalidTest.
+ * OptionsAreMalformedTest.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Src\Exception\CommandParametersAreInvalid::class)]
-final class CommandParametersAreInvalidTest extends Framework\TestCase
+#[Framework\Attributes\CoversClass(Src\Exception\OptionsAreMalformed::class)]
+final class OptionsAreMalformedTest extends Framework\TestCase
 {
-    use Tests\MappingErrorTrait;
+    #[Framework\Attributes\Test]
+    public function constructorCreatesExceptionForMalformedOptions(): void
+    {
+        $actual = new Src\Exception\OptionsAreMalformed('foo');
+
+        self::assertSame(1734462725, $actual->getCode());
+        self::assertSame('Options "foo" are malformed and cannot be parsed.', $actual->getMessage());
+    }
 
     #[Framework\Attributes\Test]
-    public function constructorCreatesExceptionForGivenErrors(): void
+    public function constructorCreatesExceptionForMalformedOptionsWithNonScalarSource(): void
     {
-        $error = $this->buildMappingError();
-        $nameMapping = [
-            'foo' => '--foo',
-        ];
+        $actual = new Src\Exception\OptionsAreMalformed($this);
 
-        $expected = implode(PHP_EOL, [
-            'Some command parameters are invalid:',
-            '  * --foo: Value null is not a valid string.',
-        ]);
-
-        $actual = new Src\Exception\CommandParametersAreInvalid($error, $nameMapping);
-
-        self::assertSame($expected, $actual->getMessage());
-        self::assertSame(1708712872, $actual->getCode());
+        self::assertSame(1734462725, $actual->getCode());
+        self::assertSame('Options are malformed and cannot be parsed.', $actual->getMessage());
     }
 }

@@ -24,8 +24,6 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup;
 
 use EliasHaeussler\ValinorXml;
-use GuzzleHttp\Client;
-use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher;
@@ -45,8 +43,6 @@ use function is_string;
 final class CacheWarmer
 {
     public const VERSION = '3.2.2';
-
-    private readonly Xml\XmlParser $parser;
 
     /**
      * @var array<string, Sitemap\Url>
@@ -78,15 +74,13 @@ final class CacheWarmer
      */
     public function __construct(
         private readonly int $limit = 0,
-        private readonly ClientInterface $client = new Client(),
         private readonly Crawler\Crawler $crawler = new Crawler\ConcurrentCrawler(),
         private readonly ?Crawler\Strategy\CrawlingStrategy $strategy = null,
+        private readonly Xml\Parser $parser = new Xml\SitemapXmlParser(),
         private readonly bool $strict = true,
         private readonly array $excludePatterns = [],
         private readonly EventDispatcherInterface $eventDispatcher = new EventDispatcher\EventDispatcher(),
-    ) {
-        $this->parser = new Xml\XmlParser($this->client);
-    }
+    ) {}
 
     public function run(): Result\CacheWarmupResult
     {

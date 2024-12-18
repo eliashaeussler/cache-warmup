@@ -18,6 +18,10 @@
 		"foo": "baz"
 	},
 	"strategy": "sort-by-changefreq",
+	"parser": "EliasHaeussler\\CacheWarmup\\Tests\\Fixtures\\Classes\\DummyParser",
+	"parserOptions": {
+		"foo": "baz"
+	},
 	"format": "json",
 	"logFile": "errors.log",
 	"logLevel": "debug",

@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Crawler;
 
 use EliasHaeussler\CacheWarmup\Exception;
-use JsonException;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log;
 use Symfony\Component\Console;
@@ -32,9 +31,7 @@ use Symfony\Component\DependencyInjection;
 use Symfony\Component\EventDispatcher;
 
 use function class_exists;
-use function is_string;
 use function is_subclass_of;
-use function json_decode;
 
 /**
  * CrawlerFactory.
@@ -64,7 +61,7 @@ final class CrawlerFactory
      */
     public function get(string $crawlerClass, array $options = []): Crawler
     {
-        $this->validateCrawler($crawlerClass);
+        $this->validate($crawlerClass);
 
         $container = $this->buildLimitedContainerForCrawler($crawlerClass);
         /** @var Crawler $crawler */
@@ -91,52 +88,17 @@ final class CrawlerFactory
     }
 
     /**
-     * @param string|array<string, mixed>|null $crawlerOptions
-     *
-     * @return array<string, mixed>
-     *
-     * @throws Exception\CrawlerOptionIsInvalid
-     */
-    public function parseCrawlerOptions(string|array|null $crawlerOptions): array
-    {
-        if (null === $crawlerOptions) {
-            return [];
-        }
-
-        // Decode JSON array
-        if (is_string($crawlerOptions)) {
-            try {
-                $crawlerOptions = json_decode($crawlerOptions, true, 512, JSON_THROW_ON_ERROR);
-            } catch (JsonException) {
-                throw new Exception\CrawlerOptionIsInvalid($crawlerOptions);
-            }
-        }
-
-        // Handle non-array crawler options
-        if (!is_array($crawlerOptions)) {
-            throw new Exception\CrawlerOptionIsInvalid($crawlerOptions);
-        }
-
-        // Handle non-associative-array crawler options
-        if ($crawlerOptions !== array_filter($crawlerOptions, is_string(...), ARRAY_FILTER_USE_KEY)) {
-            throw new Exception\CrawlerOptionIsInvalid($crawlerOptions);
-        }
-
-        return $crawlerOptions;
-    }
-
-    /**
      * @throws Exception\CrawlerDoesNotExist
      * @throws Exception\CrawlerIsInvalid
      */
-    private function validateCrawler(string $crawler): void
+    public function validate(string $crawlerClass): void
     {
-        if (!class_exists($crawler)) {
-            throw new Exception\CrawlerDoesNotExist($crawler);
+        if (!class_exists($crawlerClass)) {
+            throw new Exception\CrawlerDoesNotExist($crawlerClass);
         }
 
-        if (!is_subclass_of($crawler, Crawler::class)) {
-            throw new Exception\CrawlerIsInvalid($crawler);
+        if (!is_subclass_of($crawlerClass, Crawler::class)) {
+            throw new Exception\CrawlerIsInvalid($crawlerClass);
         }
     }
 

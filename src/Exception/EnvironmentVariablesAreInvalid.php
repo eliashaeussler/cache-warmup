@@ -41,17 +41,7 @@ final class EnvironmentVariablesAreInvalid extends Exception
      */
     public function __construct(Valinor\Mapper\MappingError $error, array $nameMapping = [])
     {
-        $errorMessages = [];
-        $errors = Valinor\Mapper\Tree\Message\Messages::flattenFromNode($error->node())->errors();
-
-        foreach ($errors as $propertyError) {
-            $path = $propertyError->node()->path();
-            $errorMessages[] = sprintf(
-                '  * %s: %s',
-                $nameMapping[$path] ?? $path,
-                $propertyError->toString(),
-            );
-        }
+        $errorMessages = $this->formatMappingError($error, $nameMapping);
 
         parent::__construct(
             sprintf(

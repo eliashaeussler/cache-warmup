@@ -23,16 +23,11 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Crawler;
 
-use EliasHaeussler\CacheWarmup\CacheWarmer;
 use EliasHaeussler\CacheWarmup\Http;
-use Generator;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Pool;
-use GuzzleHttp\Psr7;
 use Psr\Http\Message;
 use Symfony\Component\OptionsResolver;
-
-use function sprintf;
 
 /**
  * ConcurrentCrawlerTrait.
@@ -82,7 +77,12 @@ trait ConcurrentCrawlerTrait
         array $handlers = [],
         bool $stopOnFailure = false,
     ): Pool {
-        return Http\Message\RequestPoolFactory::create($this->buildRequests($urls))
+        $requestFactory = new Http\Message\RequestFactory(
+            $this->options['request_method'],
+            $this->options['request_headers'],
+        );
+
+        return Http\Message\RequestPoolFactory::create($requestFactory->buildIterable($urls))
             ->withClient($client)
             ->withConcurrency($this->options['concurrency'])
             ->withOptions($this->options['request_options'])
@@ -90,37 +90,5 @@ trait ConcurrentCrawlerTrait
             ->withStopOnFailure($stopOnFailure)
             ->createPool()
         ;
-    }
-
-    /**
-     * @param list<Message\UriInterface> $urls
-     *
-     * @return Generator<int, Message\RequestInterface>
-     */
-    protected function buildRequests(array $urls): Generator
-    {
-        foreach ($urls as $url) {
-            yield new Psr7\Request(
-                $this->options['request_method'],
-                $url,
-                $this->getRequestHeaders(),
-            );
-        }
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    protected function getRequestHeaders(): array
-    {
-        $userAgent = sprintf(
-            'EliasHaeussler-CacheWarmup/%s (https://github.com/eliashaeussler/cache-warmup)',
-            CacheWarmer::VERSION,
-        );
-
-        return [
-            'User-Agent' => $userAgent,
-            ...$this->options['request_headers'],
-        ];
     }
 }

@@ -67,3 +67,25 @@ The library ships with two default crawlers:
 You can find all available crawler options in the
 [`crawlerOptions`](../config-reference/crawler-options.md#option-reference)
 configuration reference.
+
+## `Parser`
+
+XML sitemaps are fetched and parsed by parsers implementing
+[`EliasHaeussler\CacheWarmup\Xml\Parser`](../../src/Xml/Parser.php).
+Read more about how to [create a custom parser](parser.md).
+
+In addition, there exist different variations of parser implementations:
+
+::: info ⚙️ [Configurable Parser](configurable-parser.md)
+Allows to customize parsing behavior using parser options.
+:::
+
+### Default parser
+
+The library ships with a default parser:
+
+* [`EliasHaeussler\CacheWarmup\Xml\SitemapXmlParser`](../../src/Xml/SitemapXmlParser.php)
+
+You can find all available parser options in the
+[`parserOptions`](../config-reference/parser-options.md#option-reference)
+configuration reference.

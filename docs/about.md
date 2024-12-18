@@ -40,7 +40,8 @@ Support for gzipped XML sitemaps
 :::
 
 ::: info 🧑‍💻 Customizable
-Interface for [custom crawler](api/index.md#crawler) implementations
+Interface for custom [crawler](api/index.md#crawler) and
+[parser](api/index.md#parser) implementations
 :::
 
 … and [many more](config-reference/index.md)!

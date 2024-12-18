@@ -27,6 +27,7 @@ use CuyZ\Valinor;
 use EliasHaeussler\CacheWarmup\Config;
 use EliasHaeussler\CacheWarmup\Crawler;
 use EliasHaeussler\CacheWarmup\Exception;
+use EliasHaeussler\CacheWarmup\Xml;
 use Symfony\Component\Console;
 
 use function is_string;
@@ -49,6 +50,7 @@ final class ConsoleInputConfigAdapter implements ConfigAdapter
         'progress' => '--progress',
         'crawler' => '--crawler',
         'strategy' => '--strategy',
+        'parser' => '--parser',
         'format' => '--format',
         'logFile' => '--log-file',
         'logLevel' => '--log-level',
@@ -58,12 +60,16 @@ final class ConsoleInputConfigAdapter implements ConfigAdapter
     ];
 
     private readonly Crawler\CrawlerFactory $crawlerFactory;
+    private readonly Xml\ParserFactory $parserFactory;
+    private readonly Config\Component\OptionsParser $optionsParser;
     private readonly Valinor\Mapper\TreeMapper $mapper;
 
     public function __construct(
         private readonly Console\Input\InputInterface $input,
     ) {
         $this->crawlerFactory = new Crawler\CrawlerFactory();
+        $this->parserFactory = new Xml\ParserFactory();
+        $this->optionsParser = new Config\Component\OptionsParser();
         $this->mapper = (new ConfigMapperFactory())->get();
     }
 
@@ -71,12 +77,16 @@ final class ConsoleInputConfigAdapter implements ConfigAdapter
      * @throws Exception\CommandParametersAreInvalid
      * @throws Exception\CrawlerDoesNotExist
      * @throws Exception\CrawlerIsInvalid
-     * @throws Exception\CrawlerOptionIsInvalid
+     * @throws Exception\OptionsAreInvalid
+     * @throws Exception\OptionsAreMalformed
+     * @throws Exception\ParserDoesNotExist
+     * @throws Exception\ParserIsInvalid
      */
     public function get(): Config\CacheWarmupConfig
     {
         $nameMapping = self::PARAMETER_MAPPING;
         $nameMapping['crawlerOptions'] = '--crawler-options';
+        $nameMapping['parserOptions'] = '--parser-options';
 
         $parameters = $this->resolveParameters();
 
@@ -95,7 +105,10 @@ final class ConsoleInputConfigAdapter implements ConfigAdapter
      *
      * @throws Exception\CrawlerDoesNotExist
      * @throws Exception\CrawlerIsInvalid
-     * @throws Exception\CrawlerOptionIsInvalid
+     * @throws Exception\OptionsAreInvalid
+     * @throws Exception\OptionsAreMalformed
+     * @throws Exception\ParserDoesNotExist
+     * @throws Exception\ParserIsInvalid
      */
     private function resolveParameters(): array
     {
@@ -114,12 +127,24 @@ final class ConsoleInputConfigAdapter implements ConfigAdapter
         if (null !== $this->input->getOption('crawler-options')) {
             /** @var string $crawlerOptions */
             $crawlerOptions = $this->input->getOption('crawler-options');
-            $parameters['crawlerOptions'] = $this->crawlerFactory->parseCrawlerOptions($crawlerOptions);
+            $parameters['crawlerOptions'] = $this->optionsParser->parse($crawlerOptions);
         }
 
         // Test if given crawler is supported (throws exception if it's invalid)
         if (is_string($parameters['crawler'])) {
-            $this->crawlerFactory->get($parameters['crawler']);
+            $this->crawlerFactory->validate($parameters['crawler']);
+        }
+
+        // Resolve parser options
+        if (null !== $this->input->getOption('parser-options')) {
+            /** @var string $parserOptions */
+            $parserOptions = $this->input->getOption('parser-options');
+            $parameters['parserOptions'] = $this->optionsParser->parse($parserOptions);
+        }
+
+        // Test if given parser is supported (throws exception if it's invalid)
+        if (is_string($parameters['parser'])) {
+            $this->parserFactory->validate($parameters['parser']);
         }
 
         return $parameters;

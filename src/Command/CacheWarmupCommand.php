@@ -34,8 +34,7 @@ use EliasHaeussler\CacheWarmup\Log;
 use EliasHaeussler\CacheWarmup\Result;
 use EliasHaeussler\CacheWarmup\Sitemap;
 use EliasHaeussler\CacheWarmup\Time;
-use GuzzleHttp\Client;
-use GuzzleHttp\ClientInterface;
+use EliasHaeussler\CacheWarmup\Xml;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\Console;
@@ -65,6 +64,8 @@ final class CacheWarmupCommand extends Console\Command\Command
     private const SUCCESSFUL = 0;
     private const FAILED = 1;
 
+    private readonly Config\Component\OptionsParser $optionsParser;
+    private readonly Xml\ParserFactory $parserFactory;
     private readonly Time\TimeTracker $timeTracker;
     private Config\CacheWarmupConfig $config;
     private Console\Style\SymfonyStyle $io;
@@ -73,10 +74,12 @@ final class CacheWarmupCommand extends Console\Command\Command
     private bool $firstRun = true;
 
     public function __construct(
-        private readonly ClientInterface $client = new Client(),
         private readonly EventDispatcherInterface $eventDispatcher = new EventDispatcher\EventDispatcher(),
     ) {
         parent::__construct('cache-warmup');
+
+        $this->optionsParser = new Config\Component\OptionsParser();
+        $this->parserFactory = new Xml\ParserFactory();
         $this->timeTracker = new Time\TimeTracker();
     }
 
@@ -294,6 +297,18 @@ HELP);
             'Optional strategy to prepare URLs before crawling them',
         );
         $this->addOption(
+            'parser',
+            null,
+            Console\Input\InputOption::VALUE_REQUIRED,
+            'FQCN of the parser to be used for parsing XML sitemaps',
+        );
+        $this->addOption(
+            'parser-options',
+            null,
+            Console\Input\InputOption::VALUE_REQUIRED,
+            'Additional config for configurable parsers',
+        );
+        $this->addOption(
             'allow-failures',
             null,
             Console\Input\InputOption::VALUE_NONE,
@@ -425,7 +440,10 @@ HELP);
     }
 
     /**
-     * @throws Exception\ConfigFileIsNotSupported
+     * @throws Exception\CrawlerDoesNotExist
+     * @throws Exception\CrawlerIsInvalid
+     * @throws Exception\OptionsAreInvalid
+     * @throws Exception\OptionsAreMalformed
      */
     protected function execute(Console\Input\InputInterface $input, Console\Output\OutputInterface $output): int
     {
@@ -531,9 +549,9 @@ HELP);
         // Initialize cache warmer
         $cacheWarmer = new CacheWarmer(
             $this->config->getLimit(),
-            $this->client,
             $crawler,
             $strategy,
+            $this->initializeParser(),
             !$this->config->areFailuresAllowed(),
             $this->config->getExcludePatterns(),
             $this->eventDispatcher,
@@ -557,7 +575,7 @@ HELP);
     private function initializeCrawler(): Crawler\Crawler
     {
         $crawler = $this->config->getCrawler();
-        $crawlerOptions = $this->crawlerFactory->parseCrawlerOptions($this->config->getCrawlerOptions());
+        $crawlerOptions = $this->optionsParser->parse($this->config->getCrawlerOptions());
         $stopOnFailure = $this->config->shouldStopOnFailure();
 
         // Select default crawler
@@ -596,6 +614,38 @@ HELP);
         }
 
         return $crawler;
+    }
+
+    private function initializeParser(): Xml\Parser
+    {
+        $parser = $this->config->getParser();
+        $parserOptions = $this->optionsParser->parse($this->config->getParserOptions());
+
+        // Select default parser
+        if (null === $parser) {
+            $parser = Xml\SitemapXmlParser::class;
+        }
+
+        // Initialize parser
+        if (is_string($parser)) {
+            $parser = $this->parserFactory->get($parser, $parserOptions);
+        }
+
+        // Print parser options
+        if ($parser instanceof Xml\ConfigurableParser) {
+            if ($this->formatter->isVerbose() && $this->io->isVerbose() && [] !== $parserOptions) {
+                $this->io->section('Using custom parser options:');
+                $this->io->writeln((string) json_encode($parserOptions, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+                $this->io->newLine();
+            }
+        } elseif ([] !== $parserOptions) {
+            $this->formatter->logMessage(
+                'You passed parser options to a non-configurable parser.',
+                Formatter\MessageSeverity::Warning,
+            );
+        }
+
+        return $parser;
     }
 
     /**

@@ -23,22 +23,21 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Exception;
 
-use function get_debug_type;
 use function sprintf;
 
 /**
- * CrawlerOptionIsInvalid.
+ * ParserIsInvalid.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class CrawlerOptionIsInvalid extends Exception
+final class ParserIsInvalid extends Exception
 {
-    public function __construct(mixed $options)
+    public function __construct(string $className)
     {
         parent::__construct(
-            sprintf('The crawler options must be an associative array, %s given.', get_debug_type($options)),
-            1677424305,
+            sprintf('The specified parser "%s" is not valid.', $className),
+            1734202229,
         );
     }
 }

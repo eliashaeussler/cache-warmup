@@ -23,36 +23,31 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Exception;
 
-use CuyZ\Valinor;
-use EliasHaeussler\CacheWarmup\Sitemap;
+use Throwable;
 
-use function implode;
+use function is_scalar;
 use function sprintf;
 
 /**
- * SitemapCannotBeParsed.
+ * OptionsAreMalformed.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class SitemapCannotBeParsed extends Exception
+final class OptionsAreMalformed extends Exception
 {
-    public function __construct(Sitemap\Sitemap $sitemap, ?Valinor\Mapper\MappingError $error = null)
+    public function __construct(mixed $source, ?Throwable $previous = null)
     {
-        $suffix = '.';
-
-        if (null !== $error) {
-            $suffix = sprintf(
-                ' due to the following errors:%s%s',
-                PHP_EOL,
-                implode(PHP_EOL, $this->formatMappingError($error)),
-            );
+        if (is_scalar($source)) {
+            $source = sprintf(' "%s"', $source);
+        } else {
+            $source = '';
         }
 
         parent::__construct(
-            sprintf('The sitemap "%s" is invalid and cannot be parsed%s', $sitemap->getUri(), $suffix),
-            1660668799,
-            $error,
+            sprintf('Options%s are malformed and cannot be parsed.', $source),
+            1734462725,
+            $previous,
         );
     }
 }

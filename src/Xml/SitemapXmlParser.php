@@ -26,6 +26,7 @@ namespace EliasHaeussler\CacheWarmup\Xml;
 use CuyZ\Valinor;
 use DateTimeInterface;
 use EliasHaeussler\CacheWarmup\Exception;
+use EliasHaeussler\CacheWarmup\Http;
 use EliasHaeussler\CacheWarmup\Result;
 use EliasHaeussler\CacheWarmup\Sitemap;
 use EliasHaeussler\ValinorXml;
@@ -34,6 +35,7 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7;
 use Psr\Http\Message;
+use Symfony\Component\OptionsResolver;
 use Throwable;
 
 use function file_exists;
@@ -41,25 +43,43 @@ use function file_get_contents;
 use function is_readable;
 
 /**
- * XmlParser.
+ * SitemapXmlParser.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
+ *
+ * @phpstan-type ParserOptions array{
+ *     client_config: array<string, mixed>,
+ *     request_headers: array<string, string>,
+ *     request_options: array<string, mixed>,
+ * }
  */
-final class XmlParser
+final class SitemapXmlParser implements ConfigurableParser
 {
+    private readonly OptionsResolver\OptionsResolver $optionsResolver;
     private readonly Valinor\Mapper\TreeMapper $mapper;
 
+    /**
+     * @var ParserOptions
+     */
+    private array $options;
+
+    /**
+     * @param array<string, mixed> $options
+     */
     public function __construct(
-        private readonly ClientInterface $client = new Client(),
+        array $options = [],
+        private readonly ?ClientInterface $client = null,
     ) {
+        $this->optionsResolver = $this->createOptionsResolver();
         $this->mapper = $this->createMapper();
+
+        $this->setOptions($options);
     }
 
     /**
      * @throws Exception\FileIsMissing
      * @throws Exception\SitemapCannotBeParsed
-     * @throws Exception\UrlIsInvalid
      * @throws GuzzleException
      * @throws ValinorXml\Exception\ArrayPathHasUnexpectedType
      * @throws ValinorXml\Exception\ArrayPathIsInvalid
@@ -114,6 +134,15 @@ final class XmlParser
     }
 
     /**
+     * @param array<string, mixed> $options
+     */
+    public function setOptions(array $options): void
+    {
+        /* @phpstan-ignore assign.propertyType */
+        $this->options = $this->optionsResolver->resolve($options);
+    }
+
+    /**
      * @throws Exception\FileIsMissing
      */
     private function fetchLocalFile(string $filename): string
@@ -130,10 +159,35 @@ final class XmlParser
      */
     private function fetchUrl(Message\UriInterface $uri): string
     {
-        $request = new Psr7\Request('GET', $uri);
-        $response = $this->client->send($request);
+        $requestFactory = new Http\Message\RequestFactory('GET', $this->options['request_headers']);
+        $request = $requestFactory->build($uri);
+
+        $client = $this->client ?? new Client($this->options['client_config']);
+        $response = $client->send($request, $this->options['request_options']);
 
         return (string) $response->getBody();
+    }
+
+    private function createOptionsResolver(): OptionsResolver\OptionsResolver
+    {
+        $optionsResolver = new OptionsResolver\OptionsResolver();
+
+        $optionsResolver->define('client_config')
+            ->allowedTypes('array')
+            ->default([])
+        ;
+
+        $optionsResolver->define('request_headers')
+            ->allowedTypes('array')
+            ->default([])
+        ;
+
+        $optionsResolver->define('request_options')
+            ->allowedTypes('array')
+            ->default([])
+        ;
+
+        return $optionsResolver;
     }
 
     private function createMapper(): Valinor\Mapper\TreeMapper

@@ -93,6 +93,8 @@ final class FileConfigAdapterTest extends Framework\TestCase
             Tests\Fixtures\Classes\DummyCrawler::class,
             ['foo' => 'baz'],
             Src\Crawler\Strategy\SortByChangeFrequencyStrategy::getName(),
+            Tests\Fixtures\Classes\DummyParser::class,
+            ['foo' => 'baz'],
             Src\Formatter\JsonFormatter::getType(),
             'errors.log',
             Log\LogLevel::DEBUG,

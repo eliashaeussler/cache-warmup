@@ -30,8 +30,6 @@ use EliasHaeussler\CacheWarmup\Sitemap;
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
- *
- * @internal
  */
 final class ParserResult
 {

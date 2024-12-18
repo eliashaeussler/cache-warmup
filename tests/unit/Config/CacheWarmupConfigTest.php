@@ -57,6 +57,8 @@ final class CacheWarmupConfigTest extends Framework\TestCase
             Tests\Fixtures\Classes\DummyCrawler::class,
             ['foo' => 'baz'],
             Src\Crawler\Strategy\SortByChangeFrequencyStrategy::getName(),
+            Tests\Fixtures\Classes\DummyParser::class,
+            ['foo' => 'baz'],
             'foo',
             'errors.log',
             Log\LogLevel::DEBUG,
@@ -143,6 +145,27 @@ final class CacheWarmupConfigTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    public function setParserOptionAppliesGivenParserOptionToParserOptions(): void
+    {
+        $this->subject->setParserOption('baz', 'foo');
+
+        $expected = [
+            'foo' => 'baz',
+            'baz' => 'foo',
+        ];
+
+        self::assertSame($expected, $this->subject->getParserOptions());
+    }
+
+    #[Framework\Attributes\Test]
+    public function removeParserOptionRemovesGivenParserOptionFromParserOptions(): void
+    {
+        $this->subject->removeParserOption('foo');
+
+        self::assertSame([], $this->subject->getParserOptions());
+    }
+
+    #[Framework\Attributes\Test]
     public function useJsonFormatSetsJsonAsConfiguredFormat(): void
     {
         $this->subject->useJsonFormat();
@@ -184,6 +207,8 @@ final class CacheWarmupConfigTest extends Framework\TestCase
             Tests\Fixtures\Classes\DummyLoggingCrawler::class,
             ['dummy' => 'foo'],
             Src\Crawler\Strategy\SortByLastModificationDateStrategy::getName(),
+            Tests\Fixtures\Classes\DummyConfigurableParser::class,
+            ['dummy' => 'foo'],
             Src\Formatter\JsonFormatter::getType(),
             'alerts.log',
             Log\LogLevel::ALERT,
@@ -213,6 +238,11 @@ final class CacheWarmupConfigTest extends Framework\TestCase
                 'dummy' => 'foo',
             ],
             Src\Crawler\Strategy\SortByLastModificationDateStrategy::getName(),
+            Tests\Fixtures\Classes\DummyConfigurableParser::class,
+            [
+                'foo' => 'baz',
+                'dummy' => 'foo',
+            ],
             Src\Formatter\JsonFormatter::getType(),
             'alerts.log',
             Log\LogLevel::ALERT,
@@ -238,6 +268,8 @@ final class CacheWarmupConfigTest extends Framework\TestCase
             'crawler' => null,
             'crawlerOptions' => [],
             'strategy' => null,
+            'parser' => null,
+            'parserOptions' => [],
             'format' => Src\Formatter\TextFormatter::getType(),
             'logFile' => null,
             'logLevel' => Log\LogLevel::ERROR,
