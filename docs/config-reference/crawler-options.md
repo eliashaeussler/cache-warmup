@@ -82,25 +82,50 @@ The following configuration options are currently available for both crawlers:
 > Optional [configuration](https://docs.guzzlephp.org/en/stable/quickstart.html#creating-a-client)
 > used when instantiating a new Guzzle client.
 
-::: info
-This crawler option can only be configured with a PHP configuration file.
-:::
-
 ::: code-group
+
+```bash [CLI]
+./cache-warmup.phar --crawler-options '{"client_config": {"auth": ["username", "password"]}}'
+```
+
+```json [JSON]
+{
+    "crawlerOptions": {
+        "client_config": {
+            "auth": [
+                "username",
+                "password"
+            ]
+        }
+    }
+}
+```
 
 ```php [PHP]
 use EliasHaeussler\CacheWarmup;
 
 return static function (CacheWarmup\Config\CacheWarmupConfig $config) {
-    $stack = \GuzzleHttp\HandlerStack::create();
-    $stack->push($customMiddleware);
-
     $config->setCrawlerOption('client_config', [
-        'handler' => $stack,
+        'auth' => [
+            'username',
+            'password',
+        ],
     ]);
 
     return $config;
 };
+```
+
+```yaml [YAML]
+crawlerOptions:
+  client_config:
+    auth:
+      - username
+      - password
+```
+
+```bash [.env]
+CACHE_WARMUP_CRAWLER_OPTIONS='{"client_config": {"auth": ["username", "password"]}}'
 ```
 
 :::
