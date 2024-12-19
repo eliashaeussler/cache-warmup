@@ -88,7 +88,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         $this->commandTester->execute(['--config' => 'tests/unit/Fixtures/ConfigFiles/valid_config.php']);
 
-        self::assertStringContainsString('3/3', $this->commandTester->getDisplay());
+        self::assertStringContainsString('3 / 3', $this->commandTester->getDisplay());
     }
 
     #[Framework\Attributes\Test]
@@ -100,7 +100,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         $this->commandTester->execute(['--config' => $configFile, '--progress' => true]);
 
-        self::assertStringContainsString('3/3', $this->commandTester->getDisplay());
+        self::assertStringContainsString('3 / 3', $this->commandTester->getDisplay());
     }
 
     #[Framework\Attributes\Test]
@@ -113,7 +113,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
             '--limit' => 1,
         ]);
 
-        self::assertStringContainsString('1/1', $this->commandTester->getDisplay());
+        self::assertStringContainsString('1 / 1', $this->commandTester->getDisplay());
     }
 
     #[Framework\Attributes\Test]
@@ -129,7 +129,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         putenv('CACHE_WARMUP_CONFIG');
 
-        self::assertStringContainsString('1/1', $this->commandTester->getDisplay());
+        self::assertStringContainsString('1 / 1', $this->commandTester->getDisplay());
     }
 
     #[Framework\Attributes\Test]
@@ -181,7 +181,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         putenv('CACHE_WARMUP_LIMIT');
 
-        self::assertStringContainsString('2/2', $this->commandTester->getDisplay());
+        self::assertStringContainsString('2 / 2', $this->commandTester->getDisplay());
     }
 
     #[Framework\Attributes\Test]

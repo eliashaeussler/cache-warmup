@@ -44,35 +44,11 @@ final class CompactProgressHandlerTest extends Framework\TestCase
     protected function setUp(): void
     {
         $this->output = new Console\Output\BufferedOutput();
-        $this->subject = new Src\Http\Message\Handler\CompactProgressHandler($this->output, 10);
+        $this->subject = new Src\Http\Message\Handler\CompactProgressHandler($this->output, 200);
     }
 
     #[Framework\Attributes\Test]
-    public function startProgressBarStartsProgressBar(): void
-    {
-        $this->subject->startProgressBar();
-
-        $output = $this->output->fetch();
-
-        self::assertNotEmpty($output);
-        self::assertMatchesRegularExpression('#^\s*0/10 \S+\s+0% -- no failures#m', $output);
-    }
-
-    #[Framework\Attributes\Test]
-    public function finishProgressBarFinishesProgressBar(): void
-    {
-        $this->subject->startProgressBar();
-        $this->subject->finishProgressBar();
-
-        $output = $this->output->fetch();
-
-        self::assertNotEmpty($output);
-        self::assertMatchesRegularExpression('#^\s*0/10 \S+\s+0% -- no failures#m', $output);
-        self::assertMatchesRegularExpression('#^\s*10/10 \S+\s+100% -- no failures#m', $output);
-    }
-
-    #[Framework\Attributes\Test]
-    public function onSuccessPrintsSuccessfulUrlAndAdvancesProgressBarByOneStep(): void
+    public function onSuccessAdvancesProgressByOneStep(): void
     {
         $response = new Psr7\Response();
         $uri = new Psr7\Uri('https://www.example.com');
@@ -80,14 +56,41 @@ final class CompactProgressHandlerTest extends Framework\TestCase
         $this->subject->startProgressBar();
         $this->subject->onSuccess($response, $uri);
 
-        $output = $this->output->fetch();
-
-        self::assertNotEmpty($output);
-        self::assertMatchesRegularExpression('#^\s*1/10 \S+\s+10% -- no failures#m', $output);
+        self::assertSame('.', $this->output->fetch());
     }
 
     #[Framework\Attributes\Test]
-    public function onFailurePrintsFailedUrlAndAdvancesProgressBarByOneStep(): void
+    public function onSuccessPrintsCurrentStateOnLineBreak(): void
+    {
+        $response = new Psr7\Response();
+        $uri = new Psr7\Uri('https://www.example.com');
+
+        $this->subject->startProgressBar();
+
+        for ($i = 0; $i < 100; ++$i) {
+            $this->subject->onSuccess($response, $uri);
+        }
+
+        self::assertStringContainsString('63 / 200 ( 32%)', $this->output->fetch());
+    }
+
+    #[Framework\Attributes\Test]
+    public function onSuccessPrintsFinalStateOnFinishedCrawling(): void
+    {
+        $response = new Psr7\Response();
+        $uri = new Psr7\Uri('https://www.example.com');
+
+        $this->subject->startProgressBar();
+
+        for ($i = 0; $i < 200; ++$i) {
+            $this->subject->onSuccess($response, $uri);
+        }
+
+        self::assertStringContainsString('200 / 200 (100%)', $this->output->fetch());
+    }
+
+    #[Framework\Attributes\Test]
+    public function onFailureAdvancesProgressByOneStep(): void
     {
         $exception = new Exception('foo');
         $uri = new Psr7\Uri('https://www.example.com');
@@ -96,10 +99,6 @@ final class CompactProgressHandlerTest extends Framework\TestCase
         $this->subject->onFailure($exception, $uri);
         $this->subject->onFailure($exception, $uri);
 
-        $output = $this->output->fetch();
-
-        self::assertNotEmpty($output);
-        self::assertMatchesRegularExpression('#^\s*1/10 \S+\s+10% -- 1 failure#m', $output);
-        self::assertMatchesRegularExpression('#^\s*2/10 \S+\s+20% -- 2 failures#m', $output);
+        self::assertSame('FF', $this->output->fetch());
     }
 }
