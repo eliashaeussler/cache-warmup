@@ -27,6 +27,13 @@ use Psr\Http\Message;
 use Symfony\Component\Console;
 use Throwable;
 
+use function min;
+use function round;
+use function sprintf;
+use function str_pad;
+use function str_repeat;
+use function strlen;
+
 /**
  * CompactProgressHandler.
  *
@@ -35,63 +42,86 @@ use Throwable;
  */
 final class CompactProgressHandler implements ResponseHandler
 {
-    private const PROGRESS_BAR_FORMAT = ' %current%/%max% [%bar%] %percent:3s%% -- <%fail_tag%>%fail_count% %failures%</>';
+    private const MAX_LINE_LENGTH = 80;
 
-    private readonly Console\Helper\ProgressBar $progressBar;
-    private int $failures = 0;
+    private readonly int $maxColumns;
+    private int $columns = 0;
+    private int $current = 0;
 
     public function __construct(
         private readonly Console\Output\OutputInterface $output,
-        int $max,
+        private readonly int $max,
     ) {
-        $this->progressBar = $this->createProgressBar($output, $max);
+        $this->maxColumns = $this->calculateMaxColumns();
     }
 
     public function startProgressBar(): void
     {
-        $this->progressBar->setMessage('info', 'fail_tag');
-        $this->progressBar->setMessage('no', 'fail_count');
-        $this->progressBar->setMessage('failures', 'failures');
-        $this->progressBar->start();
+        $this->reset();
     }
 
     public function finishProgressBar(): void
     {
-        $this->progressBar->finish();
-        $this->output->writeln('');
+        $this->reset();
     }
 
     public function onSuccess(Message\ResponseInterface $response, Message\UriInterface $uri): void
     {
-        $this->progressBar->advance();
-        $this->progressBar->display();
+        $this->advance('.');
     }
 
     public function onFailure(Throwable $exception, Message\UriInterface $uri): void
     {
-        $this->progressBar->setMessage((string) ++$this->failures, 'fail_count');
-
-        if ($this->failures > 0) {
-            $this->progressBar->setMessage('error', 'fail_tag');
-        }
-        if (1 === $this->failures) {
-            $this->progressBar->setMessage('failure', 'failures');
-        }
-        if (2 === $this->failures) {
-            $this->progressBar->setMessage('failures', 'failures');
-        }
-
-        $this->progressBar->advance();
-        $this->progressBar->display();
+        $this->advance('<error>F</error>');
     }
 
-    private function createProgressBar(Console\Output\OutputInterface $output, int $max): Console\Helper\ProgressBar
+    private function advance(string $output): void
     {
-        Console\Helper\ProgressBar::setFormatDefinition('cache-warmup', self::PROGRESS_BAR_FORMAT);
+        ++$this->columns;
+        ++$this->current;
 
-        $progressBar = new Console\Helper\ProgressBar($output, $max);
-        $progressBar->setFormat('cache-warmup');
+        if ($this->columns >= $this->maxColumns || $this->current === $this->max) {
+            $this->output->writeln($output.$this->renderCurrentState());
+            $this->columns = 0;
+        } else {
+            $this->output->write($output);
+        }
+    }
 
-        return $progressBar;
+    private function renderCurrentState(): string
+    {
+        $percent = round(($this->current / $this->max) * 100);
+
+        if ($this->max === $this->current) {
+            $fill = str_repeat(' ', $this->maxColumns - $this->columns);
+        } else {
+            $fill = '';
+        }
+
+        return sprintf(
+            '%s %s / %d (%s%%)',
+            $fill,
+            str_pad((string) $this->current, strlen((string) $this->max), ' ', STR_PAD_LEFT),
+            $this->max,
+            str_pad((string) $percent, 3, ' ', STR_PAD_LEFT),
+        );
+    }
+
+    private function calculateMaxColumns(): int
+    {
+        // current / max (...%)
+        $stateLength = 2 * strlen((string) $this->max) + 11;
+        $lineLength = min(
+            (new Console\Terminal())->getWidth(),
+            self::MAX_LINE_LENGTH,
+        );
+
+        return $lineLength - $stateLength;
+    }
+
+    private function reset(): void
+    {
+        $this->columns = 0;
+        $this->current = 0;
     }
 }
