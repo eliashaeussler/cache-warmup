@@ -46,6 +46,7 @@ use function count;
  *     request_headers: array<string, string>,
  *     request_options: array<string, mixed>,
  *     client_config: array<string, mixed>,
+ *     write_response_body: bool,
  * }>
  */
 final class OutputtingCrawler extends AbstractConfigurableCrawler implements LoggingCrawler, StoppableCrawler, VerboseCrawler

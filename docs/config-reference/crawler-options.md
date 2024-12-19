@@ -324,3 +324,49 @@ CACHE_WARMUP_CRAWLER_OPTIONS='{"request_options": {"delay": 500, "timeout": 10}}
 ```
 
 :::
+
+### `write_response_body` <Badge type="tip" text="4.0+" />
+
+<small>🎨&nbsp;Type: `bool` &middot; 🐝&nbsp;Default: `false`</small>
+
+> Define whether or not to write response body of crawled URLs to the corresponding
+> response object.
+
+::: warning
+Enabling this option may significantly increase memory consumption during cache warmup.
+:::
+
+::: code-group
+
+```bash [CLI]
+./cache-warmup.phar --crawler-options '{"write_response_body": true}'
+```
+
+```json [JSON]
+{
+    "crawlerOptions": {
+        "write_response_body": true
+    }
+}
+```
+
+```php [PHP]
+use EliasHaeussler\CacheWarmup;
+
+return static function (CacheWarmup\Config\CacheWarmupConfig $config) {
+    $config->setCrawlerOption('write_response_body', true);
+
+    return $config;
+};
+```
+
+```yaml [YAML]
+crawlerOptions:
+  write_response_body: true
+```
+
+```bash [.env]
+CACHE_WARMUP_CRAWLER_OPTIONS='{"write_response_body": true}'
+```
+
+:::

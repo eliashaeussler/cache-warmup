@@ -28,9 +28,12 @@ use EliasHaeussler\CacheWarmup\Tests;
 use EliasHaeussler\TransientLogger;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7;
+use GuzzleHttp\RequestOptions;
 use PHPUnit\Framework;
 use Psr\Http\Message;
 use Psr\Log;
+
+use function stream_get_meta_data;
 
 /**
  * ConcurrentCrawlerTest.
@@ -92,6 +95,45 @@ final class ConcurrentCrawlerTest extends Framework\TestCase
         $subject->crawl([new Psr7\Uri('https://www.example.org')]);
 
         self::assertNull($this->mockHandler->getLastRequest());
+    }
+
+    #[Framework\Attributes\Test]
+    public function crawlDoesNotWritesResponseBodyByDefault(): void
+    {
+        $this->mockHandler->append(new Psr7\Response());
+
+        $this->subject->crawl([new Psr7\Uri('https://www.example.org')]);
+
+        $lastOptions = $this->mockHandler->getLastOptions();
+        $sink = $lastOptions[RequestOptions::SINK] ?? null;
+
+        self::assertIsResource($sink);
+        self::assertInstanceOf(
+            Src\Http\Message\Stream\NullStream::class,
+            stream_get_meta_data($sink)['wrapper_data'],
+        );
+    }
+
+    #[Framework\Attributes\Test]
+    public function crawlWritesResponseBodyIfConfigured(): void
+    {
+        $this->mockHandler->append(new Psr7\Response());
+
+        $subject = new Src\Crawler\ConcurrentCrawler(
+            [
+                'client_config' => [
+                    'handler' => $this->mockHandler,
+                ],
+                'write_response_body' => true,
+            ],
+        );
+
+        $subject->crawl([new Psr7\Uri('https://www.example.org')]);
+
+        $lastOptions = $this->mockHandler->getLastOptions();
+        $sink = $lastOptions[RequestOptions::SINK] ?? null;
+
+        self::assertNull($sink);
     }
 
     #[Framework\Attributes\Test]

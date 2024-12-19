@@ -26,8 +26,12 @@ namespace EliasHaeussler\CacheWarmup\Crawler;
 use EliasHaeussler\CacheWarmup\Http;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Pool;
+use GuzzleHttp\RequestOptions;
 use Psr\Http\Message;
 use Symfony\Component\OptionsResolver;
+
+use function array_key_exists;
+use function fopen;
 
 /**
  * ConcurrentCrawlerTrait.
@@ -65,6 +69,11 @@ trait ConcurrentCrawlerTrait
             ->allowedTypes('array')
             ->default([])
         ;
+
+        $optionsResolver->define('write_response_body')
+            ->allowedTypes('bool')
+            ->default(false)
+        ;
     }
 
     /**
@@ -81,11 +90,19 @@ trait ConcurrentCrawlerTrait
             $this->options['request_method'],
             $this->options['request_headers'],
         );
+        $options = $this->options['request_options'];
+
+        if (!$this->options['write_response_body'] && !array_key_exists(RequestOptions::SINK, $options)) {
+            Http\Message\Stream\NullStream::register();
+            $options[RequestOptions::SINK] = fopen('null:///', 'w+');
+        } else {
+            Http\Message\Stream\NullStream::unregister();
+        }
 
         return Http\Message\RequestPoolFactory::create($requestFactory->buildIterable($urls))
             ->withClient($client)
             ->withConcurrency($this->options['concurrency'])
-            ->withOptions($this->options['request_options'])
+            ->withOptions($options)
             ->withResponseHandler(...$handlers)
             ->withStopOnFailure($stopOnFailure)
             ->createPool()
