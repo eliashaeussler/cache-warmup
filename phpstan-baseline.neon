@@ -73,6 +73,11 @@ parameters:
 			path: src/Log/FileLogger.php
 
 		-
+			message: "#^Return type \\(iterable\\<string, callable\\(\\)\\: mixed\\>\\) of method EliasHaeussler\\\\CacheWarmup\\\\Xml\\\\Node\\\\SitemapNodeProcessor\\:\\:getSubscribedEvents\\(\\) should be covariant with return type \\(iterable\\<Netlogix\\\\XmlProcessor\\\\NodeProcessor\\\\Closure\\>\\) of method Netlogix\\\\XmlProcessor\\\\NodeProcessor\\\\NodeProcessorInterface\\:\\:getSubscribedEvents\\(\\)$#"
+			count: 1
+			path: src/Xml/Node/SitemapNodeProcessor.php
+
+		-
 			message: '#^Parameter \#1 \$sitemaps of method EliasHaeussler\\CacheWarmup\\CacheWarmer\:\:addSitemaps\(\) expects EliasHaeussler\\CacheWarmup\\Sitemap\\Sitemap\|list\<EliasHaeussler\\CacheWarmup\\Sitemap\\Sitemap\|string\>\|string, array\{false\} given\.$#'
 			identifier: argument.type
 			count: 1
