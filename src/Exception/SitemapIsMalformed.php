@@ -23,36 +23,52 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Exception;
 
-use CuyZ\Valinor;
 use EliasHaeussler\CacheWarmup\Sitemap;
+use LibXMLError;
+use Throwable;
 
+use function array_map;
 use function implode;
 use function sprintf;
 
 /**
- * SitemapCannotBeParsed.
+ * SitemapIsMalformed.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class SitemapCannotBeParsed extends Exception
+final class SitemapIsMalformed extends Exception
 {
-    public function __construct(Sitemap\Sitemap $sitemap, ?Valinor\Mapper\MappingError $error = null)
+    /**
+     * @param array<LibXMLError> $errors
+     */
+    public function __construct(Sitemap\Sitemap $sitemap, array $errors = [], ?Throwable $previous = null)
     {
-        $suffix = '.';
-
-        if (null !== $error) {
+        if ([] !== $errors) {
             $suffix = sprintf(
-                ' due to the following errors:%s%s',
+                ':%s%s',
                 PHP_EOL,
-                implode(PHP_EOL, $this->formatMappingError($error)),
+                implode(PHP_EOL, array_map($this->decorateError(...), $errors)),
             );
+        } elseif (null !== $previous) {
+            $suffix = sprintf(':%s  * %s', PHP_EOL, $previous->getMessage());
+        } else {
+            $suffix = '.';
         }
 
         parent::__construct(
-            sprintf('The sitemap "%s" is invalid and cannot be parsed%s', $sitemap->getUri(), $suffix),
-            1660668799,
-            $error,
+            sprintf(
+                'Sitemap "%s" is malformed and cannot be parsed%s',
+                $sitemap->isLocalFile() ? $sitemap->getLocalFilePath() : (string) $sitemap,
+                $suffix,
+            ),
+            1733161983,
+            $previous,
         );
+    }
+
+    private function decorateError(LibXMLError $error): string
+    {
+        return sprintf('  * Line %d: %s', $error->line, $error->message);
     }
 }
