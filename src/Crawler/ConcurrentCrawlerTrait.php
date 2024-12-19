@@ -31,7 +31,6 @@ use Psr\Http\Message;
 use Symfony\Component\OptionsResolver;
 
 use function array_key_exists;
-use function fopen;
 
 /**
  * ConcurrentCrawlerTrait.
@@ -93,10 +92,7 @@ trait ConcurrentCrawlerTrait
         $options = $this->options['request_options'];
 
         if (!$this->options['write_response_body'] && !array_key_exists(RequestOptions::SINK, $options)) {
-            Http\Message\Stream\NullStream::register();
-            $options[RequestOptions::SINK] = fopen('null:///', 'w+');
-        } else {
-            Http\Message\Stream\NullStream::unregister();
+            $options[RequestOptions::SINK] = new Http\Message\Stream\NullStream();
         }
 
         return Http\Message\RequestPoolFactory::create($requestFactory->buildIterable($urls))

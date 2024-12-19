@@ -34,8 +34,6 @@ use Psr\Http\Message;
 use Psr\Log;
 use Symfony\Component\Console;
 
-use function stream_get_meta_data;
-
 /**
  * OutputtingCrawlerTest.
  *
@@ -113,10 +111,9 @@ final class OutputtingCrawlerTest extends Framework\TestCase
         $lastOptions = $this->mockHandler->getLastOptions();
         $sink = $lastOptions[RequestOptions::SINK] ?? null;
 
-        self::assertIsResource($sink);
         self::assertInstanceOf(
             Src\Http\Message\Stream\NullStream::class,
-            stream_get_meta_data($sink)['wrapper_data'],
+            $lastOptions[RequestOptions::SINK] ?? null,
         );
     }
 

@@ -26,18 +26,6 @@ namespace EliasHaeussler\CacheWarmup\Tests\Http\Message\Stream;
 use EliasHaeussler\CacheWarmup as Src;
 use PHPUnit\Framework;
 
-use function array_values;
-use function fclose;
-use function feof;
-use function fflush;
-use function fopen;
-use function fread;
-use function fseek;
-use function fstat;
-use function ftell;
-use function fwrite;
-use function is_resource;
-
 /**
  * NullStreamTest.
  *
@@ -47,108 +35,82 @@ use function is_resource;
 #[Framework\Attributes\CoversClass(Src\Http\Message\Stream\NullStream::class)]
 final class NullStreamTest extends Framework\TestCase
 {
-    /**
-     * @var resource
-     */
-    private $subject;
+    private Src\Http\Message\Stream\NullStream $subject;
 
     public function setUp(): void
     {
-        Src\Http\Message\Stream\NullStream::register();
-
-        $resource = fopen('null:///', 'w+');
-
-        if (!is_resource($resource)) {
-            self::fail('Cannot create resource.');
-        }
-
-        $this->subject = $resource;
+        $this->subject = new Src\Http\Message\Stream\NullStream();
     }
 
     #[Framework\Attributes\Test]
-    public function streamEofReturnsTrue(): void
+    public function toStringReturnsEmptyString(): void
     {
-        self::assertTrue(feof($this->subject));
+        self::assertSame('', (string) $this->subject);
     }
 
     #[Framework\Attributes\Test]
-    public function streamFlushReturnsTrue(): void
+    public function detachReturnsNull(): void
     {
-        self::assertTrue(fflush($this->subject));
+        self::assertNull($this->subject->detach());
     }
 
     #[Framework\Attributes\Test]
-    public function streamOpenOpensStream(): void
+    public function getSizeReturnsZero(): void
     {
-        $actual = fopen('null:///foo', 'r');
-
-        self::assertIsResource($actual);
-
-        fclose($actual);
+        self::assertSame(0, $this->subject->getSize());
     }
 
     #[Framework\Attributes\Test]
-    public function streamReadReturnsEmptyString(): void
+    public function eofReturnsTrue(): void
     {
-        self::assertSame('', fread($this->subject, 124));
+        self::assertTrue($this->subject->eof());
     }
 
     #[Framework\Attributes\Test]
-    public function streamSeekReturnsZero(): void
+    public function isSeekableReturnsTrue(): void
     {
-        self::assertSame(0, fseek($this->subject, 0));
+        self::assertTrue($this->subject->isSeekable());
     }
 
     #[Framework\Attributes\Test]
-    public function streamStatReturnsArrayWithEmptyInformation(): void
+    public function isWritableReturnsTrue(): void
     {
-        $blockSize = PHP_OS_FAMILY === 'Windows' ? -1 : 0;
-        $statistics = [
-            'dev' => 0,
-            'ino' => 0,
-            'mode' => 0,
-            'nlink' => 0,
-            'uid' => 0,
-            'gid' => 0,
-            'rdev' => 0,
-            'size' => 0,
-            'atime' => 0,
-            'mtime' => 0,
-            'ctime' => 0,
-            'blksize' => $blockSize,
-            'blocks' => $blockSize,
-        ];
-
-        $expected = [
-            ...array_values($statistics),
-            ...$statistics,
-        ];
-
-        self::assertSame($expected, fstat($this->subject));
+        self::assertTrue($this->subject->isWritable());
     }
 
     #[Framework\Attributes\Test]
-    public function streamTellReturnsZero(): void
+    public function writeReturnsStringLength(): void
     {
-        self::assertSame(0, ftell($this->subject));
+        self::assertSame(3, $this->subject->write('foo'));
     }
 
     #[Framework\Attributes\Test]
-    public function streamWriteReturnsZeroOnEmptyData(): void
+    public function isReadableReturnsTrue(): void
     {
-        self::assertSame(0, fwrite($this->subject, ''));
+        self::assertTrue($this->subject->isReadable());
     }
 
     #[Framework\Attributes\Test]
-    public function streamWriteReturnsNonZeroOnNonEmptyData(): void
+    public function readReturnsEmptyString(): void
     {
-        self::assertSame(3, fwrite($this->subject, 'foo'));
+        self::assertSame('', $this->subject->read(128));
     }
 
-    protected function tearDown(): void
+    #[Framework\Attributes\Test]
+    public function getContentsReturnsEmptyString(): void
     {
-        fclose($this->subject);
+        self::assertSame('', $this->subject->getContents());
+    }
 
-        Src\Http\Message\Stream\NullStream::unregister();
+    #[Framework\Attributes\Test]
+    public function getMetadataReturnsNullIfKeyIsGiven(): void
+    {
+        self::assertNull($this->subject->getMetadata('foo'));
+    }
+
+    #[Framework\Attributes\Test]
+    public function getMetadataReturnsEmptyArrayIfNoKeyIsGiven(): void
+    {
+        self::assertSame([], $this->subject->getMetadata());
     }
 }

@@ -33,8 +33,6 @@ use PHPUnit\Framework;
 use Psr\Http\Message;
 use Psr\Log;
 
-use function stream_get_meta_data;
-
 /**
  * ConcurrentCrawlerTest.
  *
@@ -105,12 +103,10 @@ final class ConcurrentCrawlerTest extends Framework\TestCase
         $this->subject->crawl([new Psr7\Uri('https://www.example.org')]);
 
         $lastOptions = $this->mockHandler->getLastOptions();
-        $sink = $lastOptions[RequestOptions::SINK] ?? null;
 
-        self::assertIsResource($sink);
         self::assertInstanceOf(
             Src\Http\Message\Stream\NullStream::class,
-            stream_get_meta_data($sink)['wrapper_data'],
+            $lastOptions[RequestOptions::SINK] ?? null,
         );
     }
 
