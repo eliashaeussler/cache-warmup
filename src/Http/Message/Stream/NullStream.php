@@ -23,10 +23,9 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Http\Message\Stream;
 
-use function in_array;
-use function stream_get_wrappers;
-use function stream_wrapper_register;
-use function stream_wrapper_unregister;
+use Psr\Http\Message;
+
+use function strlen;
 
 /**
  * NullStream.
@@ -34,77 +33,74 @@ use function stream_wrapper_unregister;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class NullStream
+final class NullStream implements Message\StreamInterface
 {
-    private const PROTOCOL = 'null';
-
-    /**
-     * @var resource|null
-     */
-    public $context;
-
-    public static function register(): void
-    {
-        if (!self::isRegistered()) {
-            stream_wrapper_register(self::PROTOCOL, self::class);
-        }
-    }
-
-    public static function unregister(): void
-    {
-        if (self::isRegistered()) {
-            stream_wrapper_unregister(self::PROTOCOL);
-        }
-    }
-
-    private static function isRegistered(): bool
-    {
-        return in_array(self::PROTOCOL, stream_get_wrappers(), true);
-    }
-
-    public function stream_close(): void {}
-
-    public function stream_eof(): bool
-    {
-        return true;
-    }
-
-    public function stream_flush(): bool
-    {
-        return true;
-    }
-
-    public function stream_open(string $path, string $mode, int $options, ?string &$opened_path): bool
-    {
-        return true;
-    }
-
-    public function stream_read(int $count): string
+    public function __toString(): string
     {
         return '';
     }
 
-    public function stream_seek(int $count, int $whence = SEEK_SET): bool
+    public function close(): void {}
+
+    public function detach()
     {
-        return true;
+        return null;
     }
 
-    /**
-     * @return array{}
-     */
-    public function stream_stat(): array
-    {
-        return [];
-    }
-
-    public function stream_tell(): int
+    public function getSize(): int
     {
         return 0;
     }
 
-    public function stream_write(string $data): int
+    public function tell(): int
     {
-        // 1 is enough for curl handler to not fail during writing
-        return '' === $data ? 0 : 1;
+        return 0;
+    }
+
+    public function eof(): bool
+    {
+        return true;
+    }
+
+    public function isSeekable(): bool
+    {
+        return true;
+    }
+
+    public function seek(int $offset, int $whence = SEEK_SET): void {}
+
+    public function rewind(): void {}
+
+    public function isWritable(): bool
+    {
+        return true;
+    }
+
+    public function write(string $string): int
+    {
+        return strlen($string);
+    }
+
+    public function isReadable(): bool
+    {
+        return true;
+    }
+
+    public function read(int $length): string
+    {
+        return '';
+    }
+
+    public function getContents(): string
+    {
+        return '';
+    }
+
+    /**
+     * @return array{}|null
+     */
+    public function getMetadata(?string $key = null): ?array
+    {
+        return null !== $key ? null : [];
     }
 }
