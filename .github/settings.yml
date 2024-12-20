@@ -1,0 +1,113 @@
+repository:
+  name: 'cache-warmup'
+  description: '🔥 PHP library to warm up caches of URLs located in XML sitemaps'
+  homepage: 'https://cache-warmup.dev/'
+  topics: 'cache-warmup, crawler, xml-sitemap, php'
+  private: false
+  has_issues: true
+  has_projects: false
+  has_wiki: false
+  has_downloads: true
+  default_branch: 'main'
+  allow_squash_merge: true
+  allow_merge_commit: true
+  allow_rebase_merge: true
+  delete_branch_on_merge: true
+  # This will be handled by Renovate
+  enable_automated_security_fixes: false
+  enable_vulnerability_alerts: false
+
+# Labels for issues and pull requests
+labels:
+  - name: 'breaking'
+    color: '#36454f'
+    description: 'This introduces a breaking change'
+
+  - name: 'bug'
+    color: '#d73a4a'
+    description: Something isn't working
+
+  - name: 'dependencies'
+    color: '#93cb4a'
+    description: 'Updates project dependencies'
+
+  - name: 'documentation'
+    color: '#0075ca'
+    description: 'Improvements or additions to documentation'
+
+  - name: 'duplicate'
+    color: '#cfd3d7'
+    description: 'This issue or pull request already exists'
+
+  - name: 'enhancement'
+    color: '#a2eeef'
+    description: 'New feature or request'
+
+  - name: 'good first issue'
+    color: '#7057ff'
+    description: 'Good for newcomers'
+
+  - name: 'help wanted'
+    color: '#008672'
+    description: 'Extra attention is needed'
+
+  - name: 'invalid'
+    color: '#e4e669'
+    description: This doesn't seem right
+
+  - name: 'maintenance'
+    color: '#c0e596'
+    description: 'Code base is being maintained'
+
+  - name: 'question'
+    color: '#d876e3'
+    description: 'Further information is requested'
+
+  - name: 'security'
+    color: '#ef7da3'
+    description: 'Contains security fixes'
+
+  - name: 'wontfix'
+    color: '#ffffff'
+    description: 'This will not be worked on'
+
+# Rulesets
+rulesets:
+  - name: CI
+    target: branch
+    enforcement: active
+    conditions:
+      ref_name:
+        include:
+          - '~DEFAULT_BRANCH'
+        exclude: []
+    rules:
+      - type: deletion
+      - type: non_fast_forward
+      - type: required_status_checks
+        parameters:
+          strict_required_status_checks_policy: true
+          do_not_enforce_on_create: false
+          required_status_checks:
+            - context: 'cgl'
+              integration_id: 15368
+            - context: 'Tests (PHP 8.2 & highest dependencies)'
+              integration_id: 15368
+            - context: 'Tests (PHP 8.2 & lowest dependencies)'
+              integration_id: 15368
+            - context: 'Tests (PHP 8.3 & highest dependencies)'
+              integration_id: 15368
+            - context: 'Tests (PHP 8.3 & lowest dependencies)'
+              integration_id: 15368
+            - context: 'Tests (PHP 8.4 & highest dependencies)'
+              integration_id: 15368
+            - context: 'Tests (PHP 8.4 & lowest dependencies)'
+              integration_id: 15368
+            - context: 'Tests (E2E)'
+              integration_id: 15368
+            - context: 'Test coverage'
+              integration_id: 15368
+    bypass_actors:
+      - actor_id: 5
+        actor_type: RepositoryRole
+        bypass_mode: always
