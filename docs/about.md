@@ -11,7 +11,7 @@ The whole warmup process is highly customizable, e.g. by defining a crawling lim
 excluding sitemaps and URLs by exclusion patterns or by using a specific crawling
 strategy. It is even possible to write custom crawlers that take care of cache warmup.
 
-![Screenshot](img/screenshot.png)
+![Screenshot](img/screenshot.jpeg)
 
 ## Features
 
