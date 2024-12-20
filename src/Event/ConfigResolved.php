@@ -31,10 +31,10 @@ use EliasHaeussler\CacheWarmup\Config;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class ConfigResolved
+final readonly class ConfigResolved
 {
     public function __construct(
-        private readonly Config\CacheWarmupConfig $config,
+        private Config\CacheWarmupConfig $config,
     ) {}
 
     public function config(): Config\CacheWarmupConfig

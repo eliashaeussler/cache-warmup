@@ -6,8 +6,7 @@ all steps below.
 
 ## Requirements
 
-- PHP >= 8.1
-- Composer >= 2.1
+- PHP >= 8.2
 - Docker (when running E2E tests)
 - GPG (when running E2E tests)
 - [`jq`](https://github.com/jqlang/jq) (when running E2E tests)

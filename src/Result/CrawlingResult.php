@@ -32,15 +32,15 @@ use Stringable;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class CrawlingResult implements Stringable
+final readonly class CrawlingResult implements Stringable
 {
     /**
      * @param array<string, mixed> $data
      */
     private function __construct(
-        private readonly Message\UriInterface $uri,
-        private readonly CrawlingState $state,
-        private readonly array $data = [],
+        private Message\UriInterface $uri,
+        private CrawlingState $state,
+        private array $data = [],
     ) {}
 
     /**

@@ -38,10 +38,10 @@ use function sprintf;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class TextFormatter implements Formatter
+final readonly class TextFormatter implements Formatter
 {
     public function __construct(
-        private readonly Console\Style\SymfonyStyle $io,
+        private Console\Style\SymfonyStyle $io,
     ) {
         Helper\ConsoleHelper::registerAdditionalConsoleOutputStyles($this->io->getFormatter());
     }

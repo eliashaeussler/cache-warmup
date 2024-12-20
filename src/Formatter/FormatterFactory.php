@@ -32,10 +32,10 @@ use Symfony\Component\Console;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class FormatterFactory
+final readonly class FormatterFactory
 {
     public function __construct(
-        private readonly Console\Style\SymfonyStyle $io,
+        private Console\Style\SymfonyStyle $io,
     ) {}
 
     /**

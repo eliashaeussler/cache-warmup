@@ -31,10 +31,10 @@ use EliasHaeussler\CacheWarmup\Sitemap;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class UrlExcluded
+final readonly class UrlExcluded
 {
     public function __construct(
-        private readonly Sitemap\Url $url,
+        private Sitemap\Url $url,
     ) {}
 
     public function url(): Sitemap\Url

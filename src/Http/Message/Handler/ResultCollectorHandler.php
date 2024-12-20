@@ -35,12 +35,12 @@ use Throwable;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class ResultCollectorHandler implements ResponseHandler
+final readonly class ResultCollectorHandler implements ResponseHandler
 {
-    private readonly Result\CacheWarmupResult $result;
+    private Result\CacheWarmupResult $result;
 
     public function __construct(
-        private readonly ?EventDispatcher\EventDispatcherInterface $eventDispatcher = null,
+        private ?EventDispatcher\EventDispatcherInterface $eventDispatcher = null,
     ) {
         $this->result = new Result\CacheWarmupResult();
     }

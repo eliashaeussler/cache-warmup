@@ -40,7 +40,7 @@ use function substr;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class ConsoleInputConfigAdapter implements ConfigAdapter
+final readonly class ConsoleInputConfigAdapter implements ConfigAdapter
 {
     private const PARAMETER_MAPPING = [
         'sitemaps' => 'sitemaps',
@@ -59,13 +59,13 @@ final class ConsoleInputConfigAdapter implements ConfigAdapter
         'repeatAfter' => '--repeat-after',
     ];
 
-    private readonly Crawler\CrawlerFactory $crawlerFactory;
-    private readonly Xml\ParserFactory $parserFactory;
-    private readonly Config\Component\OptionsParser $optionsParser;
-    private readonly Valinor\Mapper\TreeMapper $mapper;
+    private Crawler\CrawlerFactory $crawlerFactory;
+    private Xml\ParserFactory $parserFactory;
+    private Config\Component\OptionsParser $optionsParser;
+    private Valinor\Mapper\TreeMapper $mapper;
 
     public function __construct(
-        private readonly Console\Input\InputInterface $input,
+        private Console\Input\InputInterface $input,
     ) {
         $this->crawlerFactory = new Crawler\CrawlerFactory();
         $this->parserFactory = new Xml\ParserFactory();

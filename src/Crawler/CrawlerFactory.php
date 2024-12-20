@@ -39,17 +39,17 @@ use function is_subclass_of;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class CrawlerFactory
+final readonly class CrawlerFactory
 {
     /**
      * @phpstan-param Log\LogLevel::* $logLevel
      */
     public function __construct(
-        private readonly Console\Output\OutputInterface $output = new Console\Output\ConsoleOutput(),
-        private readonly ?Log\LoggerInterface $logger = null,
-        private readonly string $logLevel = Log\LogLevel::ERROR,
-        private readonly bool $stopOnFailure = false,
-        private readonly EventDispatcherInterface $eventDispatcher = new EventDispatcher\EventDispatcher(),
+        private Console\Output\OutputInterface $output = new Console\Output\ConsoleOutput(),
+        private ?Log\LoggerInterface $logger = null,
+        private string $logLevel = Log\LogLevel::ERROR,
+        private bool $stopOnFailure = false,
+        private EventDispatcherInterface $eventDispatcher = new EventDispatcher\EventDispatcher(),
     ) {}
 
     /**

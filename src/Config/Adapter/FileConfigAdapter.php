@@ -39,12 +39,12 @@ use function is_iterable;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class FileConfigAdapter implements ConfigAdapter
+final readonly class FileConfigAdapter implements ConfigAdapter
 {
-    private readonly Valinor\Mapper\TreeMapper $mapper;
+    private Valinor\Mapper\TreeMapper $mapper;
 
     public function __construct(
-        private readonly string $file,
+        private string $file,
     ) {
         $this->mapper = (new ConfigMapperFactory())->get();
     }

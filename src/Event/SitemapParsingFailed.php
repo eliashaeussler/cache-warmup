@@ -32,11 +32,11 @@ use Throwable;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class SitemapParsingFailed
+final readonly class SitemapParsingFailed
 {
     public function __construct(
-        private readonly Sitemap\Sitemap $sitemap,
-        private readonly Throwable $exception,
+        private Sitemap\Sitemap $sitemap,
+        private Throwable $exception,
     ) {}
 
     public function sitemap(): Sitemap\Sitemap

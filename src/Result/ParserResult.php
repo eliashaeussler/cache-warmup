@@ -31,15 +31,15 @@ use EliasHaeussler\CacheWarmup\Sitemap;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class ParserResult
+final readonly class ParserResult
 {
     /**
      * @param list<Sitemap\Sitemap> $sitemaps
      * @param list<Sitemap\Url>     $urls
      */
     public function __construct(
-        private readonly array $sitemaps = [],
-        private readonly array $urls = [],
+        private array $sitemaps = [],
+        private array $urls = [],
     ) {}
 
     /**
