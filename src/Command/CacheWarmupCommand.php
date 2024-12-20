@@ -64,6 +64,7 @@ final class CacheWarmupCommand extends Console\Command\Command
     private const SUCCESSFUL = 0;
     private const FAILED = 1;
 
+    private readonly Crawler\Strategy\CrawlingStrategyFactory $crawlingStrategyFactory;
     private readonly Config\Component\OptionsParser $optionsParser;
     private readonly Xml\ParserFactory $parserFactory;
     private readonly Time\TimeTracker $timeTracker;
@@ -76,11 +77,12 @@ final class CacheWarmupCommand extends Console\Command\Command
     public function __construct(
         private readonly EventDispatcherInterface $eventDispatcher = new EventDispatcher\EventDispatcher(),
     ) {
-        parent::__construct('cache-warmup');
-
+        $this->crawlingStrategyFactory = new Crawler\Strategy\CrawlingStrategyFactory();
         $this->optionsParser = new Config\Component\OptionsParser();
         $this->parserFactory = new Xml\ParserFactory();
         $this->timeTracker = new Time\TimeTracker();
+
+        parent::__construct('cache-warmup');
     }
 
     protected function configure(): void
@@ -90,9 +92,14 @@ final class CacheWarmupCommand extends Console\Command\Command
         $stoppableCrawler = Crawler\StoppableCrawler::class;
         $textFormatter = Formatter\TextFormatter::getType();
         $jsonFormatter = Formatter\JsonFormatter::getType();
-        $sortByChangeFrequencyStrategy = Crawler\Strategy\SortByChangeFrequencyStrategy::getName();
-        $sortByLastModificationDateStrategy = Crawler\Strategy\SortByLastModificationDateStrategy::getName();
         $sortByPriorityStrategy = Crawler\Strategy\SortByPriorityStrategy::getName();
+        $strategies = implode(
+            PHP_EOL,
+            array_map(
+                static fn (string $strategy): string => '   * <comment>'.$strategy.'</comment>',
+                $this->crawlingStrategyFactory->getAll(),
+            ),
+        );
         $logLevels = implode(
             PHP_EOL,
             array_map(
@@ -191,9 +198,7 @@ For this, use the <comment>--strategy</comment> option together with a predefine
 
 The following strategies are currently available:
 
-   * <comment>{$sortByChangeFrequencyStrategy}</comment>
-   * <comment>{$sortByLastModificationDateStrategy}</comment>
-   * <comment>{$sortByPriorityStrategy}</comment>
+{$strategies}
 
 <info>Allow failures</info>
 <info>==============</info>
@@ -536,14 +541,8 @@ HELP);
         }
 
         // Initialize crawling strategy
-        $strategy = $this->config->getStrategy();
-        if (is_string($strategy)) {
-            $strategy = match ($strategy) {
-                Crawler\Strategy\SortByChangeFrequencyStrategy::getName() => new Crawler\Strategy\SortByChangeFrequencyStrategy(),
-                Crawler\Strategy\SortByLastModificationDateStrategy::getName() => new Crawler\Strategy\SortByLastModificationDateStrategy(),
-                Crawler\Strategy\SortByPriorityStrategy::getName() => new Crawler\Strategy\SortByPriorityStrategy(),
-                default => throw new Console\Exception\RuntimeException('The given crawling strategy is invalid.', 1677618007),
-            };
+        if (is_string($strategy = $this->config->getStrategy())) {
+            $strategy = $this->crawlingStrategyFactory->get($strategy);
         }
 
         // Initialize cache warmer

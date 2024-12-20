@@ -577,9 +577,9 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function executeThrowsExceptionIfConfiguredCrawlingStrategyIsInvalid(): void
     {
-        $this->expectException(Console\Exception\RuntimeException::class);
-        $this->expectExceptionMessage('The given crawling strategy is invalid.');
-        $this->expectExceptionCode(1677618007);
+        $this->expectExceptionObject(
+            new Src\Exception\CrawlingStrategyDoesNotExist('foo'),
+        );
 
         $this->commandTester->execute([
             'sitemaps' => [
