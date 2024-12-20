@@ -31,10 +31,10 @@ use function round;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class Duration
+final readonly class Duration
 {
     public function __construct(
-        private readonly float $milliseconds,
+        private float $milliseconds,
     ) {}
 
     public function get(): float

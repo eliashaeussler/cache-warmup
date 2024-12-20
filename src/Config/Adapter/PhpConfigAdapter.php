@@ -36,10 +36,10 @@ use function is_callable;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class PhpConfigAdapter implements ConfigAdapter
+final readonly class PhpConfigAdapter implements ConfigAdapter
 {
     public function __construct(
-        private readonly string $file,
+        private string $file,
     ) {}
 
     /**

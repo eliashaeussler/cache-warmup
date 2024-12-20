@@ -43,7 +43,7 @@ use function trim;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class EnvironmentVariablesConfigAdapter implements ConfigAdapter
+final readonly class EnvironmentVariablesConfigAdapter implements ConfigAdapter
 {
     private const ENV_VAR_PREFIX = 'CACHE_WARMUP_';
     private const BOOLEAN_VALUES = [
@@ -52,10 +52,10 @@ final class EnvironmentVariablesConfigAdapter implements ConfigAdapter
         '1',
     ];
 
-    private readonly Crawler\CrawlerFactory $crawlerFactory;
-    private readonly Xml\ParserFactory $parserFactory;
-    private readonly Config\Component\OptionsParser $optionsParser;
-    private readonly Valinor\Mapper\TreeMapper $mapper;
+    private Crawler\CrawlerFactory $crawlerFactory;
+    private Xml\ParserFactory $parserFactory;
+    private Config\Component\OptionsParser $optionsParser;
+    private Valinor\Mapper\TreeMapper $mapper;
 
     public function __construct()
     {

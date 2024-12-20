@@ -32,11 +32,11 @@ use EliasHaeussler\CacheWarmup\Sitemap;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class SitemapParsed
+final readonly class SitemapParsed
 {
     public function __construct(
-        private readonly Sitemap\Sitemap $sitemap,
-        private readonly Result\ParserResult $result,
+        private Sitemap\Sitemap $sitemap,
+        private Result\ParserResult $result,
     ) {}
 
     public function sitemap(): Sitemap\Sitemap

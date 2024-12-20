@@ -36,14 +36,14 @@ use function sprintf;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class RequestFactory
+final readonly class RequestFactory
 {
     /**
      * @param array<string, string> $headers
      */
     public function __construct(
-        private readonly string $method,
-        private readonly array $headers = [],
+        private string $method,
+        private array $headers = [],
     ) {}
 
     public function build(Message\UriInterface $url): Message\RequestInterface

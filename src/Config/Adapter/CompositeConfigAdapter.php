@@ -33,13 +33,13 @@ use function count;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class CompositeConfigAdapter implements ConfigAdapter
+final readonly class CompositeConfigAdapter implements ConfigAdapter
 {
     /**
      * @param list<ConfigAdapter> $adapters
      */
     public function __construct(
-        private readonly array $adapters,
+        private array $adapters,
     ) {}
 
     public function get(): Config\CacheWarmupConfig

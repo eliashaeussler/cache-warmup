@@ -32,14 +32,14 @@ use EliasHaeussler\CacheWarmup\Sitemap;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class UrlsPrepared
+final readonly class UrlsPrepared
 {
     /**
      * @param list<Sitemap\Url> $urls
      */
     public function __construct(
-        private readonly Crawler\Strategy\CrawlingStrategy $strategy,
-        private readonly array $urls,
+        private Crawler\Strategy\CrawlingStrategy $strategy,
+        private array $urls,
     ) {}
 
     public function strategy(): Crawler\Strategy\CrawlingStrategy

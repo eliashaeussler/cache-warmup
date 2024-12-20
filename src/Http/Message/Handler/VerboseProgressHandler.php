@@ -36,11 +36,11 @@ use function sprintf;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class VerboseProgressHandler implements ResponseHandler
+final readonly class VerboseProgressHandler implements ResponseHandler
 {
-    private readonly Console\Output\ConsoleSectionOutput $logSection;
-    private readonly Console\Output\ConsoleSectionOutput $progressBarSection;
-    private readonly Console\Helper\ProgressBar $progressBar;
+    private Console\Output\ConsoleSectionOutput $logSection;
+    private Console\Output\ConsoleSectionOutput $progressBarSection;
+    private Console\Helper\ProgressBar $progressBar;
 
     public function __construct(
         Console\Output\ConsoleOutputInterface $output,

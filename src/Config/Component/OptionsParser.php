@@ -35,9 +35,9 @@ use function is_array;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class OptionsParser
+final readonly class OptionsParser
 {
-    private readonly Valinor\Mapper\TreeMapper $mapper;
+    private Valinor\Mapper\TreeMapper $mapper;
 
     public function __construct()
     {

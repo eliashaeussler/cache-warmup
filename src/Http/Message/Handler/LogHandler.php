@@ -35,14 +35,14 @@ use Throwable;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class LogHandler implements ResponseHandler
+final readonly class LogHandler implements ResponseHandler
 {
     /**
      * @phpstan-param LogLevel::* $logLevel
      */
     public function __construct(
-        private readonly LoggerInterface $logger,
-        private readonly string $logLevel = LogLevel::ERROR,
+        private LoggerInterface $logger,
+        private string $logLevel = LogLevel::ERROR,
     ) {}
 
     public function onSuccess(Message\ResponseInterface $response, Message\UriInterface $uri): void
