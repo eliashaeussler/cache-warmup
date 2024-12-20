@@ -26,6 +26,7 @@ namespace EliasHaeussler\CacheWarmup\Crawler\Strategy;
 use EliasHaeussler\CacheWarmup\Exception;
 
 use function array_map;
+use function in_array;
 
 /**
  * CrawlingStrategyFactory.
@@ -66,5 +67,10 @@ final class CrawlingStrategyFactory
             static fn (string $strategy) => $strategy::getName(),
             self::STRATEGIES,
         );
+    }
+
+    public function has(string $name): bool
+    {
+        return in_array($name, $this->getAll(), true);
     }
 }
