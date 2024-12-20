@@ -132,7 +132,8 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.4
-          ini-file: development
+          # @todo Enable once https://github.com/box-project/box/issues/1423 is resolved
+          # ini-file: development
           tools: composer:v2
 
       # Run tests
