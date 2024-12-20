@@ -36,11 +36,12 @@ use function sprintf;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final readonly class VerboseProgressHandler implements ResponseHandler
+final class VerboseProgressHandler implements ResponseHandler
 {
-    private Console\Output\ConsoleSectionOutput $logSection;
-    private Console\Output\ConsoleSectionOutput $progressBarSection;
-    private Console\Helper\ProgressBar $progressBar;
+    private readonly Console\Output\ConsoleSectionOutput $logSection;
+    private readonly Console\Output\ConsoleSectionOutput $progressBarSection;
+    private readonly Console\Helper\ProgressBar $progressBar;
+    private bool $hasFailures = false;
 
     public function __construct(Console\Output\ConsoleOutputInterface $output, int $max)
     {
@@ -55,6 +56,7 @@ final readonly class VerboseProgressHandler implements ResponseHandler
     {
         $this->progressBarSection->writeln('');
         $this->progressBar->start();
+        $this->hasFailures = false;
     }
 
     public function finishProgressBar(): void
@@ -66,17 +68,18 @@ final readonly class VerboseProgressHandler implements ResponseHandler
     public function onSuccess(Message\ResponseInterface $response, Message\UriInterface $uri): void
     {
         $this->logSection->writeln(sprintf('<success> DONE </success> <href=%s>%s</>', $uri, $uri));
-
         $this->progressBar->advance();
-        $this->progressBar->display();
     }
 
     public function onFailure(Throwable $exception, Message\UriInterface $uri): void
     {
         $this->logSection->writeln(sprintf('<failure> FAIL </failure> <href=%s>%s</>', $uri, $uri));
-
         $this->progressBar->advance();
-        $this->progressBar->display();
+
+        if (!$this->hasFailures) {
+            $this->progressBar->display();
+            $this->hasFailures = true;
+        }
     }
 
     private function createProgressBar(int $max): Console\Helper\ProgressBar
