@@ -91,17 +91,21 @@ rulesets:
           required_status_checks:
             - context: 'cgl'
               integration_id: 15368
-            - context: 'Tests (PHP 8.2 & highest dependencies)'
+            - context: 'Tests (PHP 8.2, Ubuntu & highest dependencies)'
               integration_id: 15368
-            - context: 'Tests (PHP 8.2 & lowest dependencies)'
+            - context: 'Tests (PHP 8.2, Ubuntu & lowest dependencies)'
               integration_id: 15368
-            - context: 'Tests (PHP 8.3 & highest dependencies)'
+            - context: 'Tests (PHP 8.3, Ubuntu & highest dependencies)'
               integration_id: 15368
-            - context: 'Tests (PHP 8.3 & lowest dependencies)'
+            - context: 'Tests (PHP 8.3, Ubuntu & lowest dependencies)'
               integration_id: 15368
-            - context: 'Tests (PHP 8.4 & highest dependencies)'
+            - context: 'Tests (PHP 8.4, Ubuntu & highest dependencies)'
               integration_id: 15368
-            - context: 'Tests (PHP 8.4 & lowest dependencies)'
+            - context: 'Tests (PHP 8.4, Ubuntu & lowest dependencies)'
+              integration_id: 15368
+            - context: 'Tests (PHP 8.4, macOS & highest dependencies)'
+              integration_id: 15368
+            - context: 'Tests (PHP 8.4, Windows & highest dependencies)'
               integration_id: 15368
             - context: 'Tests (E2E)'
               integration_id: 15368
