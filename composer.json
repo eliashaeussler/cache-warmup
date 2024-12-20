@@ -46,7 +46,8 @@
 		"phpstan/phpstan-phpunit": "^2.0",
 		"phpstan/phpstan-symfony": "^2.0",
 		"phpunit/phpunit": "^11.5.1",
-		"symfony/event-dispatcher-contracts": "^2.5.3 || ^3.4.2"
+		"symfony/event-dispatcher-contracts": "^2.5.3 || ^3.4.2",
+		"symfony/string": "^6.4.3 || ^7.0.3"
 	},
 	"conflict": {
 		"cuyz/valinor": "1.14.0"
