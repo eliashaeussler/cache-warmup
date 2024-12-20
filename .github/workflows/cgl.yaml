@@ -22,6 +22,7 @@ jobs:
         with:
           # @todo Use PHP 8.4 once PHP-CS-Fixer supports PHP 8.4
           php-version: 8.3
+          ini-file: development
           tools: composer:v2, composer-require-checker, composer-unused
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
