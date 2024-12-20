@@ -13,7 +13,7 @@
 	],
 	"homepage": "https://cache-warmup.dev/",
 	"require": {
-		"php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
+		"php": "~8.2.0 || ~8.3.0 || ~8.4.0",
 		"ext-filter": "*",
 		"ext-json": "*",
 		"ext-libxml": "*",
@@ -45,7 +45,7 @@
 		"phpstan/extension-installer": "^1.2",
 		"phpstan/phpstan-phpunit": "^2.0",
 		"phpstan/phpstan-symfony": "^2.0",
-		"phpunit/phpunit": "^10.1 || ^11.0"
+		"phpunit/phpunit": "^11.0"
 	},
 	"conflict": {
 		"cuyz/valinor": "1.14.0"

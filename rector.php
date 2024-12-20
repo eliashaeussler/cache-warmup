@@ -27,7 +27,7 @@ use Rector\Php80\Rector\Class_\AnnotationToAttributeRector;
 use Rector\ValueObject\PhpVersion;
 
 return static function (RectorConfig $rectorConfig): void {
-    Config::create($rectorConfig, PhpVersion::PHP_81)
+    Config::create($rectorConfig, PhpVersion::PHP_82)
         ->in(
             __DIR__.'/src',
             __DIR__.'/tests',
