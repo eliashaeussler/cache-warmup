@@ -33,8 +33,9 @@ use Symfony\Component\Console;
  */
 final class ConsoleHelper
 {
-    public static function registerAdditionalConsoleOutputStyles(Console\Formatter\OutputFormatterInterface $formatter): void
-    {
+    public static function registerAdditionalConsoleOutputStyles(
+        Console\Formatter\OutputFormatterInterface $formatter,
+    ): void {
         $formatter->setStyle(
             'success',
             new Console\Formatter\OutputFormatterStyle('black', 'green'),

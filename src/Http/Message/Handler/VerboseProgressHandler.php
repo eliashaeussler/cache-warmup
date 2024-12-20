@@ -42,15 +42,13 @@ final readonly class VerboseProgressHandler implements ResponseHandler
     private Console\Output\ConsoleSectionOutput $progressBarSection;
     private Console\Helper\ProgressBar $progressBar;
 
-    public function __construct(
-        Console\Output\ConsoleOutputInterface $output,
-        int $max,
-    ) {
+    public function __construct(Console\Output\ConsoleOutputInterface $output, int $max)
+    {
         Helper\ConsoleHelper::registerAdditionalConsoleOutputStyles($output->getFormatter());
 
         $this->logSection = $output->section();
         $this->progressBarSection = $output->section();
-        $this->progressBar = new Console\Helper\ProgressBar($this->progressBarSection, $max);
+        $this->progressBar = $this->createProgressBar($max);
     }
 
     public function startProgressBar(): void
@@ -79,5 +77,15 @@ final readonly class VerboseProgressHandler implements ResponseHandler
 
         $this->progressBar->advance();
         $this->progressBar->display();
+    }
+
+    private function createProgressBar(int $max): Console\Helper\ProgressBar
+    {
+        $symfonyStyle = new Console\Style\SymfonyStyle(
+            new Console\Input\StringInput(''),
+            $this->progressBarSection,
+        );
+
+        return $symfonyStyle->createProgressBar($max);
     }
 }
