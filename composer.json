@@ -21,7 +21,7 @@
 		"ext-simplexml": "*",
 		"ext-zlib": "*",
 		"cuyz/valinor": "^1.4",
-		"guzzlehttp/guzzle": "^7.0",
+		"guzzlehttp/guzzle": "^7.5",
 		"guzzlehttp/promises": "^1.0 || ^2.0",
 		"guzzlehttp/psr7": "^2.0",
 		"psr/event-dispatcher": "^1.0",
