@@ -31,7 +31,7 @@
 		"symfony/dependency-injection": "^5.4.35 || ^6.4.3 || ^7.0.3",
 		"symfony/event-dispatcher": "^5.4.35 || ^6.4.3 || ^7.0.3",
 		"symfony/filesystem": "^5.4.35 || ^6.4.3 || ^7.0.3",
-		"symfony/options-resolver": "^5.4 || ^6.0 || ^7.0",
+		"symfony/options-resolver": "^5.4.35 || ^6.4.3 || ^7.0.3",
 		"symfony/yaml": "^5.4.35 || ^6.4.3 || ^7.0.3"
 	},
 	"require-dev": {
