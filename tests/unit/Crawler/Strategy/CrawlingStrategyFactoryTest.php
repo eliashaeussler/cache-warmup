@@ -72,6 +72,18 @@ final class CrawlingStrategyFactoryTest extends Framework\TestCase
         self::assertSame($expected, $this->subject->getAll());
     }
 
+    #[Framework\Attributes\Test]
+    public function hasReturnsTrueIfGivenCrawlingStrategyExists(): void
+    {
+        self::assertTrue($this->subject->has(Src\Crawler\Strategy\SortByPriorityStrategy::getName()));
+    }
+
+    #[Framework\Attributes\Test]
+    public function hasReturnsFalseIfGivenCrawlingStrategyDoesNotExists(): void
+    {
+        self::assertFalse($this->subject->has('foo'));
+    }
+
     /**
      * @return Generator<string, array{string, Src\Crawler\Strategy\CrawlingStrategy}>
      */
