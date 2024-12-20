@@ -77,6 +77,10 @@ final class VerboseProgressHandlerTest extends Framework\TestCase
         $uri = new Psr7\Uri('https://www.example.com');
 
         $this->subject->startProgressBar();
+
+        // Ensure progress bar is rendered on next step (redraw frequency is 1 second)
+        sleep(1);
+
         $this->subject->onSuccess($response, $uri);
 
         $output = $this->output->fetch();
