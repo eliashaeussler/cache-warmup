@@ -101,9 +101,20 @@ it can be configured by using the
 [`request_headers`](config-reference/parser-options.md#request-headers) parser
 option in combination with the default parser.
 
+## How can I reduce memory consumption and CPU load?
+
+When crawling large sitemaps, memory consumption and CPU load may increase rapidly.
+The following measures can reduce consumption and save resources:
+
+* Avoid [`progress`](config-reference/progress.md) together with `-v`/`--verbose`
+  option. At best, do not use `--progress`.
+* Make sure the crawler option
+  [`write_response_body`](config-reference/crawler-options.md#write-response-body)
+  is set to `false` (default).
+
 ## What does "default crawlers" actually mean?
 
-The library ships with two default crawlers. Depending on the provided configuration
-options, one of the crawlers is used for cache warmup, unless you configure a custom
-crawler by using the [`crawler`](config-reference/crawler.md) configuration option.
-Read more at [Default crawlers](api/index.md#default-crawlers).
+The library ships with two crawlers. Depending on the provided configuration options,
+one of the crawlers is used for cache warmup, unless you configure a custom crawler
+by using the [`crawler`](config-reference/crawler.md) configuration option. Read more
+at [Default crawlers](api/index.md#default-crawlers).
