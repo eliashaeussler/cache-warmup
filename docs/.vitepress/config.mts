@@ -12,8 +12,8 @@ import {version} from '../../package.json';
 const hostname: string = 'https://cache-warmup.dev';
 const title: string = 'Cache Warmup';
 const description: string = 'Library to warm up website caches of URLs located in XML sitemaps. Highly customizable and written in PHP.';
-const image: string = `${hostname}/img/social-media.png`;
-const imageAltText: string = 'Screenshot from a terminal window running the "cache-warmup" command on the XML sitemap from Google.';
+const image: string = `${hostname}/img/social-media.jpeg`;
+const imageAltText: string = 'Screenshot from a terminal window running the "cache-warmup" command on the XML sitemap from cache-warmup.dev.';
 
 // GitHub repository
 const repoUrl: string = 'https://github.com/eliashaeussler/cache-warmup';
