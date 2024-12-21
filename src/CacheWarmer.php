@@ -166,14 +166,12 @@ final class CacheWarmer
         return $this;
     }
 
-    private function addSitemap(Sitemap\Sitemap $sitemap): self
+    private function addSitemap(Sitemap\Sitemap $sitemap): void
     {
         if (!array_key_exists((string) $sitemap, $this->sitemaps)) {
             $this->sitemaps[(string) $sitemap] = $sitemap;
             $this->eventDispatcher->dispatch(new Event\SitemapAdded($sitemap));
         }
-
-        return $this;
     }
 
     public function addUrl(string|Sitemap\Url $url): self
