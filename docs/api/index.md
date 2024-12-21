@@ -12,8 +12,8 @@ the whole set of available [configuration options](../config-reference/index.md)
 
 ## `CacheWarmer`
 
-The [`EliasHaeussler\CacheWarmup\CacheWarmer`](../../src/CacheWarmer.php)
-class serves as main entrypoint for the PHP API.
+The [`CacheWarmer`](../../src/CacheWarmer.php) class serves as main
+entrypoint for the PHP API.
 
 ```php
 use EliasHaeussler\CacheWarmup;
@@ -35,8 +35,8 @@ opportunities.
 ## `Crawler`
 
 URLs in XML sitemaps are processed by crawlers implementing
-[`EliasHaeussler\CacheWarmup\Crawler\Crawler`](../../src/Crawler/Crawler.php).
-Read more about how to [create a custom crawler](crawler.md).
+[`Crawler\Crawler`](../../src/Crawler/Crawler.php). Read more
+about how to [create a custom crawler](crawler.md).
 
 In addition, there exist different variations of crawler
 implementations:
@@ -61,8 +61,8 @@ Enhances the cache warmup process with user-oriented output.
 
 The library ships with two default crawlers:
 
-* [`EliasHaeussler\CacheWarmup\Crawler\ConcurrentCrawler`](../../src/Crawler/ConcurrentCrawler.php)
-* [`EliasHaeussler\CacheWarmup\Crawler\OutputtingCrawler`](../../src/Crawler/OutputtingCrawler.php)
+* [`Crawler\ConcurrentCrawler`](../../src/Crawler/ConcurrentCrawler.php)
+* [`Crawler\OutputtingCrawler`](../../src/Crawler/OutputtingCrawler.php)
 
 You can find all available crawler options in the
 [`crawlerOptions`](../config-reference/crawler-options.md#option-reference)
@@ -71,8 +71,8 @@ configuration reference.
 ## `Parser`
 
 XML sitemaps are fetched and parsed by parsers implementing
-[`EliasHaeussler\CacheWarmup\Xml\Parser`](../../src/Xml/Parser.php).
-Read more about how to [create a custom parser](parser.md).
+[`Xml\Parser`](../../src/Xml/Parser.php). Read more about how
+to [create a custom parser](parser.md).
 
 In addition, there exist different variations of parser implementations:
 
@@ -84,7 +84,7 @@ Allows to customize parsing behavior using parser options.
 
 The library ships with a default parser:
 
-* [`EliasHaeussler\CacheWarmup\Xml\SitemapXmlParser`](../../src/Xml/SitemapXmlParser.php)
+* [`Xml\SitemapXmlParser`](../../src/Xml/SitemapXmlParser.php)
 
 You can find all available parser options in the
 [`parserOptions`](../config-reference/parser-options.md#option-reference)

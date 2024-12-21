@@ -17,7 +17,7 @@ $result = $cacheWarmer->run();
 ```
 
 Once cache warmup is finished, this method returns an instance of
-[`EliasHaeussler\CacheWarmup\Result\CacheWarmupResult`](../../src/Result/CacheWarmupResult.php)
+[`Result\CacheWarmupResult`](../../src/Result/CacheWarmupResult.php)
 with all successful and failed crawling results:
 
 ```php

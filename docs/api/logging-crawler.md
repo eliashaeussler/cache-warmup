@@ -6,7 +6,7 @@ outline: [2,3]
 
 In some cases it might be helpful to log parts of the cache
 warmup process. For this, your crawler should implement
-[`EliasHaeussler\CacheWarmup\Crawler\LoggingCrawler`](../../src/Crawler/LoggingCrawler.php):
+[`Crawler\LoggingCrawler`](../../src/Crawler/LoggingCrawler.php):
 
 ```php
 namespace Vendor\Crawler;

@@ -7,7 +7,7 @@ outline: [2,3]
 Parsers are used to fetch, validate and parse XML sitemaps.
 They transform a given XML sitemap to appropriate objects
 use for subsequent cache warmup. Each parser must implement
-[`EliasHaeussler\CacheWarmup\Xml\Parser`](../../src/Xml/Parser.php):
+[`Xml\Parser`](../../src/Xml/Parser.php):
 
 ```php
 namespace Vendor\Xml;

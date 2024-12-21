@@ -82,7 +82,7 @@ in your JSON file and enable autocompletion in your IDE:
 
 PHP configuration files must return a closure which receives the
 current instance of
-[`EliasHaeussler\CacheWarmup\Config\CacheWarmupConfig`](../src/Config/CacheWarmupConfig.php).
+[`Config\CacheWarmupConfig`](../src/Config/CacheWarmupConfig.php).
 They may also return a (new) instance to override the current one:
 
 ```php

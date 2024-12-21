@@ -6,7 +6,7 @@ outline: [2,3]
 
 In terms of error handling it might be useful to define the
 behavior in case a cache warmup failure occurs. You can implement
-[`EliasHaeussler\CacheWarmup\Crawler\StoppableCrawler`](../../src/Crawler/StoppableCrawler.php)
+[`Crawler\StoppableCrawler`](../../src/Crawler/StoppableCrawler.php)
 to make this sort of error handling configurable:
 
 ```php

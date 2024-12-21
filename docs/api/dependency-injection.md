@@ -21,5 +21,5 @@ The container includes the following runtime services:
 The service container is built when creating crawlers and parsers
 through their respective factories, including:
 
-* [`EliasHaeussler\CacheWarmup\Crawler\CrawlerFactory`](../../src/Crawler/CrawlerFactory.php)
-* [`EliasHaeussler\CacheWarmup\Xml\ParserFactory`](../../src/Xml/ParserFactory.php)
+* [`Crawler\CrawlerFactory`](../../src/Crawler/CrawlerFactory.php)
+* [`Xml\ParserFactory`](../../src/Xml/ParserFactory.php)

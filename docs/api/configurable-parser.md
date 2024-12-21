@@ -5,8 +5,7 @@ outline: [2,3]
 # Configurable Parser <Badge type="tip" text="4.0+" />
 
 Whenever you want to allow a custom behavior of your parser, it
-should implement
-[`EliasHaeussler\CacheWarmup\Xml\ConfigurableParser`](../../src/Xml/ConfigurableParser.php):
+should implement [`Xml\ConfigurableParser`](../../src/Xml/ConfigurableParser.php):
 
 ```php
 namespace Vendor\Xml;

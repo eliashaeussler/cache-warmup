@@ -70,8 +70,8 @@ CACHE_WARMUP_CRAWLER_OPTIONS='{"concurrency": 3, "request_options": {"delay": 30
 
 Both default crawlers are implemented as configurable crawlers:
 
-* [`EliasHaeussler\CacheWarmup\Crawler\ConcurrentCrawler`](../../src/Crawler/ConcurrentCrawler.php)
-* [`EliasHaeussler\CacheWarmup\Crawler\OutputtingCrawler`](../../src/Crawler/OutputtingCrawler.php)
+* [`Crawler\ConcurrentCrawler`](../../src/Crawler/ConcurrentCrawler.php)
+* [`Crawler\OutputtingCrawler`](../../src/Crawler/OutputtingCrawler.php)
 
 The following configuration options are currently available for both crawlers:
 

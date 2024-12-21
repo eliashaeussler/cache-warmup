@@ -7,7 +7,7 @@ outline: [2,3]
 When cache warmup is performed from the command line, it might
 be helpful to provide user-oriented output such as progress bars
 or error messages. In this case, you can implement
-[`EliasHaeussler\CacheWarmup\Crawler\VerboseCrawler`](../../src/Crawler/VerboseCrawler.php):
+[`Crawler\VerboseCrawler`](../../src/Crawler/VerboseCrawler.php):
 
 ```php
 namespace Vendor\Crawler;

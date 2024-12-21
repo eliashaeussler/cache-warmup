@@ -67,7 +67,7 @@ CACHE_WARMUP_PARSER_OPTIONS='{"request_options": {"proxy": "http://localhost:812
 
 The default parser is implemented as configurable parser:
 
-* [`EliasHaeussler\CacheWarmup\Xml\SitemapXmlParser`](../../src/Xml/SitemapXmlParser.php)
+* [`Xml\SitemapXmlParser`](../../src/Xml/SitemapXmlParser.php)
 
 The following configuration options are currently available for the default parser:
 
