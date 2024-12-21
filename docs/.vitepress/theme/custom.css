@@ -14,3 +14,23 @@ p:has(a > img[src*="shields"]) {
     flex-flow: wrap;
     gap: 5px;
 }
+
+/* Display hero image on large screens */
+.VPHero.VPHomeHero.has-image .image {
+    display: none;
+}
+.VPHero.VPHomeHero.has-image .image-container {
+    transform: none;
+}
+
+@media (min-width: 1280px) {
+    .VPHero.VPHomeHero.has-image .image {
+        display: initial;
+    }
+
+    .VPHero.VPHomeHero.has-image .VPImage.image-src {
+        border-radius: 5px;
+        max-width: 100%;
+        max-height: 100%;
+    }
+}

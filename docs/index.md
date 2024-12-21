@@ -5,6 +5,9 @@ hero:
   name: Cache Warmup
   text: Sitemap Crawler & Cache Warmer
   tagline: Warm up website caches in minutes and benefit from fast page loading times for your visitors.
+  image:
+    src: /img/header.jpeg
+    alt: Screenshot from a terminal window running the "cache-warmup" command on the XML sitemap of cache-warmup.dev.
   actions:
     - theme: brand
       text: Getting started
