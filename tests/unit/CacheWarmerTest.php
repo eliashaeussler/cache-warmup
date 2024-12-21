@@ -52,6 +52,7 @@ final class CacheWarmerTest extends Framework\TestCase
         $this->parser = new Src\Xml\SitemapXmlParser(client: $this->client);
         $this->eventDispatcher = new Fixtures\Classes\DummyEventDispatcher();
         $this->subject = new Src\CacheWarmer(
+            crawler: new Src\Crawler\ConcurrentCrawler(client: $this->client),
             parser: $this->parser,
             eventDispatcher: $this->eventDispatcher,
         );
@@ -357,7 +358,7 @@ final class CacheWarmerTest extends Framework\TestCase
     }
 
     /**
-     * @return Generator<string, array{array<int, string>}>
+     * @return Generator<string, array{list<string>}>
      */
     public static function runCrawlsListOfUrlsDataProvider(): Generator
     {
