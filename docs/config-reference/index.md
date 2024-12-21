@@ -58,6 +58,13 @@ Describes options to modify and customize the crawling behavior.
 * [Crawler options](crawler-options.md)
 * [Crawling strategy](strategy.md)
 
+## Parsing
+
+Describes options to modify and customize the XML parser.
+
+* [Parser](parser.md)
+* [Parser options](parser-options.md)
+
 ## Logging & Error Handling
 
 Describes possibilities to handle and debug errors during cache warmup.
