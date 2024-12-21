@@ -183,6 +183,11 @@ export default defineConfig({
             {
                 items: [
                     {text: 'Frequently Asked Questions', link: '/faq'},
+                    {text: 'Migration', link: '/migration'},
+                ],
+            },
+            {
+                items: [
                     {text: 'Contribution guide', link: '/contribution-guide'},
                     {text: 'Sponsor this project', link: '/sponsor'},
                     {text: 'License', link: '/license'},
