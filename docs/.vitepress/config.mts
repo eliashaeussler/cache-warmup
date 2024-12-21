@@ -171,6 +171,15 @@ export default defineConfig({
                         ],
                     },
                     {
+                        text: 'HTTP',
+                        collapsed: true,
+                        items: [
+                            {text: 'Client Factory', link: '/api/client-factory'},
+                            {text: 'Request Factory', link: '/api/request-factory'},
+                            {text: 'Response Handlers', link: '/api/response-handlers'},
+                        ],
+                    },
+                    {
                         text: 'Dependency injection',
                         link: '/api/dependency-injection',
                     },
