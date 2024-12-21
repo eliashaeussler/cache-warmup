@@ -18,23 +18,6 @@ $cacheWarmer = new CacheWarmup\CacheWarmer(
 $cacheWarmer->run();
 ```
 
-## `client`
-
-<small>🐝&nbsp;Default: `new GuzzleHttp\Client()`</small>
-
-> A preconfigured Guzzle client to use when parsing XML sitemaps.
-
-```php
-use EliasHaeussler\CacheWarmup;
-
-$cacheWarmer = new CacheWarmup\CacheWarmer(
-    client: new \GuzzleHttp\Client([
-        'handler' => $handler,
-    ]),
-);
-$cacheWarmer->run();
-```
-
 ## `crawler`
 
 <small>🐝&nbsp;Default: `new EliasHaeussler\CacheWarmup\Crawler\ConcurrentCrawler()`</small>
@@ -61,6 +44,21 @@ use EliasHaeussler\CacheWarmup;
 
 $cacheWarmer = new CacheWarmup\CacheWarmer(
     strategy: new CacheWarmup\Crawler\Strategy\SortByPriorityStrategy(),
+);
+$cacheWarmer->run();
+```
+
+## `parser`
+
+<small>🐝&nbsp;Default: `new EliasHaeussler\CacheWarmup\Xml\SitemapXmlParser()`</small>
+
+> *Same as the [`parser`](../config-reference/parser.md) configuration option.*
+
+```php
+use EliasHaeussler\CacheWarmup;
+
+$cacheWarmer = new CacheWarmup\CacheWarmer(
+    parser: new \Vendor\Xml\MyCustomParser(),
 );
 $cacheWarmer->run();
 ```
@@ -93,6 +91,28 @@ $cacheWarmer = new CacheWarmup\CacheWarmer(
     excludePatterns: [
         CacheWarmup\Config\Option\ExcludePattern::create('*foo*'),
     ],
+);
+$cacheWarmer->run();
+```
+
+## `eventDispatcher`
+
+<small>🐝&nbsp;Default: `new Symfony\Component\EventDispatcher\EventDispatcher()`</small>
+
+> Dispatches several [events](../api/events.md) during the cache warmup progress.
+
+```php
+use EliasHaeussler\CacheWarmup;
+use Symfony\Component\EventDispatcher;
+
+$eventDispatcher = new EventDispatcher\EventDispatcher();
+$eventDispatcher->addListener(
+    CacheWarmup\Event\SitemapParsed::class,
+    new \Vendor\EventListener\OnSitemapParsedListener(),
+);
+
+$cacheWarmer = new CacheWarmup\CacheWarmer(
+    eventDispatcher: $eventDispatcher,
 );
 $cacheWarmer->run();
 ```

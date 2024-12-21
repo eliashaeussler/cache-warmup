@@ -169,3 +169,21 @@ foreach ($urls as $url) {
     echo ' * '.$url.PHP_EOL;
 }
 ```
+
+## `getLimit`
+
+Get configured [limit](../config-reference/limit.md) of URLs to
+be processed.
+
+```php
+use EliasHaeussler\CacheWarmup;
+
+$cacheWarmer = new CacheWarmup\CacheWarmer();
+$limit = $cacheWarmer->getLimit();
+
+if ($limit === 0) {
+    echo 'No limit configured.'.PHP_EOL;
+} else {
+    echo 'Cache warmup limited to '.$limit.' URLs.'.PHP_EOL;
+}
+```
