@@ -64,11 +64,6 @@ trait ConcurrentCrawlerTrait
             ->default([])
         ;
 
-        $optionsResolver->define('client_config')
-            ->allowedTypes('array')
-            ->default([])
-        ;
-
         $optionsResolver->define('write_response_body')
             ->allowedTypes('bool')
             ->default(false)

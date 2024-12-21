@@ -57,7 +57,6 @@ use function unlink;
  * @license GPL-3.0-or-later
  *
  * @phpstan-type ParserOptions array{
- *     client_config: array<string, mixed>,
  *     request_headers: array<string, string>,
  *     request_options: array<string, mixed>,
  * }
@@ -82,7 +81,7 @@ final class SitemapXmlParser implements ConfigurableParser
      */
     public function __construct(
         array $options = [],
-        private readonly ?ClientInterface $client = null,
+        private readonly ClientInterface $client = new Client(),
     ) {
         $this->optionsResolver = $this->createOptionsResolver();
         $this->sitemapConverter = new Node\SitemapNodeConverter();
@@ -194,8 +193,7 @@ final class SitemapXmlParser implements ConfigurableParser
         $requestOptions = $this->options['request_options'];
         $requestOptions[RequestOptions::SINK] = $filename;
 
-        $client = $this->client ?? new Client($this->options['client_config']);
-        $client->send($request, $requestOptions);
+        $this->client->send($request, $requestOptions);
 
         return $filename;
     }
@@ -217,11 +215,6 @@ final class SitemapXmlParser implements ConfigurableParser
     private function createOptionsResolver(): OptionsResolver\OptionsResolver
     {
         $optionsResolver = new OptionsResolver\OptionsResolver();
-
-        $optionsResolver->define('client_config')
-            ->allowedTypes('array')
-            ->default([])
-        ;
 
         $optionsResolver->define('request_headers')
             ->allowedTypes('array')
