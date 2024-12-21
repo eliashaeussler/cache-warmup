@@ -76,7 +76,7 @@ actions. This page lists all currently available events.
 
 ::: warning IMPORTANT
 This event is only dispatched if the configured crawler utilizes the
-[`ResultCollectionHandler`](../../src/Http/Message/Handler/ResultCollectorHandler.php).
+[`ResultCollectorHandler`](response-handlers.md#resultcollectorhandler).
 :::
 
 ### [`UrlCrawlingFailed`](../../src/Event/UrlCrawlingFailed.php) <Badge type="tip" text="3.2+" />
@@ -87,7 +87,7 @@ This event is only dispatched if the configured crawler utilizes the
 
 ::: warning IMPORTANT
 This event is only dispatched if the configured crawler utilizes the
-[`ResultCollectionHandler`](../../src/Http/Message/Handler/ResultCollectorHandler.php).
+[`ResultCollectorHandler`](response-handlers.md#resultcollectorhandler).
 :::
 
 ### [`CrawlingFinished`](../../src/Event/CrawlingFinished.php) <Badge type="tip" text="3.2+" />
