@@ -91,6 +91,7 @@ final class CacheWarmupCommand extends Console\Command\Command
         $crawler = Crawler\Crawler::class;
         $configurableCrawler = Crawler\ConfigurableCrawler::class;
         $stoppableCrawler = Crawler\StoppableCrawler::class;
+        $configurableParser = Xml\ConfigurableParser::class;
         $textFormatter = Formatter\TextFormatter::getType();
         $jsonFormatter = Formatter\JsonFormatter::getType();
         $sortByPriorityStrategy = Crawler\Strategy\SortByPriorityStrategy::getName();
@@ -207,6 +208,13 @@ For this, use the <comment>--strategy</comment> option together with a predefine
 The following strategies are currently available:
 
 {$strategies}
+
+<info>Parser options</info>
+<info>==============</info>
+For parsers implementing <comment>{$configurableParser}</comment>,
+it is possible to pass a JSON-encoded string of parser options by using the <comment>--parser-options</comment> option:
+
+   <comment>%command.full_name% --parser-options '{"request_options": {"proxy": "http://localhost:8125"}}'</comment>
 
 <info>Allow failures</info>
 <info>==============</info>
