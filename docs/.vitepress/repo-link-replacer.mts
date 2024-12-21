@@ -6,6 +6,7 @@ export class RepoLinkReplacer
     constructor(
         private readonly repoUrl: string,
         private readonly rootPath: string,
+        private readonly gitReference: string,
     ) {}
 
     public replaceLink(link: string, templatePath: string): string
@@ -22,7 +23,7 @@ export class RepoLinkReplacer
             return link;
         }
 
-        const blobUrl = `${this.repoUrl}/blob/main/${relativePath.substring(3)}`;
+        const blobUrl = `${this.repoUrl}/blob/${this.gitReference}/${relativePath.substring(3)}`;
 
         if (process.env.NODE_ENV !== 'production') {
             console.log(`Replaced link: ${link} → ${blobUrl}`);

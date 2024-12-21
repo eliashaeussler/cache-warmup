@@ -19,7 +19,7 @@ const imageAltText: string = 'Screenshot from a terminal window running the "cac
 const repoUrl: string = 'https://github.com/eliashaeussler/cache-warmup';
 // @ts-ignore
 const rootPath: string = path.resolve(__dirname, '..');
-const replacer = new RepoLinkReplacer(repoUrl, rootPath);
+const replacer = new RepoLinkReplacer(repoUrl, rootPath, version);
 
 export default defineConfig({
     title: title,
