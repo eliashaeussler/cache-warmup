@@ -26,6 +26,7 @@ namespace EliasHaeussler\CacheWarmup\Tests\Crawler;
 use EliasHaeussler\CacheWarmup as Src;
 use EliasHaeussler\CacheWarmup\Tests;
 use EliasHaeussler\TransientLogger;
+use GuzzleHttp\RequestOptions;
 use PHPUnit\Framework;
 use Psr\Log;
 use Symfony\Component\Console;
@@ -42,6 +43,7 @@ final class CrawlerFactoryTest extends Framework\TestCase
     private Console\Output\BufferedOutput $output;
     private TransientLogger\TransientLogger $logger;
     private Tests\Fixtures\Classes\DummyEventDispatcher $eventDispatcher;
+    private Src\Http\Client\ClientFactory $clientFactory;
     private Src\Crawler\CrawlerFactory $subject;
 
     protected function setUp(): void
@@ -49,12 +51,18 @@ final class CrawlerFactoryTest extends Framework\TestCase
         $this->output = new Console\Output\BufferedOutput();
         $this->logger = new TransientLogger\TransientLogger();
         $this->eventDispatcher = new Tests\Fixtures\Classes\DummyEventDispatcher();
+        $this->clientFactory = new Src\Http\Client\ClientFactory([
+            RequestOptions::AUTH => ['username', 'password'],
+        ]);
         $this->subject = new Src\Crawler\CrawlerFactory(
-            $this->output,
-            $this->logger,
+            new Src\DependencyInjection\ContainerFactory(
+                $this->output,
+                $this->logger,
+                $this->eventDispatcher,
+                $this->clientFactory,
+            ),
             Log\LogLevel::ERROR,
             true,
-            $this->eventDispatcher,
         );
     }
 
@@ -81,6 +89,7 @@ final class CrawlerFactoryTest extends Framework\TestCase
 
         self::assertInstanceOf(Tests\Fixtures\Classes\DummyCrawler::class, $actual);
         self::assertSame($this->eventDispatcher, $actual->eventDispatcher);
+        self::assertEquals($this->clientFactory->get(), Tests\Fixtures\Classes\DummyCrawler::$client);
     }
 
     #[Framework\Attributes\Test]
@@ -129,5 +138,26 @@ final class CrawlerFactoryTest extends Framework\TestCase
         self::assertTrue(Tests\Fixtures\Classes\DummyStoppableCrawler::$stopOnFailure);
 
         Tests\Fixtures\Classes\DummyStoppableCrawler::$stopOnFailure = false;
+    }
+
+    #[Framework\Attributes\Test]
+    public function validateThrowsExceptionIfGivenCrawlerClassIsInvalid(): void
+    {
+        $this->expectExceptionObject(new Src\Exception\CrawlerDoesNotExist('foo'));
+
+        Src\Crawler\CrawlerFactory::validate('foo');
+    }
+
+    #[Framework\Attributes\Test]
+    public function validateThrowsExceptionIfGivenCrawlerClassIsUnsupported(): void
+    {
+        $this->expectExceptionObject(new Src\Exception\CrawlerIsInvalid(self::class));
+
+        Src\Crawler\CrawlerFactory::validate(self::class);
+    }
+
+    protected function tearDown(): void
+    {
+        Tests\Fixtures\Classes\DummyCrawler::$client = null;
     }
 }

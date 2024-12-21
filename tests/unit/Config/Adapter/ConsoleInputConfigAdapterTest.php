@@ -46,6 +46,28 @@ final class ConsoleInputConfigAdapterTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    public function getThrowsExceptionIfConfiguredClientOptionsAreInvalid(): void
+    {
+        $subject = $this->getSubject([
+            '--client-options' => 'foo',
+        ]);
+
+        $this->expectExceptionObject(new Src\Exception\OptionsAreMalformed('foo'));
+
+        $subject->get();
+    }
+
+    #[Framework\Attributes\Test]
+    public function getParsesClientOptions(): void
+    {
+        $subject = $this->getSubject([
+            '--client-options' => '{"foo":"baz"}',
+        ]);
+
+        self::assertSame(['foo' => 'baz'], $subject->get()->getClientOptions());
+    }
+
+    #[Framework\Attributes\Test]
     public function getThrowsExceptionIfConfiguredCrawlerOptionsAreInvalid(): void
     {
         $subject = $this->getSubject([
@@ -131,6 +153,7 @@ final class ConsoleInputConfigAdapterTest extends Framework\TestCase
             ],
             '--limit' => 10,
             '--progress' => true,
+            '--client-options' => '{"foo":"baz"}',
             '--crawler' => Tests\Fixtures\Classes\DummyCrawler::class,
             '--crawler-options' => '{"foo":"baz"}',
             '--strategy' => Src\Crawler\Strategy\SortByChangeFrequencyStrategy::getName(),
@@ -159,6 +182,7 @@ final class ConsoleInputConfigAdapterTest extends Framework\TestCase
             ],
             10,
             true,
+            ['foo' => 'baz'],
             Tests\Fixtures\Classes\DummyCrawler::class,
             ['foo' => 'baz'],
             Src\Crawler\Strategy\SortByChangeFrequencyStrategy::getName(),

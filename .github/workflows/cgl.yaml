@@ -48,7 +48,7 @@ jobs:
 
       # Check dependencies
       - name: Check Composer dependencies
-        run: composer-require-checker check
+        run: composer-require-checker check --config-file dependency-checker.json
       - name: Check for unused Composer dependencies
         run: composer-unused --excludePackage=ext-zlib
       - name: Check for unused Frontend dependencies

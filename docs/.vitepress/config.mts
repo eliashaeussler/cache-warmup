@@ -104,6 +104,13 @@ export default defineConfig({
                         ],
                     },
                     {
+                        text: 'Client',
+                        collapsed: true,
+                        items: [
+                            {text: 'Client options', link: '/config-reference/client-options'},
+                        ],
+                    },
+                    {
                         text: 'Crawling',
                         collapsed: true,
                         items: [
@@ -162,6 +169,10 @@ export default defineConfig({
                             {text: 'Create a custom parser', link: '/api/parser'},
                             {text: 'Configurable Parser', link: '/api/configurable-parser'},
                         ],
+                    },
+                    {
+                        text: 'Dependency injection',
+                        link: '/api/dependency-injection',
                     },
                     {
                         text: 'Events',

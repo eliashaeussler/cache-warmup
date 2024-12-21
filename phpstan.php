@@ -25,6 +25,7 @@ use EliasHaeussler\PHPStanConfig;
 
 $symfonySet = PHPStanConfig\Set\SymfonySet::create()
     ->withConsoleApplicationLoader('tests/build/console-application.php')
+    ->withContainerXmlPath('.build/container.xml')
 ;
 
 return PHPStanConfig\Config\Config::create(__DIR__)

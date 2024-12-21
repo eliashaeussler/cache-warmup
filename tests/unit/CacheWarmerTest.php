@@ -78,7 +78,7 @@ final class CacheWarmerTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function runPreparesUrlsWithConfiguredStrategy(): void
     {
-        $crawler = new Fixtures\Classes\DummyCrawler($this->eventDispatcher);
+        $crawler = new Fixtures\Classes\DummyCrawler($this->client, $this->eventDispatcher);
         $subject = new Src\CacheWarmer(crawler: $crawler, strategy: new Src\Crawler\Strategy\SortByPriorityStrategy());
 
         $url1 = new Src\Sitemap\Url('https://www.example.org/foo', 0.75);
@@ -97,7 +97,7 @@ final class CacheWarmerTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function runDispatchesUrlsPreparedEvent(): void
     {
-        $crawler = new Fixtures\Classes\DummyCrawler($this->eventDispatcher);
+        $crawler = new Fixtures\Classes\DummyCrawler($this->client, $this->eventDispatcher);
         $subject = new Src\CacheWarmer(
             crawler: $crawler,
             strategy: new Src\Crawler\Strategy\SortByPriorityStrategy(),

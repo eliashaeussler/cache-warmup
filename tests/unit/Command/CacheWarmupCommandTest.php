@@ -25,7 +25,9 @@ namespace EliasHaeussler\CacheWarmup\Tests\Command;
 
 use EliasHaeussler\CacheWarmup as Src;
 use EliasHaeussler\CacheWarmup\Tests;
+use Exception;
 use Generator;
+use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
@@ -56,12 +58,13 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         $this->client = $this->createClient();
         $this->eventDispatcher = new Tests\Fixtures\Classes\DummyEventDispatcher();
 
-        // Inject mock handler into parser client
+        // Inject mock handler into client options
         $this->eventDispatcher->addListener(
             Src\Event\ConfigResolved::class,
-            fn (Src\Event\ConfigResolved $event) => $event->config()->setParserOption('client_config', [
-                'handler' => HandlerStack::create($this->mockHandler),
-            ]),
+            fn (Src\Event\ConfigResolved $event) => $event->config()->setClientOption(
+                'handler',
+                HandlerStack::create($this->mockHandler),
+            ),
         );
 
         $command = new Src\Command\CacheWarmupCommand($this->eventDispatcher);
@@ -250,6 +253,23 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    public function initializeInitializesFactoriesWithContainerFactory(): void
+    {
+        $this->mockSitemapRequest('valid_sitemap_3');
+
+        $this->commandTester->execute([
+            'sitemaps' => [
+                'https://www.example.com/sitemap.xml',
+            ],
+            '--crawler' => Tests\Fixtures\Classes\DummyCrawler::class,
+            '--parser' => Tests\Fixtures\Classes\DummyParser::class,
+        ]);
+
+        self::assertInstanceOf(Client::class, Tests\Fixtures\Classes\DummyCrawler::$client);
+        self::assertInstanceOf(Client::class, Tests\Fixtures\Classes\DummyParser::$client);
+    }
+
+    #[Framework\Attributes\Test]
     public function interactThrowsExceptionIfNeitherArgumentNorInteractiveInputProvidesSitemaps(): void
     {
         $this->expectException(Console\Exception\RuntimeException::class);
@@ -427,6 +447,8 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     {
         $this->mockSitemapRequest('valid_sitemap_3');
 
+        $this->mockHandler->append(new Psr7\Response(), new Psr7\Response());
+
         $this->commandTester->execute(
             [
                 'sitemaps' => [
@@ -445,6 +467,47 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         self::assertNotEmpty($output);
         self::assertStringContainsString(' DONE ', $output);
         self::assertStringContainsString('100%', $output);
+    }
+
+    #[Framework\Attributes\Test]
+    public function executeThrowsExceptionIfClientOptionsAreInvalid(): void
+    {
+        $this->expectExceptionObject(new Src\Exception\OptionsAreMalformed('foo'));
+
+        $this->commandTester->execute([
+            'sitemaps' => [
+                'https://www.example.com/sitemap.xml',
+            ],
+            '--client-options' => 'foo',
+        ]);
+    }
+
+    /**
+     * @param array{auth: array{string, string}}|string $clientOptions
+     */
+    #[Framework\Attributes\Test]
+    #[Framework\Attributes\DataProvider('executeUsesClientOptionsDataProvider')]
+    public function executeUsesClientOptions(array|string $clientOptions): void
+    {
+        $this->mockSitemapRequest('valid_sitemap_3');
+
+        $this->commandTester->execute(
+            [
+                'sitemaps' => [
+                    'https://www.example.com/sitemap.xml',
+                ],
+                '--client-options' => $clientOptions,
+            ],
+            [
+                'verbosity' => Console\Output\OutputInterface::VERBOSITY_VERBOSE,
+            ],
+        );
+
+        $output = $this->commandTester->getDisplay();
+
+        self::assertNotEmpty($output);
+        self::assertStringContainsString('Using custom client options:', $output);
+        self::assertMatchesRegularExpression('/"auth": \[\s+"username",\s+"password"\s+]/', $output);
     }
 
     #[Framework\Attributes\Test]
@@ -733,9 +796,9 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     #[Framework\Attributes\DataProvider('executeFailsIfSitemapCannotBeCrawledDataProvider')]
     public function executeFailsIfSitemapCannotBeCrawled(bool $allowFailures, int $expected): void
     {
-        Tests\Fixtures\Classes\DummyCrawler::$resultStack[] = Src\Result\CrawlingState::Failed;
-
         $this->mockSitemapRequest('valid_sitemap_3');
+
+        $this->mockHandler->append(new Psr7\Response(), new Exception());
 
         $exitCode = $this->commandTester->execute([
             'sitemaps' => [
@@ -883,6 +946,15 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     }
 
     /**
+     * @return Generator<string, array{array{auth: array{string, string}}|string}>
+     */
+    public static function executeUsesClientOptionsDataProvider(): Generator
+    {
+        yield 'array' => [['auth' => ['username', 'password']]];
+        yield 'json string' => ['{"auth": ["username", "password"]}'];
+    }
+
+    /**
      * @return Generator<string, array{array{concurrency: int}|string}>
      */
     public static function executeUsesCrawlerOptionsDataProvider(): Generator
@@ -911,9 +983,11 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
     protected function tearDown(): void
     {
+        Tests\Fixtures\Classes\DummyCrawler::$client = null;
         Tests\Fixtures\Classes\DummyCrawler::$crawledUrls = [];
         Tests\Fixtures\Classes\DummyCrawler::$resultStack = [];
         Tests\Fixtures\Classes\DummyVerboseCrawler::$output = null;
+        Tests\Fixtures\Classes\DummyParser::$client = null;
         Tests\Fixtures\Classes\DummyParser::$parsedSitemap = null;
     }
 }

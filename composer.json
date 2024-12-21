@@ -46,8 +46,9 @@
 		"phpstan/phpstan-phpunit": "^2.0",
 		"phpstan/phpstan-symfony": "^2.0",
 		"phpunit/phpunit": "^11.5.1",
+		"symfony/config": "^5.4.35 || ^6.4.3 || ^7.0.3",
 		"symfony/event-dispatcher-contracts": "^2.5.3 || ^3.4.2",
-		"symfony/string": "^6.4.3 || ^7.0.3"
+		"symfony/string": "^5.4.35 || ^6.4.3 || ^7.0.3"
 	},
 	"conflict": {
 		"cuyz/valinor": "1.14.0"
@@ -97,7 +98,10 @@
 		"sca": [
 			"@sca:php"
 		],
-		"sca:php": "phpstan analyse -c phpstan.php",
+		"sca:php": [
+			"@php tests/build/service-container.php",
+			"phpstan analyse -c phpstan.php"
+		],
 		"test": [
 			"@test:e2e",
 			"@test:unit"

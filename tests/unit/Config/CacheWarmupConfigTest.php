@@ -54,6 +54,7 @@ final class CacheWarmupConfigTest extends Framework\TestCase
             ],
             10,
             true,
+            ['foo' => 'baz'],
             Tests\Fixtures\Classes\DummyCrawler::class,
             ['foo' => 'baz'],
             Src\Crawler\Strategy\SortByChangeFrequencyStrategy::getName(),
@@ -121,6 +122,27 @@ final class CacheWarmupConfigTest extends Framework\TestCase
         $this->subject->disableLimit();
 
         self::assertSame(0, $this->subject->getLimit());
+    }
+
+    #[Framework\Attributes\Test]
+    public function setClientOptionAppliesGivenClientOptionToClientOptions(): void
+    {
+        $this->subject->setClientOption('baz', 'foo');
+
+        $expected = [
+            'foo' => 'baz',
+            'baz' => 'foo',
+        ];
+
+        self::assertSame($expected, $this->subject->getClientOptions());
+    }
+
+    #[Framework\Attributes\Test]
+    public function removeClientOptionRemovesGivenClientOptionFromClientOptions(): void
+    {
+        $this->subject->removeClientOption('foo');
+
+        self::assertSame([], $this->subject->getClientOptions());
     }
 
     #[Framework\Attributes\Test]
@@ -204,6 +226,7 @@ final class CacheWarmupConfigTest extends Framework\TestCase
             ],
             50,
             false,
+            ['dummy' => 'foo'],
             Tests\Fixtures\Classes\DummyLoggingCrawler::class,
             ['dummy' => 'foo'],
             Src\Crawler\Strategy\SortByLastModificationDateStrategy::getName(),
@@ -232,6 +255,10 @@ final class CacheWarmupConfigTest extends Framework\TestCase
             ],
             50,
             true,
+            [
+                'foo' => 'baz',
+                'dummy' => 'foo',
+            ],
             Tests\Fixtures\Classes\DummyLoggingCrawler::class,
             [
                 'foo' => 'baz',
@@ -265,6 +292,7 @@ final class CacheWarmupConfigTest extends Framework\TestCase
             'excludePatterns' => [],
             'limit' => 10,
             'progress' => false,
+            'clientOptions' => [],
             'crawler' => null,
             'crawlerOptions' => [],
             'strategy' => null,

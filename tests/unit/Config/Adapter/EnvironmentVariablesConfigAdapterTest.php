@@ -62,6 +62,30 @@ final class EnvironmentVariablesConfigAdapterTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    public function getThrowsExceptionIfConfiguredClientOptionsAreInvalid(): void
+    {
+        $this->expectExceptionObject(new Src\Exception\OptionsAreMalformed('foo'));
+
+        $this->testWithEnvironment(
+            fn () => $this->subject->get(),
+            [
+                'CACHE_WARMUP_CLIENT_OPTIONS' => 'foo',
+            ],
+        );
+    }
+
+    #[Framework\Attributes\Test]
+    public function getParsesClientOptions(): void
+    {
+        $this->testWithEnvironment(
+            fn () => self::assertSame(['foo' => 'baz'], $this->subject->get()->getClientOptions()),
+            [
+                'CACHE_WARMUP_CLIENT_OPTIONS' => '{"foo":"baz"}',
+            ],
+        );
+    }
+
+    #[Framework\Attributes\Test]
     public function getThrowsExceptionIfConfiguredCrawlerOptionsAreInvalid(): void
     {
         $this->expectExceptionObject(new Src\Exception\OptionsAreMalformed('foo'));
@@ -171,6 +195,7 @@ final class EnvironmentVariablesConfigAdapterTest extends Framework\TestCase
             'CACHE_WARMUP_EXCLUDE_PATTERNS' => '#foo#,*foo*',
             'CACHE_WARMUP_LIMIT' => '10',
             'CACHE_WARMUP_PROGRESS' => 'true',
+            'CACHE_WARMUP_CLIENT_OPTIONS' => '{"foo":"baz"}',
             'CACHE_WARMUP_CRAWLER' => Tests\Fixtures\Classes\DummyCrawler::class,
             'CACHE_WARMUP_CRAWLER_OPTIONS' => '{"foo":"baz"}',
             'CACHE_WARMUP_STRATEGY' => Src\Crawler\Strategy\SortByChangeFrequencyStrategy::getName(),
@@ -199,6 +224,7 @@ final class EnvironmentVariablesConfigAdapterTest extends Framework\TestCase
             ],
             10,
             true,
+            ['foo' => 'baz'],
             Tests\Fixtures\Classes\DummyCrawler::class,
             ['foo' => 'baz'],
             Src\Crawler\Strategy\SortByChangeFrequencyStrategy::getName(),

@@ -59,16 +59,12 @@ final readonly class ConsoleInputConfigAdapter implements ConfigAdapter
         'repeatAfter' => '--repeat-after',
     ];
 
-    private Crawler\CrawlerFactory $crawlerFactory;
-    private Xml\ParserFactory $parserFactory;
     private Config\Component\OptionsParser $optionsParser;
     private Valinor\Mapper\TreeMapper $mapper;
 
     public function __construct(
         private Console\Input\InputInterface $input,
     ) {
-        $this->crawlerFactory = new Crawler\CrawlerFactory();
-        $this->parserFactory = new Xml\ParserFactory();
         $this->optionsParser = new Config\Component\OptionsParser();
         $this->mapper = (new ConfigMapperFactory())->get();
     }
@@ -85,6 +81,7 @@ final readonly class ConsoleInputConfigAdapter implements ConfigAdapter
     public function get(): Config\CacheWarmupConfig
     {
         $nameMapping = self::PARAMETER_MAPPING;
+        $nameMapping['clientOptions'] = '--client-options';
         $nameMapping['crawlerOptions'] = '--crawler-options';
         $nameMapping['parserOptions'] = '--parser-options';
 
@@ -123,6 +120,13 @@ final readonly class ConsoleInputConfigAdapter implements ConfigAdapter
             }
         }
 
+        // Resolve client options
+        if (null !== $this->input->getOption('client-options')) {
+            /** @var string $clientOptions */
+            $clientOptions = $this->input->getOption('client-options');
+            $parameters['clientOptions'] = $this->optionsParser->parse($clientOptions);
+        }
+
         // Resolve crawler options
         if (null !== $this->input->getOption('crawler-options')) {
             /** @var string $crawlerOptions */
@@ -132,7 +136,7 @@ final readonly class ConsoleInputConfigAdapter implements ConfigAdapter
 
         // Test if given crawler is supported (throws exception if it's invalid)
         if (is_string($parameters['crawler'])) {
-            $this->crawlerFactory->validate($parameters['crawler']);
+            Crawler\CrawlerFactory::validate($parameters['crawler']);
         }
 
         // Resolve parser options
@@ -144,7 +148,7 @@ final readonly class ConsoleInputConfigAdapter implements ConfigAdapter
 
         // Test if given parser is supported (throws exception if it's invalid)
         if (is_string($parameters['parser'])) {
-            $this->parserFactory->validate($parameters['parser']);
+            Xml\ParserFactory::validate($parameters['parser']);
         }
 
         return $parameters;

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Xml;
 
+use EliasHaeussler\CacheWarmup\DependencyInjection;
 use EliasHaeussler\CacheWarmup\Exception;
 
 use function class_exists;
@@ -34,8 +35,12 @@ use function is_subclass_of;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class ParserFactory
+final readonly class ParserFactory
 {
+    public function __construct(
+        private DependencyInjection\ContainerFactory $containerFactory,
+    ) {}
+
     /**
      * @param class-string<Parser> $parserClass
      * @param array<string, mixed> $options
@@ -45,10 +50,11 @@ final class ParserFactory
      */
     public function get(string $parserClass, array $options = []): Parser
     {
-        $this->validate($parserClass);
+        self::validate($parserClass);
 
+        $container = $this->containerFactory->buildFor($parserClass);
         /** @var Parser $parser */
-        $parser = new $parserClass();
+        $parser = $container->get($parserClass);
 
         if ($parser instanceof ConfigurableParser) {
             $parser->setOptions($options);
@@ -61,7 +67,7 @@ final class ParserFactory
      * @throws Exception\ParserDoesNotExist
      * @throws Exception\ParserIsInvalid
      */
-    public function validate(string $parserClass): void
+    public static function validate(string $parserClass): void
     {
         if (!class_exists($parserClass)) {
             throw new Exception\ParserDoesNotExist($parserClass);
