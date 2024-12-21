@@ -90,6 +90,7 @@ final class FileConfigAdapterTest extends Framework\TestCase
             ],
             10,
             true,
+            ['foo' => 'baz'],
             Tests\Fixtures\Classes\DummyCrawler::class,
             ['foo' => 'baz'],
             Src\Crawler\Strategy\SortByChangeFrequencyStrategy::getName(),

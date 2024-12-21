@@ -26,10 +26,12 @@ namespace EliasHaeussler\CacheWarmup\Command;
 use EliasHaeussler\CacheWarmup\CacheWarmer;
 use EliasHaeussler\CacheWarmup\Config;
 use EliasHaeussler\CacheWarmup\Crawler;
+use EliasHaeussler\CacheWarmup\DependencyInjection;
 use EliasHaeussler\CacheWarmup\Event;
 use EliasHaeussler\CacheWarmup\Exception;
 use EliasHaeussler\CacheWarmup\Formatter;
 use EliasHaeussler\CacheWarmup\Helper;
+use EliasHaeussler\CacheWarmup\Http;
 use EliasHaeussler\CacheWarmup\Log;
 use EliasHaeussler\CacheWarmup\Result;
 use EliasHaeussler\CacheWarmup\Sitemap;
@@ -66,12 +68,12 @@ final class CacheWarmupCommand extends Console\Command\Command
 
     private readonly Crawler\Strategy\CrawlingStrategyFactory $crawlingStrategyFactory;
     private readonly Config\Component\OptionsParser $optionsParser;
-    private readonly Xml\ParserFactory $parserFactory;
     private readonly Time\TimeTracker $timeTracker;
     private Config\CacheWarmupConfig $config;
     private Console\Style\SymfonyStyle $io;
     private Formatter\Formatter $formatter;
     private Crawler\CrawlerFactory $crawlerFactory;
+    private Xml\ParserFactory $parserFactory;
     private bool $firstRun = true;
 
     public function __construct(
@@ -79,7 +81,6 @@ final class CacheWarmupCommand extends Console\Command\Command
     ) {
         $this->crawlingStrategyFactory = new Crawler\Strategy\CrawlingStrategyFactory();
         $this->optionsParser = new Config\Component\OptionsParser();
-        $this->parserFactory = new Xml\ParserFactory();
         $this->timeTracker = new Time\TimeTracker();
 
         parent::__construct('cache-warmup');
@@ -170,6 +171,13 @@ For a more verbose output, add the <comment>--verbose</comment> option:
 The number of URLs to be crawled can be limited using the <comment>--limit</comment> option:
 
    <comment>%command.full_name% --limit 50</comment>
+
+<info>Client options</info>
+<info>==============</info>
+Parsing and crawling of XML sitemaps and URLs is done by a shared Guzzle client.
+Use the <comment>--client-options</comment> option to provide additional config for the client:
+
+   <comment>%command.full_name% --client-options '{"auth": ["username", "password"]}'</comment>
 
 <info>Crawler</info>
 <info>=======</info>
@@ -282,6 +290,12 @@ HELP);
             'p',
             Console\Input\InputOption::VALUE_NONE,
             'Show progress bar during cache warmup',
+        );
+        $this->addOption(
+            'client-options',
+            't',
+            Console\Input\InputOption::VALUE_REQUIRED,
+            'Additional config for client used for parsing and crawling XML sitemaps',
         );
         $this->addOption(
             'crawler',
@@ -407,13 +421,17 @@ HELP);
             }
         }
 
-        $this->crawlerFactory = new Crawler\CrawlerFactory(
+        // Create container factory for crawler and parser factory
+        $containerFactory = new DependencyInjection\ContainerFactory(
             $output,
             $logger,
-            $logLevel,
-            $stopOnFailure,
             $this->eventDispatcher,
+            new Http\Client\ClientFactory($this->config->getClientOptions()),
         );
+
+        // Create factories
+        $this->crawlerFactory = new Crawler\CrawlerFactory($containerFactory, $logLevel, $stopOnFailure);
+        $this->parserFactory = new Xml\ParserFactory($containerFactory);
     }
 
     protected function interact(Console\Input\InputInterface $input, Console\Output\OutputInterface $output): void
@@ -470,6 +488,13 @@ HELP);
         if ($this->firstRun && $repeatAfter > 0) {
             $this->showEndlessModeWarning($repeatAfter);
             $this->firstRun = false;
+        }
+
+        // Print client options
+        if ($this->formatter->isVerbose() && $this->io->isVerbose() && [] !== $this->config->getClientOptions()) {
+            $this->io->section('Using custom client options:');
+            $this->io->writeln((string) json_encode($this->config->getClientOptions(), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+            $this->io->newLine();
         }
 
         // Initialize components

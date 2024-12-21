@@ -50,6 +50,7 @@ final class CacheWarmupConfig
      * @param list<Sitemap\Url>                                  $urls
      * @param list<Option\ExcludePattern>                        $excludePatterns
      * @param int<0, max>                                        $limit
+     * @param array<string, mixed>                               $clientOptions
      * @param Crawler\Crawler|class-string<Crawler\Crawler>|null $crawler
      * @param array<string, mixed>                               $crawlerOptions
      * @param Xml\Parser|class-string<Xml\Parser>|null           $parser
@@ -62,6 +63,7 @@ final class CacheWarmupConfig
         private array $excludePatterns = [],
         private int $limit = 0,
         private bool $progress = false,
+        private array $clientOptions = [],
         private Crawler\Crawler|string|null $crawler = null,
         private array $crawlerOptions = [],
         private Crawler\Strategy\CrawlingStrategy|string|null $strategy = null,
@@ -198,6 +200,38 @@ final class CacheWarmupConfig
     public function disableProgressBar(): self
     {
         $this->progress = false;
+
+        return $this;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getClientOptions(): array
+    {
+        return $this->clientOptions;
+    }
+
+    /**
+     * @param array<string, mixed> $clientOptions
+     */
+    public function setClientOptions(array $clientOptions): self
+    {
+        $this->clientOptions = $clientOptions;
+
+        return $this;
+    }
+
+    public function setClientOption(string $name, mixed $value): self
+    {
+        $this->clientOptions[$name] = $value;
+
+        return $this;
+    }
+
+    public function removeClientOption(string $name): self
+    {
+        unset($this->clientOptions[$name]);
 
         return $this;
     }

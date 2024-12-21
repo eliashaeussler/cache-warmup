@@ -25,6 +25,7 @@ namespace EliasHaeussler\CacheWarmup\Tests\Xml;
 
 use EliasHaeussler\CacheWarmup as Src;
 use EliasHaeussler\CacheWarmup\Tests;
+use GuzzleHttp\RequestOptions;
 use PHPUnit\Framework;
 
 /**
@@ -36,11 +37,17 @@ use PHPUnit\Framework;
 #[Framework\Attributes\CoversClass(Src\Xml\ParserFactory::class)]
 final class ParserFactoryTest extends Framework\TestCase
 {
+    private Src\Http\Client\ClientFactory $clientFactory;
     private Src\Xml\ParserFactory $subject;
 
     protected function setUp(): void
     {
-        $this->subject = new Src\Xml\ParserFactory();
+        $this->clientFactory = new Src\Http\Client\ClientFactory([
+            RequestOptions::AUTH => ['username', 'password'],
+        ]);
+        $this->subject = new Src\Xml\ParserFactory(
+            new Src\DependencyInjection\ContainerFactory(clientFactory: $this->clientFactory),
+        );
     }
 
     #[Framework\Attributes\Test]
@@ -67,6 +74,7 @@ final class ParserFactoryTest extends Framework\TestCase
         $actual = $this->subject->get(Tests\Fixtures\Classes\DummyParser::class);
 
         self::assertInstanceOf(Tests\Fixtures\Classes\DummyParser::class, $actual);
+        self::assertEquals($this->clientFactory->get(), Tests\Fixtures\Classes\DummyParser::$client);
     }
 
     #[Framework\Attributes\Test]
@@ -80,5 +88,26 @@ final class ParserFactoryTest extends Framework\TestCase
 
         self::assertInstanceOf(Tests\Fixtures\Classes\DummyConfigurableParser::class, $actual);
         self::assertSame(['foo' => 'baz'], $actual->getOptions());
+    }
+
+    #[Framework\Attributes\Test]
+    public function validateThrowsExceptionIfGivenParserClassIsInvalid(): void
+    {
+        $this->expectExceptionObject(new Src\Exception\ParserDoesNotExist('foo'));
+
+        Src\Xml\ParserFactory::validate('foo');
+    }
+
+    #[Framework\Attributes\Test]
+    public function validateThrowsExceptionIfGivenParserClassIsUnsupported(): void
+    {
+        $this->expectExceptionObject(new Src\Exception\ParserIsInvalid(self::class));
+
+        Src\Xml\ParserFactory::validate(self::class);
+    }
+
+    protected function tearDown(): void
+    {
+        Tests\Fixtures\Classes\DummyParser::$client = null;
     }
 }

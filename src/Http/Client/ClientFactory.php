@@ -21,36 +21,40 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Tests\Fixtures\Classes;
+namespace EliasHaeussler\CacheWarmup\Http\Client;
 
-use EliasHaeussler\CacheWarmup\Result;
-use EliasHaeussler\CacheWarmup\Sitemap;
-use EliasHaeussler\CacheWarmup\Xml;
+use EliasHaeussler\CacheWarmup\Helper;
+use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 
 /**
- * DummyParser.
+ * ClientFactory.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
- *
- * @internal
  */
-final class DummyParser implements Xml\Parser
+final readonly class ClientFactory
 {
-    public static ?ClientInterface $client = null;
+    /**
+     * @param array<string, mixed> $defaults
+     */
+    public function __construct(
+        private array $defaults = [],
+    ) {}
 
-    public static ?Sitemap\Sitemap $parsedSitemap = null;
-
-    public function __construct(ClientInterface $client)
+    /**
+     * @param array<string, mixed> $config
+     *
+     * @see https://docs.guzzlephp.org/en/stable/quickstart.html#creating-a-client
+     */
+    public function get(array $config = []): ClientInterface
     {
-        self::$client = $client;
-    }
+        $mergedConfig = $this->defaults;
 
-    public function parse(Sitemap\Sitemap $sitemap): Result\ParserResult
-    {
-        self::$parsedSitemap = $sitemap;
+        if ([] !== $config) {
+            Helper\ArrayHelper::mergeRecursive($mergedConfig, $config);
+        }
 
-        return new Result\ParserResult();
+        return new Client($mergedConfig);
     }
 }

@@ -44,6 +44,12 @@ Defines how to format cache warmup progress and result.
 * [Progress](progress.md)
 * [Endless mode](repeat-after.md)
 
+## Client
+
+Describes options to customize the shared Guzzle client.
+
+* [Client options](client-options.md)
+
 ## Crawling
 
 Describes options to modify and customize the crawling behavior.

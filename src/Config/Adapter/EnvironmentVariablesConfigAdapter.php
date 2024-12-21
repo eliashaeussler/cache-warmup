@@ -52,15 +52,11 @@ final readonly class EnvironmentVariablesConfigAdapter implements ConfigAdapter
         '1',
     ];
 
-    private Crawler\CrawlerFactory $crawlerFactory;
-    private Xml\ParserFactory $parserFactory;
     private Config\Component\OptionsParser $optionsParser;
     private Valinor\Mapper\TreeMapper $mapper;
 
     public function __construct()
     {
-        $this->crawlerFactory = new Crawler\CrawlerFactory();
-        $this->parserFactory = new Xml\ParserFactory();
         $this->optionsParser = new Config\Component\OptionsParser();
         $this->mapper = (new ConfigMapperFactory())->get();
     }
@@ -124,17 +120,17 @@ final readonly class EnvironmentVariablesConfigAdapter implements ConfigAdapter
     {
         // Test if given crawler is supported (throws exception if it's invalid)
         if ('crawler' === $name && '' !== trim($envVarValue)) {
-            $this->crawlerFactory->validate($envVarValue);
+            Crawler\CrawlerFactory::validate($envVarValue);
         }
 
         // Test if given parser is supported (throws exception if it's invalid)
         if ('parser' === $name && '' !== trim($envVarValue)) {
-            $this->parserFactory->validate($envVarValue);
+            Xml\ParserFactory::validate($envVarValue);
         }
 
         return match (gettype($defaultValue)) {
             'array' => match ($name) {
-                'crawlerOptions', 'parserOptions' => $this->optionsParser->parse($envVarValue),
+                'clientOptions', 'crawlerOptions', 'parserOptions' => $this->optionsParser->parse($envVarValue),
                 default => Helper\ArrayHelper::trimExplode($envVarValue),
             },
             'boolean' => in_array(trim($envVarValue), self::BOOLEAN_VALUES, true),

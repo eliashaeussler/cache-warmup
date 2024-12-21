@@ -9,6 +9,8 @@ excludePatterns:
   - '*foo*'
 limit: 10
 progress: true
+clientOptions:
+  foo: baz
 crawler: EliasHaeussler\CacheWarmup\Tests\Fixtures\Classes\DummyCrawler
 crawlerOptions:
   foo: baz

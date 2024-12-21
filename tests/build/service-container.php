@@ -21,36 +21,11 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Tests\Fixtures\Classes;
+use EliasHaeussler\CacheWarmup\DependencyInjection;
+use Psr\Log;
 
-use EliasHaeussler\CacheWarmup\Result;
-use EliasHaeussler\CacheWarmup\Sitemap;
-use EliasHaeussler\CacheWarmup\Xml;
-use GuzzleHttp\ClientInterface;
+require dirname(__DIR__, 2).'/vendor/autoload.php';
 
-/**
- * DummyParser.
- *
- * @author Elias Häußler <elias@haeussler.dev>
- * @license GPL-3.0-or-later
- *
- * @internal
- */
-final class DummyParser implements Xml\Parser
-{
-    public static ?ClientInterface $client = null;
+$containerFactory = new DependencyInjection\ContainerFactory(logger: new Log\NullLogger());
 
-    public static ?Sitemap\Sitemap $parsedSitemap = null;
-
-    public function __construct(ClientInterface $client)
-    {
-        self::$client = $client;
-    }
-
-    public function parse(Sitemap\Sitemap $sitemap): Result\ParserResult
-    {
-        self::$parsedSitemap = $sitemap;
-
-        return new Result\ParserResult();
-    }
-}
+return $containerFactory->buildForTesting();
