@@ -2,7 +2,7 @@
 outline: [2,3]
 ---
 
-# Configurable Crawler
+# Configurable Crawler <Badge type="tip" text="0.7.13+" />
 
 Whenever you want to allow a custom behavior of your crawler, it
 should implement

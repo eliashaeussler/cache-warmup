@@ -2,7 +2,7 @@
 outline: [2,3]
 ---
 
-# Stoppable Crawler
+# Stoppable Crawler <Badge type="tip" text="2.7+" />
 
 In terms of error handling it might be useful to define the
 behavior in case a cache warmup failure occurs. You can implement

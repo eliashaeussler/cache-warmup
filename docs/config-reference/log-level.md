@@ -1,4 +1,4 @@
-# Log level <Badge type="tip" text="2.4.0+" />
+# Log level <Badge type="tip" text="2.4+" />
 
 <small>📝&nbsp;Name: `logLevel` &middot; 🖥️&nbsp;Option: `--log-level` &middot; 🐝&nbsp;Default: `error`</small>
 

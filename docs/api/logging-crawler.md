@@ -2,7 +2,7 @@
 outline: [2,3]
 ---
 
-# Logging Crawler
+# Logging Crawler <Badge type="tip" text="2.4+" />
 
 In some cases it might be helpful to log parts of the cache
 warmup process. For this, your crawler should implement

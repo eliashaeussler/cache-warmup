@@ -1,4 +1,4 @@
-# Log file <Badge type="tip" text="2.4.0+" />
+# Log file <Badge type="tip" text="2.4+" />
 
 <small>📝&nbsp;Name: `logFile` &middot; 🖥️&nbsp;Option: `--log-file`</small>
 

@@ -2,7 +2,7 @@
 outline: [2,3]
 ---
 
-# Verbose Crawler
+# Verbose Crawler <Badge type="tip" text="0.2.0+" />
 
 When cache warmup is performed from the command line, it might
 be helpful to provide user-oriented output such as progress bars

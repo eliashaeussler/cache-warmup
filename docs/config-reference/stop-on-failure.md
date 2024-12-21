@@ -1,4 +1,4 @@
-# Stop on failure <Badge type="tip" text="2.7.0+" />
+# Stop on failure <Badge type="tip" text="2.7+" />
 
 <small>📝&nbsp;Name: `stopOnFailure` &middot; 🖥️&nbsp;Option: `--stop-on-failure`</small>
 
