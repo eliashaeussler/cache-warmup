@@ -26,7 +26,6 @@ namespace EliasHaeussler\CacheWarmup\Tests\Xml;
 use DateTimeImmutable;
 use EliasHaeussler\CacheWarmup as Src;
 use EliasHaeussler\CacheWarmup\Tests;
-use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\RequestOptions;
 use PHPUnit\Framework;
@@ -172,22 +171,6 @@ final class SitemapXmlParserTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
-    public function parseRespectsConfiguredClientConfig(): void
-    {
-        $this->mockSitemapRequest('valid_sitemap_4');
-
-        $subject = new Src\Xml\SitemapXmlParser([
-            'client_config' => [
-                'handler' => HandlerStack::create($this->mockHandler),
-            ],
-        ]);
-
-        $subject->parse($this->sitemap);
-
-        self::assertNotNull($this->mockHandler->getLastRequest());
-    }
-
-    #[Framework\Attributes\Test]
     public function parseRespectsConfiguredRequestHeaders(): void
     {
         $this->mockSitemapRequest('valid_sitemap_4');
@@ -260,7 +243,6 @@ final class SitemapXmlParserTest extends Framework\TestCase
         $this->expectException(OptionsResolver\Exception\UndefinedOptionsException::class);
 
         $this->subject->setOptions([
-            'client_config' => [],
             'foo' => 'baz',
         ]);
     }
@@ -275,7 +257,6 @@ final class SitemapXmlParserTest extends Framework\TestCase
         ]);
 
         $expected = [
-            'client_config' => [],
             'request_headers' => [
                 'foo' => 'baz',
             ],

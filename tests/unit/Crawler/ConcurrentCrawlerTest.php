@@ -26,7 +26,6 @@ namespace EliasHaeussler\CacheWarmup\Tests\Crawler;
 use EliasHaeussler\CacheWarmup as Src;
 use EliasHaeussler\CacheWarmup\Tests;
 use EliasHaeussler\TransientLogger;
-use GuzzleHttp\Client;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\RequestOptions;
 use PHPUnit\Framework;
@@ -57,45 +56,6 @@ final class ConcurrentCrawlerTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
-    public function crawlInstantiatesClientWithGivenClientConfig(): void
-    {
-        $this->mockHandler->append(new Psr7\Response());
-
-        $subject = new Src\Crawler\ConcurrentCrawler(
-            [
-                'client_config' => [
-                    'handler' => $this->mockHandler,
-                ],
-            ],
-        );
-
-        self::assertNull($this->mockHandler->getLastRequest());
-
-        $subject->crawl([new Psr7\Uri('https://www.example.org')]);
-
-        self::assertNotNull($this->mockHandler->getLastRequest());
-    }
-
-    #[Framework\Attributes\Test]
-    public function crawlIgnoresGivenClientConfigIfInstantiatedClientIsPassed(): void
-    {
-        $subject = new Src\Crawler\ConcurrentCrawler(
-            [
-                'client_config' => [
-                    'handler' => $this->mockHandler,
-                ],
-            ],
-            new Client(),
-        );
-
-        self::assertNull($this->mockHandler->getLastRequest());
-
-        $subject->crawl([new Psr7\Uri('https://www.example.org')]);
-
-        self::assertNull($this->mockHandler->getLastRequest());
-    }
-
-    #[Framework\Attributes\Test]
     public function crawlDoesNotWritesResponseBodyByDefault(): void
     {
         $this->mockHandler->append(new Psr7\Response());
@@ -115,16 +75,11 @@ final class ConcurrentCrawlerTest extends Framework\TestCase
     {
         $this->mockHandler->append(new Psr7\Response());
 
-        $subject = new Src\Crawler\ConcurrentCrawler(
-            [
-                'client_config' => [
-                    'handler' => $this->mockHandler,
-                ],
-                'write_response_body' => true,
-            ],
-        );
+        $this->subject->setOptions([
+            'write_response_body' => true,
+        ]);
 
-        $subject->crawl([new Psr7\Uri('https://www.example.org')]);
+        $this->subject->crawl([new Psr7\Uri('https://www.example.org')]);
 
         $lastOptions = $this->mockHandler->getLastOptions();
         $sink = $lastOptions[RequestOptions::SINK] ?? null;

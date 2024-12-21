@@ -26,13 +26,13 @@ make sure to pass them as **JSON-encoded string**.
 ::: code-group
 
 ```bash [CLI]
-./cache-warmup.phar --parser-options '{"client_config": {"proxy": "http://localhost:8125"}}'
+./cache-warmup.phar --parser-options '{"request_options": {"proxy": "http://localhost:8125"}}'
 ```
 
 ```json [JSON]
 {
     "parserOptions": {
-        "client_config": {
+        "request_options": {
             "proxy": "http://localhost:8125"
         }
     }
@@ -43,7 +43,7 @@ make sure to pass them as **JSON-encoded string**.
 use EliasHaeussler\CacheWarmup;
 
 return static function (CacheWarmup\Config\CacheWarmupConfig $config) {
-    $config->setParserOption('client_config', [
+    $config->setParserOption('request_options', [
         'proxy' => 'http://localhost:8125',
     ]);
 
@@ -53,12 +53,12 @@ return static function (CacheWarmup\Config\CacheWarmupConfig $config) {
 
 ```yaml [YAML]
 parserOptions:
-  client_config:
+  request_options:
     proxy: 'http://localhost:8125'
 ```
 
 ```bash [.env]
-CACHE_WARMUP_PARSER_OPTIONS='{"client_config": {"proxy": "http://localhost:8125"}}'
+CACHE_WARMUP_PARSER_OPTIONS='{"request_options": {"proxy": "http://localhost:8125"}}'
 ```
 
 :::
@@ -70,61 +70,6 @@ The default parser is implemented as configurable parser:
 * [`EliasHaeussler\CacheWarmup\Xml\SitemapXmlParser`](../../src/Xml/SitemapXmlParser.php)
 
 The following configuration options are currently available for the default parser:
-
-### `client_config` <Badge type="tip" text="4.0+" />
-
-<small>🎨&nbsp;Type: `array<string, mixed>` &middot; 🐝&nbsp;Default: `[]`</small>
-
-> Optional [configuration](https://docs.guzzlephp.org/en/stable/quickstart.html#creating-a-client)
-> used when instantiating a new Guzzle client.
-
-::: code-group
-
-```bash [CLI]
-./cache-warmup.phar --parser-options '{"client_config": {"auth": ["username", "password"]}}'
-```
-
-```json [JSON]
-{
-    "parserOptions": {
-        "client_config": {
-            "auth": [
-                "username",
-                "password"
-            ]
-        }
-    }
-}
-```
-
-```php [PHP]
-use EliasHaeussler\CacheWarmup;
-
-return static function (CacheWarmup\Config\CacheWarmupConfig $config) {
-    $config->setParserOption('client_config', [
-        'auth' => [
-            'username',
-            'password',
-        ],
-    ]);
-
-    return $config;
-};
-```
-
-```yaml [YAML]
-parserOptions:
-  client_config:
-    auth:
-      - username
-      - password
-```
-
-```bash [.env]
-CACHE_WARMUP_PARSER_OPTIONS='{"client_config": {"auth": ["username", "password"]}}'
-```
-
-:::
 
 ### `request_headers` <Badge type="tip" text="4.0+" />
 

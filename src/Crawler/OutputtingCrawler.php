@@ -45,7 +45,6 @@ use function count;
  *     request_method: string,
  *     request_headers: array<string, string>,
  *     request_options: array<string, mixed>,
- *     client_config: array<string, mixed>,
  *     write_response_body: bool,
  * }>
  */
@@ -61,7 +60,7 @@ final class OutputtingCrawler extends AbstractConfigurableCrawler implements Log
 
     public function __construct(
         array $options = [],
-        private readonly ?ClientInterface $client = null,
+        private readonly ClientInterface $client = new Client(),
         private Console\Output\OutputInterface $output = new Console\Output\ConsoleOutput(),
         private ?Log\LoggerInterface $logger = null,
         private readonly ?EventDispatcher\EventDispatcherInterface $eventDispatcher = null,
@@ -91,11 +90,8 @@ final class OutputtingCrawler extends AbstractConfigurableCrawler implements Log
             $handlers[] = $logHandler;
         }
 
-        // Create new client
-        $client = $this->client ?? new Client($this->options['client_config']);
-
         // Create request pool
-        $pool = $this->createPool($urls, $client, $handlers, $this->stopOnFailure);
+        $pool = $this->createPool($urls, $this->client, $handlers, $this->stopOnFailure);
 
         // Start crawling
         try {

@@ -75,61 +75,6 @@ Both default crawlers are implemented as configurable crawlers:
 
 The following configuration options are currently available for both crawlers:
 
-### `client_config` <Badge type="tip" text="1.2.0+" />
-
-<small>🎨&nbsp;Type: `array<string, mixed>` &middot; 🐝&nbsp;Default: `[]`</small>
-
-> Optional [configuration](https://docs.guzzlephp.org/en/stable/quickstart.html#creating-a-client)
-> used when instantiating a new Guzzle client.
-
-::: code-group
-
-```bash [CLI]
-./cache-warmup.phar --crawler-options '{"client_config": {"auth": ["username", "password"]}}'
-```
-
-```json [JSON]
-{
-    "crawlerOptions": {
-        "client_config": {
-            "auth": [
-                "username",
-                "password"
-            ]
-        }
-    }
-}
-```
-
-```php [PHP]
-use EliasHaeussler\CacheWarmup;
-
-return static function (CacheWarmup\Config\CacheWarmupConfig $config) {
-    $config->setCrawlerOption('client_config', [
-        'auth' => [
-            'username',
-            'password',
-        ],
-    ]);
-
-    return $config;
-};
-```
-
-```yaml [YAML]
-crawlerOptions:
-  client_config:
-    auth:
-      - username
-      - password
-```
-
-```bash [.env]
-CACHE_WARMUP_CRAWLER_OPTIONS='{"client_config": {"auth": ["username", "password"]}}'
-```
-
-:::
-
 ### `concurrency` <Badge type="tip" text="0.7.13+" />
 
 <small>🎨&nbsp;Type: `integer` &middot; 🐝&nbsp;Default: `3`</small>

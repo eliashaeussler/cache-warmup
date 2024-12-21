@@ -42,7 +42,6 @@ use Psr\Log;
  *     request_method: string,
  *     request_headers: array<string, string>,
  *     request_options: array<string, mixed>,
- *     client_config: array<string, mixed>,
  *     write_response_body: bool,
  * }>
  */
@@ -58,7 +57,7 @@ final class ConcurrentCrawler extends AbstractConfigurableCrawler implements Log
 
     public function __construct(
         array $options = [],
-        private readonly ?ClientInterface $client = null,
+        private readonly ClientInterface $client = new Client(),
         private ?Log\LoggerInterface $logger = null,
         private readonly ?EventDispatcher\EventDispatcherInterface $eventDispatcher = null,
     ) {
@@ -77,12 +76,9 @@ final class ConcurrentCrawler extends AbstractConfigurableCrawler implements Log
             $handlers[] = $logHandler;
         }
 
-        // Create new client
-        $client = $this->client ?? new Client($this->options['client_config']);
-
         // Start crawling
         try {
-            $this->createPool($urls, $client, $handlers, $this->stopOnFailure)->promise()->wait();
+            $this->createPool($urls, $this->client, $handlers, $this->stopOnFailure)->promise()->wait();
         } catch (Promise\CancellationException) {
             $result->setCancelled(true);
         }
