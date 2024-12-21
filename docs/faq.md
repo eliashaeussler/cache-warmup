@@ -26,68 +26,44 @@ crawler option in combination with one of the default crawlers.
 
 ## How can I configure basic auth credentials?
 
-This is possible by using the [`request_options`](config-reference/crawler-options.md#request-options)
-crawler option in combination with one of the default crawlers. In addition,
-the [`client_config`](config-reference/parser-options.md#client-config) parser
-option in combination with the default parser can be used. Both crawler option
-and parser option accept all configurable Guzzle request options such as
-[`auth`](https://docs.guzzlephp.org/en/stable/request-options.html#auth) for
-basic auth.
-
-Example:
+This is possible by using the [`clientOptions`](config-reference/client-options.md)
+configuration option in combination with one of the default crawlers and the
+default parser. Pass your basic auth credentials with the
+[`auth`](https://docs.guzzlephp.org/en/stable/request-options.html#auth) request
+option, for example:
 
 ::: code-group
 
 ```bash [CLI]
-./cache-warmup.phar \
-    --crawler-options '{"request_options": {"auth": ["username", "password"]}}' \
-    --parser-options '{"client_config": {"auth": ["username", "password"]}}'
+./cache-warmup.phar --client-options '{"auth": ["username", "password"]}'
 ```
 
 ```json [JSON]
 {
-    "crawlerOptions": {
-        "request_options": {
-            "auth": ["username", "password"]
-        }
-    },
-    "parserOptions": {
-        "client_config": {
-            "auth": ["username", "password"]
-        }
+    "clientOptions": {
+        "auth": ["username", "password"]
     }
 }
 ```
 
 ```php [PHP]
 use EliasHaeussler\CacheWarmup;
+use GuzzleHttp\RequestOptions;
 
 return static function (CacheWarmup\Config\CacheWarmupConfig $config) {
-    $basicAuth = ['username', 'password'];
-
-    $config->setCrawlerOption('request_options', [
-        'auth' => $basicAuth,
-    ]);
-    $config->setParserOption('client_config', [
-        'auth' => $basicAuth,
-    ]);
+    $config->setClientOption(RequestOptions::AUTH, ['username', 'password']);
 
     return $config;
 };
 ```
 
 ```yaml [YAML]
-crawlerOptions:
-  request_options:
-    auth: ['username', 'password']
-parserOptions:
-  client_config:
-    auth: ['username', 'password']
+clientOptions:
+  auth: ['username', 'password']
 ```
 
 ```bash [.env]
-CACHE_WARMUP_CRAWLER_OPTIONS='{"request_options": {"auth": ["username", "password"]}}'
-CACHE_WARMUP_PARSER_OPTIONS='{"client_config": {"auth": ["username", "password"]}}'
+CACHE_WARMUP_CLIENT_OPTIONS='{"auth": ["username", "password"]}'
 ```
 
 :::
