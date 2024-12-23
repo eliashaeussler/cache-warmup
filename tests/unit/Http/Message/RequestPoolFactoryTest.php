@@ -59,7 +59,7 @@ final class RequestPoolFactoryTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
-    public function createReturnsObjectForGivenRequests(): void
+    public function createPoolReturnsObjectForGivenRequests(): void
     {
         $visitedUrls = [];
         $response = function (Message\RequestInterface $request) use (&$visitedUrls) {

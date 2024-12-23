@@ -11,26 +11,20 @@ The factory is stateful – it stores request method and headers.
 
 The following methods are available:
 
-### `__construct`
+### `create`
 
-Pass HTTP request method and request headers to the constructor. They will
-be used for each generated HTTP request.
+Pass HTTP request method which will be used for each generated HTTP request.
 
-```php {7}
+```php {3}
 use EliasHaeussler\CacheWarmup;
 
-$headers = [
-    'X-Foo' => 'Bar',
-];
-
-$clientFactory = new CacheWarmup\Http\Message\RequestFactory('GET', $headers);
+$clientFactory = CacheWarmup\Http\Message\RequestFactory::create('GET');
 ```
 
-### `build`
+### `createRequest`
 
 Generate HTTP request for given URL. It is built using the configured HTTP
-method and includes configured request headers, merged with default
-`User-Agent` header.
+method and includes configured request headers.
 
 ```php {7}
 use EliasHaeussler\CacheWarmup;
@@ -38,13 +32,13 @@ use GuzzleHttp\Psr7;
 
 $url = new Psr7\Uri('https://www.example.com/');
 
-$clientFactory = new CacheWarmup\Http\Message\RequestFactory('GET');
-$request = $clientFactory->build($url);
+$clientFactory = CacheWarmup\Http\Message\RequestFactory::create('GET');
+$request = $clientFactory->createRequest($url);
 ```
 
-### `buildIterable`
+### `createRequests`
 
-Generate HTTP requests for given URLs, same as with the [`build`](#build)
+Generate HTTP requests for given URLs, same as with the [`createRequest`](#createrequest)
 method.
 
 ```php {11}
@@ -57,8 +51,53 @@ $urls = [
     new Psr7\Uri('https://www.example.com/fr/'),
 ];
 
-$clientFactory = new CacheWarmup\Http\Message\RequestFactory('GET');
-$requests = $clientFactory->buildIterable($urls);
+$clientFactory = CacheWarmup\Http\Message\RequestFactory::create('GET');
+$requests = $clientFactory->createRequests($urls);
+```
+
+### `withHeaders`
+
+Pass request headers to include in each generated HTTP request.
+
+```php {4-6}
+use EliasHaeussler\CacheWarmup;
+
+$clientFactory = CacheWarmup\Http\Message\RequestFactory::create('GET')
+    ->withHeaders([
+        'X-Foo' => 'Bar',
+    ])
+;
+```
+
+### `withUserAgent`
+
+Add default `User-Agent` header to request headers. The `User-Agent` header
+is generated as follows (`<version>` is replaced by the current version of
+the library):
+
+```
+EliasHaeussler-CacheWarmup/<version> (https://cache-warmup.dev)
+```
+
+::: info
+If a `User-Agent` header is already configured using the `withHeaders()`
+method, it will be overridden when calling the `withUserAgent()` method,
+unless the `$skipIfAlreadyPresent` parameter is set to `true`.
+:::
+
+```php {5,11}
+use EliasHaeussler\CacheWarmup;
+
+// Enforce default User-Agent header
+$clientFactory = CacheWarmup\Http\Message\RequestFactory::create('GET')
+    ->withUserAgent()
+;
+
+// Only add default User-Agent header if not already present
+$clientFactory = CacheWarmup\Http\Message\RequestFactory::create('GET')
+    ->withHeaders(['User-Agent' => 'Foo'])
+    ->withUserAgent(true)
+;
 ```
 
 ## Example
@@ -68,17 +107,29 @@ $requests = $clientFactory->buildIterable($urls);
 use EliasHaeussler\CacheWarmup;
 use GuzzleHttp\Psr7;
 
-$clientFactory = new CacheWarmup\Http\Message\RequestFactory('GET', [
-    'X-Foo' => 'Bar',
+$requestFactory = CacheWarmup\Http\Message\RequestFactory::create('GET');
+$requestFactory = $requestFactory->withHeaders(['X-Foo' => 'Bar']);
+$requestFactoryWithUserAgent = $requestFactory->withUserAgent();
+
+// One GET request with X-Foo header
+$request = $requestFactory->createRequest(
+    new Psr7\Uri('https://www.example.com/'),
+);
+
+// Multiple GET requests with X-Foo headers
+$requests = $requestFactory->createRequests([
+    new Psr7\Uri('https://www.example.com/'),
+    new Psr7\Uri('https://www.example.com/de/'),
+    new Psr7\Uri('https://www.example.com/fr/'),
 ]);
 
 // One GET request with X-Foo and User-Agent headers
-$request = $clientFactory->build(
+$userAgentRequest = $requestFactoryWithUserAgent->createRequest(
     new Psr7\Uri('https://www.example.com/'),
 );
 
 // Multiple GET requests with X-Foo and User-Agent headers
-$requests = $clientFactory->buildIterable([
+$userAgentRequests = $requestFactoryWithUserAgent->createRequests([
     new Psr7\Uri('https://www.example.com/'),
     new Psr7\Uri('https://www.example.com/de/'),
     new Psr7\Uri('https://www.example.com/fr/'),

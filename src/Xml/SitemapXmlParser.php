@@ -188,8 +188,12 @@ final class SitemapXmlParser implements ConfigurableParser
     {
         $filename = $this->createTemporaryFilename((string) $uri);
 
-        $requestFactory = new Http\Message\RequestFactory('GET', $this->options['request_headers']);
-        $request = $requestFactory->build($uri);
+        $request = Http\Message\RequestFactory::create('GET')
+            ->withHeaders($this->options['request_headers'])
+            ->withUserAgent(true)
+            ->createRequest($uri)
+        ;
+
         $requestOptions = $this->options['request_options'];
         $requestOptions[RequestOptions::SINK] = $filename;
 
