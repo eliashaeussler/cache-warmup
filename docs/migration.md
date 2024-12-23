@@ -52,8 +52,22 @@ acts as drop-in replacement for globally shared client configuration.
   Note that this configuration option will be respected by the default parser
   as well.
 
+### Changed `User-Agent` header ([#447])
+
+The default HTTP request header `User-Agent` changed like follows (`<version>`
+references the current library's version):
+
+```diff
+-EliasHaeussler-CacheWarmup/<version> (https://github.com/eliashaeussler/cache-warmup)
++EliasHaeussler-CacheWarmup/<version> (https://cache-warmup.dev)
+```
+
+* Change usages and references of the `User-Agent` header, for example when
+  excluding cache warmup requests from website analytics.
+
 
 
 [#422]: https://github.com/eliashaeussler/cache-warmup/pull/422
 [#424]: https://github.com/eliashaeussler/cache-warmup/pull/424
 [#442]: https://github.com/eliashaeussler/cache-warmup/pull/442
+[#447]: https://github.com/eliashaeussler/cache-warmup/pull/447
