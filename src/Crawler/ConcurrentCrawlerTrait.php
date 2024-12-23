@@ -80,17 +80,18 @@ trait ConcurrentCrawlerTrait
         array $handlers = [],
         bool $stopOnFailure = false,
     ): Pool {
-        $requestFactory = new Http\Message\RequestFactory(
-            $this->options['request_method'],
-            $this->options['request_headers'],
-        );
         $options = $this->options['request_options'];
+        $requests = Http\Message\RequestFactory::create($this->options['request_method'])
+            ->withHeaders($this->options['request_headers'])
+            ->withUserAgent(true)
+            ->createRequests($urls)
+        ;
 
         if (!$this->options['write_response_body'] && !array_key_exists(RequestOptions::SINK, $options)) {
             $options[RequestOptions::SINK] = new Http\Message\Stream\NullStream();
         }
 
-        return Http\Message\RequestPoolFactory::create($requestFactory->buildIterable($urls))
+        return Http\Message\RequestPoolFactory::create($requests)
             ->withClient($client)
             ->withConcurrency($this->options['concurrency'])
             ->withOptions($options)

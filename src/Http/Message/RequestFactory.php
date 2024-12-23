@@ -28,6 +28,7 @@ use Generator;
 use GuzzleHttp\Psr7;
 use Psr\Http\Message;
 
+use function array_key_exists;
 use function sprintf;
 
 /**
@@ -36,23 +37,25 @@ use function sprintf;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final readonly class RequestFactory
+final class RequestFactory
 {
     /**
-     * @param array<string, string> $headers
+     * @var array<string, string>
      */
-    public function __construct(
-        private string $method,
-        private array $headers = [],
+    private array $headers = [];
+
+    private function __construct(
+        private readonly string $method,
     ) {}
 
-    public function build(Message\UriInterface $url): Message\RequestInterface
+    public static function create(string $method): self
     {
-        return new Psr7\Request(
-            $this->method,
-            $url,
-            $this->buildHeaders(),
-        );
+        return new self($method);
+    }
+
+    public function createRequest(Message\UriInterface $url): Message\RequestInterface
+    {
+        return new Psr7\Request($this->method, $url, $this->headers);
     }
 
     /**
@@ -60,26 +63,40 @@ final readonly class RequestFactory
      *
      * @return Generator<int, Message\RequestInterface>
      */
-    public function buildIterable(array $urls): Generator
+    public function createRequests(array $urls): Generator
     {
         foreach ($urls as $url) {
-            yield $this->build($url);
+            yield $this->createRequest($url);
         }
     }
 
     /**
-     * @return array<string, string>
+     * @param array<string, string> $headers
      */
-    private function buildHeaders(): array
+    public function withHeaders(array $headers): self
     {
-        $userAgent = sprintf(
+        $clone = clone $this;
+        $clone->headers = $headers;
+
+        return $clone;
+    }
+
+    public function withUserAgent(bool $skipIfAlreadyPresent = false): self
+    {
+        $clone = clone $this;
+
+        if (!$skipIfAlreadyPresent || !array_key_exists('User-Agent', $clone->headers)) {
+            $clone->headers['User-Agent'] = $this->createUserAgentHeader();
+        }
+
+        return $clone;
+    }
+
+    private function createUserAgentHeader(): string
+    {
+        return sprintf(
             'EliasHaeussler-CacheWarmup/%s (https://github.com/eliashaeussler/cache-warmup)',
             CacheWarmer::VERSION,
         );
-
-        return [
-            'User-Agent' => $userAgent,
-            ...$this->headers,
-        ];
     }
 }

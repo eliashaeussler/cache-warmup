@@ -24,8 +24,9 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Tests\Http\Message;
 
 use EliasHaeussler\CacheWarmup as Src;
-use GuzzleHttp\Psr7\Uri;
+use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
+use Psr\Http\Message;
 
 use function iterator_to_array;
 
@@ -39,57 +40,66 @@ use function iterator_to_array;
 final class RequestFactoryTest extends Framework\TestCase
 {
     private Src\Http\Message\RequestFactory $subject;
+    private Message\UriInterface $uri;
 
     public function setUp(): void
     {
-        $this->subject = new Src\Http\Message\RequestFactory(
-            'GET',
-            [
-                'X-Foo' => 'Baz',
-            ],
-        );
+        $this->subject = Src\Http\Message\RequestFactory::create('GET');
+        $this->uri = new Psr7\Uri('https://example.com/');
     }
 
     #[Framework\Attributes\Test]
-    public function buildReturnsRequestWithDefaultUserAgentIncluded(): void
+    public function createRequestReturnsRequestForGivenUrl(): void
     {
-        $uri = new Uri('https://example.com/');
-        $actual = $this->subject->build($uri);
+        $actual = $this->subject->createRequest($this->uri);
 
         self::assertSame('GET', $actual->getMethod());
-        self::assertSame($uri, $actual->getUri());
-        self::assertSame(['Baz'], $actual->getHeader('X-Foo'));
-        self::assertStringStartsWith('EliasHaeussler-CacheWarmup/', $actual->getHeader('User-Agent')[0] ?? '');
+        self::assertSame($this->uri, $actual->getUri());
     }
 
     #[Framework\Attributes\Test]
-    public function buildReturnsRequestWithCustomUserAgent(): void
+    public function createRequestsReturnsGeneratorWithRequestsForGivenUrls(): void
     {
-        $uri = new Uri('https://example.com/');
-        $subject = new Src\Http\Message\RequestFactory(
-            'GET',
-            [
-                'User-Agent' => 'foo',
-            ],
-        );
-        $actual = $subject->build($uri);
-
-        self::assertSame(['foo'], $actual->getHeader('User-Agent'));
-    }
-
-    #[Framework\Attributes\Test]
-    public function buildIterableReturnsGeneratorWithRequests(): void
-    {
-        $url1 = new Uri('https://example.com/');
-        $url2 = new Uri('https://example.com/de/');
-        $url3 = new Uri('https://example.com/fr/');
+        $url1 = new Psr7\Uri('https://example.com/');
+        $url2 = new Psr7\Uri('https://example.com/de/');
+        $url3 = new Psr7\Uri('https://example.com/fr/');
         $urls = [$url1, $url2, $url3];
 
-        $actual = iterator_to_array($this->subject->buildIterable($urls));
+        $actual = iterator_to_array($this->subject->createRequests($urls));
 
         self::assertCount(3, $actual);
         self::assertSame($url1, $actual[0]->getUri());
         self::assertSame($url2, $actual[1]->getUri());
         self::assertSame($url3, $actual[2]->getUri());
+    }
+
+    #[Framework\Attributes\Test]
+    public function withHeadersClonesObjectAndAppliesGivenHeaders(): void
+    {
+        $subject = $this->subject->withHeaders(['X-Foo' => 'Baz']);
+
+        $actual = $subject->createRequest($this->uri);
+
+        self::assertSame(['Baz'], $actual->getHeader('X-Foo'));
+    }
+
+    #[Framework\Attributes\Test]
+    public function withUserAgentClonesObjectAndAppliesGivenUserAgent(): void
+    {
+        $subject = $this->subject->withUserAgent();
+
+        $actual = $subject->createRequest($this->uri);
+
+        self::assertStringStartsWith('EliasHaeussler-CacheWarmup/', $actual->getHeader('User-Agent')[0] ?? '');
+    }
+
+    #[Framework\Attributes\Test]
+    public function withUserAgentDoesNotApplyUserAgentIfItAlreadyExists(): void
+    {
+        $subject = $this->subject->withHeaders(['User-Agent' => 'foo'])->withUserAgent(true);
+
+        $actual = $subject->createRequest($this->uri);
+
+        self::assertSame('foo', $actual->getHeader('User-Agent')[0] ?? '');
     }
 }
