@@ -95,7 +95,7 @@ final class RequestFactory
     private function createUserAgentHeader(): string
     {
         return sprintf(
-            'EliasHaeussler-CacheWarmup/%s (https://github.com/eliashaeussler/cache-warmup)',
+            'EliasHaeussler-CacheWarmup/%s (https://cache-warmup.dev)',
             CacheWarmer::VERSION,
         );
     }
