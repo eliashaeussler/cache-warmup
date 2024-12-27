@@ -51,7 +51,7 @@ final readonly class ResultCollectorHandler implements ResponseHandler
             'response' => $response,
         ]);
 
-        $event = new Event\UrlCrawlingSucceeded($uri, $response, $result);
+        $event = new Event\Crawler\UrlCrawlingSucceeded($uri, $response, $result);
         $this->eventDispatcher?->dispatch($event);
 
         $this->result->addResult($event->result());
@@ -63,7 +63,7 @@ final readonly class ResultCollectorHandler implements ResponseHandler
             'exception' => $exception,
         ]);
 
-        $event = new Event\UrlCrawlingFailed($uri, $exception, $result);
+        $event = new Event\Crawler\UrlCrawlingFailed($uri, $exception, $result);
         $this->eventDispatcher?->dispatch($event);
 
         $this->result->addResult($event->result());

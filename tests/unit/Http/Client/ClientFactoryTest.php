@@ -73,7 +73,7 @@ final class ClientFactoryTest extends Framework\TestCase
         $this->subject->get();
 
         self::assertTrue(
-            $this->eventDispatcher->wasDispatched(Src\Event\ClientConstructed::class),
+            $this->eventDispatcher->wasDispatched(Src\Event\Http\ClientConstructed::class),
         );
     }
 }

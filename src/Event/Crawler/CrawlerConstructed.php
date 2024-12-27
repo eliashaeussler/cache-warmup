@@ -21,7 +21,7 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Event;
+namespace EliasHaeussler\CacheWarmup\Event\Crawler;
 
 use EliasHaeussler\CacheWarmup\Crawler;
 

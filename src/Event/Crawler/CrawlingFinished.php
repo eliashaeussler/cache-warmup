@@ -21,24 +21,44 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Event;
+namespace EliasHaeussler\CacheWarmup\Event\Crawler;
 
+use EliasHaeussler\CacheWarmup\Crawler;
+use EliasHaeussler\CacheWarmup\Result;
 use EliasHaeussler\CacheWarmup\Sitemap;
 
 /**
- * SitemapAdded.
+ * CrawlingFinished.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final readonly class SitemapAdded
+final readonly class CrawlingFinished
 {
+    /**
+     * @param list<Sitemap\Url> $urls
+     */
     public function __construct(
-        private Sitemap\Sitemap $sitemap,
+        private array $urls,
+        private Crawler\Crawler $crawler,
+        private Result\CacheWarmupResult $result,
     ) {}
 
-    public function sitemap(): Sitemap\Sitemap
+    /**
+     * @return list<Sitemap\Url>
+     */
+    public function urls(): array
     {
-        return $this->sitemap;
+        return $this->urls;
+    }
+
+    public function crawler(): Crawler\Crawler
+    {
+        return $this->crawler;
+    }
+
+    public function result(): Result\CacheWarmupResult
+    {
+        return $this->result;
     }
 }

@@ -21,24 +21,44 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Event;
+namespace EliasHaeussler\CacheWarmup\Event\Crawler;
 
-use EliasHaeussler\CacheWarmup\Sitemap;
+use EliasHaeussler\CacheWarmup\Result;
+use Psr\Http\Message;
 
 /**
- * UrlAdded.
+ * UrlCrawlingSucceeded.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final readonly class UrlAdded
+final class UrlCrawlingSucceeded
 {
     public function __construct(
-        private Sitemap\Url $url,
+        private readonly Message\UriInterface $uri,
+        private readonly Message\ResponseInterface $response,
+        private Result\CrawlingResult $result,
     ) {}
 
-    public function url(): Sitemap\Url
+    public function uri(): Message\UriInterface
     {
-        return $this->url;
+        return $this->uri;
+    }
+
+    public function response(): Message\ResponseInterface
+    {
+        return $this->response;
+    }
+
+    public function result(): Result\CrawlingResult
+    {
+        return $this->result;
+    }
+
+    public function setResult(Result\CrawlingResult $result): self
+    {
+        $this->result = $result;
+
+        return $this;
     }
 }

@@ -55,7 +55,7 @@ final class ResultCollectorHandlerTest extends Framework\TestCase
 
         $this->subject->onSuccess($response, $uri);
 
-        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\UrlCrawlingSucceeded::class));
+        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\Crawler\UrlCrawlingSucceeded::class));
     }
 
     #[Framework\Attributes\Test]
@@ -85,8 +85,8 @@ final class ResultCollectorHandlerTest extends Framework\TestCase
         $expected = Src\Result\CrawlingResult::createFailed($uri, ['exception' => $exception]);
 
         $this->eventDispatcher->addListener(
-            Src\Event\UrlCrawlingSucceeded::class,
-            static fn (Src\Event\UrlCrawlingSucceeded $event) => $event->setResult($expected),
+            Src\Event\Crawler\UrlCrawlingSucceeded::class,
+            static fn (Src\Event\Crawler\UrlCrawlingSucceeded $event) => $event->setResult($expected),
         );
 
         $this->subject->onSuccess($response, $uri);
@@ -103,7 +103,7 @@ final class ResultCollectorHandlerTest extends Framework\TestCase
 
         $this->subject->onFailure($exception, $uri);
 
-        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\UrlCrawlingFailed::class));
+        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\Crawler\UrlCrawlingFailed::class));
     }
 
     #[Framework\Attributes\Test]
@@ -133,8 +133,8 @@ final class ResultCollectorHandlerTest extends Framework\TestCase
         $expected = Src\Result\CrawlingResult::createSuccessful($uri, ['response' => $response]);
 
         $this->eventDispatcher->addListener(
-            Src\Event\UrlCrawlingFailed::class,
-            static fn (Src\Event\UrlCrawlingFailed $event) => $event->setResult($expected),
+            Src\Event\Crawler\UrlCrawlingFailed::class,
+            static fn (Src\Event\Crawler\UrlCrawlingFailed $event) => $event->setResult($expected),
         );
 
         $this->subject->onFailure($exception, $uri);

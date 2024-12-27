@@ -7,7 +7,7 @@ actions. This page lists all currently available events.
 
 ## Configuration
 
-### [`ConfigResolved`](../../src/Event/ConfigResolved.php) <Badge type="tip" text="3.2+" />
+### [`ConfigResolved`](../../src/Event/Config/ConfigResolved.php) <Badge type="tip" text="3.2+" />
 
 <small>✅&nbsp;Console command &middot; 🚫&nbsp;PHP API</small>
 
@@ -15,44 +15,44 @@ actions. This page lists all currently available events.
 
 ## Parser
 
-### [`ParserConstructed`](../../src/Event/ParserConstructed.php) <Badge type="tip" text="4.0+" />
+### [`ParserConstructed`](../../src/Event/Parser/ParserConstructed.php) <Badge type="tip" text="4.0+" />
 
 <small>✅&nbsp;Console command &middot; ✅&nbsp;PHP API</small>
 
 > Dispatched if an XML parser is constructed by the parser factory.
 
-### [`SitemapAdded`](../../src/Event/SitemapAdded.php) <Badge type="tip" text="3.2+" />
+### [`SitemapAdded`](../../src/Event/Parser/SitemapAdded.php) <Badge type="tip" text="3.2+" />
 
 <small>✅&nbsp;Console command &middot; ✅&nbsp;PHP API</small>
 
 > Dispatched if an XML sitemap is added for cache warmup.
 
-### [`SitemapExcluded`](../../src/Event/SitemapExcluded.php) <Badge type="tip" text="3.2+" />
+### [`SitemapExcluded`](../../src/Event/Parser/SitemapExcluded.php) <Badge type="tip" text="3.2+" />
 
 <small>✅&nbsp;Console command &middot; ✅&nbsp;PHP API</small>
 
 > Dispatched if an XML sitemap was skipped due to a
 > configured [exclude pattern](../config-reference/exclude.md).
 
-### [`SitemapParsed`](../../src/Event/SitemapParsed.php) <Badge type="tip" text="3.2+" />
+### [`SitemapParsed`](../../src/Event/Parser/SitemapParsed.php) <Badge type="tip" text="3.2+" />
 
 <small>✅&nbsp;Console command &middot; ✅&nbsp;PHP API</small>
 
 > Dispatched once an XML sitemap is successfully parsed.
 
-### [`SitemapParsingFailed`](../../src/Event/SitemapParsingFailed.php) <Badge type="tip" text="3.2+" />
+### [`SitemapParsingFailed`](../../src/Event/Parser/SitemapParsingFailed.php) <Badge type="tip" text="3.2+" />
 
 <small>✅&nbsp;Console command &middot; ✅&nbsp;PHP API</small>
 
 > Dispatched if parsing of an XML sitemap failed due to an error.
 
-### [`UrlAdded`](../../src/Event/UrlAdded.php) <Badge type="tip" text="3.2+" />
+### [`UrlAdded`](../../src/Event/Parser/UrlAdded.php) <Badge type="tip" text="3.2+" />
 
 <small>✅&nbsp;Console command &middot; ✅&nbsp;PHP API</small>
 
 > Dispatched if a URL is added for cache warmup.
 
-### [`UrlExcluded`](../../src/Event/UrlExcluded.php) <Badge type="tip" text="3.2+" />
+### [`UrlExcluded`](../../src/Event/Parser/UrlExcluded.php) <Badge type="tip" text="3.2+" />
 
 <small>✅&nbsp;Console command &middot; ✅&nbsp;PHP API</small>
 
@@ -61,26 +61,26 @@ actions. This page lists all currently available events.
 
 ## Crawler
 
-### [`CrawlerConstructed`](../../src/Event/CrawlerConstructed.php) <Badge type="tip" text="4.0+" />
+### [`CrawlerConstructed`](../../src/Event/Crawler/CrawlerConstructed.php) <Badge type="tip" text="4.0+" />
 
 <small>✅&nbsp;Console command &middot; ✅&nbsp;PHP API</small>
 
 > Dispatched if a crawler is constructed by the crawler factory.
 
-### [`UrlsPrepared`](../../src/Event/UrlsPrepared.php) <Badge type="tip" text="3.2+" />
+### [`UrlsPrepared`](../../src/Event/Crawler/UrlsPrepared.php) <Badge type="tip" text="3.2+" />
 
 <small>✅&nbsp;Console command &middot; ✅&nbsp;PHP API</small>
 
 > Dispatched if URLs are prepared due to a configured
 > [crawling strategy](../config-reference/strategy.md).
 
-### [`CrawlingStarted`](../../src/Event/CrawlingStarted.php) <Badge type="tip" text="3.2+" />
+### [`CrawlingStarted`](../../src/Event/Crawler/CrawlingStarted.php) <Badge type="tip" text="3.2+" />
 
 <small>✅&nbsp;Console command &middot; ✅&nbsp;PHP API</small>
 
 > Dispatched right before crawling is started.
 
-### [`UrlCrawlingSucceeded`](../../src/Event/UrlCrawlingSucceeded.php) <Badge type="tip" text="3.2+" />
+### [`UrlCrawlingSucceeded`](../../src/Event/Crawler/UrlCrawlingSucceeded.php) <Badge type="tip" text="3.2+" />
 
 <small>✅&nbsp;Console command &middot; ✅&nbsp;PHP API</small>
 
@@ -91,7 +91,7 @@ This event is only dispatched if the configured crawler utilizes the
 [`ResultCollectorHandler`](response-handlers.md#resultcollectorhandler).
 :::
 
-### [`UrlCrawlingFailed`](../../src/Event/UrlCrawlingFailed.php) <Badge type="tip" text="3.2+" />
+### [`UrlCrawlingFailed`](../../src/Event/Crawler/UrlCrawlingFailed.php) <Badge type="tip" text="3.2+" />
 
 <small>✅&nbsp;Console command &middot; ✅&nbsp;PHP API</small>
 
@@ -102,7 +102,7 @@ This event is only dispatched if the configured crawler utilizes the
 [`ResultCollectorHandler`](response-handlers.md#resultcollectorhandler).
 :::
 
-### [`CrawlingFinished`](../../src/Event/CrawlingFinished.php) <Badge type="tip" text="3.2+" />
+### [`CrawlingFinished`](../../src/Event/Crawler/CrawlingFinished.php) <Badge type="tip" text="3.2+" />
 
 <small>✅&nbsp;Console command &middot; ✅&nbsp;PHP API</small>
 
@@ -110,7 +110,7 @@ This event is only dispatched if the configured crawler utilizes the
 
 ## HTTP
 
-### [`ClientConstructed`](../../src/Event/ClientConstructed.php) <Badge type="tip" text="4.0+" />
+### [`ClientConstructed`](../../src/Event/Http/ClientConstructed.php) <Badge type="tip" text="4.0+" />
 
 <small>✅&nbsp;Console command &middot; ✅&nbsp;PHP API</small>
 

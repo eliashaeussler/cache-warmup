@@ -87,12 +87,12 @@ final class CacheWarmer
 
         if (null !== $this->strategy) {
             $urls = $this->strategy->prepareUrls($urls);
-            $this->eventDispatcher->dispatch(new Event\UrlsPrepared($this->strategy, $urls));
+            $this->eventDispatcher->dispatch(new Event\Crawler\UrlsPrepared($this->strategy, $urls));
         }
 
-        $this->eventDispatcher->dispatch(new Event\CrawlingStarted($urls, $this->crawler));
+        $this->eventDispatcher->dispatch(new Event\Crawler\CrawlingStarted($urls, $this->crawler));
         $result = $this->crawler->crawl($urls);
-        $this->eventDispatcher->dispatch(new Event\CrawlingFinished($urls, $this->crawler, $result));
+        $this->eventDispatcher->dispatch(new Event\Crawler\CrawlingFinished($urls, $this->crawler, $result));
 
         return $result;
     }
@@ -130,7 +130,7 @@ final class CacheWarmer
             // Skip sitemap if exclude pattern matches
             if ($this->isExcluded((string) $sitemap->getUri())) {
                 $this->excludedSitemaps[] = $sitemap;
-                $this->eventDispatcher->dispatch(new Event\SitemapExcluded($sitemap));
+                $this->eventDispatcher->dispatch(new Event\Parser\SitemapExcluded($sitemap));
 
                 continue;
             }
@@ -138,9 +138,9 @@ final class CacheWarmer
             // Parse sitemap object
             try {
                 $result = $this->parser->parse($sitemap);
-                $this->eventDispatcher->dispatch(new Event\SitemapParsed($sitemap, $result));
+                $this->eventDispatcher->dispatch(new Event\Parser\SitemapParsed($sitemap, $result));
             } catch (GuzzleException|Exception\Exception $exception) {
-                $this->eventDispatcher->dispatch(new Event\SitemapParsingFailed($sitemap, $exception));
+                $this->eventDispatcher->dispatch(new Event\Parser\SitemapParsingFailed($sitemap, $exception));
 
                 // Exit early if running in strict mode
                 if ($this->strict) {
@@ -170,7 +170,7 @@ final class CacheWarmer
     {
         if (!array_key_exists((string) $sitemap, $this->sitemaps)) {
             $this->sitemaps[(string) $sitemap] = $sitemap;
-            $this->eventDispatcher->dispatch(new Event\SitemapAdded($sitemap));
+            $this->eventDispatcher->dispatch(new Event\Parser\SitemapAdded($sitemap));
         }
     }
 
@@ -182,14 +182,14 @@ final class CacheWarmer
 
         if ($this->isExcluded((string) $url)) {
             $this->excludedUrls[] = $url;
-            $this->eventDispatcher->dispatch(new Event\UrlExcluded($url));
+            $this->eventDispatcher->dispatch(new Event\Parser\UrlExcluded($url));
 
             return $this;
         }
 
         if (!$this->exceededLimit() && !array_key_exists((string) $url, $this->urls)) {
             $this->urls[(string) $url] = $url;
-            $this->eventDispatcher->dispatch(new Event\UrlAdded($url));
+            $this->eventDispatcher->dispatch(new Event\Parser\UrlAdded($url));
         }
 
         return $this;

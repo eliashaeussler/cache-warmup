@@ -398,7 +398,7 @@ HELP);
         }
 
         $this->config = (new Config\Adapter\CompositeConfigAdapter($configAdapters))->get();
-        $this->eventDispatcher->dispatch(new Event\ConfigResolved($this->config));
+        $this->eventDispatcher->dispatch(new Event\Config\ConfigResolved($this->config));
 
         $this->io = new Console\Style\SymfonyStyle($input, $output);
         $this->formatter = (new Formatter\FormatterFactory($this->io))->get($this->config->getFormat());

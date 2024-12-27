@@ -63,7 +63,7 @@ final readonly class ParserFactory
         }
 
         $eventDispatcher = $container->get(EventDispatcher\EventDispatcherInterface::class);
-        $eventDispatcher->dispatch(new Event\ParserConstructed($parser));
+        $eventDispatcher->dispatch(new Event\Parser\ParserConstructed($parser));
 
         return $parser;
     }

@@ -104,7 +104,7 @@ final class ParserFactoryTest extends Framework\TestCase
         $this->subject->get(Tests\Fixtures\Classes\DummyParser::class);
 
         self::assertTrue(
-            $this->eventDispatcher->wasDispatched(Src\Event\ParserConstructed::class),
+            $this->eventDispatcher->wasDispatched(Src\Event\Parser\ParserConstructed::class),
         );
     }
 

@@ -115,7 +115,7 @@ final class CacheWarmerTest extends Framework\TestCase
 
         $subject->run();
 
-        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\UrlsPrepared::class));
+        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\Crawler\UrlsPrepared::class));
     }
 
     #[Framework\Attributes\Test]
@@ -123,7 +123,7 @@ final class CacheWarmerTest extends Framework\TestCase
     {
         $this->subject->run();
 
-        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\CrawlingStarted::class));
+        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\Crawler\CrawlingStarted::class));
     }
 
     #[Framework\Attributes\Test]
@@ -131,7 +131,7 @@ final class CacheWarmerTest extends Framework\TestCase
     {
         $this->subject->run();
 
-        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\CrawlingFinished::class));
+        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\Crawler\CrawlingFinished::class));
     }
 
     #[Framework\Attributes\Test]
@@ -171,7 +171,7 @@ final class CacheWarmerTest extends Framework\TestCase
 
         $subject->addSitemaps('https://www.example.com/sitemap.xml');
 
-        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\SitemapParsingFailed::class));
+        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\Parser\SitemapParsingFailed::class));
     }
 
     #[Framework\Attributes\Test]
@@ -268,7 +268,7 @@ final class CacheWarmerTest extends Framework\TestCase
 
         $subject->addSitemaps('https://www.example.com/sitemap.xml');
 
-        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\SitemapExcluded::class));
+        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\Parser\SitemapExcluded::class));
     }
 
     /**
@@ -302,9 +302,9 @@ final class CacheWarmerTest extends Framework\TestCase
 
         $this->subject->addSitemaps('https://www.example.org/sitemap.xml');
 
-        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\SitemapParsed::class));
-        self::assertSame(1, $this->eventDispatcher->numberOfDispatchedEventsFor(Src\Event\SitemapAdded::class));
-        self::assertSame(3, $this->eventDispatcher->numberOfDispatchedEventsFor(Src\Event\UrlAdded::class));
+        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\Parser\SitemapParsed::class));
+        self::assertSame(1, $this->eventDispatcher->numberOfDispatchedEventsFor(Src\Event\Parser\SitemapAdded::class));
+        self::assertSame(3, $this->eventDispatcher->numberOfDispatchedEventsFor(Src\Event\Parser\UrlAdded::class));
     }
 
     #[Framework\Attributes\Test]
@@ -328,7 +328,7 @@ final class CacheWarmerTest extends Framework\TestCase
 
         $subject->addUrl('https://www.example.com/');
 
-        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\UrlExcluded::class));
+        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\Parser\UrlExcluded::class));
     }
 
     #[Framework\Attributes\Test]
