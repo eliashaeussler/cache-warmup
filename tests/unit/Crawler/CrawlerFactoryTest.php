@@ -51,9 +51,12 @@ final class CrawlerFactoryTest extends Framework\TestCase
         $this->output = new Console\Output\BufferedOutput();
         $this->logger = new TransientLogger\TransientLogger();
         $this->eventDispatcher = new Tests\Fixtures\Classes\DummyEventDispatcher();
-        $this->clientFactory = new Src\Http\Client\ClientFactory([
-            RequestOptions::AUTH => ['username', 'password'],
-        ]);
+        $this->clientFactory = new Src\Http\Client\ClientFactory(
+            $this->eventDispatcher,
+            [
+                RequestOptions::AUTH => ['username', 'password'],
+            ],
+        );
         $this->subject = new Src\Crawler\CrawlerFactory(
             new Src\DependencyInjection\ContainerFactory(
                 $this->output,
@@ -138,6 +141,16 @@ final class CrawlerFactoryTest extends Framework\TestCase
         self::assertTrue(Tests\Fixtures\Classes\DummyStoppableCrawler::$stopOnFailure);
 
         Tests\Fixtures\Classes\DummyStoppableCrawler::$stopOnFailure = false;
+    }
+
+    #[Framework\Attributes\Test]
+    public function getDispatchesCrawlerConstructedEvent(): void
+    {
+        $this->subject->get(Tests\Fixtures\Classes\DummyCrawler::class);
+
+        self::assertTrue(
+            $this->eventDispatcher->wasDispatched(Src\Event\CrawlerConstructed::class),
+        );
     }
 
     #[Framework\Attributes\Test]

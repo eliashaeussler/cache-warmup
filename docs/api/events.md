@@ -15,6 +15,12 @@ actions. This page lists all currently available events.
 
 ## Parser
 
+### [`ParserConstructed`](../../src/Event/ParserConstructed.php) <Badge type="tip" text="4.0+" />
+
+<small>✅&nbsp;Console command &middot; ✅&nbsp;PHP API</small>
+
+> Dispatched if an XML parser is constructed by the parser factory.
+
 ### [`SitemapAdded`](../../src/Event/SitemapAdded.php) <Badge type="tip" text="3.2+" />
 
 <small>✅&nbsp;Console command &middot; ✅&nbsp;PHP API</small>
@@ -54,6 +60,12 @@ actions. This page lists all currently available events.
 > [exclude pattern](../config-reference/exclude.md).
 
 ## Crawler
+
+### [`CrawlerConstructed`](../../src/Event/CrawlerConstructed.php) <Badge type="tip" text="4.0+" />
+
+<small>✅&nbsp;Console command &middot; ✅&nbsp;PHP API</small>
+
+> Dispatched if a crawler is constructed by the crawler factory.
 
 ### [`UrlsPrepared`](../../src/Event/UrlsPrepared.php) <Badge type="tip" text="3.2+" />
 
@@ -95,3 +107,11 @@ This event is only dispatched if the configured crawler utilizes the
 <small>✅&nbsp;Console command &middot; ✅&nbsp;PHP API</small>
 
 > Dispatched once crawling is finished.
+
+## HTTP
+
+### [`ClientConstructed`](../../src/Event/ClientConstructed.php) <Badge type="tip" text="4.0+" />
+
+<small>✅&nbsp;Console command &middot; ✅&nbsp;PHP API</small>
+
+> Dispatched if an HTTP client is constructed by the client factory.

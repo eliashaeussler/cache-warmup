@@ -434,7 +434,7 @@ HELP);
             $output,
             $logger,
             $this->eventDispatcher,
-            new Http\Client\ClientFactory($this->config->getClientOptions()),
+            new Http\Client\ClientFactory($this->eventDispatcher, $this->config->getClientOptions()),
         );
 
         // Create factories

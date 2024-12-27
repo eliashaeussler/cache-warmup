@@ -21,47 +21,24 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Http\Client;
+namespace EliasHaeussler\CacheWarmup\Event;
 
-use EliasHaeussler\CacheWarmup\Event;
-use EliasHaeussler\CacheWarmup\Helper;
-use GuzzleHttp\Client;
-use GuzzleHttp\ClientInterface;
-use Psr\EventDispatcher;
+use EliasHaeussler\CacheWarmup\Xml;
 
 /**
- * ClientFactory.
+ * ParserConstructed.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final readonly class ClientFactory
+final readonly class ParserConstructed
 {
-    /**
-     * @param array<string, mixed> $defaults
-     */
     public function __construct(
-        private EventDispatcher\EventDispatcherInterface $eventDispatcher,
-        private array $defaults = [],
+        private Xml\Parser $parser,
     ) {}
 
-    /**
-     * @param array<string, mixed> $config
-     *
-     * @see https://docs.guzzlephp.org/en/stable/quickstart.html#creating-a-client
-     */
-    public function get(array $config = []): ClientInterface
+    public function parser(): Xml\Parser
     {
-        $mergedConfig = $this->defaults;
-
-        if ([] !== $config) {
-            Helper\ArrayHelper::mergeRecursive($mergedConfig, $config);
-        }
-
-        $client = new Client($mergedConfig);
-
-        $this->eventDispatcher->dispatch(new Event\ClientConstructed($client));
-
-        return $client;
+        return $this->parser;
     }
 }
