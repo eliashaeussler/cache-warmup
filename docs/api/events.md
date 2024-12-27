@@ -5,6 +5,28 @@ the use of events. An event dispatcher instance is passed
 around which allows custom listeners to react on several
 actions. This page lists all currently available events.
 
+## Available events
+
+* Configuration
+  - [`ConfigResolved`](#configresolved)
+* Parser
+  - [`ParserConstructed`](#parserconstructed)
+  - [`SitemapAdded`](#sitemapadded)
+  - [`SitemapExcluded`](#sitemapexcluded)
+  - [`SitemapParsed`](#sitemapparsed)
+  - [`SitemapParsingFailed`](#sitemapparsingfailed)
+  - [`UrlAdded`](#urladded)
+  - [`UrlExcluded`](#urlexcluded)
+* Crawler
+  - [`CrawlerConstructed`](#crawlerconstructed)
+  - [`UrlsPrepared`](#urlsprepared)
+  - [`CrawlingStarted`](#crawlingstarted)
+  - [`UrlCrawlingSucceeded`](#urlcrawlingsucceeded)
+  - [`UrlCrawlingFailed`](#urlcrawlingfailed)
+  - [`CrawlingFinished`](#crawlingfinished)
+* HTTP
+  - [`ClientConstructed`](#clientconstructed)
+
 ## Configuration
 
 ### [`ConfigResolved`](../../src/Event/Config/ConfigResolved.php) <Badge type="tip" text="3.2+" />
