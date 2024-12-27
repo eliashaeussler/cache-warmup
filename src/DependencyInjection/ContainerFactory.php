@@ -60,8 +60,10 @@ final class ContainerFactory
         Console\Output\OutputInterface $output = new Console\Output\ConsoleOutput(),
         ?Log\LoggerInterface $logger = null,
         EventDispatcherInterface $eventDispatcher = new EventDispatcher\EventDispatcher(),
-        Http\Client\ClientFactory $clientFactory = new Http\Client\ClientFactory(),
+        ?Http\Client\ClientFactory $clientFactory = null,
     ) {
+        $clientFactory ??= new Http\Client\ClientFactory($eventDispatcher);
+
         $this->services = array_filter([
             Console\Output\OutputInterface::class => $output,
             Log\LoggerInterface::class => $logger,

@@ -24,7 +24,9 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Crawler;
 
 use EliasHaeussler\CacheWarmup\DependencyInjection;
+use EliasHaeussler\CacheWarmup\Event;
 use EliasHaeussler\CacheWarmup\Exception;
+use Psr\EventDispatcher;
 use Psr\Log;
 use Symfony\Component\Console;
 
@@ -80,6 +82,9 @@ final readonly class CrawlerFactory
         if ($crawler instanceof StoppableCrawler) {
             $crawler->stopOnFailure($this->stopOnFailure);
         }
+
+        $eventDispatcher = $container->get(EventDispatcher\EventDispatcherInterface::class);
+        $eventDispatcher->dispatch(new Event\CrawlerConstructed($crawler));
 
         return $crawler;
     }

@@ -24,7 +24,9 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Xml;
 
 use EliasHaeussler\CacheWarmup\DependencyInjection;
+use EliasHaeussler\CacheWarmup\Event;
 use EliasHaeussler\CacheWarmup\Exception;
+use Psr\EventDispatcher;
 
 use function class_exists;
 use function is_subclass_of;
@@ -59,6 +61,9 @@ final readonly class ParserFactory
         if ($parser instanceof ConfigurableParser) {
             $parser->setOptions($options);
         }
+
+        $eventDispatcher = $container->get(EventDispatcher\EventDispatcherInterface::class);
+        $eventDispatcher->dispatch(new Event\ParserConstructed($parser));
 
         return $parser;
     }

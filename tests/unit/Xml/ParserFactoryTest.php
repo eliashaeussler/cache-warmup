@@ -37,16 +37,24 @@ use PHPUnit\Framework;
 #[Framework\Attributes\CoversClass(Src\Xml\ParserFactory::class)]
 final class ParserFactoryTest extends Framework\TestCase
 {
+    private Tests\Fixtures\Classes\DummyEventDispatcher $eventDispatcher;
     private Src\Http\Client\ClientFactory $clientFactory;
     private Src\Xml\ParserFactory $subject;
 
     protected function setUp(): void
     {
-        $this->clientFactory = new Src\Http\Client\ClientFactory([
-            RequestOptions::AUTH => ['username', 'password'],
-        ]);
+        $this->eventDispatcher = new Tests\Fixtures\Classes\DummyEventDispatcher();
+        $this->clientFactory = new Src\Http\Client\ClientFactory(
+            $this->eventDispatcher,
+            [
+                RequestOptions::AUTH => ['username', 'password'],
+            ],
+        );
         $this->subject = new Src\Xml\ParserFactory(
-            new Src\DependencyInjection\ContainerFactory(clientFactory: $this->clientFactory),
+            new Src\DependencyInjection\ContainerFactory(
+                eventDispatcher: $this->eventDispatcher,
+                clientFactory: $this->clientFactory,
+            ),
         );
     }
 
@@ -88,6 +96,16 @@ final class ParserFactoryTest extends Framework\TestCase
 
         self::assertInstanceOf(Tests\Fixtures\Classes\DummyConfigurableParser::class, $actual);
         self::assertSame(['foo' => 'baz'], $actual->getOptions());
+    }
+
+    #[Framework\Attributes\Test]
+    public function getDispatchesParserConstructedEvent(): void
+    {
+        $this->subject->get(Tests\Fixtures\Classes\DummyParser::class);
+
+        self::assertTrue(
+            $this->eventDispatcher->wasDispatched(Src\Event\ParserConstructed::class),
+        );
     }
 
     #[Framework\Attributes\Test]

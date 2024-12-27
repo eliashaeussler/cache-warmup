@@ -52,7 +52,7 @@ final class ContainerFactoryTest extends Framework\TestCase
         $this->output = new Console\Output\NullOutput();
         $this->logger = new Log\NullLogger();
         $this->eventDispatcher = new EventDispatcher\EventDispatcher();
-        $this->clientFactory = new Src\Http\Client\ClientFactory();
+        $this->clientFactory = new Src\Http\Client\ClientFactory($this->eventDispatcher);
         $this->subject = new Src\DependencyInjection\ContainerFactory(
             $this->output,
             $this->logger,

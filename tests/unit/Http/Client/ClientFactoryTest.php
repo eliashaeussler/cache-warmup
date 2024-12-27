@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Tests\Http\Client;
 
 use EliasHaeussler\CacheWarmup as Src;
+use EliasHaeussler\CacheWarmup\Tests;
 use GuzzleHttp\Client;
 use PHPUnit\Framework;
 
@@ -36,13 +37,13 @@ use PHPUnit\Framework;
 #[Framework\Attributes\CoversClass(Src\Http\Client\ClientFactory::class)]
 final class ClientFactoryTest extends Framework\TestCase
 {
+    private Tests\Fixtures\Classes\DummyEventDispatcher $eventDispatcher;
     private Src\Http\Client\ClientFactory $subject;
 
     public function setUp(): void
     {
-        $this->subject = new Src\Http\Client\ClientFactory([
-            'foo' => 'baz',
-        ]);
+        $this->eventDispatcher = new Tests\Fixtures\Classes\DummyEventDispatcher();
+        $this->subject = new Src\Http\Client\ClientFactory($this->eventDispatcher, ['foo' => 'baz']);
     }
 
     #[Framework\Attributes\Test]
@@ -64,5 +65,15 @@ final class ClientFactoryTest extends Framework\TestCase
         ]);
 
         self::assertEquals($expected, $this->subject->get(['another' => 'foo']));
+    }
+
+    #[Framework\Attributes\Test]
+    public function getDispatchesClientConstructedEvent(): void
+    {
+        $this->subject->get();
+
+        self::assertTrue(
+            $this->eventDispatcher->wasDispatched(Src\Event\ClientConstructed::class),
+        );
     }
 }
