@@ -149,7 +149,7 @@ final class CrawlerFactoryTest extends Framework\TestCase
         $this->subject->get(Tests\Fixtures\Classes\DummyCrawler::class);
 
         self::assertTrue(
-            $this->eventDispatcher->wasDispatched(Src\Event\CrawlerConstructed::class),
+            $this->eventDispatcher->wasDispatched(Src\Event\Crawler\CrawlerConstructed::class),
         );
     }
 

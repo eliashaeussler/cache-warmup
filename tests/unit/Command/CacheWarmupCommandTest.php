@@ -60,8 +60,8 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         // Inject mock handler into client options
         $this->eventDispatcher->addListener(
-            Src\Event\ConfigResolved::class,
-            fn (Src\Event\ConfigResolved $event) => $event->config()->setClientOption(
+            Src\Event\Config\ConfigResolved::class,
+            fn (Src\Event\Config\ConfigResolved $event) => $event->config()->setClientOption(
                 'handler',
                 HandlerStack::create($this->mockHandler),
             ),
@@ -198,7 +198,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
             ],
         ]);
 
-        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\ConfigResolved::class));
+        self::assertTrue($this->eventDispatcher->wasDispatched(Src\Event\Config\ConfigResolved::class));
     }
 
     #[Framework\Attributes\Test]

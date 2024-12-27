@@ -21,37 +21,45 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Event;
+namespace EliasHaeussler\CacheWarmup\Event\Crawler;
 
-use EliasHaeussler\CacheWarmup\Crawler;
-use EliasHaeussler\CacheWarmup\Sitemap;
+use EliasHaeussler\CacheWarmup\Result;
+use Psr\Http\Message;
+use Throwable;
 
 /**
- * UrlsPrepared.
+ * UrlCrawlingFailed.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final readonly class UrlsPrepared
+final class UrlCrawlingFailed
 {
-    /**
-     * @param list<Sitemap\Url> $urls
-     */
     public function __construct(
-        private Crawler\Strategy\CrawlingStrategy $strategy,
-        private array $urls,
+        private readonly Message\UriInterface $uri,
+        private readonly Throwable $exception,
+        private Result\CrawlingResult $result,
     ) {}
 
-    public function strategy(): Crawler\Strategy\CrawlingStrategy
+    public function uri(): Message\UriInterface
     {
-        return $this->strategy;
+        return $this->uri;
     }
 
-    /**
-     * @return list<Sitemap\Url>
-     */
-    public function urls(): array
+    public function exception(): Throwable
     {
-        return $this->urls;
+        return $this->exception;
+    }
+
+    public function result(): Result\CrawlingResult
+    {
+        return $this->result;
+    }
+
+    public function setResult(Result\CrawlingResult $result): self
+    {
+        $this->result = $result;
+
+        return $this;
     }
 }

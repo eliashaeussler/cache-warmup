@@ -54,7 +54,7 @@ acts as drop-in replacement for globally shared client configuration.
 
 ### Changed `User-Agent` header ([#447])
 
-The default HTTP request header `User-Agent` changed like follows (`<version>`
+The default HTTP request header `User-Agent` changes like follows (`<version>`
 references the current library's version):
 
 ```diff
@@ -65,9 +65,18 @@ references the current library's version):
 * Change usages and references of the `User-Agent` header, for example when
   excluding cache warmup requests from website analytics.
 
+### Moved namespace of events ([#450])
+
+Class namespaces of events are changed to follow a clear categorization of
+specific events.
+
+* Modify namespaces of referenced events. A list of available events is available
+  on the [Events](api/events.md) page.
+
 
 
 [#422]: https://github.com/eliashaeussler/cache-warmup/pull/422
 [#424]: https://github.com/eliashaeussler/cache-warmup/pull/424
 [#442]: https://github.com/eliashaeussler/cache-warmup/pull/442
 [#447]: https://github.com/eliashaeussler/cache-warmup/pull/447
+[#450]: https://github.com/eliashaeussler/cache-warmup/pull/450

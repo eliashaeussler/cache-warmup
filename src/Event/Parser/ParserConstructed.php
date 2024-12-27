@@ -21,24 +21,24 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Event;
+namespace EliasHaeussler\CacheWarmup\Event\Parser;
 
-use EliasHaeussler\CacheWarmup\Sitemap;
+use EliasHaeussler\CacheWarmup\Xml;
 
 /**
- * UrlExcluded.
+ * ParserConstructed.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final readonly class UrlExcluded
+final readonly class ParserConstructed
 {
     public function __construct(
-        private Sitemap\Url $url,
+        private Xml\Parser $parser,
     ) {}
 
-    public function url(): Sitemap\Url
+    public function parser(): Xml\Parser
     {
-        return $this->url;
+        return $this->parser;
     }
 }

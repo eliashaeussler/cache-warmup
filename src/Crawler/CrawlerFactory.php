@@ -84,7 +84,7 @@ final readonly class CrawlerFactory
         }
 
         $eventDispatcher = $container->get(EventDispatcher\EventDispatcherInterface::class);
-        $eventDispatcher->dispatch(new Event\CrawlerConstructed($crawler));
+        $eventDispatcher->dispatch(new Event\Crawler\CrawlerConstructed($crawler));
 
         return $crawler;
     }

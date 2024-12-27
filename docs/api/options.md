@@ -107,7 +107,7 @@ use Symfony\Component\EventDispatcher;
 
 $eventDispatcher = new EventDispatcher\EventDispatcher();
 $eventDispatcher->addListener(
-    CacheWarmup\Event\SitemapParsed::class,
+    CacheWarmup\Event\Parser\SitemapParsed::class,
     new \Vendor\EventListener\OnSitemapParsedListener(),
 );
 

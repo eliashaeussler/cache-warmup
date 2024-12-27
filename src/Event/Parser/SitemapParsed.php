@@ -21,24 +21,31 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Event;
+namespace EliasHaeussler\CacheWarmup\Event\Parser;
 
-use GuzzleHttp\ClientInterface;
+use EliasHaeussler\CacheWarmup\Result;
+use EliasHaeussler\CacheWarmup\Sitemap;
 
 /**
- * ClientConstructed.
+ * SitemapParsed.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final readonly class ClientConstructed
+final readonly class SitemapParsed
 {
     public function __construct(
-        private ClientInterface $client,
+        private Sitemap\Sitemap $sitemap,
+        private Result\ParserResult $result,
     ) {}
 
-    public function client(): ClientInterface
+    public function sitemap(): Sitemap\Sitemap
     {
-        return $this->client;
+        return $this->sitemap;
+    }
+
+    public function result(): Result\ParserResult
+    {
+        return $this->result;
     }
 }

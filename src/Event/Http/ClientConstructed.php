@@ -21,24 +21,24 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Event;
+namespace EliasHaeussler\CacheWarmup\Event\Http;
 
-use EliasHaeussler\CacheWarmup\Sitemap;
+use GuzzleHttp\ClientInterface;
 
 /**
- * SitemapExcluded.
+ * ClientConstructed.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final readonly class SitemapExcluded
+final readonly class ClientConstructed
 {
     public function __construct(
-        private Sitemap\Sitemap $sitemap,
+        private ClientInterface $client,
     ) {}
 
-    public function sitemap(): Sitemap\Sitemap
+    public function client(): ClientInterface
     {
-        return $this->sitemap;
+        return $this->client;
     }
 }

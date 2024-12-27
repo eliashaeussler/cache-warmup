@@ -21,31 +21,24 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Event;
+namespace EliasHaeussler\CacheWarmup\Event\Parser;
 
 use EliasHaeussler\CacheWarmup\Sitemap;
-use Throwable;
 
 /**
- * SitemapParsingFailed.
+ * UrlAdded.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final readonly class SitemapParsingFailed
+final readonly class UrlAdded
 {
     public function __construct(
-        private Sitemap\Sitemap $sitemap,
-        private Throwable $exception,
+        private Sitemap\Url $url,
     ) {}
 
-    public function sitemap(): Sitemap\Sitemap
+    public function url(): Sitemap\Url
     {
-        return $this->sitemap;
-    }
-
-    public function exception(): Throwable
-    {
-        return $this->exception;
+        return $this->url;
     }
 }

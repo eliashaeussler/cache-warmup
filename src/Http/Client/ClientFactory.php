@@ -60,7 +60,7 @@ final readonly class ClientFactory
 
         $client = new Client($mergedConfig);
 
-        $this->eventDispatcher->dispatch(new Event\ClientConstructed($client));
+        $this->eventDispatcher->dispatch(new Event\Http\ClientConstructed($client));
 
         return $client;
     }
