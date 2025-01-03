@@ -1,7 +1,7 @@
 {
 	"name": "@eliashaeussler/cache-warmup",
 	"description": "Composer package to warm up website caches, based on a given XML sitemap",
-	"version": "3.2.2",
+	"version": "4.0.0",
 	"license": "GPL-3.0-or-later",
 	"repository": "https://github.com/eliashaeussler/cache-warmup.git",
 	"private": true,
