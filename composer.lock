@@ -2623,16 +2623,16 @@
         },
         {
             "name": "eliashaeussler/version-bumper",
-            "version": "2.1.0",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/version-bumper.git",
-                "reference": "bbdab6c6bb85d982611a8d1af18bf0d9a50b7f7c"
+                "reference": "d30cb4d831b796fcedc8d2881f3c93f3f3f356be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/version-bumper/zipball/bbdab6c6bb85d982611a8d1af18bf0d9a50b7f7c",
-                "reference": "bbdab6c6bb85d982611a8d1af18bf0d9a50b7f7c",
+                "url": "https://api.github.com/repos/eliashaeussler/version-bumper/zipball/d30cb4d831b796fcedc8d2881f3c93f3f3f356be",
+                "reference": "d30cb4d831b796fcedc8d2881f3c93f3f3f356be",
                 "shasum": ""
             },
             "require": {
@@ -2681,9 +2681,9 @@
             "description": "Composer plugin to bump project versions during release preparations",
             "support": {
                 "issues": "https://github.com/eliashaeussler/version-bumper/issues",
-                "source": "https://github.com/eliashaeussler/version-bumper/tree/2.1.0"
+                "source": "https://github.com/eliashaeussler/version-bumper/tree/2.1.1"
             },
-            "time": "2025-01-13T09:25:38+00:00"
+            "time": "2025-01-13T11:38:48+00:00"
         },
         {
             "name": "ergebnis/composer-normalize",
