@@ -1,16 +1,14 @@
+presets:
+  - name: npm-package
+    options:
+      packageName: '@eliashaeussler/cache-warmup'
+
 filesToModify:
-  - path: package.json
-    patterns:
-      - '"version": "{%version%}"'
-    reportUnmatched: true
-  - path: package-lock.json
-    patterns:
-      - '"name": "@eliashaeussler/cache-warmup",\s+"version": "{%version%}"'
-    reportUnmatched: true
   - path: src/CacheWarmer.php
     patterns:
       - public const VERSION = '{%version%}'
     reportUnmatched: true
+
 releaseOptions:
   commitMessage: '[RELEASE] Release of cache-warmup {%version%}'
   signTag: true
