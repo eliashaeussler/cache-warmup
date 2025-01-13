@@ -69,6 +69,7 @@ final class CacheWarmer
     private array $excludedUrls = [];
 
     /**
+     * @param non-negative-int                   $limit
      * @param list<Config\Option\ExcludePattern> $excludePatterns
      */
     public function __construct(
@@ -154,12 +155,12 @@ final class CacheWarmer
 
             $this->addSitemap($sitemap);
 
-            foreach ($result->getSitemaps() as $parsedSitemap) {
-                $this->addSitemaps($parsedSitemap);
-            }
-
             foreach ($result->getUrls() as $parsedUrl) {
                 $this->addUrl($parsedUrl);
+            }
+
+            foreach ($result->getSitemaps() as $parsedSitemap) {
+                $this->addSitemaps($parsedSitemap);
             }
         }
 
@@ -176,6 +177,10 @@ final class CacheWarmer
 
     public function addUrl(string|Sitemap\Url $url): self
     {
+        if ($this->exceededLimit()) {
+            return $this;
+        }
+
         if (is_string($url)) {
             $url = new Sitemap\Url($url);
         }
@@ -187,7 +192,7 @@ final class CacheWarmer
             return $this;
         }
 
-        if (!$this->exceededLimit() && !array_key_exists((string) $url, $this->urls)) {
+        if (!array_key_exists((string) $url, $this->urls)) {
             $this->urls[(string) $url] = $url;
             $this->eventDispatcher->dispatch(new Event\Parser\UrlAdded($url));
         }
