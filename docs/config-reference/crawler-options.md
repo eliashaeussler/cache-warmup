@@ -132,7 +132,7 @@ CACHE_WARMUP_CRAWLER_OPTIONS='{"concurrency": 5}'
 
 ::: info
 The default User-Agent is built in
-[`ConcurrentCrawlerTrait::getRequestHeaders()`](../../src/Crawler/ConcurrentCrawlerTrait.php).
+[`RequestFactory::createUserAgentHeader()`](../../src/Http/Message/RequestFactory.php).
 :::
 
 ::: code-group
