@@ -80,7 +80,7 @@ The following configuration options are currently available for the default pars
 
 ::: info
 The default User-Agent is built in
-[`ConcurrentCrawlerTrait::getRequestHeaders()`](../../src/Crawler/ConcurrentCrawlerTrait.php).
+[`RequestFactory::createUserAgentHeader()`](../../src/Http/Message/RequestFactory.php).
 :::
 
 ::: code-group
