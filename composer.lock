@@ -1981,16 +1981,16 @@
     "packages-dev": [
         {
             "name": "armin/editorconfig-cli",
-            "version": "2.0.1",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/a-r-m-i-n/editorconfig-cli.git",
-                "reference": "33f029b47bc8eb60dfa0c68a55de3f065a01e273"
+                "reference": "902e716afd137388fdf49fb83e140413d7d819e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/a-r-m-i-n/editorconfig-cli/zipball/33f029b47bc8eb60dfa0c68a55de3f065a01e273",
-                "reference": "33f029b47bc8eb60dfa0c68a55de3f065a01e273",
+                "url": "https://api.github.com/repos/a-r-m-i-n/editorconfig-cli/zipball/902e716afd137388fdf49fb83e140413d7d819e8",
+                "reference": "902e716afd137388fdf49fb83e140413d7d819e8",
                 "shasum": ""
             },
             "require": {
@@ -2004,8 +2004,8 @@
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.59",
-                "jangregor/phpstan-prophecy": "^1.0",
-                "phpstan/phpstan": "^1.11",
+                "jangregor/phpstan-prophecy": "^2.0",
+                "phpstan/phpstan": "^2.0",
                 "phpunit/phpunit": "^10.5",
                 "seld/phar-utils": "^1.2"
             },
@@ -2035,7 +2035,7 @@
                 "issues": "https://github.com/a-r-m-i-n/editorconfig-cli/issues",
                 "source": "https://github.com/a-r-m-i-n/editorconfig-cli"
             },
-            "time": "2024-07-19T14:33:46+00:00"
+            "time": "2025-01-27T21:03:30+00:00"
         },
         {
             "name": "clue/ndjson-react",
