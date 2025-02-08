@@ -43,12 +43,6 @@ parameters:
 			path: src/Log/FileLogger.php
 
 		-
-			message: '#^Parameter \#3 \$context \(array\<string, mixed\>\) of method EliasHaeussler\\CacheWarmup\\Log\\FileLogger\:\:log\(\) should be contravariant with parameter \$context \(array\) of method Psr\\Log\\LoggerTrait\:\:log\(\)$#'
-			identifier: method.childParameterType
-			count: 1
-			path: src/Log/FileLogger.php
-
-		-
 			message: '#^Parameter \#3 \$context \(array\<string, mixed\>\) of method EliasHaeussler\\CacheWarmup\\Log\\FileLogger\:\:log\(\) should be contravariant with parameter \$context \(array\<mixed\>\) of method Psr\\Log\\AbstractLogger\:\:log\(\)$#'
 			identifier: method.childParameterType
 			count: 1
@@ -56,6 +50,12 @@ parameters:
 
 		-
 			message: '#^Parameter \#3 \$context \(array\<string, mixed\>\) of method EliasHaeussler\\CacheWarmup\\Log\\FileLogger\:\:log\(\) should be contravariant with parameter \$context \(array\<mixed\>\) of method Psr\\Log\\LoggerInterface\:\:log\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: src/Log/FileLogger.php
+
+		-
+			message: '#^Parameter \#3 \$context \(array\<string, mixed\>\) of method EliasHaeussler\\CacheWarmup\\Log\\FileLogger\:\:log\(\) should be contravariant with parameter \$context \(array\<mixed\>\) of method Psr\\Log\\LoggerTrait\:\:log\(\)$#'
 			identifier: method.childParameterType
 			count: 1
 			path: src/Log/FileLogger.php
