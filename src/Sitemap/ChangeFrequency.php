@@ -41,12 +41,8 @@ enum ChangeFrequency: string
     case Yearly = 'yearly';
     case Never = 'never';
 
-    /**
-     * @pure
-     */
     public static function fromCaseInsensitive(string $changeFrequency): self
     {
-        /* @phpstan-ignore possiblyImpure.methodCall */
         return self::from(strtolower($changeFrequency));
     }
 }
