@@ -33,9 +33,6 @@ use function sprintf;
  */
 final class RegularExpressionIsInvalid extends Exception
 {
-    /**
-     * @pure
-     */
     public function __construct(string $regex)
     {
         parent::__construct(
