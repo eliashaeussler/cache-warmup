@@ -51,7 +51,7 @@
 		"symfony/string": "^5.4.35 || ^6.4.3 || ^7.0.3"
 	},
 	"conflict": {
-		"cuyz/valinor": "1.14.0"
+		"cuyz/valinor": "1.14.0 || 1.14.3"
 	},
 	"autoload": {
 		"psr-4": {
