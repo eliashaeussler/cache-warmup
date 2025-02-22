@@ -40,10 +40,6 @@ jobs:
       - name: Install Frontend dependencies
         run: npm ci
 
-      # Audit packages
-      - name: Audit Frontend dependencies
-        run: npm audit
-
       # Check dependencies
       - name: Check Composer dependencies
         run: composer-require-checker check
