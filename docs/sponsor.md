@@ -40,8 +40,8 @@ const members = [
     title: 'Backend Developer',
     links: [
       { icon: 'github', link: 'https://haeussler.dev/github' },
+      { icon: 'bluesky', link: 'https://haeussler.dev/bluesky' },
       { icon: 'mastodon', link: 'https://haeussler.dev/mastodon' },
-      { icon: 'x', link: 'https://haeussler.dev/x' },
     ],
     sponsor: 'https://github.com/sponsors/eliashaeussler',
   },
