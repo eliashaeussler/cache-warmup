@@ -61,8 +61,7 @@ final readonly class CrawlerFactory
     {
         self::validate($crawlerClass);
 
-        $container = $this->containerFactory->buildFor($crawlerClass);
-        /** @var Crawler $crawler */
+        $container = $this->containerFactory->build();
         $crawler = $container->get($crawlerClass);
 
         if ($crawler instanceof VerboseCrawler) {
@@ -73,7 +72,6 @@ final readonly class CrawlerFactory
             $crawler->setOptions($options);
         }
 
-        /* @phpstan-ignore booleanAnd.rightAlwaysTrue */
         if ($crawler instanceof LoggingCrawler && $container->has(Log\LoggerInterface::class)) {
             $crawler->setLogger($container->get(Log\LoggerInterface::class));
             $crawler->setLogLevel($this->logLevel);

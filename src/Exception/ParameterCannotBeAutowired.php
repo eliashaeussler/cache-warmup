@@ -21,22 +21,24 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use EliasHaeussler\PHPStanConfig;
+namespace EliasHaeussler\CacheWarmup\Exception;
 
-$symfonySet = PHPStanConfig\Set\SymfonySet::create()
-    ->withConsoleApplicationLoader('tests/build/console-application.php')
-;
-
-return PHPStanConfig\Config\Config::create(__DIR__)
-    ->in(
-        'bin/cache-warmup',
-        'src',
-        'tests',
-    )
-    ->withBaseline()
-    ->withBleedingEdge()
-    ->with('vendor/cuyz/valinor/qa/PHPStan/valinor-phpstan-configuration.php')
-    ->maxLevel()
-    ->withSets($symfonySet)
-    ->toArray()
-;
+/**
+ * ParameterCannotBeAutowired.
+ *
+ * @author Elias Häußler <elias@haeussler.dev>
+ * @license GPL-3.0-or-later
+ */
+final class ParameterCannotBeAutowired extends Exception
+{
+    /**
+     * @param class-string $className
+     */
+    public function __construct(string $className, string $parameterName)
+    {
+        parent::__construct(
+            sprintf('The constructor parameter "$%s" of class "%s" cannot be used for autowire.', $parameterName, $className),
+            1740467653,
+        );
+    }
+}
