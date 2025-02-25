@@ -54,8 +54,7 @@ final readonly class ParserFactory
     {
         self::validate($parserClass);
 
-        $container = $this->containerFactory->buildFor($parserClass);
-        /** @var Parser $parser */
+        $container = $this->containerFactory->build();
         $parser = $container->get($parserClass);
 
         if ($parser instanceof ConfigurableParser) {

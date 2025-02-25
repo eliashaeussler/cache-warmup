@@ -21,22 +21,27 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use EliasHaeussler\PHPStanConfig;
+namespace EliasHaeussler\CacheWarmup\Tests\Exception;
 
-$symfonySet = PHPStanConfig\Set\SymfonySet::create()
-    ->withConsoleApplicationLoader('tests/build/console-application.php')
-;
+use EliasHaeussler\CacheWarmup as Src;
+use PHPUnit\Framework;
+use stdClass;
 
-return PHPStanConfig\Config\Config::create(__DIR__)
-    ->in(
-        'bin/cache-warmup',
-        'src',
-        'tests',
-    )
-    ->withBaseline()
-    ->withBleedingEdge()
-    ->with('vendor/cuyz/valinor/qa/PHPStan/valinor-phpstan-configuration.php')
-    ->maxLevel()
-    ->withSets($symfonySet)
-    ->toArray()
-;
+/**
+ * RecursionInServiceCreationTest.
+ *
+ * @author Elias Häußler <elias@haeussler.dev>
+ * @license GPL-3.0-or-later
+ */
+#[Framework\Attributes\CoversClass(Src\Exception\RecursionInServiceCreation::class)]
+final class RecursionInServiceCreationTest extends Framework\TestCase
+{
+    #[Framework\Attributes\Test]
+    public function constructorReturnsExceptionForGivenClassName(): void
+    {
+        $actual = new Src\Exception\RecursionInServiceCreation(stdClass::class);
+
+        self::assertSame('Recursion detected while creating service "stdClass".', $actual->getMessage());
+        self::assertSame(1740494581, $actual->getCode());
+    }
+}

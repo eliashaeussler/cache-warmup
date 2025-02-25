@@ -62,30 +62,37 @@ final class ContainerFactoryTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
-    public function buildForReturnsCachedContainer(): void
+    public function buildReturnsCachedContainer(): void
     {
-        $crawler = $this->subject->buildFor(Tests\Fixtures\Classes\DummyCrawler::class);
+        $actual = $this->subject->build();
 
-        self::assertSame($crawler, $this->subject->buildFor(Tests\Fixtures\Classes\DummyCrawler::class));
+        self::assertSame($actual, $this->subject->build());
     }
 
     #[Framework\Attributes\Test]
-    public function buildForRegistersAutowiredServiceForGivenClassName(): void
+    public function buildCreatesContainerForConstructableCrawlers(): void
     {
-        $actual = $this->subject->buildFor(Tests\Fixtures\Classes\DummyCrawler::class);
+        $actual = $this->subject->build();
 
-        /* @phpstan-ignore symfonyContainer.serviceNotFound */
         $crawler = $actual->get(Tests\Fixtures\Classes\DummyCrawler::class);
 
-        self::assertInstanceOf(Tests\Fixtures\Classes\DummyCrawler::class, $crawler);
         self::assertSame($this->eventDispatcher, $crawler->eventDispatcher);
         self::assertEquals($this->clientFactory->get(), Tests\Fixtures\Classes\DummyCrawler::$client);
     }
 
     #[Framework\Attributes\Test]
-    public function buildForRegistersComponentsAsServices(): void
+    public function buildCreatesContainerForConstructableParsers(): void
     {
-        $actual = $this->subject->buildFor(Tests\Fixtures\Classes\DummyCrawler::class);
+        $actual = $this->subject->build();
+        $actual->get(Tests\Fixtures\Classes\DummyParser::class);
+
+        self::assertEquals($this->clientFactory->get(), Tests\Fixtures\Classes\DummyParser::$client);
+    }
+
+    #[Framework\Attributes\Test]
+    public function buildRegistersComponentsAsServices(): void
+    {
+        $actual = $this->subject->build();
 
         self::assertSame($this->output, $actual->get(Console\Output\OutputInterface::class));
         self::assertSame($this->logger, $actual->get(Log\LoggerInterface::class));

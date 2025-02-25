@@ -21,11 +21,24 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use EliasHaeussler\CacheWarmup\DependencyInjection;
-use Psr\Log;
+namespace EliasHaeussler\CacheWarmup\Exception;
 
-require dirname(__DIR__, 2).'/vendor/autoload.php';
-
-$containerFactory = new DependencyInjection\ContainerFactory(logger: new Log\NullLogger());
-
-return $containerFactory->buildForTesting();
+/**
+ * RecursionInServiceCreation.
+ *
+ * @author Elias Häußler <elias@haeussler.dev>
+ * @license GPL-3.0-or-later
+ */
+final class RecursionInServiceCreation extends Exception
+{
+    /**
+     * @param class-string $className
+     */
+    public function __construct(string $className)
+    {
+        parent::__construct(
+            sprintf('Recursion detected while creating service "%s".', $className),
+            1740494581,
+        );
+    }
+}

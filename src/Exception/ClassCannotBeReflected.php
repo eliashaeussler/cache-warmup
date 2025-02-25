@@ -21,22 +21,27 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use EliasHaeussler\PHPStanConfig;
+namespace EliasHaeussler\CacheWarmup\Exception;
 
-$symfonySet = PHPStanConfig\Set\SymfonySet::create()
-    ->withConsoleApplicationLoader('tests/build/console-application.php')
-;
+use Throwable;
 
-return PHPStanConfig\Config\Config::create(__DIR__)
-    ->in(
-        'bin/cache-warmup',
-        'src',
-        'tests',
-    )
-    ->withBaseline()
-    ->withBleedingEdge()
-    ->with('vendor/cuyz/valinor/qa/PHPStan/valinor-phpstan-configuration.php')
-    ->maxLevel()
-    ->withSets($symfonySet)
-    ->toArray()
-;
+/**
+ * ClassCannotBeReflected.
+ *
+ * @author Elias Häußler <elias@haeussler.dev>
+ * @license GPL-3.0-or-later
+ */
+final class ClassCannotBeReflected extends Exception
+{
+    /**
+     * @param class-string $className
+     */
+    public function __construct(string $className, ?Throwable $previous = null)
+    {
+        parent::__construct(
+            sprintf('There was an error when trying to reflect class "%s".', $className),
+            1740467760,
+            $previous,
+        );
+    }
+}

@@ -23,15 +23,11 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\DependencyInjection;
 
-use EliasHaeussler\CacheWarmup\Crawler;
-use EliasHaeussler\CacheWarmup\Helper;
 use EliasHaeussler\CacheWarmup\Http;
-use EliasHaeussler\CacheWarmup\Xml;
 use GuzzleHttp\ClientInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log;
 use Symfony\Component\Console;
-use Symfony\Component\DependencyInjection;
 use Symfony\Component\EventDispatcher;
 
 use function array_filter;
@@ -50,11 +46,7 @@ final class ContainerFactory
      * @var array<class-string, object>
      */
     private readonly array $services;
-
-    /**
-     * @var array<class-string<Crawler\Crawler|Xml\Parser>, DependencyInjection\ContainerInterface>
-     */
-    private array $containers = [];
+    private ?Container $container = null;
 
     public function __construct(
         Console\Output\OutputInterface $output = new Console\Output\ConsoleOutput(),
@@ -73,68 +65,18 @@ final class ContainerFactory
         ]);
     }
 
-    /**
-     * @param class-string<Crawler\Crawler|Xml\Parser> $className
-     */
-    public function buildFor(string $className): DependencyInjection\ContainerInterface
+    public function build(): Container
     {
-        if (isset($this->containers[$className])) {
-            return $this->containers[$className];
+        if (null !== $this->container) {
+            return $this->container;
         }
 
-        $container = new DependencyInjection\ContainerBuilder();
+        $container = new Container();
 
-        // Register crawler or parser as public service
-        $container->register($className)
-            ->setPublic(true)
-            ->setAutowired(true);
-
-        return $this->containers[$className] = $this->buildWithServices($container);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     */
-    public function buildForTesting(): DependencyInjection\ContainerInterface
-    {
-        $container = new DependencyInjection\ContainerBuilder();
-        $container->addCompilerPass(
-            new CompilerPass\ContainerBuilderDebugDumpPass(
-                Helper\FilesystemHelper::joinPathSegments(
-                    Helper\FilesystemHelper::getWorkingDirectory(),
-                    '.build/container.xml',
-                ),
-            ),
-        );
-
-        return $this->buildWithServices($container);
-    }
-
-    private function buildWithServices(DependencyInjection\ContainerBuilder $container): DependencyInjection\ContainerBuilder
-    {
-        // Register runtime services
         foreach ($this->services as $alias => $service) {
-            $container
-                ->register($service::class)
-                ->setSynthetic(true)
-                ->setPublic(true)
-            ;
-
-            if ($alias !== $service::class) {
-                $container
-                    ->setAlias($alias, $service::class)
-                    ->setPublic(true)
-                ;
-            }
+            $container->set($alias, $service);
         }
 
-        $container->compile();
-
-        // Inject runtime services
-        foreach ($this->services as $service) {
-            $container->set($service::class, $service);
-        }
-
-        return $container;
+        return $this->container = $container;
     }
 }
