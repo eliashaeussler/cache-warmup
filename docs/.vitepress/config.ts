@@ -1,11 +1,7 @@
 import {defineConfig} from 'vitepress';
-// @ts-ignore
 import markdownItReplaceLink from 'markdown-it-replace-link';
-// @ts-ignore
 import path from 'path';
-// @ts-ignore
-import {RepoLinkReplacer} from './repo-link-replacer.mts';
-// @ts-ignore
+import {RepoLinkReplacer} from './repo-link-replacer';
 import {version} from '../../package.json';
 
 // General information
@@ -218,9 +214,12 @@ export default defineConfig({
         },
     },
     markdown: {
-        config(md) {
+        async config(md) {
             md.use(markdownItReplaceLink, {
-                replaceLink: (link, {relativePath}) => replacer.replaceLink(link, relativePath),
+                replaceLink: (
+                    link: string,
+                    {relativePath}: { [key: string]: string },
+                ) => replacer.replaceLink(link, relativePath),
             });
         },
     },

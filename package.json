@@ -11,11 +11,13 @@
 		"url": "https://haeussler.dev"
 	},
 	"homepage": "https://cache-warmup.dev/",
+	"dependencies": {
+		"vitepress": "^2.0.0-alpha.3"
+	},
 	"devDependencies": {
 		"@types/node": "^22.0.0",
 		"depcheck": "^1.4.7",
-		"markdown-it-replace-link": "^1.2.1",
-		"vitepress": "^1.0.0"
+		"markdown-it-replace-link": "^1.2.1"
 	},
 	"scripts": {
 		"check-dependencies": "depcheck",
