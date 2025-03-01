@@ -1,6 +1,8 @@
 import {defineConfig} from 'vitepress';
 import markdownItReplaceLink from 'markdown-it-replace-link';
+import {groupIconMdPlugin, groupIconVitePlugin} from 'vitepress-plugin-group-icons';
 import path from 'path';
+
 import {RepoLinkReplacer} from './repo-link-replacer';
 import {version} from '../../package.json';
 
@@ -215,6 +217,7 @@ export default defineConfig({
     },
     markdown: {
         async config(md) {
+            md.use(groupIconMdPlugin);
             md.use(markdownItReplaceLink, {
                 replaceLink: (
                     link: string,
@@ -222,5 +225,24 @@ export default defineConfig({
                 ) => replacer.replaceLink(link, relativePath),
             });
         },
+    },
+    vite: {
+        plugins: [
+            groupIconVitePlugin({
+                customIcon: {
+                    '.php': 'vscode-icons:file-type-php3',
+                    'cli': 'vscode-icons:file-type-shell',
+                    'composer': 'vscode-icons:file-type-composer',
+                    'docker': 'vscode-icons:file-type-docker2',
+                    'github actions': 'simple-icons:github',
+                    'gitlab ci': 'vscode-icons:file-type-gitlab',
+                    'phar': 'vscode-icons:file-type-php3',
+                    'phive': 'vscode-icons:file-type-php3',
+                    'php': 'vscode-icons:file-type-php3',
+                    'json': 'vscode-icons:file-type-light-json',
+                    'yaml': 'vscode-icons:file-type-light-yaml',
+                },
+            }),
+        ],
     },
 });
