@@ -32,8 +32,14 @@ $header = PhpCsFixerConfig\Rules\Header::create(
     PhpCsFixerConfig\Package\License::GPL3OrLater,
 );
 
+// @todo Re-enable once https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/issues/8462 is resolved
+$disableFalsePositiveInPHPUnit = PhpCsFixerConfig\Rules\RuleSet::fromArray([
+    'php_unit_method_casing' => false,
+]);
+
 return PhpCsFixerConfig\Config::create()
     ->withRule($header)
+    ->withRule($disableFalsePositiveInPHPUnit)
     ->withFinder(
         static fn (Finder\Finder $finder) => $finder->in(__DIR__)->name(['cache-warmup', '*.php']),
     )
