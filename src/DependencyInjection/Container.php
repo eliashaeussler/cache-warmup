@@ -67,12 +67,8 @@ final class Container
      */
     public function get(string $className): object
     {
-        if (isset($this->serviceBag[$className])) {
-            /* @phpstan-ignore return.type */
-            return $this->serviceBag[$className];
-        }
-
-        return $this->serviceBag[$className] = $this->constructNewService($className);
+        /* @phpstan-ignore return.type */
+        return $this->serviceBag[$className] ?? $this->serviceBag[$className] = $this->constructNewService($className);
     }
 
     /**
