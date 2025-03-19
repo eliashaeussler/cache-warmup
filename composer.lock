@@ -3239,16 +3239,16 @@
         },
         {
             "name": "justinrainbow/json-schema",
-            "version": "6.3.0",
+            "version": "6.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jsonrainbow/json-schema.git",
-                "reference": "fbb4049557dbac6ff554985eed95ba763c37528a"
+                "reference": "c9f00dec766a67bf82c277b71d71d254357db92c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jsonrainbow/json-schema/zipball/fbb4049557dbac6ff554985eed95ba763c37528a",
-                "reference": "fbb4049557dbac6ff554985eed95ba763c37528a",
+                "url": "https://api.github.com/repos/jsonrainbow/json-schema/zipball/c9f00dec766a67bf82c277b71d71d254357db92c",
+                "reference": "c9f00dec766a67bf82c277b71d71d254357db92c",
                 "shasum": ""
             },
             "require": {
@@ -3308,9 +3308,9 @@
             ],
             "support": {
                 "issues": "https://github.com/jsonrainbow/json-schema/issues",
-                "source": "https://github.com/jsonrainbow/json-schema/tree/6.3.0"
+                "source": "https://github.com/jsonrainbow/json-schema/tree/6.3.1"
             },
-            "time": "2025-03-14T11:57:01+00:00"
+            "time": "2025-03-18T19:03:56+00:00"
         },
         {
             "name": "localheinz/diff",
@@ -3957,16 +3957,16 @@
         },
         {
             "name": "phpstan/phpstan-strict-rules",
-            "version": "2.0.3",
+            "version": "2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-strict-rules.git",
-                "reference": "8b88b5f818bfa301e0c99154ab622dace071c3ba"
+                "reference": "3e139cbe67fafa3588e1dbe27ca50f31fdb6236a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-strict-rules/zipball/8b88b5f818bfa301e0c99154ab622dace071c3ba",
-                "reference": "8b88b5f818bfa301e0c99154ab622dace071c3ba",
+                "url": "https://api.github.com/repos/phpstan/phpstan-strict-rules/zipball/3e139cbe67fafa3588e1dbe27ca50f31fdb6236a",
+                "reference": "3e139cbe67fafa3588e1dbe27ca50f31fdb6236a",
                 "shasum": ""
             },
             "require": {
@@ -3999,9 +3999,9 @@
             "description": "Extra strict and opinionated rules for PHPStan",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-strict-rules/issues",
-                "source": "https://github.com/phpstan/phpstan-strict-rules/tree/2.0.3"
+                "source": "https://github.com/phpstan/phpstan-strict-rules/tree/2.0.4"
             },
-            "time": "2025-01-21T10:52:14+00:00"
+            "time": "2025-03-18T11:42:40+00:00"
         },
         {
             "name": "phpstan/phpstan-symfony",
@@ -4399,16 +4399,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "11.5.12",
+            "version": "11.5.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "d42785840519401ed2113292263795eb4c0f95da"
+                "reference": "3bbb8d54b3a6718e51fd48cd478079f5f49b82bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/d42785840519401ed2113292263795eb4c0f95da",
-                "reference": "d42785840519401ed2113292263795eb4c0f95da",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3bbb8d54b3a6718e51fd48cd478079f5f49b82bd",
+                "reference": "3bbb8d54b3a6718e51fd48cd478079f5f49b82bd",
                 "shasum": ""
             },
             "require": {
@@ -4435,7 +4435,7 @@
                 "sebastian/exporter": "^6.3.0",
                 "sebastian/global-state": "^7.0.2",
                 "sebastian/object-enumerator": "^6.0.1",
-                "sebastian/type": "^5.1.0",
+                "sebastian/type": "^5.1.2",
                 "sebastian/version": "^5.0.2",
                 "staabm/side-effects-detector": "^1.0.5"
             },
@@ -4480,7 +4480,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.5.12"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.5.13"
             },
             "funding": [
                 {
@@ -4496,7 +4496,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-03-07T07:31:03+00:00"
+            "time": "2025-03-18T13:41:57+00:00"
         },
         {
             "name": "react/cache",
@@ -5900,16 +5900,16 @@
         },
         {
             "name": "sebastian/type",
-            "version": "5.1.0",
+            "version": "5.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/type.git",
-                "reference": "461b9c5da241511a2a0e8f240814fb23ce5c0aac"
+                "reference": "a8a7e30534b0eb0c77cd9d07e82de1a114389f5e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/type/zipball/461b9c5da241511a2a0e8f240814fb23ce5c0aac",
-                "reference": "461b9c5da241511a2a0e8f240814fb23ce5c0aac",
+                "url": "https://api.github.com/repos/sebastianbergmann/type/zipball/a8a7e30534b0eb0c77cd9d07e82de1a114389f5e",
+                "reference": "a8a7e30534b0eb0c77cd9d07e82de1a114389f5e",
                 "shasum": ""
             },
             "require": {
@@ -5945,7 +5945,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/type/issues",
                 "security": "https://github.com/sebastianbergmann/type/security/policy",
-                "source": "https://github.com/sebastianbergmann/type/tree/5.1.0"
+                "source": "https://github.com/sebastianbergmann/type/tree/5.1.2"
             },
             "funding": [
                 {
@@ -5953,7 +5953,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-09-17T13:12:04+00:00"
+            "time": "2025-03-18T13:35:50+00:00"
         },
         {
             "name": "sebastian/version",
