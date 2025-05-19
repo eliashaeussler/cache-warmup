@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "cuyz/valinor",
-            "version": "1.15.0",
+            "version": "1.16.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CuyZ/Valinor.git",
-                "reference": "c3cb63a35bb0c0b1b130117cd8962def1ede9e6f"
+                "reference": "acbda7ff3c25e5749f1e04ed183b3795434264c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CuyZ/Valinor/zipball/c3cb63a35bb0c0b1b130117cd8962def1ede9e6f",
-                "reference": "c3cb63a35bb0c0b1b130117cd8962def1ede9e6f",
+                "url": "https://api.github.com/repos/CuyZ/Valinor/zipball/acbda7ff3c25e5749f1e04ed183b3795434264c0",
+                "reference": "acbda7ff3c25e5749f1e04ed183b3795434264c0",
                 "shasum": ""
             },
             "require": {
@@ -74,7 +74,7 @@
             ],
             "support": {
                 "issues": "https://github.com/CuyZ/Valinor/issues",
-                "source": "https://github.com/CuyZ/Valinor/tree/1.15.0"
+                "source": "https://github.com/CuyZ/Valinor/tree/1.16.1"
             },
             "funding": [
                 {
@@ -82,7 +82,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-03-30T22:35:46+00:00"
+            "time": "2025-05-19T13:46:02+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
