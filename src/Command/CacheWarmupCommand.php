@@ -66,7 +66,6 @@ final class CacheWarmupCommand extends Console\Command\Command
     private const SUCCESSFUL = 0;
     private const FAILED = 1;
 
-    private readonly Crawler\Strategy\CrawlingStrategyFactory $crawlingStrategyFactory;
     private readonly Config\Component\OptionsParser $optionsParser;
     private readonly Time\TimeTracker $timeTracker;
     private Config\CacheWarmupConfig $config;
@@ -78,8 +77,8 @@ final class CacheWarmupCommand extends Console\Command\Command
 
     public function __construct(
         private readonly EventDispatcherInterface $eventDispatcher = new EventDispatcher\EventDispatcher(),
+        private readonly Crawler\Strategy\CrawlingStrategyFactory $crawlingStrategyFactory = new Crawler\Strategy\CrawlingStrategyFactory(),
     ) {
-        $this->crawlingStrategyFactory = new Crawler\Strategy\CrawlingStrategyFactory();
         $this->optionsParser = new Config\Component\OptionsParser();
         $this->timeTracker = new Time\TimeTracker();
 

@@ -34,21 +34,25 @@ use function in_array;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class CrawlingStrategyFactory
+final readonly class CrawlingStrategyFactory
 {
-    private const STRATEGIES = [
-        SortByChangeFrequencyStrategy::class,
-        SortByLastModificationDateStrategy::class,
-        SortByPriorityStrategy::class,
-    ];
+    /**
+     * @param list<class-string<CrawlingStrategy>> $strategies
+     */
+    public function __construct(
+        private array $strategies = [
+            SortByChangeFrequencyStrategy::class,
+            SortByLastModificationDateStrategy::class,
+            SortByPriorityStrategy::class,
+        ],
+    ) {}
 
     /**
      * @throws Exception\CrawlingStrategyDoesNotExist
      */
     public function get(string $name): CrawlingStrategy
     {
-        /** @var class-string<CrawlingStrategy> $strategy */
-        foreach (self::STRATEGIES as $strategy) {
+        foreach ($this->strategies as $strategy) {
             if ($name === $strategy::getName()) {
                 return new $strategy();
             }
@@ -58,14 +62,13 @@ final class CrawlingStrategyFactory
     }
 
     /**
-     * @return list<string>
+     * @return list<non-empty-string>
      */
     public function getAll(): array
     {
         return array_map(
-            /** @param class-string<CrawlingStrategy> $strategy */
             static fn (string $strategy) => $strategy::getName(),
-            self::STRATEGIES,
+            $this->strategies,
         );
     }
 
