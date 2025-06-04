@@ -1,7 +1,6 @@
 presets:
-  - name: npm-package
-    options:
-      packageName: '@eliashaeussler/cache-warmup'
+  - npm-package
+  - typo3-commit-guidelines
 
 filesToModify:
   - path: src/CacheWarmer.php
