@@ -20,7 +20,7 @@
 		"ext-mbstring": "*",
 		"ext-simplexml": "*",
 		"ext-zlib": "*",
-		"cuyz/valinor": "^1.4",
+		"cuyz/valinor": "^2.0",
 		"guzzlehttp/guzzle": "^7.8.2",
 		"guzzlehttp/promises": "^2.0.3",
 		"guzzlehttp/psr7": "^2.0",
