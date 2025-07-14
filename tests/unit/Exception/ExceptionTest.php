@@ -51,8 +51,8 @@ final class ExceptionTest extends Framework\TestCase
         $error = $this->buildMappingError(['foo' => null, 'baz' => false]);
 
         $expected = [
-            '  * *root*: Unexpected key(s) `baz`, expected `foo`.',
             '  * foo: Value null is not a valid string.',
+            '  * *root*: Unexpected key(s) `baz`, expected `foo`.',
         ];
 
         self::assertSame($expected, $this->subject->formatMappingError($error));
@@ -64,8 +64,8 @@ final class ExceptionTest extends Framework\TestCase
         $error = $this->buildMappingError(['foo' => null, 'baz' => false]);
 
         $expected = [
-            '  * *root*: Unexpected key(s) `baz`, expected `foo`.',
             '  * baz: Value null is not a valid string.',
+            '  * *root*: Unexpected key(s) `baz`, expected `foo`.',
         ];
 
         self::assertSame($expected, $this->subject->formatMappingError($error, ['foo' => 'baz']));

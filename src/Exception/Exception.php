@@ -42,11 +42,10 @@ abstract class Exception extends \Exception
      */
     protected function formatMappingError(Valinor\Mapper\MappingError $error, array $nodePathMapping = []): array
     {
-        $messages = Valinor\Mapper\Tree\Message\Messages::flattenFromNode($error->node())->errors();
         $errors = [];
 
-        foreach ($messages as $message) {
-            $path = $message->node()->path();
+        foreach ($error->messages() as $message) {
+            $path = $message->path();
             $errors[] = sprintf(
                 '  * %s: %s',
                 $nodePathMapping[$path] ?? $path,

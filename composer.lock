@@ -4,26 +4,25 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "444786867433f982691c8a91ff86cd86",
+    "content-hash": "942f97a5ee1985819b3e4258edf38c92",
     "packages": [
         {
             "name": "cuyz/valinor",
-            "version": "1.17.0",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CuyZ/Valinor.git",
-                "reference": "9eb2802797e36f3af1fd6e13ff23e4e3d0058022"
+                "reference": "914a8cbe64c71f9f0a9728df75e7d92a2988fb40"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CuyZ/Valinor/zipball/9eb2802797e36f3af1fd6e13ff23e4e3d0058022",
-                "reference": "9eb2802797e36f3af1fd6e13ff23e4e3d0058022",
+                "url": "https://api.github.com/repos/CuyZ/Valinor/zipball/914a8cbe64c71f9f0a9728df75e7d92a2988fb40",
+                "reference": "914a8cbe64c71f9f0a9728df75e7d92a2988fb40",
                 "shasum": ""
             },
             "require": {
                 "composer-runtime-api": "^2.0",
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
-                "psr/simple-cache": "^1.0 || ^2.0 || ^3.0"
+                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0"
             },
             "conflict": {
                 "phpstan/phpstan": "<1.0 || >= 3.0",
@@ -74,7 +73,7 @@
             ],
             "support": {
                 "issues": "https://github.com/CuyZ/Valinor/issues",
-                "source": "https://github.com/CuyZ/Valinor/tree/1.17.0"
+                "source": "https://github.com/CuyZ/Valinor/tree/2.0.0"
             },
             "funding": [
                 {
@@ -82,7 +81,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-06-20T06:40:38+00:00"
+            "time": "2025-06-27T06:38:26+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -721,57 +720,6 @@
                 "source": "https://github.com/php-fig/log/tree/3.0.2"
             },
             "time": "2024-09-11T13:17:53+00:00"
-        },
-        {
-            "name": "psr/simple-cache",
-            "version": "3.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/simple-cache.git",
-                "reference": "764e0b3939f5ca87cb904f570ef9be2d78a07865"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/simple-cache/zipball/764e0b3939f5ca87cb904f570ef9be2d78a07865",
-                "reference": "764e0b3939f5ca87cb904f570ef9be2d78a07865",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.0.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Psr\\SimpleCache\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "https://www.php-fig.org/"
-                }
-            ],
-            "description": "Common interfaces for simple caching",
-            "keywords": [
-                "cache",
-                "caching",
-                "psr",
-                "psr-16",
-                "simple-cache"
-            ],
-            "support": {
-                "source": "https://github.com/php-fig/simple-cache/tree/3.0.0"
-            },
-            "time": "2021-10-29T13:26:27+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
@@ -2474,39 +2422,39 @@
         },
         {
             "name": "eliashaeussler/version-bumper",
-            "version": "2.4.0",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/version-bumper.git",
-                "reference": "e297bf2be0699e6dbffb42223f6e67d5e04251c4"
+                "reference": "a5e5395f0f76ceb9cbe8c4d7194039777c2181c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/version-bumper/zipball/e297bf2be0699e6dbffb42223f6e67d5e04251c4",
-                "reference": "e297bf2be0699e6dbffb42223f6e67d5e04251c4",
+                "url": "https://api.github.com/repos/eliashaeussler/version-bumper/zipball/a5e5395f0f76ceb9cbe8c4d7194039777c2181c9",
+                "reference": "a5e5395f0f76ceb9cbe8c4d7194039777c2181c9",
                 "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^2.0",
-                "cuyz/valinor": "^1.12",
+                "cuyz/valinor": "^2.0",
                 "cypresslab/gitelephant": "^4.5",
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
+                "php": "~8.2.0 || ~8.3.0 || ~8.4.0",
                 "symfony/console": "^5.4 || ^6.4 || ^7.0",
                 "symfony/filesystem": "^5.4 || ^6.4 || ^7.0",
                 "symfony/options-resolver": "^5.4 || ^6.4 || ^7.0",
                 "symfony/yaml": "^5.4 || ^6.4 || ^7.0"
             },
             "require-dev": {
-                "armin/editorconfig-cli": "^1.8 || ^2.0",
+                "armin/editorconfig-cli": "^2.0",
                 "composer/composer": "^2.2",
-                "eliashaeussler/php-cs-fixer-config": "^2.0",
-                "eliashaeussler/phpstan-config": "^2.0",
-                "eliashaeussler/rector-config": "^3.0",
-                "ergebnis/composer-normalize": "^2.30",
-                "phpstan/extension-installer": "^1.2",
+                "eliashaeussler/php-cs-fixer-config": "^2.3",
+                "eliashaeussler/phpstan-config": "^2.9",
+                "eliashaeussler/rector-config": "^3.1",
+                "ergebnis/composer-normalize": "^2.47",
+                "phpstan/extension-installer": "^1.3",
                 "phpstan/phpstan-phpunit": "^2.0",
                 "phpstan/phpstan-symfony": "^2.0",
-                "phpunit/phpunit": "^10.2 || ^11.0 || ^12.0"
+                "phpunit/phpunit": "^11.0 || ^12.0"
             },
             "type": "composer-plugin",
             "extra": {
@@ -2532,9 +2480,9 @@
             "description": "Composer plugin to bump project versions during release preparations",
             "support": {
                 "issues": "https://github.com/eliashaeussler/version-bumper/issues",
-                "source": "https://github.com/eliashaeussler/version-bumper/tree/2.4.0"
+                "source": "https://github.com/eliashaeussler/version-bumper/tree/3.0.0"
             },
-            "time": "2025-06-04T14:11:26+00:00"
+            "time": "2025-06-28T12:36:27+00:00"
         },
         {
             "name": "ergebnis/composer-normalize",

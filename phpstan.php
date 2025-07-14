@@ -35,7 +35,10 @@ return PHPStanConfig\Config\Config::create(__DIR__)
     )
     ->withBaseline()
     ->withBleedingEdge()
-    ->with('vendor/cuyz/valinor/qa/PHPStan/valinor-phpstan-configuration.php')
+    ->with(
+        'vendor/cuyz/valinor/qa/PHPStan/valinor-phpstan-configuration.php',
+        'vendor/cuyz/valinor/qa/PHPStan/valinor-phpstan-suppress-pure-errors.php',
+    )
     ->maxLevel()
     ->withSets($symfonySet)
     ->toArray()
