@@ -62,9 +62,9 @@ final class FileLogger extends Log\AbstractLogger
     }
 
     /**
-     * @phpstan-param Log\LogLevel::* $level
-     *
      * @param array<string, mixed> $context
+     *
+     * @phpstan-param Log\LogLevel::* $level
      *
      * @throws Exception\FileStreamResultIsUnexpected
      */

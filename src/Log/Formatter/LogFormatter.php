@@ -35,9 +35,9 @@ use Stringable;
 interface LogFormatter
 {
     /**
-     * @phpstan-param Log\LogLevel::* $level
-     *
      * @param array<string, mixed> $context
+     *
+     * @phpstan-param Log\LogLevel::* $level
      */
     public function format(string $level, Stringable|string $message, array $context = []): string;
 }
