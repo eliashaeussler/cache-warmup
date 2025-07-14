@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Sitemap;
 
+use CuyZ\Valinor;
 use DateTimeInterface;
 use EliasHaeussler\CacheWarmup\Exception;
 use EliasHaeussler\CacheWarmup\Helper;
@@ -75,6 +76,7 @@ class Sitemap implements Stringable
      * @throws Exception\UrlIsEmpty
      * @throws Exception\UrlIsInvalid
      */
+    #[Valinor\Mapper\Object\Constructor]
     public static function createFromString(string $sitemap): self
     {
         // Sitemap is a remote URL

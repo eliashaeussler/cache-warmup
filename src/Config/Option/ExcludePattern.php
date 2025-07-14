@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Config\Option;
 
+use CuyZ\Valinor;
 use EliasHaeussler\CacheWarmup\Exception;
 use Stringable;
 
@@ -55,6 +56,7 @@ final class ExcludePattern
     /**
      * @throws Exception\RegularExpressionIsInvalid
      */
+    #[Valinor\Mapper\Object\Constructor]
     public static function create(string $pattern): self
     {
         if (self::isRegularExpression($pattern)) {

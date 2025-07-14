@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Config\Adapter;
 
 use CuyZ\Valinor;
-use EliasHaeussler\CacheWarmup\Config;
 use EliasHaeussler\CacheWarmup\Sitemap;
 
 /**
@@ -41,12 +40,10 @@ final class ConfigMapperFactory
     {
         return (new Valinor\MapperBuilder())
             ->registerConstructor(
-                Config\Option\ExcludePattern::create(...),
-                Sitemap\Sitemap::createFromString(...),
                 static fn (string $uri): Sitemap\Url => new Sitemap\Url($uri),
             )
             ->allowPermissiveTypes()
-            ->enableFlexibleCasting()
+            ->allowScalarValueCasting()
             ->mapper()
         ;
     }
