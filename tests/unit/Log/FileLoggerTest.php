@@ -79,7 +79,7 @@ final class FileLoggerTest extends Framework\TestCase
 
         $fileContents = file_get_contents($this->logFile);
 
-        self::assertNotEmpty($fileContents);
+        self::assertIsString($fileContents);
         self::assertStringContainsString('ERROR: oops, something went wrong.', $fileContents);
     }
 
