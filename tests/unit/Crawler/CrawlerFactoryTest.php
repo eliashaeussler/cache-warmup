@@ -74,6 +74,7 @@ final class CrawlerFactoryTest extends Framework\TestCase
     {
         $this->expectExceptionObject(new Src\Exception\CrawlerDoesNotExist('foo'));
 
+        /* @phpstan-ignore argument.templateType */
         $this->subject->get('foo');
     }
 
@@ -82,6 +83,7 @@ final class CrawlerFactoryTest extends Framework\TestCase
     {
         $this->expectExceptionObject(new Src\Exception\CrawlerIsInvalid(self::class));
 
+        /* @phpstan-ignore argument.templateType */
         $this->subject->get(self::class);
     }
 
@@ -90,7 +92,6 @@ final class CrawlerFactoryTest extends Framework\TestCase
     {
         $actual = $this->subject->get(Tests\Fixtures\Classes\DummyCrawler::class);
 
-        self::assertInstanceOf(Tests\Fixtures\Classes\DummyCrawler::class, $actual);
         self::assertSame($this->eventDispatcher, $actual->eventDispatcher);
         self::assertEquals($this->clientFactory->get(), Tests\Fixtures\Classes\DummyCrawler::$client);
     }
@@ -104,16 +105,14 @@ final class CrawlerFactoryTest extends Framework\TestCase
 
         $actual = $this->subject->get(Tests\Fixtures\Classes\DummyConfigurableCrawler::class, $options);
 
-        self::assertInstanceOf(Tests\Fixtures\Classes\DummyConfigurableCrawler::class, $actual);
         self::assertSame(['foo' => 'baz', 'bar' => 42], $actual->getOptions());
     }
 
     #[Framework\Attributes\Test]
     public function getReturnsVerboseCrawler(): void
     {
-        $actual = $this->subject->get(Tests\Fixtures\Classes\DummyVerboseCrawler::class);
+        $this->subject->get(Tests\Fixtures\Classes\DummyVerboseCrawler::class);
 
-        self::assertInstanceOf(Tests\Fixtures\Classes\DummyVerboseCrawler::class, $actual);
         self::assertSame($this->output, Tests\Fixtures\Classes\DummyVerboseCrawler::$output);
 
         Tests\Fixtures\Classes\DummyVerboseCrawler::$output = null;
@@ -122,9 +121,8 @@ final class CrawlerFactoryTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function getReturnsLoggingCrawler(): void
     {
-        $actual = $this->subject->get(Tests\Fixtures\Classes\DummyLoggingCrawler::class);
+        $this->subject->get(Tests\Fixtures\Classes\DummyLoggingCrawler::class);
 
-        self::assertInstanceOf(Tests\Fixtures\Classes\DummyLoggingCrawler::class, $actual);
         self::assertSame($this->logger, Tests\Fixtures\Classes\DummyLoggingCrawler::$logger);
         self::assertSame(Log\LogLevel::ERROR, Tests\Fixtures\Classes\DummyLoggingCrawler::$logLevel);
 
@@ -135,9 +133,8 @@ final class CrawlerFactoryTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function getReturnsStoppableCrawler(): void
     {
-        $actual = $this->subject->get(Tests\Fixtures\Classes\DummyStoppableCrawler::class);
+        $this->subject->get(Tests\Fixtures\Classes\DummyStoppableCrawler::class);
 
-        self::assertInstanceOf(Tests\Fixtures\Classes\DummyStoppableCrawler::class, $actual);
         self::assertTrue(Tests\Fixtures\Classes\DummyStoppableCrawler::$stopOnFailure);
 
         Tests\Fixtures\Classes\DummyStoppableCrawler::$stopOnFailure = false;
