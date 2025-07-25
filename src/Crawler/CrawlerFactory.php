@@ -51,8 +51,12 @@ final readonly class CrawlerFactory
     ) {}
 
     /**
-     * @param class-string<Crawler> $crawlerClass
-     * @param array<string, mixed>  $options
+     * @template T of Crawler
+     *
+     * @param class-string<T>      $crawlerClass
+     * @param array<string, mixed> $options
+     *
+     * @return T
      *
      * @throws Exception\CrawlerDoesNotExist
      * @throws Exception\CrawlerIsInvalid
