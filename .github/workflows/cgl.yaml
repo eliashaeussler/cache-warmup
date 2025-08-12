@@ -25,7 +25,8 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.4
+          # We use the minimum supported PHP version
+          php-version: 8.2
           ini-file: development
           tools: composer:v2, composer-require-checker, composer-unused
         env:

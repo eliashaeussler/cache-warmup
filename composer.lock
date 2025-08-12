@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0049e7aedf32029c7d6bdb3dd37accd1",
+    "content-hash": "cf4867fa89bc669e55c5c2c84361d5d7",
     "packages": [
         {
             "name": "cuyz/valinor",
@@ -2230,20 +2230,20 @@
         },
         {
             "name": "eliashaeussler/deep-closure-comparator",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/deep-closure-comparator.git",
-                "reference": "6b1e88d9aa88f31e1cee316507455a3c1b3ca91a"
+                "reference": "f4712409d847f70ea62e6237f4d265e754a58e89"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/deep-closure-comparator/zipball/6b1e88d9aa88f31e1cee316507455a3c1b3ca91a",
-                "reference": "6b1e88d9aa88f31e1cee316507455a3c1b3ca91a",
+                "url": "https://api.github.com/repos/eliashaeussler/deep-closure-comparator/zipball/f4712409d847f70ea62e6237f4d265e754a58e89",
+                "reference": "f4712409d847f70ea62e6237f4d265e754a58e89",
                 "shasum": ""
             },
             "require": {
-                "opis/closure": "^4.0",
+                "opis/closure": "^4.4",
                 "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
                 "phpunit/phpunit": "^10.5 || ^11.5 || ^12.3",
                 "sebastian/comparator": "^5.0 || ^6.3 || ^7.0"
@@ -2279,9 +2279,9 @@
             "description": "Provides a PHPUnit comparator to assert equality of closures",
             "support": {
                 "issues": "https://github.com/eliashaeussler/deep-closure-comparator/issues",
-                "source": "https://github.com/eliashaeussler/deep-closure-comparator/tree/1.2.0"
+                "source": "https://github.com/eliashaeussler/deep-closure-comparator/tree/1.2.1"
             },
-            "time": "2025-11-14T14:11:56+00:00"
+            "time": "2025-11-20T06:37:27+00:00"
         },
         {
             "name": "eliashaeussler/php-cs-fixer-config",
@@ -3629,16 +3629,16 @@
         },
         {
             "name": "opis/closure",
-            "version": "4.3.1",
+            "version": "4.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/opis/closure.git",
-                "reference": "9b6ef5f622b4b29cf98bdc144f2a370c3a40d4df"
+                "reference": "4836788ab123b955a0bbf31f7d4468dd3db825fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/opis/closure/zipball/9b6ef5f622b4b29cf98bdc144f2a370c3a40d4df",
-                "reference": "9b6ef5f622b4b29cf98bdc144f2a370c3a40d4df",
+                "url": "https://api.github.com/repos/opis/closure/zipball/4836788ab123b955a0bbf31f7d4468dd3db825fa",
+                "reference": "4836788ab123b955a0bbf31f7d4468dd3db825fa",
                 "shasum": ""
             },
             "require": {
@@ -3678,6 +3678,7 @@
             "description": "A library that can be used to serialize closures (anonymous functions) and arbitrary data.",
             "homepage": "https://opis.io/closure",
             "keywords": [
+                "anonymous classes",
                 "anonymous functions",
                 "closure",
                 "function",
@@ -3687,9 +3688,9 @@
             ],
             "support": {
                 "issues": "https://github.com/opis/closure/issues",
-                "source": "https://github.com/opis/closure/tree/4.3.1"
+                "source": "https://github.com/opis/closure/tree/4.4.0"
             },
-            "time": "2025-01-10T20:42:24+00:00"
+            "time": "2025-11-20T00:20:49+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -6943,7 +6944,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "~8.2.0 || ~8.3.0 || ~8.4.0",
+        "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
         "ext-filter": "*",
         "ext-json": "*",
         "ext-libxml": "*",

@@ -20,14 +20,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ["8.2", "8.3", "8.4"]
+        php-version: ["8.2", "8.3", "8.4", "8.5"]
         dependencies: ["highest", "lowest"]
         os: ["Ubuntu"]
         include:
-          - php-version: "8.4"
+          - php-version: "8.5"
             dependencies: "highest"
             os: "macOS"
-          - php-version: "8.4"
+          - php-version: "8.5"
             dependencies: "highest"
             os: "Windows"
     steps:
@@ -68,7 +68,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.4
+          php-version: 8.5
           ini-file: development
           tools: composer:v2
           coverage: pcov
@@ -140,9 +140,9 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
+          # @todo Switch to PHP 8.5 once Box is fully PHP 8.5 compatible
           php-version: 8.4
-          # @todo Enable once https://github.com/box-project/box/issues/1423 is resolved
-          # ini-file: development
+          ini-file: development
           tools: composer:v2
 
       # Run tests
