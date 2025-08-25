@@ -25,6 +25,7 @@ namespace EliasHaeussler\CacheWarmup\Tests\Crawler;
 
 use EliasHaeussler\CacheWarmup as Src;
 use EliasHaeussler\CacheWarmup\Tests;
+use EliasHaeussler\DeepClosureComparator;
 use EliasHaeussler\TransientLogger;
 use GuzzleHttp\RequestOptions;
 use PHPUnit\Framework;
@@ -93,7 +94,7 @@ final class CrawlerFactoryTest extends Framework\TestCase
         $actual = $this->subject->get(Tests\Fixtures\Classes\DummyCrawler::class);
 
         self::assertSame($this->eventDispatcher, $actual->eventDispatcher);
-        self::assertEquals($this->clientFactory->get(), Tests\Fixtures\Classes\DummyCrawler::$client);
+        DeepClosureComparator\DeepClosureAssert::assertEquals($this->clientFactory->get(), Tests\Fixtures\Classes\DummyCrawler::$client);
     }
 
     #[Framework\Attributes\Test]
