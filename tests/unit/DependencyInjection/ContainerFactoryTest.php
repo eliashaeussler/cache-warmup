@@ -25,6 +25,7 @@ namespace EliasHaeussler\CacheWarmup\Tests\DependencyInjection;
 
 use EliasHaeussler\CacheWarmup as Src;
 use EliasHaeussler\CacheWarmup\Tests;
+use EliasHaeussler\DeepClosureComparator;
 use GuzzleHttp\ClientInterface;
 use PHPUnit\Framework;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -77,7 +78,7 @@ final class ContainerFactoryTest extends Framework\TestCase
         $crawler = $actual->get(Tests\Fixtures\Classes\DummyCrawler::class);
 
         self::assertSame($this->eventDispatcher, $crawler->eventDispatcher);
-        self::assertEquals($this->clientFactory->get(), Tests\Fixtures\Classes\DummyCrawler::$client);
+        DeepClosureComparator\DeepClosureAssert::assertEquals($this->clientFactory->get(), Tests\Fixtures\Classes\DummyCrawler::$client);
     }
 
     #[Framework\Attributes\Test]
@@ -86,7 +87,7 @@ final class ContainerFactoryTest extends Framework\TestCase
         $actual = $this->subject->build();
         $actual->get(Tests\Fixtures\Classes\DummyParser::class);
 
-        self::assertEquals($this->clientFactory->get(), Tests\Fixtures\Classes\DummyParser::$client);
+        DeepClosureComparator\DeepClosureAssert::assertEquals($this->clientFactory->get(), Tests\Fixtures\Classes\DummyParser::$client);
     }
 
     #[Framework\Attributes\Test]
@@ -98,7 +99,7 @@ final class ContainerFactoryTest extends Framework\TestCase
         self::assertSame($this->logger, $actual->get(Log\LoggerInterface::class));
         self::assertSame($this->eventDispatcher, $actual->get(EventDispatcherInterface::class));
         self::assertSame($this->clientFactory, $actual->get(Src\Http\Client\ClientFactory::class));
-        self::assertEquals($this->clientFactory->get(), $actual->get(ClientInterface::class));
+        DeepClosureComparator\DeepClosureAssert::assertEquals($this->clientFactory->get(), $actual->get(ClientInterface::class));
     }
 
     protected function tearDown(): void

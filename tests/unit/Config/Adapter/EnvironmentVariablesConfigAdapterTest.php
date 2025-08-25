@@ -25,6 +25,7 @@ namespace EliasHaeussler\CacheWarmup\Tests\Config\Adapter;
 
 use EliasHaeussler\CacheWarmup as Src;
 use EliasHaeussler\CacheWarmup\Tests;
+use EliasHaeussler\DeepClosureComparator;
 use Generator;
 use PHPUnit\Framework;
 use Psr\Log;
@@ -239,7 +240,7 @@ final class EnvironmentVariablesConfigAdapterTest extends Framework\TestCase
         );
 
         $this->testWithEnvironment(
-            fn () => self::assertEquals($expected, $this->subject->get()),
+            fn () => DeepClosureComparator\DeepClosureAssert::assertEquals($expected, $this->subject->get()),
             $variables,
         );
     }

@@ -25,6 +25,7 @@ namespace EliasHaeussler\CacheWarmup\Tests\Config\Adapter;
 
 use EliasHaeussler\CacheWarmup as Src;
 use EliasHaeussler\CacheWarmup\Tests;
+use EliasHaeussler\DeepClosureComparator;
 use PHPUnit\Framework;
 use Psr\Log;
 use Symfony\Component\Console;
@@ -196,7 +197,7 @@ final class ConsoleInputConfigAdapterTest extends Framework\TestCase
             300,
         );
 
-        self::assertEquals($expected, $subject->get());
+        DeepClosureComparator\DeepClosureAssert::assertEquals($expected, $subject->get());
     }
 
     #[Framework\Attributes\Test]

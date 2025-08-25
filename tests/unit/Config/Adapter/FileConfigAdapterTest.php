@@ -25,6 +25,7 @@ namespace EliasHaeussler\CacheWarmup\Tests\Config\Adapter;
 
 use EliasHaeussler\CacheWarmup as Src;
 use EliasHaeussler\CacheWarmup\Tests;
+use EliasHaeussler\DeepClosureComparator;
 use Generator;
 use PHPUnit\Framework;
 use Psr\Log;
@@ -106,7 +107,7 @@ final class FileConfigAdapterTest extends Framework\TestCase
 
         $subject = new Src\Config\Adapter\FileConfigAdapter($file);
 
-        self::assertEquals($expected, $subject->get());
+        DeepClosureComparator\DeepClosureAssert::assertEquals($expected, $subject->get());
     }
 
     #[Framework\Attributes\Test]
