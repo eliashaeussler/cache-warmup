@@ -2223,23 +2223,23 @@
         },
         {
             "name": "eliashaeussler/deep-closure-comparator",
-            "version": "1.0.1",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/deep-closure-comparator.git",
-                "reference": "243940e7426c1d1e80053c15f2573c33c42fd119"
+                "reference": "a84e20dc0c6f9b7b7a719c5a384d514dbf947f73"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/deep-closure-comparator/zipball/243940e7426c1d1e80053c15f2573c33c42fd119",
-                "reference": "243940e7426c1d1e80053c15f2573c33c42fd119",
+                "url": "https://api.github.com/repos/eliashaeussler/deep-closure-comparator/zipball/a84e20dc0c6f9b7b7a719c5a384d514dbf947f73",
+                "reference": "a84e20dc0c6f9b7b7a719c5a384d514dbf947f73",
                 "shasum": ""
             },
             "require": {
                 "opis/closure": "^4.0",
                 "php": "~8.2.0 || ~8.3.0 || ~8.4.0",
-                "phpunit/phpunit": "^11.5 || ^12.3",
-                "sebastian/comparator": "^6.3 || ^7.0"
+                "phpunit/phpunit": "^10.5 || ^11.5 || ^12.3",
+                "sebastian/comparator": "^5.0 || ^6.3 || ^7.0"
             },
             "require-dev": {
                 "armin/editorconfig-cli": "^2.1",
@@ -2272,9 +2272,9 @@
             "description": "Provides a PHPUnit comparator to assert equality of closures",
             "support": {
                 "issues": "https://github.com/eliashaeussler/deep-closure-comparator/issues",
-                "source": "https://github.com/eliashaeussler/deep-closure-comparator/tree/1.0.1"
+                "source": "https://github.com/eliashaeussler/deep-closure-comparator/tree/1.1.0"
             },
-            "time": "2025-08-25T13:36:12+00:00"
+            "time": "2025-08-26T07:52:15+00:00"
         },
         {
             "name": "eliashaeussler/php-cs-fixer-config",
