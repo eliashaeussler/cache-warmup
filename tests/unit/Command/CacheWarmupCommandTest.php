@@ -275,7 +275,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         $this->expectException(Console\Exception\RuntimeException::class);
         $this->expectExceptionCode(1604258903);
 
-        $this->commandTester->setInputs([null]);
+        $this->commandTester->setInputs(['']);
         $this->commandTester->execute([]);
     }
 
@@ -295,7 +295,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         $this->commandTester->setInputs([
             'https://www.example.com/sitemap.xml',
-            null,
+            '',
         ]);
 
         $this->commandTester->execute([], ['verbosity' => Console\Output\OutputInterface::VERBOSITY_DEBUG]);
@@ -360,7 +360,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     #[Framework\Attributes\Test]
     public function executeCrawlsAdditionalUrls(): void
     {
-        $this->commandTester->setInputs([null]);
+        $this->commandTester->setInputs(['']);
 
         $this->commandTester->execute(
             [
