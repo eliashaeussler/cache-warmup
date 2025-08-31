@@ -110,15 +110,15 @@ jobs:
         with:
           name: coverage
 
-      # CodeClimate
-      - name: CodeClimate report
-        uses: paambaati/codeclimate-action@v9.0.0
-        if: env.CC_TEST_REPORTER_ID
+      # qlty
+      - name: qlty report
+        uses: qltysh/qlty-action/coverage@v2
+        if: env.QLTY_COVERAGE_TOKEN
         env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+          QLTY_COVERAGE_TOKEN: ${{ secrets.QLTY_COVERAGE_TOKEN }}
         with:
-          coverageLocations: |
-            ${{ steps.download.outputs.download-path }}/clover.xml:clover
+          token: ${{ secrets.QLTY_COVERAGE_TOKEN }}
+          files: ${{ steps.download.outputs.download-path }}/clover.xml
 
       # Coveralls
       - name: Coveralls report
