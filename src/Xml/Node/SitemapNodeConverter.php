@@ -28,6 +28,7 @@ use DateTimeInterface;
 use EliasHaeussler\CacheWarmup\Exception;
 use EliasHaeussler\CacheWarmup\Sitemap;
 use GuzzleHttp\Psr7;
+use Throwable;
 
 /**
  * SitemapNodeConverter.
@@ -105,7 +106,7 @@ final class SitemapNodeConverter
         foreach (self::DATE_FORMATS as $dateFormat) {
             try {
                 $lastModificationDate = DateTimeImmutable::createFromFormat($dateFormat, $datetime);
-            } catch (\Exception) {
+            } catch (Throwable) {
                 // Try next format
                 continue;
             }
