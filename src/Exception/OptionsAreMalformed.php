@@ -39,7 +39,7 @@ final class OptionsAreMalformed extends Exception
     public function __construct(mixed $source, ?Throwable $previous = null)
     {
         if (is_scalar($source)) {
-            $source = sprintf(' "%s"', $source);
+            $source = sprintf(' "%s"', (string) $source);
         } else {
             $source = '';
         }

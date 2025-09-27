@@ -56,7 +56,7 @@ final class CompactLogFormatter implements LogFormatter
             $date->format(DateTimeInterface::ATOM),
             strtoupper($level),
             $formattedMessage,
-            json_encode($context),
+            json_encode($context, JSON_THROW_ON_ERROR),
         );
     }
 
