@@ -52,6 +52,9 @@ final class NullStream implements Message\StreamInterface
         return 0;
     }
 
+    /**
+     * @throws void
+     */
     public function tell(): int
     {
         return 0;
@@ -67,8 +70,14 @@ final class NullStream implements Message\StreamInterface
         return true;
     }
 
+    /**
+     * @throws void
+     */
     public function seek(int $offset, int $whence = SEEK_SET): void {}
 
+    /**
+     * @throws void
+     */
     public function rewind(): void {}
 
     public function isWritable(): bool
@@ -86,11 +95,17 @@ final class NullStream implements Message\StreamInterface
         return true;
     }
 
+    /**
+     * @throws void
+     */
     public function read(int $length): string
     {
         return '';
     }
 
+    /**
+     * @throws void
+     */
     public function getContents(): string
     {
         return '';
