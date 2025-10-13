@@ -49,6 +49,9 @@
 		"symfony/event-dispatcher-contracts": "^2.5.3 || ^3.4.2",
 		"symfony/string": "^5.4.35 || ^6.4.3 || ^7.0.3"
 	},
+	"conflict": {
+		"cuyz/valinor": "2.2.1"
+	},
 	"autoload": {
 		"psr-4": {
 			"EliasHaeussler\\CacheWarmup\\": "src"
