@@ -2512,16 +2512,16 @@
         },
         {
             "name": "eliashaeussler/version-bumper",
-            "version": "3.0.1",
+            "version": "3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/version-bumper.git",
-                "reference": "06caa19bdb3948dcf98e4f59d90baf290e0d2a27"
+                "reference": "2a2905a63015548d6ee961428bf11a980c5afe94"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/version-bumper/zipball/06caa19bdb3948dcf98e4f59d90baf290e0d2a27",
-                "reference": "06caa19bdb3948dcf98e4f59d90baf290e0d2a27",
+                "url": "https://api.github.com/repos/eliashaeussler/version-bumper/zipball/2a2905a63015548d6ee961428bf11a980c5afe94",
+                "reference": "2a2905a63015548d6ee961428bf11a980c5afe94",
                 "shasum": ""
             },
             "require": {
@@ -2533,6 +2533,9 @@
                 "symfony/filesystem": "^5.4 || ^6.4 || ^7.0",
                 "symfony/options-resolver": "^5.4 || ^6.4 || ^7.0",
                 "symfony/yaml": "^5.4 || ^6.4 || ^7.0"
+            },
+            "conflict": {
+                "cuyz/valinor": "2.2.1"
             },
             "require-dev": {
                 "armin/editorconfig-cli": "^2.0",
@@ -2571,9 +2574,9 @@
             "description": "Composer plugin to bump project versions during release preparations",
             "support": {
                 "issues": "https://github.com/eliashaeussler/version-bumper/issues",
-                "source": "https://github.com/eliashaeussler/version-bumper/tree/3.0.1"
+                "source": "https://github.com/eliashaeussler/version-bumper/tree/3.0.2"
             },
-            "time": "2025-07-15T08:32:17+00:00"
+            "time": "2025-10-13T05:10:37+00:00"
         },
         {
             "name": "ergebnis/composer-normalize",
