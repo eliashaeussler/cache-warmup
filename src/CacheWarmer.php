@@ -41,7 +41,7 @@ use function is_string;
  */
 final class CacheWarmer
 {
-    public const VERSION = '4.3.1';
+    public const VERSION = '4.3.2';
 
     /**
      * @var array<string, Sitemap\Url>
