@@ -68,7 +68,7 @@ final class EnvironmentVariablesConfigAdapterTest extends Framework\TestCase
         $this->expectExceptionObject(new Src\Exception\OptionsAreMalformed('foo'));
 
         $this->testWithEnvironment(
-            fn () => $this->subject->get(),
+            $this->subject->get(...),
             [
                 'CACHE_WARMUP_CLIENT_OPTIONS' => 'foo',
             ],
@@ -92,7 +92,7 @@ final class EnvironmentVariablesConfigAdapterTest extends Framework\TestCase
         $this->expectExceptionObject(new Src\Exception\OptionsAreMalformed('foo'));
 
         $this->testWithEnvironment(
-            fn () => $this->subject->get(),
+            $this->subject->get(...),
             [
                 'CACHE_WARMUP_CRAWLER_OPTIONS' => 'foo',
             ],
@@ -105,7 +105,7 @@ final class EnvironmentVariablesConfigAdapterTest extends Framework\TestCase
         $this->expectExceptionObject(new Src\Exception\CrawlerDoesNotExist('foo'));
 
         $this->testWithEnvironment(
-            fn () => $this->subject->get(),
+            $this->subject->get(...),
             [
                 'CACHE_WARMUP_CRAWLER' => 'foo',
             ],
@@ -129,7 +129,7 @@ final class EnvironmentVariablesConfigAdapterTest extends Framework\TestCase
         $this->expectExceptionObject(new Src\Exception\OptionsAreMalformed('foo'));
 
         $this->testWithEnvironment(
-            fn () => $this->subject->get(),
+            $this->subject->get(...),
             [
                 'CACHE_WARMUP_PARSER_OPTIONS' => 'foo',
             ],
@@ -142,7 +142,7 @@ final class EnvironmentVariablesConfigAdapterTest extends Framework\TestCase
         $this->expectExceptionObject(new Src\Exception\ParserDoesNotExist('foo'));
 
         $this->testWithEnvironment(
-            fn () => $this->subject->get(),
+            $this->subject->get(...),
             [
                 'CACHE_WARMUP_PARSER' => 'foo',
             ],
@@ -252,7 +252,7 @@ final class EnvironmentVariablesConfigAdapterTest extends Framework\TestCase
         $this->expectExceptionCode(1708635629);
 
         $this->testWithEnvironment(
-            fn () => $this->subject->get(),
+            $this->subject->get(...),
             [
                 // Must be a non-negative integer
                 'CACHE_WARMUP_LIMIT' => 'foo',
