@@ -88,7 +88,7 @@ jobs:
         working-directory: .build/coverage
         run: sed -i 's#/home/runner/work/cache-warmup/cache-warmup#${{ github.workspace }}#g' clover.xml
       - name: Upload coverage artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: coverage
           path: .build/coverage/clover.xml
@@ -106,7 +106,7 @@ jobs:
       # Download artifact
       - name: Download coverage artifact
         id: download
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: coverage
 
