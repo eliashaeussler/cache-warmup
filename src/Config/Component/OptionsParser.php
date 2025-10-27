@@ -73,7 +73,7 @@ final readonly class OptionsParser
         }
 
         // Handle non-associative-array options
-        if ($result !== array_filter($result, 'is_string', ARRAY_FILTER_USE_KEY)) {
+        if ($result !== array_filter($result, is_string(...), ARRAY_FILTER_USE_KEY)) {
             throw new Exception\OptionsAreInvalid();
         }
 
