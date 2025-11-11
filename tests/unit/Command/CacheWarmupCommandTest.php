@@ -746,7 +746,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
     }
 
     /**
-     * @param array{concurrency: int}|string $parserOptions
+     * @param array{request_headers: array<string, string>}|string $parserOptions
      */
     #[Framework\Attributes\Test]
     #[Framework\Attributes\DataProvider('executeUsesParserOptionsDataProvider')]
