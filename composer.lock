@@ -2285,21 +2285,21 @@
         },
         {
             "name": "eliashaeussler/php-cs-fixer-config",
-            "version": "2.3.0",
+            "version": "2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/php-cs-fixer-config.git",
-                "reference": "130111f9aef350910bd2224cd244e6e1b8b5ba82"
+                "reference": "b2a2e4f659ad17d6a052edf412181f5cb93b5d90"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/php-cs-fixer-config/zipball/130111f9aef350910bd2224cd244e6e1b8b5ba82",
-                "reference": "130111f9aef350910bd2224cd244e6e1b8b5ba82",
+                "url": "https://api.github.com/repos/eliashaeussler/php-cs-fixer-config/zipball/b2a2e4f659ad17d6a052edf412181f5cb93b5d90",
+                "reference": "b2a2e4f659ad17d6a052edf412181f5cb93b5d90",
                 "shasum": ""
             },
             "require": {
                 "friendsofphp/php-cs-fixer": "^3.14",
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
+                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
                 "symfony/finder": "^5.4 || ^6.0 || ^7.0"
             },
             "require-dev": {
@@ -2332,9 +2332,9 @@
             "description": "My personal configuration for PHP-CS-Fixer",
             "support": {
                 "issues": "https://github.com/eliashaeussler/php-cs-fixer-config/issues",
-                "source": "https://github.com/eliashaeussler/php-cs-fixer-config/tree/2.3.0"
+                "source": "https://github.com/eliashaeussler/php-cs-fixer-config/tree/2.4.0"
             },
-            "time": "2025-05-18T14:45:22+00:00"
+            "time": "2025-11-14T10:43:52+00:00"
         },
         {
             "name": "eliashaeussler/phpstan-config",
