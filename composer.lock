@@ -2399,21 +2399,21 @@
         },
         {
             "name": "eliashaeussler/rector-config",
-            "version": "3.1.1",
+            "version": "3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/rector-config.git",
-                "reference": "7b560e5b99f6bbfa806b8e3f338e8314925f70cb"
+                "reference": "980f3044779472eef1cff3d76116ab92fa64e567"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/rector-config/zipball/7b560e5b99f6bbfa806b8e3f338e8314925f70cb",
-                "reference": "7b560e5b99f6bbfa806b8e3f338e8314925f70cb",
+                "url": "https://api.github.com/repos/eliashaeussler/rector-config/zipball/980f3044779472eef1cff3d76116ab92fa64e567",
+                "reference": "980f3044779472eef1cff3d76116ab92fa64e567",
                 "shasum": ""
             },
             "require": {
                 "composer-runtime-api": "^2.0",
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
+                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
                 "rector/rector": "^1.2.9 || ^2.0"
             },
             "require-dev": {
@@ -2428,7 +2428,7 @@
                 "phpunit/phpunit": "^10.5.10 || ^11.0 || ^12.0",
                 "ssch/typo3-rector": "^2.0 || ^3.0",
                 "symfony/config": "^5.4 || ^6.0 || ^7.0",
-                "typo3/cms-core": "^12.4 || ^13.0"
+                "typo3/cms-core": "^12.4 || ^13.4"
             },
             "suggest": {
                 "ssch/typo3-rector": "Configures additional Rector rules for TYPO3 CMS projects (^2.0 || ^3.0)"
@@ -2454,9 +2454,9 @@
             "description": "My personal configuration for Rector",
             "support": {
                 "issues": "https://github.com/eliashaeussler/rector-config/issues",
-                "source": "https://github.com/eliashaeussler/rector-config/tree/3.1.1"
+                "source": "https://github.com/eliashaeussler/rector-config/tree/3.2.0"
             },
-            "time": "2025-03-19T06:55:11+00:00"
+            "time": "2025-11-14T11:25:05+00:00"
         },
         {
             "name": "eliashaeussler/transient-logger",
