@@ -2230,21 +2230,21 @@
         },
         {
             "name": "eliashaeussler/deep-closure-comparator",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/deep-closure-comparator.git",
-                "reference": "a84e20dc0c6f9b7b7a719c5a384d514dbf947f73"
+                "reference": "6b1e88d9aa88f31e1cee316507455a3c1b3ca91a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/deep-closure-comparator/zipball/a84e20dc0c6f9b7b7a719c5a384d514dbf947f73",
-                "reference": "a84e20dc0c6f9b7b7a719c5a384d514dbf947f73",
+                "url": "https://api.github.com/repos/eliashaeussler/deep-closure-comparator/zipball/6b1e88d9aa88f31e1cee316507455a3c1b3ca91a",
+                "reference": "6b1e88d9aa88f31e1cee316507455a3c1b3ca91a",
                 "shasum": ""
             },
             "require": {
                 "opis/closure": "^4.0",
-                "php": "~8.2.0 || ~8.3.0 || ~8.4.0",
+                "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
                 "phpunit/phpunit": "^10.5 || ^11.5 || ^12.3",
                 "sebastian/comparator": "^5.0 || ^6.3 || ^7.0"
             },
@@ -2279,9 +2279,9 @@
             "description": "Provides a PHPUnit comparator to assert equality of closures",
             "support": {
                 "issues": "https://github.com/eliashaeussler/deep-closure-comparator/issues",
-                "source": "https://github.com/eliashaeussler/deep-closure-comparator/tree/1.1.0"
+                "source": "https://github.com/eliashaeussler/deep-closure-comparator/tree/1.2.0"
             },
-            "time": "2025-08-26T07:52:15+00:00"
+            "time": "2025-11-14T14:11:56+00:00"
         },
         {
             "name": "eliashaeussler/php-cs-fixer-config",
