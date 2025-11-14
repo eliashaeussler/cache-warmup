@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d89a7f1f5e13ebb1d540d50732287604",
+    "content-hash": "032e076d716eb9df47544737c6fe7177",
     "packages": [
         {
             "name": "cuyz/valinor",
@@ -2338,20 +2338,20 @@
         },
         {
             "name": "eliashaeussler/phpstan-config",
-            "version": "2.9.0",
+            "version": "2.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/phpstan-config.git",
-                "reference": "715bc0cdb811d4237445f7f2f694257f9cc87df5"
+                "reference": "b3f34fb85828790237c3d7bf60da5cd89f337a52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/phpstan-config/zipball/715bc0cdb811d4237445f7f2f694257f9cc87df5",
-                "reference": "715bc0cdb811d4237445f7f2f694257f9cc87df5",
+                "url": "https://api.github.com/repos/eliashaeussler/phpstan-config/zipball/b3f34fb85828790237c3d7bf60da5cd89f337a52",
+                "reference": "b3f34fb85828790237c3d7bf60da5cd89f337a52",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
+                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
                 "phpstan/phpstan": "^1.9 || ^2.0",
                 "phpstan/phpstan-deprecation-rules": "^1.1 || ^2.0",
                 "phpstan/phpstan-strict-rules": "^1.4 || ^2.0"
@@ -2393,27 +2393,27 @@
             "description": "My personal configuration for PHPStan",
             "support": {
                 "issues": "https://github.com/eliashaeussler/phpstan-config/issues",
-                "source": "https://github.com/eliashaeussler/phpstan-config/tree/2.9.0"
+                "source": "https://github.com/eliashaeussler/phpstan-config/tree/2.10.0"
             },
-            "time": "2025-04-28T16:43:48+00:00"
+            "time": "2025-11-14T11:29:08+00:00"
         },
         {
             "name": "eliashaeussler/rector-config",
-            "version": "3.1.1",
+            "version": "3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/rector-config.git",
-                "reference": "7b560e5b99f6bbfa806b8e3f338e8314925f70cb"
+                "reference": "980f3044779472eef1cff3d76116ab92fa64e567"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/rector-config/zipball/7b560e5b99f6bbfa806b8e3f338e8314925f70cb",
-                "reference": "7b560e5b99f6bbfa806b8e3f338e8314925f70cb",
+                "url": "https://api.github.com/repos/eliashaeussler/rector-config/zipball/980f3044779472eef1cff3d76116ab92fa64e567",
+                "reference": "980f3044779472eef1cff3d76116ab92fa64e567",
                 "shasum": ""
             },
             "require": {
                 "composer-runtime-api": "^2.0",
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
+                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
                 "rector/rector": "^1.2.9 || ^2.0"
             },
             "require-dev": {
@@ -2428,7 +2428,7 @@
                 "phpunit/phpunit": "^10.5.10 || ^11.0 || ^12.0",
                 "ssch/typo3-rector": "^2.0 || ^3.0",
                 "symfony/config": "^5.4 || ^6.0 || ^7.0",
-                "typo3/cms-core": "^12.4 || ^13.0"
+                "typo3/cms-core": "^12.4 || ^13.4"
             },
             "suggest": {
                 "ssch/typo3-rector": "Configures additional Rector rules for TYPO3 CMS projects (^2.0 || ^3.0)"
@@ -2454,26 +2454,26 @@
             "description": "My personal configuration for Rector",
             "support": {
                 "issues": "https://github.com/eliashaeussler/rector-config/issues",
-                "source": "https://github.com/eliashaeussler/rector-config/tree/3.1.1"
+                "source": "https://github.com/eliashaeussler/rector-config/tree/3.2.0"
             },
-            "time": "2025-03-19T06:55:11+00:00"
+            "time": "2025-11-14T11:25:05+00:00"
         },
         {
             "name": "eliashaeussler/transient-logger",
-            "version": "1.0.1",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/transient-logger.git",
-                "reference": "e2f6a167f070400f1bf22fcef670dfcebdd3979c"
+                "reference": "ef4da9b58bafd65c52c09d5b630654c44414aead"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/transient-logger/zipball/e2f6a167f070400f1bf22fcef670dfcebdd3979c",
-                "reference": "e2f6a167f070400f1bf22fcef670dfcebdd3979c",
+                "url": "https://api.github.com/repos/eliashaeussler/transient-logger/zipball/ef4da9b58bafd65c52c09d5b630654c44414aead",
+                "reference": "ef4da9b58bafd65c52c09d5b630654c44414aead",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
+                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
                 "psr/log": "^1.0 || ^2.0 || ^3.0"
             },
             "provide": {
@@ -2486,8 +2486,8 @@
                 "eliashaeussler/rector-config": "^3.0",
                 "ergebnis/composer-normalize": "^2.39",
                 "phpstan/extension-installer": "^1.3",
-                "phpstan/phpstan-phpunit": "^1.3",
-                "phpunit/phpunit": "^10.4 || ^11.0"
+                "phpstan/phpstan-phpunit": "^2.0",
+                "phpunit/phpunit": "^10.4 || ^11.0 || ^12.0"
             },
             "type": "library",
             "autoload": {
@@ -2510,29 +2510,29 @@
             "description": "PSR-3 compliant logger to store logs in memory, especially useful for testing",
             "support": {
                 "issues": "https://github.com/eliashaeussler/transient-logger/issues",
-                "source": "https://github.com/eliashaeussler/transient-logger/tree/1.0.1"
+                "source": "https://github.com/eliashaeussler/transient-logger/tree/1.1.0"
             },
-            "time": "2024-11-26T20:36:35+00:00"
+            "time": "2025-11-14T14:25:37+00:00"
         },
         {
             "name": "eliashaeussler/version-bumper",
-            "version": "3.0.2",
+            "version": "3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/version-bumper.git",
-                "reference": "2a2905a63015548d6ee961428bf11a980c5afe94"
+                "reference": "cb380fa4e6c488cb595aee1bfa08cf0570efff6f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/version-bumper/zipball/2a2905a63015548d6ee961428bf11a980c5afe94",
-                "reference": "2a2905a63015548d6ee961428bf11a980c5afe94",
+                "url": "https://api.github.com/repos/eliashaeussler/version-bumper/zipball/cb380fa4e6c488cb595aee1bfa08cf0570efff6f",
+                "reference": "cb380fa4e6c488cb595aee1bfa08cf0570efff6f",
                 "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^2.0",
                 "cuyz/valinor": "^2.0",
                 "cypresslab/gitelephant": "^4.5",
-                "php": "~8.2.0 || ~8.3.0 || ~8.4.0",
+                "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
                 "symfony/console": "^5.4 || ^6.4 || ^7.0",
                 "symfony/filesystem": "^5.4 || ^6.4 || ^7.0",
                 "symfony/options-resolver": "^5.4 || ^6.4 || ^7.0",
@@ -2578,9 +2578,9 @@
             "description": "Composer plugin to bump project versions during release preparations",
             "support": {
                 "issues": "https://github.com/eliashaeussler/version-bumper/issues",
-                "source": "https://github.com/eliashaeussler/version-bumper/tree/3.0.2"
+                "source": "https://github.com/eliashaeussler/version-bumper/tree/3.1.0"
             },
-            "time": "2025-10-13T05:10:37+00:00"
+            "time": "2025-11-14T17:13:18+00:00"
         },
         {
             "name": "ergebnis/composer-normalize",
@@ -6943,7 +6943,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "~8.2.0 || ~8.3.0 || ~8.4.0",
+        "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
         "ext-filter": "*",
         "ext-json": "*",
         "ext-libxml": "*",

@@ -5,5 +5,20 @@
 	],
 	"constraints": {
 		"php": "8.2.*"
-	}
+	},
+	"packageRules": [
+		{
+			"enabled": false,
+			"matchCurrentVersion": "8.2",
+			"matchDatasources": [
+				"github-tags"
+			],
+			"matchDepNames": [
+				"php"
+			],
+			"matchFileNames": [
+				".github/workflows/cgl.yaml"
+			]
+		}
+	]
 }
