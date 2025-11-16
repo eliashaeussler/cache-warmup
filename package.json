@@ -18,12 +18,13 @@
 		"vitepress-plugin-group-icons": "^1.3.6"
 	},
 	"devDependencies": {
-		"@types/node": "^24.0.0",
-		"depcheck": "^1.4.7",
-		"markdown-it-replace-link": "^1.2.1"
+		"@types/node": "^24.10.1",
+		"knip": "^5.69.1",
+		"markdown-it-replace-link": "^1.2.1",
+		"typescript": "^5.9.3"
 	},
 	"scripts": {
-		"check-dependencies": "depcheck",
+		"check-dependencies": "knip",
 		"docs:dev": "vitepress dev docs --open",
 		"docs:build": "vitepress build docs",
 		"docs:preview": "vitepress preview docs --open"

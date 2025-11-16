@@ -1,0 +1,12 @@
+{
+	"$schema": "https://unpkg.com/knip@5/schema.json",
+	"include": [
+		"dependencies"
+	],
+	"ignoreDependencies": [
+		"@iconify-json/simple-icons",
+		"markdown-it-replace-link",
+		"vite",
+		"vitepress-plugin-group-icons"
+	]
+}

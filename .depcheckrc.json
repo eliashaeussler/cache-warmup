@@ -1,7 +1,0 @@
-{
-	"ignores": [
-		"@iconify-json/simple-icons",
-		"vite"
-	],
-	"skip-missing": true
-}
