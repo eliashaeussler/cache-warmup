@@ -24,7 +24,7 @@
 		"typescript": "^5.9.3"
 	},
 	"scripts": {
-		"check-dependencies": "knip",
+		"check-dependencies": "knip -c build/knip.json",
 		"docs:dev": "vitepress dev docs --open",
 		"docs:build": "vitepress build docs",
 		"docs:preview": "vitepress preview docs --open"

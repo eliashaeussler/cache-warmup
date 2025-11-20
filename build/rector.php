@@ -21,20 +21,26 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use EliasHaeussler\PhpCsFixerConfig;
-use Symfony\Component\Finder;
+use EliasHaeussler\RectorConfig\Config\Config;
+use Rector\Config\RectorConfig;
+use Rector\Php80\Rector\Class_\AnnotationToAttributeRector;
+use Rector\ValueObject\PhpVersion;
 
-$header = PhpCsFixerConfig\Rules\Header::create(
-    'eliashaeussler/cache-warmup',
-    PhpCsFixerConfig\Package\Type::ComposerPackage,
-    PhpCsFixerConfig\Package\Author::create('Elias Häußler', 'elias@haeussler.dev'),
-    PhpCsFixerConfig\Package\CopyrightRange::from(2020),
-    PhpCsFixerConfig\Package\License::GPL3OrLater,
-);
+return static function (RectorConfig $rectorConfig): void {
+    $rootPath = dirname(__DIR__);
 
-return PhpCsFixerConfig\Config::create()
-    ->withRule($header)
-    ->withFinder(
-        static fn (Finder\Finder $finder) => $finder->in(__DIR__)->name(['cache-warmup', '*.php']),
-    )
-;
+    Config::create($rectorConfig, PhpVersion::PHP_82)
+        ->in(
+            $rootPath.'/src',
+            $rootPath.'/tests',
+        )
+        ->withPHPUnit()
+        ->skip(
+            AnnotationToAttributeRector::class,
+            [
+                $rootPath.'/src/Formatter/JsonFormatter.php',
+            ],
+        )
+        ->apply()
+    ;
+};
