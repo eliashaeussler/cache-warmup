@@ -4,82 +4,82 @@ parameters:
 			rawMessage: Instanceof between EliasHaeussler\CacheWarmup\Sitemap\Sitemap and EliasHaeussler\CacheWarmup\Sitemap\Sitemap will always evaluate to true.
 			identifier: instanceof.alwaysTrue
 			count: 1
-			path: src/CacheWarmer.php
+			path: ../src/CacheWarmer.php
 
 		-
 			rawMessage: 'Variable property access on $this(EliasHaeussler\CacheWarmup\Config\CacheWarmupConfig).'
 			identifier: property.dynamicName
 			count: 1
-			path: src/Config/CacheWarmupConfig.php
+			path: ../src/Config/CacheWarmupConfig.php
 
 		-
 			rawMessage: 'Property EliasHaeussler\CacheWarmup\Crawler\AbstractConfigurableCrawler<TOptions of array<string, mixed>>::$options (TOptions of array<string, mixed>) does not accept array.'
 			identifier: assign.propertyType
 			count: 1
-			path: src/Crawler/AbstractConfigurableCrawler.php
+			path: ../src/Crawler/AbstractConfigurableCrawler.php
 
 		-
 			rawMessage: 'Property EliasHaeussler\CacheWarmup\Formatter\JsonFormatter::$json (array{parserResult?: array{success?: array{sitemaps: list<string>, urls: list<string>}, failure?: array{sitemaps: list<string>}, excluded?: array{sitemaps: list<string>, urls: list<string>}}, cacheWarmupResult?: array{success?: list<string>, failure?: list<string>, cancelled?: bool}, messages?: array<''error''|''info''|''success''|''warning'', list<string>>, time?: array{parse?: string, crawl?: string}}) does not accept iterable<string, mixed>.'
 			identifier: assign.propertyType
 			count: 2
-			path: src/Formatter/JsonFormatter.php
+			path: ../src/Formatter/JsonFormatter.php
 
 		-
 			rawMessage: 'Parameter #1 $level (''alert''|''critical''|''debug''|''emergency''|''error''|''info''|''notice''|''warning'') of method EliasHaeussler\CacheWarmup\Log\FileLogger::log() should be contravariant with parameter $level (mixed) of method Psr\Log\AbstractLogger::log()'
 			identifier: method.childParameterType
 			count: 1
-			path: src/Log/FileLogger.php
+			path: ../src/Log/FileLogger.php
 
 		-
 			rawMessage: 'Parameter #1 $level (''alert''|''critical''|''debug''|''emergency''|''error''|''info''|''notice''|''warning'') of method EliasHaeussler\CacheWarmup\Log\FileLogger::log() should be contravariant with parameter $level (mixed) of method Psr\Log\LoggerInterface::log()'
 			identifier: method.childParameterType
 			count: 1
-			path: src/Log/FileLogger.php
+			path: ../src/Log/FileLogger.php
 
 		-
 			rawMessage: 'Parameter #1 $level (''alert''|''critical''|''debug''|''emergency''|''error''|''info''|''notice''|''warning'') of method EliasHaeussler\CacheWarmup\Log\FileLogger::log() should be contravariant with parameter $level (mixed) of method Psr\Log\LoggerTrait::log()'
 			identifier: method.childParameterType
 			count: 1
-			path: src/Log/FileLogger.php
+			path: ../src/Log/FileLogger.php
 
 		-
 			rawMessage: 'Parameter #3 $context (array<string, mixed>) of method EliasHaeussler\CacheWarmup\Log\FileLogger::log() should be contravariant with parameter $context (array<mixed>) of method Psr\Log\AbstractLogger::log()'
 			identifier: method.childParameterType
 			count: 1
-			path: src/Log/FileLogger.php
+			path: ../src/Log/FileLogger.php
 
 		-
 			rawMessage: 'Parameter #3 $context (array<string, mixed>) of method EliasHaeussler\CacheWarmup\Log\FileLogger::log() should be contravariant with parameter $context (array<mixed>) of method Psr\Log\LoggerInterface::log()'
 			identifier: method.childParameterType
 			count: 1
-			path: src/Log/FileLogger.php
+			path: ../src/Log/FileLogger.php
 
 		-
 			rawMessage: 'Parameter #3 $context (array<string, mixed>) of method EliasHaeussler\CacheWarmup\Log\FileLogger::log() should be contravariant with parameter $context (array<mixed>) of method Psr\Log\LoggerTrait::log()'
 			identifier: method.childParameterType
 			count: 1
-			path: src/Log/FileLogger.php
+			path: ../src/Log/FileLogger.php
 
 		-
 			rawMessage: 'Parameter #1 $sitemaps of method EliasHaeussler\CacheWarmup\CacheWarmer::addSitemaps() expects EliasHaeussler\CacheWarmup\Sitemap\Sitemap|list<EliasHaeussler\CacheWarmup\Sitemap\Sitemap|string>|string, array{false} given.'
 			identifier: argument.type
 			count: 1
-			path: tests/unit/CacheWarmerTest.php
+			path: ../tests/unit/CacheWarmerTest.php
 
 		-
 			rawMessage: 'Parameter #1 $limit of method EliasHaeussler\CacheWarmup\Config\CacheWarmupConfig::setLimit() expects int<0, max>, -10 given.'
 			identifier: argument.type
 			count: 1
-			path: tests/unit/Config/CacheWarmupConfigTest.php
+			path: ../tests/unit/Config/CacheWarmupConfigTest.php
 
 		-
 			rawMessage: 'Parameter #1 $crawlerClass of method EliasHaeussler\CacheWarmup\Crawler\CrawlerFactory::get() expects class-string<EliasHaeussler\CacheWarmup\Crawler\Crawler>, string given.'
 			identifier: argument.type
 			count: 2
-			path: tests/unit/Crawler/CrawlerFactoryTest.php
+			path: ../tests/unit/Crawler/CrawlerFactoryTest.php
 
 		-
 			rawMessage: 'Call to static method PHPUnit\Framework\Assert::assertSame() with ''foo'' and ''foo'' will always evaluate to true.'
 			identifier: staticMethod.alreadyNarrowedType
 			count: 1
-			path: tests/unit/Time/TimeTrackerTest.php
+			path: ../tests/unit/Time/TimeTrackerTest.php

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
-         bootstrap="vendor/autoload.php"
-         cacheDirectory=".build/cache/phpunit"
+         xsi:noNamespaceSchemaLocation="../vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="../vendor/autoload.php"
+         cacheDirectory="../.build/cache/phpunit"
          colors="true"
          failOnDeprecation="true"
          failOnNotice="true"
@@ -17,22 +17,22 @@
     </php>
     <testsuites>
         <testsuite name="tests">
-            <directory>tests/unit</directory>
+            <directory>../tests/unit</directory>
         </testsuite>
     </testsuites>
     <coverage>
         <report>
-            <clover outputFile=".build/coverage/clover.xml"/>
-            <html outputDirectory=".build/coverage/html"/>
+            <clover outputFile="../.build/coverage/clover.xml"/>
+            <html outputDirectory="../.build/coverage/html"/>
             <text outputFile="php://stdout" showOnlySummary="true"/>
         </report>
     </coverage>
     <logging>
-        <junit outputFile=".build/coverage/junit.xml"/>
+        <junit outputFile="../.build/coverage/junit.xml"/>
     </logging>
     <source>
         <include>
-            <directory>src</directory>
+            <directory>../src</directory>
         </include>
     </source>
 </phpunit>

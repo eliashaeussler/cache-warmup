@@ -21,25 +21,22 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use EliasHaeussler\PHPStanConfig;
+use EliasHaeussler\PhpCsFixerConfig;
+use Symfony\Component\Finder;
 
-$symfonySet = PHPStanConfig\Set\SymfonySet::create()
-    ->withConsoleApplicationLoader('tests/build/console-application.php')
-;
+$rootPath = dirname(__DIR__);
+$header = PhpCsFixerConfig\Rules\Header::create(
+    'eliashaeussler/cache-warmup',
+    PhpCsFixerConfig\Package\Type::ComposerPackage,
+    PhpCsFixerConfig\Package\Author::create('Elias Häußler', 'elias@haeussler.dev'),
+    PhpCsFixerConfig\Package\CopyrightRange::from(2020),
+    PhpCsFixerConfig\Package\License::GPL3OrLater,
+);
 
-return PHPStanConfig\Config\Config::create(__DIR__)
-    ->in(
-        'bin/cache-warmup',
-        'src',
-        'tests',
+return PhpCsFixerConfig\Config::create()
+    ->withRule($header)
+    ->withFinder(
+        static fn (Finder\Finder $finder) => $finder->in($rootPath)->name(['cache-warmup', '*.php']),
     )
-    ->withBaseline()
-    ->withBleedingEdge()
-    ->with(
-        'vendor/cuyz/valinor/qa/PHPStan/valinor-phpstan-configuration.php',
-        'vendor/cuyz/valinor/qa/PHPStan/valinor-phpstan-suppress-pure-errors.php',
-    )
-    ->maxLevel()
-    ->withSets($symfonySet)
-    ->toArray()
+    ->setCacheFile($rootPath.'/.build/cache/php-cs-fixer.cache')
 ;

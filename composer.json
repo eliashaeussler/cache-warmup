@@ -37,7 +37,7 @@
 		"armin/editorconfig-cli": "^2.0",
 		"eliashaeussler/deep-closure-comparator": "^1.2.1",
 		"eliashaeussler/php-cs-fixer-config": "^3.0",
-		"eliashaeussler/phpstan-config": "^2.0",
+		"eliashaeussler/phpstan-config": "^3.0",
 		"eliashaeussler/rector-config": "^3.0",
 		"eliashaeussler/transient-logger": "^2.0",
 		"eliashaeussler/version-bumper": "^3.0",
@@ -71,11 +71,16 @@
 		},
 		"sort-packages": true
 	},
+	"extra": {
+		"version-bumper": {
+			"config-file": "build/version-bumper.yaml"
+		}
+	},
 	"scripts": {
 		"analyze": [
 			"@analyze:dependencies"
 		],
-		"analyze:dependencies": "composer-dependency-analyser",
+		"analyze:dependencies": "composer-dependency-analyser --config build/composer-dependency-analyser.php",
 		"fix": [
 			"@fix:composer",
 			"@fix:editorconfig",
@@ -83,7 +88,7 @@
 		],
 		"fix:composer": "@composer normalize",
 		"fix:editorconfig": "@lint:editorconfig --fix",
-		"fix:php": "php-cs-fixer fix",
+		"fix:php": "php-cs-fixer fix --config build/.php-cs-fixer.php",
 		"lint": [
 			"@lint:composer",
 			"@lint:editorconfig",
@@ -95,11 +100,11 @@
 		"migration": [
 			"@migration:rector"
 		],
-		"migration:rector": "rector process -c rector.php",
+		"migration:rector": "rector process -c build/rector.php",
 		"sca": [
 			"@sca:php"
 		],
-		"sca:php": "phpstan analyse -c phpstan.php",
+		"sca:php": "phpstan analyse -c build/phpstan.php",
 		"test": [
 			"@test:e2e",
 			"@test:unit"
@@ -108,6 +113,6 @@
 		"test:e2e:docker": "@test:e2e docker",
 		"test:e2e:phar": "@test:e2e phar",
 		"test:unit": "@test:unit:coverage --no-coverage",
-		"test:unit:coverage": "phpunit -c phpunit.xml"
+		"test:unit:coverage": "phpunit -c build/phpunit.xml"
 	}
 }

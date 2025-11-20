@@ -1,5 +1,0 @@
-{
-	"symbol-whitelist": [
-		"Symfony\\Component\\Config\\ConfigCache"
-	]
-}
