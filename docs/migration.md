@@ -8,6 +8,20 @@ You can find all pull requests with breaking changes on
 [GitHub](https://github.com/eliashaeussler/cache-warmup/pulls?q=is%3Apr+is%3Amerged+label%3Abreaking).
 :::
 
+## 4.x → 5.x
+
+### Removed deprecated functionality ([#574])
+
+The deprecated class `EliasHaeussler\CacheWarmup\Helper\VersionHelper` has
+been removed. Usages of the only available method `getCurrentVersion` can
+be replaced by accessing the `EliasHaeussler\CacheWarmup\CacheWarmer::VERSION`
+constant:
+
+```diff
+-$version = \EliasHaeussler\CacheWarmup\Helper\VersionHelper::getCurrentVersion();
++$version = \EliasHaeussler\CacheWarmup\CacheWarmer::VERSION;
+```
+
 ## 3.x → 4.x
 
 ### New XML parser component ([#422])
@@ -80,3 +94,4 @@ specific events.
 [#442]: https://github.com/eliashaeussler/cache-warmup/pull/442
 [#447]: https://github.com/eliashaeussler/cache-warmup/pull/447
 [#450]: https://github.com/eliashaeussler/cache-warmup/pull/450
+[#574]: https://github.com/eliashaeussler/cache-warmup/pull/574
