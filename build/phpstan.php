@@ -23,12 +23,7 @@ declare(strict_types=1);
 
 use EliasHaeussler\PHPStanConfig;
 
-$config = PHPStanConfig\Config\Config::create(dirname(__DIR__));
-$config->createSet(PHPStanConfig\Set\SymfonySet::class)
-    ->withConsoleApplicationLoader('tests/build/console-application.php')
-;
-
-return $config
+return PHPStanConfig\Config\Config::create(dirname(__DIR__))
     ->in(
         'bin/cache-warmup',
         'src',
@@ -40,6 +35,9 @@ return $config
         'vendor/cuyz/valinor/qa/PHPStan/valinor-phpstan-configuration.php',
         'vendor/cuyz/valinor/qa/PHPStan/valinor-phpstan-suppress-pure-errors.php',
     )
+    ->withSet(static function (PHPStanConfig\Set\SymfonySet $set) {
+        $set->withConsoleApplicationLoader('tests/build/console-application.php');
+    })
     ->useCacheDir('.build/cache/phpstan')
     ->maxLevel()
     ->toArray()
