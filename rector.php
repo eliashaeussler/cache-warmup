@@ -37,7 +37,6 @@ return static function (RectorConfig $rectorConfig): void {
             AnnotationToAttributeRector::class,
             [
                 __DIR__.'/src/Formatter/JsonFormatter.php',
-                __DIR__.'/src/Helper/VersionHelper.php',
             ],
         )
         ->apply()
