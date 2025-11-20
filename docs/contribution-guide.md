@@ -22,6 +22,16 @@ cd cache-warmup
 composer install
 ```
 
+## Run code analyzers
+
+```bash
+# All analyzers
+composer analyze
+
+# Specific analyzers
+composer analyze:dependencies
+```
+
 ## Run linters
 
 ```bash

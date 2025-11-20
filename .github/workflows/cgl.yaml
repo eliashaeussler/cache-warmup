@@ -28,7 +28,7 @@ jobs:
           # We use the minimum supported PHP version
           php-version: 8.2
           ini-file: development
-          tools: composer:v2, composer-require-checker, composer-unused
+          tools: composer:v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup Node
@@ -48,14 +48,14 @@ jobs:
         run: npm ci
 
       # Audit packages
-      - name: Audit Frontend dependencies
+      - name: Audit Composer dependencies
         run: npm audit
+      - name: Audit Frontend dependencies
+        run: composer audit
 
-      # Check dependencies
-      - name: Check Composer dependencies
-        run: composer-require-checker check --config-file dependency-checker.json
-      - name: Check for unused Composer dependencies
-        run: composer-unused --excludePackage=ext-zlib
+      # Analyze
+      - name: Analyze Composer dependencies
+        run: composer analyze:dependencies
       - name: Check for unused Frontend dependencies
         run: npm run check-dependencies
 
