@@ -36,7 +36,7 @@
 	"require-dev": {
 		"armin/editorconfig-cli": "^2.0",
 		"eliashaeussler/deep-closure-comparator": "^1.0",
-		"eliashaeussler/php-cs-fixer-config": "^2.0",
+		"eliashaeussler/php-cs-fixer-config": "^3.0",
 		"eliashaeussler/phpstan-config": "^2.0",
 		"eliashaeussler/rector-config": "^3.0",
 		"eliashaeussler/transient-logger": "^2.0",

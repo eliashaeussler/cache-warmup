@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "36c0e721c7dbfd98f06ec53fe1b65dc9",
+    "content-hash": "9a25e521ca710a954588bd857e2921a0",
     "packages": [
         {
             "name": "cuyz/valinor",
@@ -2285,31 +2285,31 @@
         },
         {
             "name": "eliashaeussler/php-cs-fixer-config",
-            "version": "2.4.0",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/php-cs-fixer-config.git",
-                "reference": "b2a2e4f659ad17d6a052edf412181f5cb93b5d90"
+                "reference": "8fa434acfb37446bcbadf651715984a1ee9f4a3a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/php-cs-fixer-config/zipball/b2a2e4f659ad17d6a052edf412181f5cb93b5d90",
-                "reference": "b2a2e4f659ad17d6a052edf412181f5cb93b5d90",
+                "url": "https://api.github.com/repos/eliashaeussler/php-cs-fixer-config/zipball/8fa434acfb37446bcbadf651715984a1ee9f4a3a",
+                "reference": "8fa434acfb37446bcbadf651715984a1ee9f4a3a",
                 "shasum": ""
             },
             "require": {
                 "friendsofphp/php-cs-fixer": "^3.14",
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
+                "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
                 "symfony/finder": "^5.4 || ^6.0 || ^7.0"
             },
             "require-dev": {
-                "armin/editorconfig-cli": "^1.5 || ^2.0",
+                "armin/editorconfig-cli": "^2.0",
                 "eliashaeussler/phpstan-config": "^2.0.0",
                 "eliashaeussler/phpunit-attributes": "^1.1",
                 "eliashaeussler/rector-config": "^3.0",
                 "ergebnis/composer-normalize": "^2.29",
                 "phpstan/extension-installer": "^1.2",
-                "phpunit/phpunit": "^10.4 || ^11.0 || ^12.0"
+                "phpunit/phpunit": "^11.0 || ^12.0"
             },
             "type": "library",
             "autoload": {
@@ -2332,9 +2332,9 @@
             "description": "My personal configuration for PHP-CS-Fixer",
             "support": {
                 "issues": "https://github.com/eliashaeussler/php-cs-fixer-config/issues",
-                "source": "https://github.com/eliashaeussler/php-cs-fixer-config/tree/2.4.0"
+                "source": "https://github.com/eliashaeussler/php-cs-fixer-config/tree/3.0.0"
             },
-            "time": "2025-11-14T10:43:52+00:00"
+            "time": "2025-11-19T19:30:29+00:00"
         },
         {
             "name": "eliashaeussler/phpstan-config",
