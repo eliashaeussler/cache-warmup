@@ -13,14 +13,14 @@
 	],
 	"homepage": "https://cache-warmup.dev/",
 	"require": {
-		"php": "~8.2.0 || ~8.3.0 || ~8.4.0",
+		"php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
 		"ext-filter": "*",
 		"ext-json": "*",
 		"ext-libxml": "*",
 		"ext-mbstring": "*",
 		"ext-simplexml": "*",
 		"ext-zlib": "*",
-		"cuyz/valinor": "^2.0",
+		"cuyz/valinor": "^2.3.1",
 		"guzzlehttp/guzzle": "^7.8.2",
 		"guzzlehttp/promises": "^2.0.3",
 		"guzzlehttp/psr7": "^2.0",
@@ -35,7 +35,7 @@
 	},
 	"require-dev": {
 		"armin/editorconfig-cli": "^2.0",
-		"eliashaeussler/deep-closure-comparator": "^1.0",
+		"eliashaeussler/deep-closure-comparator": "^1.2.1",
 		"eliashaeussler/php-cs-fixer-config": "^3.0",
 		"eliashaeussler/phpstan-config": "^2.0",
 		"eliashaeussler/rector-config": "^3.0",
@@ -48,9 +48,6 @@
 		"phpunit/phpunit": "^11.5.1 || ^12.0",
 		"symfony/event-dispatcher-contracts": "^3.4.2",
 		"symfony/string": "^6.4.3 || ^7.0.3"
-	},
-	"conflict": {
-		"cuyz/valinor": "2.2.1"
 	},
 	"autoload": {
 		"psr-4": {
