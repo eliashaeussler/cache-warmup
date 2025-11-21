@@ -1823,16 +1823,16 @@
     "packages-dev": [
         {
             "name": "armin/editorconfig-cli",
-            "version": "2.1.1",
+            "version": "2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/a-r-m-i-n/editorconfig-cli.git",
-                "reference": "408dd6b11d67914f9b23fca21ea3f805157b35a0"
+                "reference": "b29e35e2f37dc03a941e1f526d087f9a16f9d734"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/a-r-m-i-n/editorconfig-cli/zipball/408dd6b11d67914f9b23fca21ea3f805157b35a0",
-                "reference": "408dd6b11d67914f9b23fca21ea3f805157b35a0",
+                "url": "https://api.github.com/repos/a-r-m-i-n/editorconfig-cli/zipball/b29e35e2f37dc03a941e1f526d087f9a16f9d734",
+                "reference": "b29e35e2f37dc03a941e1f526d087f9a16f9d734",
                 "shasum": ""
             },
             "require": {
@@ -1845,11 +1845,11 @@
                 "symfony/mime": "^5 || ^6 || ^7"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.59",
-                "jangregor/phpstan-prophecy": "^2.0",
-                "phpstan/phpstan": "^2.0",
-                "phpunit/phpunit": "^10.5",
-                "seld/phar-utils": "^1.2"
+                "friendsofphp/php-cs-fixer": "^3.90.0",
+                "jangregor/phpstan-prophecy": "^2.2.0",
+                "phpstan/phpstan": "^2.1.32",
+                "phpunit/phpunit": "^10.5.58",
+                "seld/phar-utils": "^1.2.1"
             },
             "bin": [
                 "bin/ec"
@@ -1877,7 +1877,7 @@
                 "issues": "https://github.com/a-r-m-i-n/editorconfig-cli/issues",
                 "source": "https://github.com/a-r-m-i-n/editorconfig-cli"
             },
-            "time": "2025-06-02T17:23:31+00:00"
+            "time": "2025-11-21T10:43:50+00:00"
         },
         {
             "name": "clue/ndjson-react",
