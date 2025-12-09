@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "14035a47da3e54b55628282e9751ddf2",
+    "content-hash": "0da042a4d38c2d9bfcf8e948a3e21642",
     "packages": [
         {
             "name": "cuyz/valinor",
@@ -2338,28 +2338,28 @@
         },
         {
             "name": "eliashaeussler/phpstan-config",
-            "version": "3.1.2",
+            "version": "4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/phpstan-config.git",
-                "reference": "2a772feddf1a0cef08b3bf3beb6a9866904500aa"
+                "reference": "1811522ab13e70cb0bce1ac60ecf7e3d0723b23d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/phpstan-config/zipball/2a772feddf1a0cef08b3bf3beb6a9866904500aa",
-                "reference": "2a772feddf1a0cef08b3bf3beb6a9866904500aa",
+                "url": "https://api.github.com/repos/eliashaeussler/phpstan-config/zipball/1811522ab13e70cb0bce1ac60ecf7e3d0723b23d",
+                "reference": "1811522ab13e70cb0bce1ac60ecf7e3d0723b23d",
                 "shasum": ""
             },
             "require": {
                 "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
-                "phpstan/phpstan": "^1.9 || ^2.0",
-                "phpstan/phpstan-deprecation-rules": "^1.1 || ^2.0",
-                "phpstan/phpstan-strict-rules": "^1.4 || ^2.0"
+                "phpstan/phpstan": "^2.0",
+                "phpstan/phpstan-deprecation-rules": "^2.0",
+                "phpstan/phpstan-strict-rules": "^2.0"
             },
             "require-dev": {
                 "armin/editorconfig-cli": "^2.0",
                 "eliashaeussler/php-cs-fixer-config": "^3.0",
-                "eliashaeussler/rector-config": "^3.0",
+                "eliashaeussler/rector-config": "^4.0",
                 "ergebnis/composer-normalize": "^2.29",
                 "nikic/php-parser": "*",
                 "phpstan/phpdoc-parser": "*",
@@ -2393,9 +2393,9 @@
             "description": "My personal configuration for PHPStan",
             "support": {
                 "issues": "https://github.com/eliashaeussler/phpstan-config/issues",
-                "source": "https://github.com/eliashaeussler/phpstan-config/tree/3.1.2"
+                "source": "https://github.com/eliashaeussler/phpstan-config/tree/4.0.0"
             },
-            "time": "2025-11-21T19:08:21+00:00"
+            "time": "2025-12-09T08:43:49+00:00"
         },
         {
             "name": "eliashaeussler/rector-config",
