@@ -69,7 +69,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         $command = new Src\Command\CacheWarmupCommand($this->eventDispatcher);
         $application = new Console\Application();
-        $application->add($command);
+        $application->addCommands([$command]);
 
         $this->commandTester = new Console\Tester\CommandTester($command);
     }
