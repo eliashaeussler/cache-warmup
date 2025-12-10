@@ -2515,16 +2515,16 @@
         },
         {
             "name": "eliashaeussler/version-bumper",
-            "version": "3.1.0",
+            "version": "3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/version-bumper.git",
-                "reference": "cb380fa4e6c488cb595aee1bfa08cf0570efff6f"
+                "reference": "34743202a78ac30dc56d659772121f3785dc2e87"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/version-bumper/zipball/cb380fa4e6c488cb595aee1bfa08cf0570efff6f",
-                "reference": "cb380fa4e6c488cb595aee1bfa08cf0570efff6f",
+                "url": "https://api.github.com/repos/eliashaeussler/version-bumper/zipball/34743202a78ac30dc56d659772121f3785dc2e87",
+                "reference": "34743202a78ac30dc56d659772121f3785dc2e87",
                 "shasum": ""
             },
             "require": {
@@ -2532,10 +2532,10 @@
                 "cuyz/valinor": "^2.0",
                 "cypresslab/gitelephant": "^4.5",
                 "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
-                "symfony/console": "^5.4 || ^6.4 || ^7.0",
-                "symfony/filesystem": "^5.4 || ^6.4 || ^7.0",
-                "symfony/options-resolver": "^5.4 || ^6.4 || ^7.0",
-                "symfony/yaml": "^5.4 || ^6.4 || ^7.0"
+                "symfony/console": "^5.4 || ^6.4 || ^7.0 || ^8.0",
+                "symfony/filesystem": "^5.4 || ^6.4 || ^7.0 || ^8.0",
+                "symfony/options-resolver": "^5.4 || ^6.4 || ^7.0 || ^8.0",
+                "symfony/yaml": "^5.4 || ^6.4 || ^7.0 || ^8.0"
             },
             "conflict": {
                 "cuyz/valinor": "2.2.1"
@@ -2543,9 +2543,9 @@
             "require-dev": {
                 "armin/editorconfig-cli": "^2.0",
                 "composer/composer": "^2.2",
-                "eliashaeussler/php-cs-fixer-config": "^2.3",
-                "eliashaeussler/phpstan-config": "^2.9",
-                "eliashaeussler/rector-config": "^3.1",
+                "eliashaeussler/php-cs-fixer-config": "^3.0",
+                "eliashaeussler/phpstan-config": "^3.0",
+                "eliashaeussler/rector-config": "^4.0",
                 "ergebnis/composer-normalize": "^2.47",
                 "phpstan/extension-installer": "^1.3",
                 "phpstan/phpstan-phpunit": "^2.0",
@@ -2577,9 +2577,9 @@
             "description": "Composer plugin to bump project versions during release preparations",
             "support": {
                 "issues": "https://github.com/eliashaeussler/version-bumper/issues",
-                "source": "https://github.com/eliashaeussler/version-bumper/tree/3.1.0"
+                "source": "https://github.com/eliashaeussler/version-bumper/tree/3.1.1"
             },
-            "time": "2025-11-14T17:13:18+00:00"
+            "time": "2025-12-09T08:36:24+00:00"
         },
         {
             "name": "ergebnis/composer-normalize",
