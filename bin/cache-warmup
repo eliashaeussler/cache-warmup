@@ -47,6 +47,6 @@ unset($autoloadFile, $file);
 // Run application
 $command = new Command\CacheWarmupCommand();
 $application = new Console\Application('cache-warmup', CacheWarmer::VERSION);
-$application->add($command);
+$application->addCommands([$command]);
 $application->setDefaultCommand('cache-warmup', true);
 $application->run();
