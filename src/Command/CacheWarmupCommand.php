@@ -706,9 +706,9 @@ HELP);
         );
     }
 
-    private function validateSitemap(?string $input): ?Sitemap\Sitemap
+    private function validateSitemap(mixed $input): ?Sitemap\Sitemap
     {
-        if (null === $input) {
+        if (!is_string($input)) {
             return null;
         }
 
