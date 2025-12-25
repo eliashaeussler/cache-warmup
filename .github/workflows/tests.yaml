@@ -110,16 +110,6 @@ jobs:
         with:
           name: coverage
 
-      # qlty
-      - name: qlty report
-        uses: qltysh/qlty-action/coverage@v2
-        if: env.QLTY_COVERAGE_TOKEN
-        env:
-          QLTY_COVERAGE_TOKEN: ${{ secrets.QLTY_COVERAGE_TOKEN }}
-        with:
-          token: ${{ secrets.QLTY_COVERAGE_TOKEN }}
-          files: ${{ steps.download.outputs.download-path }}/clover.xml
-
       # Coveralls
       - name: Coveralls report
         uses: coverallsapp/github-action@v2
