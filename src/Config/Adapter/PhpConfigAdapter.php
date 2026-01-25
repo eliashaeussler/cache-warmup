@@ -72,7 +72,7 @@ final readonly class PhpConfigAdapter implements ConfigAdapter
     {
         $resolvedConfig = $closure($config);
 
-        if (!($resolvedConfig instanceof Config\CacheWarmupConfig)) {
+        if (!$resolvedConfig instanceof Config\CacheWarmupConfig) {
             $resolvedConfig = $config;
         }
 
