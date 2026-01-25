@@ -124,7 +124,7 @@ final class CacheWarmer
             }
 
             // Throw exception if sitemap is invalid
-            if (!($sitemap instanceof Sitemap\Sitemap)) {
+            if (!$sitemap instanceof Sitemap\Sitemap) {
                 throw new Exception\SitemapIsInvalid($sitemap);
             }
 
