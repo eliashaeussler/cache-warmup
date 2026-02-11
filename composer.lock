@@ -2231,29 +2231,29 @@
         },
         {
             "name": "eliashaeussler/deep-closure-comparator",
-            "version": "1.2.1",
+            "version": "1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/deep-closure-comparator.git",
-                "reference": "f4712409d847f70ea62e6237f4d265e754a58e89"
+                "reference": "293b22e4a393d00743f63c70945426d9f5d373d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/deep-closure-comparator/zipball/f4712409d847f70ea62e6237f4d265e754a58e89",
-                "reference": "f4712409d847f70ea62e6237f4d265e754a58e89",
+                "url": "https://api.github.com/repos/eliashaeussler/deep-closure-comparator/zipball/293b22e4a393d00743f63c70945426d9f5d373d8",
+                "reference": "293b22e4a393d00743f63c70945426d9f5d373d8",
                 "shasum": ""
             },
             "require": {
                 "opis/closure": "^4.4",
                 "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
-                "phpunit/phpunit": "^10.5 || ^11.5 || ^12.3",
-                "sebastian/comparator": "^5.0 || ^6.3 || ^7.0"
+                "phpunit/phpunit": "^10.5 || ^11.5 || ^12.3 || ^13.0",
+                "sebastian/comparator": "^5.0 || ^6.3 || ^7.0 || ^8.0"
             },
             "require-dev": {
                 "armin/editorconfig-cli": "^2.1",
-                "eliashaeussler/php-cs-fixer-config": "^2.3",
-                "eliashaeussler/phpstan-config": "^2.9",
-                "eliashaeussler/rector-config": "^3.1.1",
+                "eliashaeussler/php-cs-fixer-config": "^3.0",
+                "eliashaeussler/phpstan-config": "^4.0",
+                "eliashaeussler/rector-config": "^4.0.0",
                 "ergebnis/composer-normalize": "^2.47",
                 "phpstan/extension-installer": "^1.4",
                 "phpstan/phpstan-phpunit": "^2.0",
@@ -2280,9 +2280,9 @@
             "description": "Provides a PHPUnit comparator to assert equality of closures",
             "support": {
                 "issues": "https://github.com/eliashaeussler/deep-closure-comparator/issues",
-                "source": "https://github.com/eliashaeussler/deep-closure-comparator/tree/1.2.1"
+                "source": "https://github.com/eliashaeussler/deep-closure-comparator/tree/1.2.2"
             },
-            "time": "2025-11-20T06:37:27+00:00"
+            "time": "2026-02-11T17:38:18+00:00"
         },
         {
             "name": "eliashaeussler/php-cs-fixer-config",
