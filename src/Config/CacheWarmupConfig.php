@@ -477,6 +477,7 @@ final class CacheWarmupConfig
      */
     public function toArray(bool $omitDefaultValues = false): array
     {
+        /** @var array<string, mixed> $config */
         $config = get_object_vars($this);
 
         if (!$omitDefaultValues) {
