@@ -3635,16 +3635,16 @@
         },
         {
             "name": "opis/closure",
-            "version": "4.4.0",
+            "version": "4.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/opis/closure.git",
-                "reference": "4836788ab123b955a0bbf31f7d4468dd3db825fa"
+                "reference": "b97e42b95bb72d87507f5e2d137ceb239aea8d6b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/opis/closure/zipball/4836788ab123b955a0bbf31f7d4468dd3db825fa",
-                "reference": "4836788ab123b955a0bbf31f7d4468dd3db825fa",
+                "url": "https://api.github.com/repos/opis/closure/zipball/b97e42b95bb72d87507f5e2d137ceb239aea8d6b",
+                "reference": "b97e42b95bb72d87507f5e2d137ceb239aea8d6b",
                 "shasum": ""
             },
             "require": {
@@ -3694,9 +3694,9 @@
             ],
             "support": {
                 "issues": "https://github.com/opis/closure/issues",
-                "source": "https://github.com/opis/closure/tree/4.4.0"
+                "source": "https://github.com/opis/closure/tree/4.5.0"
             },
-            "time": "2025-11-20T00:20:49+00:00"
+            "time": "2026-03-05T13:32:42+00:00"
         },
         {
             "name": "phar-io/manifest",
