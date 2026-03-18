@@ -26,7 +26,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           # We use the minimum supported PHP version
-          php-version: 8.2 # renovate-ignore
+          php-version: 8.2
           ini-file: development
           tools: composer:v2
         env:
