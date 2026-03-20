@@ -19,7 +19,7 @@
 	},
 	"devDependencies": {
 		"@types/node": "^25.0.0",
-		"knip": "^5.69.1",
+		"knip": "^6.0.0",
 		"markdown-it-replace-link": "^1.2.1",
 		"typescript": "^5.9.3"
 	},
