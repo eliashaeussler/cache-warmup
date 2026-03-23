@@ -21,7 +21,7 @@
 		"@types/node": "^25.0.0",
 		"knip": "^6.0.0",
 		"markdown-it-replace-link": "^1.2.1",
-		"typescript": "^5.9.3"
+		"typescript": "^6.0.0"
 	},
 	"scripts": {
 		"check-dependencies": "knip -c build/knip.json",
