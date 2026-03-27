@@ -155,7 +155,7 @@ jobs:
           php-version: 8.5
           coverage: none
       - name: Setup Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
       # Download PHAR file
       - name: Download artifact
