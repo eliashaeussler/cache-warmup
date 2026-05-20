@@ -13,7 +13,7 @@ permissions:
 jobs:
   prepare:
     name: Prepare workflow
-    uses: eliashaeussler/.github/.github/workflows/pull-request.yaml@76514ec3b1ca3ae6de8d56490ddcfe7f05139590 # main
+    uses: eliashaeussler/.github/.github/workflows/pull-request.yaml@fdc23f43e6ba48018b997f552dd39f9944c17c86 # main
 
   tests:
     name: Tests (PHP ${{ matrix.php-version }}, ${{ matrix.os }} & ${{ matrix.dependencies }} dependencies)
