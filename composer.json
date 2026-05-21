@@ -77,37 +77,54 @@
 		}
 	},
 	"scripts": {
-		"analyze": [
-			"@analyze:dependencies"
+		"check": [
+			"@check:deps",
+			"@check:refactor",
+			"@check:static",
+			"@check:style"
 		],
-		"analyze:dependencies": "composer-dependency-analyser --config build/composer-dependency-analyser.php",
+		"check:deps": "composer-dependency-analyser --config build/composer-dependency-analyser.php",
+		"check:refactor": [
+			"@check:refactor:php"
+		],
+		"check:refactor:php": "@refactor:php --dry-run",
+		"check:static": "phpstan analyse -c build/phpstan.php",
+		"check:style": [
+			"@check:style:composer",
+			"@check:style:editorconfig",
+			"@check:style:php",
+			"@check:style:shell"
+		],
+		"check:style:composer": "@fix:composer --dry-run",
+		"check:style:editorconfig": "ec",
+		"check:style:php": "@fix:php --dry-run",
+		"check:style:shell": "find tests/e2e -name '*.sh' -print0 | xargs -0 -I{} shellcheck {}",
+		"ci": [
+			"@composer validate",
+			"@composer audit",
+			"@check:deps",
+			"@check:refactor",
+			"@check:static --error-format github",
+			"@check:style"
+		],
 		"fix": [
 			"@fix:composer",
 			"@fix:editorconfig",
 			"@fix:php"
 		],
 		"fix:composer": "@composer normalize",
-		"fix:editorconfig": "@lint:editorconfig --fix",
+		"fix:editorconfig": "@check:style:editorconfig --fix",
 		"fix:php": "php-cs-fixer fix --config build/.php-cs-fixer.php",
-		"lint": [
-			"@lint:composer",
-			"@lint:editorconfig",
-			"@lint:php"
+		"refactor": [
+			"@refactor:php"
 		],
-		"lint:composer": "@fix:composer --dry-run",
-		"lint:editorconfig": "ec",
-		"lint:php": "@fix:php --dry-run",
-		"migration": [
-			"@migration:rector"
-		],
-		"migration:rector": "rector process -c build/rector.php",
-		"sca": [
-			"@sca:php"
-		],
-		"sca:php": "phpstan analyse -c build/phpstan.php",
+		"refactor:php": "rector process -c build/rector.php",
 		"test": [
 			"@test:e2e",
 			"@test:unit"
+		],
+		"test:coverage": [
+			"@test:unit:coverage"
 		],
 		"test:e2e": "tests/e2e/run.sh",
 		"test:e2e:docker": "@test:e2e docker",

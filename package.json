@@ -24,7 +24,8 @@
 		"typescript": "^6.0.0"
 	},
 	"scripts": {
-		"check-dependencies": "knip -c build/knip.json",
+		"ci": "npm audit && npm run check:deps",
+		"check:deps": "knip -c build/knip.json",
 		"docs:dev": "vitepress dev docs --open",
 		"docs:build": "vitepress build docs",
 		"docs:preview": "vitepress preview docs --open"
