@@ -6,232 +6,116 @@ on:
   workflow_dispatch:
 
 env:
+  PHAR_FILE: '.build/cache-warmup.phar'
   REF_NAME: ${{ github.ref_name }}
 
 jobs:
-  phar:
-    name: Compile PHAR
+  assets:
+    name: 'Build release assets'
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-        with:
-          persist-credentials: false
 
-      # Prepare environment
-      - name: Setup PHP
-        uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # v2
-        with:
-          php-version: 8.5
-          tools: composer:v2, phive
-
-      # Compile PHAR
-      - name: Install box
-        run: phive install --trust-gpg-keys 2DF45277AEF09A2F humbug/box
-      - name: Install Composer dependencies
-        uses: ramsey/composer-install@5c2bcf28d7b060ef3c601d7b476d5430a7b46c27 #v4
-        with:
-          composer-options: "--no-dev"
-          ignore-cache: true
-      - name: Compile PHAR
-        run: ./tools/box compile --with-docker
-
-      # Sign PHAR file
-      - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@2dc316deee8e90f13e1a351ab510b4d5bc0c82cd # v7
-        with:
-          gpg_private_key: ${{ secrets.PHAR_GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.PHAR_GPG_PASSPHRASE }}
-      - name: Sign PHAR file
-        run: gpg --armor --output .build/cache-warmup.phar.asc --yes --detach-sig .build/cache-warmup.phar
-
-      # Upload compiled PHAR as artifact
-      - name: Upload artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
-        with:
-          name: phar
-          path: |
-            .build/cache-warmup.phar
-            .build/cache-warmup.phar.asc
-            Dockerfile
-
-  docker:
-    name: Docker deploy
-    runs-on: ubuntu-latest
-    needs: phar
     permissions:
       contents: read
       packages: write
+
+    outputs:
+      phar-artifact-name: ${{ steps.phar.outputs.artifact-name }}
+
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - name: 'Checkout'
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           persist-credentials: false
 
-      # Check if tag is valid
-      - name: Check tag
-        if: ${{ github.event_name != 'workflow_dispatch' }}
-        run: |
-          if ! [[ "$REF_NAME" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            exit 1
-          fi
-
-      # Download PHAR and Dockerfile
-      - name: Download artifact
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+      - name: 'Build PHAR'
+        uses: eliashaeussler/gha/.github/actions/build-phar@b4023b28e2974ed4e7ec3ce4b9a4503c98369b3c # 0.1.1
+        id: phar
         with:
-          name: phar
-      - name: Make PHAR executable
-        run: chmod +x .build/cache-warmup.phar
+          target-file: ${{ env.PHAR_FILE }}
+          build-dockerfile: true
+          gpg-key: ${{ secrets.PHAR_GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.PHAR_GPG_PASSPHRASE }}
 
-      # Generate metadata
-      - name: Generate image metadata
-        id: meta
-        uses: docker/metadata-action@030e881283bb7a6894de51c315a6bfe6a94e05cf # v6
+      - name: 'Make PHAR executable'
+        run: chmod +x "$PHAR_FILE"
+
+      - name: 'Build Docker'
+        uses: eliashaeussler/gha/.github/actions/build-docker@b4023b28e2974ed4e7ec3ce4b9a4503c98369b3c # 0.1.1
         with:
-          images: |
-            eliashaeussler/cache-warmup
-            ghcr.io/eliashaeussler/cache-warmup
-          tags: |
-            type=raw,value=latest,enable=${{ github.event_name != 'workflow_dispatch' }}
-            type=semver,pattern={{version}}
-            type=raw,value=${{ env.REF_NAME }},enable=${{ github.event_name == 'workflow_dispatch' }}
-
-      # Prepare build
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@ce360397dd3f832beb865e1373c09c0e9f86d70a # v4
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4
-
-      # Login at Docker Hub
-      - name: Login to Docker Hub
-        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      # Login at GitHub container registry
-      - name: Login to GHCR
-        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      # Build and push image
-      - name: Build and push
-        uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7
-        with:
-          context: .
-          push: true
-          platforms: linux/amd64,linux/arm64
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
+          dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}
+          ghcr-token: ${{ secrets.GITHUB_TOKEN }}
 
   docs:
-    name: Publish documentation
+    name: 'Build and deploy documentation'
     runs-on: ubuntu-latest
-    needs: phar
+
+    needs: [assets]
+
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deploy.outputs.pages-url }}
+
     permissions:
       contents: read
       pages: write
       id-token: write
 
-    # Allow one concurrent deployment
     concurrency:
       group: pages
       cancel-in-progress: true
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - name: 'Checkout'
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           persist-credentials: false
 
-      # Prepare environment
-      - name: Setup Node
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
-        with:
-          node-version: 24
-          package-manager-cache: false
-      - name: Setup PHP
-        uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # v2
-        with:
-          php-version: 8.5
-          coverage: none
-      - name: Setup Pages
-        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
-
-      # Download PHAR file
-      - name: Download artifact
+      - name: 'Download PHAR file'
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
-          name: phar
-      - name: Make PHAR executable
-        run: chmod +x .build/cache-warmup.phar
+          name: ${{ needs.assets.outputs.phar-artifact-name }}
 
-      # Move PHAR to public folder
-      - name: Publish PHAR file
+      - name: 'Make PHAR executable'
+        run: chmod +x "$PHAR_FILE"
+
+      - name: 'Publish PHAR file'
         run: |
-          mv -v .build/cache-warmup.phar docs/public/
-          mv -v .build/cache-warmup.phar.asc docs/public/
+          mv -v "${PHAR_FILE}" docs/public/
+          mv -v "${PHAR_FILE}.asc" docs/public/
 
-      # Install dependencies
-      - name: Install Frontend dependencies
-        run: npm ci
-
-      # Render documentation
-      - name: Render documentation
-        run: npm run docs:build
-
-      # Deploy documentation
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
+      - name: 'Build and deploy docs'
+        id: deploy
+        uses: eliashaeussler/gha/.github/actions/deploy-pages@b4023b28e2974ed4e7ec3ce4b9a4503c98369b3c # 0.1.1
         with:
-          path: 'docs/.vitepress/dist'
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5
+          build-command: 'docs:build'
+          base-path: 'docs/.vitepress/dist'
 
-      # Warm up cache
-      - name: Run cache warmup
+      - name: 'Run cache warmup'
         uses: eliashaeussler/cache-warmup-action@a0c1504d177d494a44681009bc6838df654d4b98 # v1
         with:
-          sitemaps: ${{ steps.deployment.outputs.page_url }}/sitemap.xml
+          sitemaps: ${{ steps.deploy.outputs.pages-url }}/sitemap.xml
           progress: true
           verbosity: v
 
   release:
-    name: Create release
-    if: ${{ github.event_name != 'workflow_dispatch' }}
+    name: 'Create release'
     runs-on: ubuntu-latest
-    needs: phar
+
+    if: ${{ github.event_name != 'workflow_dispatch' }}
+
+    needs: [assets]
+
     permissions:
       contents: write
+
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - name: 'Checkout'
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           persist-credentials: false
 
-      # Check if tag is valid
-      - name: Check tag
-        run: |
-          if ! [[ "${REF_NAME}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            exit 1
-          fi
-
-      # Download PHAR
-      - name: Download artifact
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+      - name: 'Create release'
+        uses: eliashaeussler/gha/.github/actions/create-release@b4023b28e2974ed4e7ec3ce4b9a4503c98369b3c # 0.1.1
         with:
-          name: phar
-      - name: Make PHAR executable
-        run: chmod +x .build/cache-warmup.phar
-
-      # Create release
-      - name: Create release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release create "${REF_NAME}" --generate-notes .build/cache-warmup.phar .build/cache-warmup.phar.asc
+          artifact-name: ${{ needs.assets.outputs.phar-artifact-name }}
