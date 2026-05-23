@@ -40,7 +40,7 @@
 		"eliashaeussler/phpstan-config": "^4.0.0",
 		"eliashaeussler/rector-config": "^4.0",
 		"eliashaeussler/transient-logger": "^2.0",
-		"eliashaeussler/version-bumper": "^3.0",
+		"eliashaeussler/version-bumper": "^4.0",
 		"ergebnis/composer-normalize": "^2.28",
 		"phpstan/extension-installer": "^1.2",
 		"phpstan/phpstan-phpunit": "^2.0",
