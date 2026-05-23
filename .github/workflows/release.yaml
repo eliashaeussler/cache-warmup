@@ -28,7 +28,7 @@ jobs:
           persist-credentials: false
 
       - name: 'Build PHAR'
-        uses: eliashaeussler/gha/.github/actions/build-phar@b4023b28e2974ed4e7ec3ce4b9a4503c98369b3c # 0.1.1
+        uses: eliashaeussler/gha/.github/actions/build-phar@9d2e7a72b4a205e5415b2b6262c0af0232a1e006 # 0.1.3
         id: phar
         with:
           target-file: ${{ env.PHAR_FILE }}
@@ -40,7 +40,7 @@ jobs:
         run: chmod +x "$PHAR_FILE"
 
       - name: 'Build Docker'
-        uses: eliashaeussler/gha/.github/actions/build-docker@b4023b28e2974ed4e7ec3ce4b9a4503c98369b3c # 0.1.1
+        uses: eliashaeussler/gha/.github/actions/build-docker@9d2e7a72b4a205e5415b2b6262c0af0232a1e006 # 0.1.3
         with:
           dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
           dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -86,7 +86,7 @@ jobs:
 
       - name: 'Build and deploy docs'
         id: deploy
-        uses: eliashaeussler/gha/.github/actions/deploy-pages@b4023b28e2974ed4e7ec3ce4b9a4503c98369b3c # 0.1.1
+        uses: eliashaeussler/gha/.github/actions/deploy-pages@9d2e7a72b4a205e5415b2b6262c0af0232a1e006 # 0.1.3
         with:
           build-command: 'docs:build'
           base-path: 'docs/.vitepress/dist'
@@ -116,6 +116,6 @@ jobs:
           persist-credentials: false
 
       - name: 'Create release'
-        uses: eliashaeussler/gha/.github/actions/create-release@b4023b28e2974ed4e7ec3ce4b9a4503c98369b3c # 0.1.1
+        uses: eliashaeussler/gha/.github/actions/create-release@9d2e7a72b4a205e5415b2b6262c0af0232a1e006 # 0.1.3
         with:
           artifact-name: ${{ needs.assets.outputs.phar-artifact-name }}
