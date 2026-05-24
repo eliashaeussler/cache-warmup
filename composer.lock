@@ -2587,16 +2587,16 @@
         },
         {
             "name": "eliashaeussler/version-bumper",
-            "version": "4.0.0",
+            "version": "4.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/version-bumper.git",
-                "reference": "e096b64068ba36864580d36c96d8d13c46f93441"
+                "reference": "2e8ba02dca5ff394792414caf1e7da112f9b04e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/version-bumper/zipball/e096b64068ba36864580d36c96d8d13c46f93441",
-                "reference": "e096b64068ba36864580d36c96d8d13c46f93441",
+                "url": "https://api.github.com/repos/eliashaeussler/version-bumper/zipball/2e8ba02dca5ff394792414caf1e7da112f9b04e7",
+                "reference": "2e8ba02dca5ff394792414caf1e7da112f9b04e7",
                 "shasum": ""
             },
             "require": {
@@ -2616,7 +2616,7 @@
             },
             "require-dev": {
                 "armin/editorconfig-cli": "^2.0",
-                "composer/composer": "^2.2",
+                "composer/composer": "~2.2.28 || ~2.9.8",
                 "eliashaeussler/php-cs-fixer-config": "^3.0",
                 "eliashaeussler/phpstan-config": "^4.0",
                 "eliashaeussler/rector-config": "^4.0",
@@ -2652,9 +2652,9 @@
             "description": "Composer plugin to bump project versions during release preparations",
             "support": {
                 "issues": "https://github.com/eliashaeussler/version-bumper/issues",
-                "source": "https://github.com/eliashaeussler/version-bumper/tree/4.0.0"
+                "source": "https://github.com/eliashaeussler/version-bumper/tree/4.0.1"
             },
-            "time": "2026-05-23T12:03:56+00:00"
+            "time": "2026-05-23T18:02:25+00:00"
         },
         {
             "name": "ergebnis/agent-detector",
