@@ -74,4 +74,9 @@ jobs:
     needs: [prepare]
     if: ${{ needs.prepare.outputs.continue == 'true' }}
 
-    uses: eliashaeussler/gha/.github/workflows/composer-test-coverage.yaml@9d2e7a72b4a205e5415b2b6262c0af0232a1e006 # 0.1.3
+    permissions:
+      code-quality: write
+      contents: read
+      pull-requests: read
+
+    uses: eliashaeussler/gha/.github/workflows/composer-test-coverage.yaml@bf55f1ae7b0f402ee254e52c4503039c3f084e8d # 0.1.3
