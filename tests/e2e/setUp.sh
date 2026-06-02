@@ -30,7 +30,9 @@ function _install_phive() {
     # Download PHIVE
     wget -qO "${phiveExecutable}" https://phar.io/releases/phive.phar
     wget -qO "${phiveExecutable}.asc" https://phar.io/releases/phive.phar.asc
-    gpg --quiet --keyserver hkps://keys.openpgp.org --recv-keys 0x9D8A98B29B2D5D79
+    curl -sS https://keys.openpgp.org/vks/v1/by-fingerprint/6AF725270AB81E04D79442549D8A98B29B2D5D79 -o /tmp/key.asc
+    gpg --import /tmp/key.asc >/dev/null 2>&1
+    rm /tmp/key.asc
     gpg --quiet --verify "${phiveExecutable}.asc" "${phiveExecutable}" >/dev/null 2>&1
     chmod +x "${phiveExecutable}"
 
