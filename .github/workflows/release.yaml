@@ -23,10 +23,10 @@ jobs:
 
     steps:
       - name: 'Checkout'
-        uses: eliashaeussler/gha/.github/actions/checkout@61021346542aab8ca5cd441199b82b05db5c67fd # 0.6.0
+        uses: eliashaeussler/gha/.github/actions/checkout@39747882312d1fbeaff9792b2a8e2eb00ddc640f # 0.6.2
 
       - name: 'Build PHAR'
-        uses: eliashaeussler/gha/.github/actions/build-phar@61021346542aab8ca5cd441199b82b05db5c67fd # 0.6.0
+        uses: eliashaeussler/gha/.github/actions/build-phar@39747882312d1fbeaff9792b2a8e2eb00ddc640f # 0.6.2
         id: phar
         with:
           target-file: ${{ env.PHAR_FILE }}
@@ -38,7 +38,7 @@ jobs:
         run: chmod +x "$PHAR_FILE"
 
       - name: 'Build Docker'
-        uses: eliashaeussler/gha/.github/actions/build-docker@61021346542aab8ca5cd441199b82b05db5c67fd # 0.6.0
+        uses: eliashaeussler/gha/.github/actions/build-docker@39747882312d1fbeaff9792b2a8e2eb00ddc640f # 0.6.2
         with:
           dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
           dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -75,7 +75,7 @@ jobs:
 
     steps:
       - name: 'Checkout'
-        uses: eliashaeussler/gha/.github/actions/checkout@61021346542aab8ca5cd441199b82b05db5c67fd # 0.6.0
+        uses: eliashaeussler/gha/.github/actions/checkout@39747882312d1fbeaff9792b2a8e2eb00ddc640f # 0.6.2
 
       - name: 'Download PHAR file'
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
@@ -92,7 +92,7 @@ jobs:
 
       - name: 'Build and deploy docs'
         id: deploy
-        uses: eliashaeussler/gha/.github/actions/deploy-pages@61021346542aab8ca5cd441199b82b05db5c67fd # 0.6.0
+        uses: eliashaeussler/gha/.github/actions/deploy-pages@39747882312d1fbeaff9792b2a8e2eb00ddc640f # 0.6.2
         with:
           build-command: 'docs:build'
           base-path: 'docs/.vitepress/dist'
@@ -113,6 +113,6 @@ jobs:
     permissions:
       contents: write
 
-    uses: eliashaeussler/gha/.github/workflows/github-release.yaml@61021346542aab8ca5cd441199b82b05db5c67fd # 0.6.0
+    uses: eliashaeussler/gha/.github/workflows/github-release.yaml@39747882312d1fbeaff9792b2a8e2eb00ddc640f # 0.6.2
     with:
       artifact-name: ${{ needs.assets.outputs.phar-artifact-name }}
