@@ -83,6 +83,7 @@ final class ParserFactoryTest extends Framework\TestCase
         $actual = $this->subject->get(Tests\Fixtures\Classes\DummyParser::class);
 
         self::assertInstanceOf(Tests\Fixtures\Classes\DummyParser::class, $actual);
+        // @todo Switch to self::assertEquals() once support for PHP 8.2 (and PHPUnit 11.x) ist dropped
         DeepClosureComparator\DeepClosureAssert::assertEquals($this->clientFactory->get(), Tests\Fixtures\Classes\DummyParser::$client);
     }
 

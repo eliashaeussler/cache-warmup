@@ -106,6 +106,7 @@ final class CacheWarmupConfigTest extends Framework\TestCase
             Src\Config\Option\ExcludePattern::createFromRegularExpression('#foo#'),
         ];
 
+        // @todo Switch to self::assertEquals() once support for PHP 8.2 (and PHPUnit 11.x) ist dropped
         DeepClosureComparator\DeepClosureAssert::assertEquals($expected, $this->subject->getExcludePatterns());
     }
 
@@ -279,6 +280,7 @@ final class CacheWarmupConfigTest extends Framework\TestCase
             300,
         );
 
+        // @todo Switch to self::assertEquals() once support for PHP 8.2 (and PHPUnit 11.x) ist dropped
         DeepClosureComparator\DeepClosureAssert::assertEquals($expected, $this->subject->merge($other));
     }
 
