@@ -103,10 +103,10 @@ composer test:unit:coverage
 
 ## Coverage reports
 
-Code coverage reports are written to `.build/coverage`. Open the latest HTML report with:
+Code coverage reports are written to `build/tests/coverage`. Open the latest HTML report with:
 
 ```bash
-open .build/coverage/html/index.html
+open build/tests/coverage/html/index.html
 ```
 
 ## Pull requests
