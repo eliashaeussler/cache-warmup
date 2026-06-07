@@ -25,7 +25,6 @@ namespace EliasHaeussler\CacheWarmup\Tests\Config\Adapter;
 
 use EliasHaeussler\CacheWarmup as Src;
 use EliasHaeussler\CacheWarmup\Tests;
-use EliasHaeussler\DeepClosureComparator;
 use PHPUnit\Framework;
 use Psr\Log;
 use Symfony\Component\Console;
@@ -197,8 +196,7 @@ final class ConsoleInputConfigAdapterTest extends Framework\TestCase
             300,
         );
 
-        // @todo Switch to self::assertEquals() once support for PHP 8.2 (and PHPUnit 11.x) ist dropped
-        DeepClosureComparator\DeepClosureAssert::assertEquals($expected, $subject->get());
+        self::assertEquals($expected, $subject->get());
     }
 
     #[Framework\Attributes\Test]

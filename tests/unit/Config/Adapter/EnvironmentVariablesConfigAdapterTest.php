@@ -25,7 +25,6 @@ namespace EliasHaeussler\CacheWarmup\Tests\Config\Adapter;
 
 use EliasHaeussler\CacheWarmup as Src;
 use EliasHaeussler\CacheWarmup\Tests;
-use EliasHaeussler\DeepClosureComparator;
 use Generator;
 use PHPUnit\Framework;
 use Psr\Log;
@@ -239,9 +238,8 @@ final class EnvironmentVariablesConfigAdapterTest extends Framework\TestCase
             300,
         );
 
-        // @todo Switch to self::assertEquals() once support for PHP 8.2 (and PHPUnit 11.x) ist dropped
         $this->testWithEnvironment(
-            fn () => DeepClosureComparator\DeepClosureAssert::assertEquals($expected, $this->subject->get()),
+            fn () => self::assertEquals($expected, $this->subject->get()),
             $variables,
         );
     }

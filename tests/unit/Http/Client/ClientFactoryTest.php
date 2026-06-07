@@ -25,7 +25,6 @@ namespace EliasHaeussler\CacheWarmup\Tests\Http\Client;
 
 use EliasHaeussler\CacheWarmup as Src;
 use EliasHaeussler\CacheWarmup\Tests;
-use EliasHaeussler\DeepClosureComparator;
 use GuzzleHttp\Client;
 use PHPUnit\Framework;
 
@@ -54,8 +53,7 @@ final class ClientFactoryTest extends Framework\TestCase
             'foo' => 'baz',
         ]);
 
-        // @todo Switch to self::assertEquals() once support for PHP 8.2 (and PHPUnit 11.x) ist dropped
-        DeepClosureComparator\DeepClosureAssert::assertEquals($expected, $this->subject->get());
+        self::assertEquals($expected, $this->subject->get());
     }
 
     #[Framework\Attributes\Test]
@@ -66,8 +64,7 @@ final class ClientFactoryTest extends Framework\TestCase
             'another' => 'foo',
         ]);
 
-        // @todo Switch to self::assertEquals() once support for PHP 8.2 (and PHPUnit 11.x) ist dropped
-        DeepClosureComparator\DeepClosureAssert::assertEquals($expected, $this->subject->get(['another' => 'foo']));
+        self::assertEquals($expected, $this->subject->get(['another' => 'foo']));
     }
 
     #[Framework\Attributes\Test]
