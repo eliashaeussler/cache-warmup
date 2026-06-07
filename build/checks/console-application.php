@@ -21,22 +21,11 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use EliasHaeussler\PhpCsFixerConfig;
-use Symfony\Component\Finder;
+require_once dirname(__DIR__, 2).'/vendor/autoload.php';
 
-$rootPath = dirname(__DIR__);
-$header = PhpCsFixerConfig\Rules\Header::create(
-    'eliashaeussler/cache-warmup',
-    PhpCsFixerConfig\Package\Type::ComposerPackage,
-    PhpCsFixerConfig\Package\Author::create('Elias Häußler', 'elias@haeussler.dev'),
-    PhpCsFixerConfig\Package\CopyrightRange::from(2020),
-    PhpCsFixerConfig\Package\License::GPL3OrLater,
-);
+$application = new Symfony\Component\Console\Application();
+$application->addCommands([
+    new EliasHaeussler\CacheWarmup\Command\CacheWarmupCommand(),
+]);
 
-return PhpCsFixerConfig\Config::create()
-    ->withRule($header)
-    ->withFinder(
-        static fn (Finder\Finder $finder) => $finder->in($rootPath)->name(['cache-warmup', '*.php']),
-    )
-    ->setCacheFile($rootPath.'/.build/cache/php-cs-fixer.cache')
-;
+return $application;

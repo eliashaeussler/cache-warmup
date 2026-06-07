@@ -25,7 +25,7 @@
 	},
 	"scripts": {
 		"ci": "npm audit && npm run check:deps",
-		"check:deps": "knip -c build/knip.json",
+		"check:deps": "knip -c build/checks/knip.json",
 		"docs:dev": "vitepress dev docs --open",
 		"docs:build": "vitepress build docs",
 		"docs:preview": "vitepress preview docs --open"

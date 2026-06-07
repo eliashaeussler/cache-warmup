@@ -21,26 +21,23 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use EliasHaeussler\RectorConfig\Config\Config;
-use Rector\Config\RectorConfig;
-use Rector\Php80\Rector\Class_\AnnotationToAttributeRector;
-use Rector\ValueObject\PhpVersion;
+use EliasHaeussler\PHPStanConfig;
 
-return static function (RectorConfig $rectorConfig): void {
-    $rootPath = dirname(__DIR__);
-
-    Config::create($rectorConfig, PhpVersion::PHP_82)
-        ->in(
-            $rootPath.'/src',
-            $rootPath.'/tests',
-        )
-        ->withPHPUnit()
-        ->skip(
-            AnnotationToAttributeRector::class,
-            [
-                $rootPath.'/src/Formatter/JsonFormatter.php',
-            ],
-        )
-        ->apply()
-    ;
-};
+return PHPStanConfig\Config\Config::create(dirname(__DIR__, 2))
+    ->in(
+        'bin/cache-warmup',
+        'src',
+        'tests',
+    )
+    ->withBaseline(__DIR__.'/phpstan-baseline.neon')
+    ->withBleedingEdge()
+    ->with(
+        'vendor/cuyz/valinor/qa/PHPStan/valinor-phpstan-configuration.php',
+        'vendor/cuyz/valinor/qa/PHPStan/valinor-phpstan-suppress-pure-errors.php',
+    )
+    ->withSet(static function (PHPStanConfig\Set\SymfonySet $set) {
+        $set->withConsoleApplicationLoader(__DIR__.'/console-application.php');
+    })
+    ->maxLevel()
+    ->toArray()
+;

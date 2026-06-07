@@ -75,7 +75,7 @@
 	},
 	"extra": {
 		"version-bumper": {
-			"config-file": "build/version-bumper.yaml"
+			"config-file": "build/release/version-bumper.yaml"
 		}
 	},
 	"scripts": {
@@ -85,12 +85,12 @@
 			"@check:static",
 			"@check:style"
 		],
-		"check:deps": "composer-dependency-analyser --config build/composer-dependency-analyser.php",
+		"check:deps": "composer-dependency-analyser --config build/checks/composer-dependency-analyser.php",
 		"check:refactor": [
 			"@check:refactor:php"
 		],
 		"check:refactor:php": "@refactor:php --dry-run",
-		"check:static": "phpstan analyse -c build/phpstan.php",
+		"check:static": "phpstan analyse -c build/checks/phpstan.php",
 		"check:style": [
 			"@check:style:composer",
 			"@check:style:editorconfig",
@@ -116,11 +116,11 @@
 		],
 		"fix:composer": "@composer normalize",
 		"fix:editorconfig": "@check:style:editorconfig --fix",
-		"fix:php": "php-cs-fixer fix --config build/.php-cs-fixer.php",
+		"fix:php": "php-cs-fixer fix --config build/checks/.php-cs-fixer.php",
 		"refactor": [
 			"@refactor:php"
 		],
-		"refactor:php": "rector process -c build/rector.php",
+		"refactor:php": "rector process -c build/checks/rector.php",
 		"test": [
 			"@test:e2e",
 			"@test:unit"
@@ -132,6 +132,6 @@
 		"test:e2e:docker": "@test:e2e docker",
 		"test:e2e:phar": "@test:e2e phar",
 		"test:unit": "@test:unit:coverage --no-coverage",
-		"test:unit:coverage": "phpunit -c build/phpunit.xml"
+		"test:unit:coverage": "phpunit -c build/tests/phpunit.xml"
 	}
 }
