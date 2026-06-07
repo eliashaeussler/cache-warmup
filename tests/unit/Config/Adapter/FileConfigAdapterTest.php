@@ -107,6 +107,7 @@ final class FileConfigAdapterTest extends Framework\TestCase
 
         $subject = new Src\Config\Adapter\FileConfigAdapter($file);
 
+        // @todo Switch to self::assertEquals() once support for PHP 8.2 (and PHPUnit 11.x) ist dropped
         DeepClosureComparator\DeepClosureAssert::assertEquals($expected, $subject->get());
     }
 

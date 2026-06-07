@@ -54,6 +54,7 @@ final class ClientFactoryTest extends Framework\TestCase
             'foo' => 'baz',
         ]);
 
+        // @todo Switch to self::assertEquals() once support for PHP 8.2 (and PHPUnit 11.x) ist dropped
         DeepClosureComparator\DeepClosureAssert::assertEquals($expected, $this->subject->get());
     }
 
@@ -65,6 +66,7 @@ final class ClientFactoryTest extends Framework\TestCase
             'another' => 'foo',
         ]);
 
+        // @todo Switch to self::assertEquals() once support for PHP 8.2 (and PHPUnit 11.x) ist dropped
         DeepClosureComparator\DeepClosureAssert::assertEquals($expected, $this->subject->get(['another' => 'foo']));
     }
 

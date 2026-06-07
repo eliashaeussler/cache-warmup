@@ -239,6 +239,7 @@ final class EnvironmentVariablesConfigAdapterTest extends Framework\TestCase
             300,
         );
 
+        // @todo Switch to self::assertEquals() once support for PHP 8.2 (and PHPUnit 11.x) ist dropped
         $this->testWithEnvironment(
             fn () => DeepClosureComparator\DeepClosureAssert::assertEquals($expected, $this->subject->get()),
             $variables,
