@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "62e06240da9084890a780830b0a79904",
+    "content-hash": "7c55265d62308a76f6819a59088d85ca",
     "packages": [
         {
             "name": "cuyz/valinor",
@@ -2329,61 +2329,6 @@
             "time": "2024-11-26T16:23:11+00:00"
         },
         {
-            "name": "eliashaeussler/deep-closure-comparator",
-            "version": "1.2.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/eliashaeussler/deep-closure-comparator.git",
-                "reference": "293b22e4a393d00743f63c70945426d9f5d373d8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/deep-closure-comparator/zipball/293b22e4a393d00743f63c70945426d9f5d373d8",
-                "reference": "293b22e4a393d00743f63c70945426d9f5d373d8",
-                "shasum": ""
-            },
-            "require": {
-                "opis/closure": "^4.4",
-                "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
-                "phpunit/phpunit": "^10.5 || ^11.5 || ^12.3 || ^13.0",
-                "sebastian/comparator": "^5.0 || ^6.3 || ^7.0 || ^8.0"
-            },
-            "require-dev": {
-                "armin/editorconfig-cli": "^2.1",
-                "eliashaeussler/php-cs-fixer-config": "^3.0",
-                "eliashaeussler/phpstan-config": "^4.0",
-                "eliashaeussler/rector-config": "^4.0.0",
-                "ergebnis/composer-normalize": "^2.47",
-                "phpstan/extension-installer": "^1.4",
-                "phpstan/phpstan-phpunit": "^2.0",
-                "shipmonk/composer-dependency-analyser": "^1.8"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "EliasHaeussler\\DeepClosureComparator\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Elias Häußler",
-                    "email": "elias@haeussler.dev",
-                    "homepage": "https://haeussler.dev",
-                    "role": "Maintainer"
-                }
-            ],
-            "description": "Provides a PHPUnit comparator to assert equality of closures",
-            "support": {
-                "issues": "https://github.com/eliashaeussler/deep-closure-comparator/issues",
-                "source": "https://github.com/eliashaeussler/deep-closure-comparator/tree/1.2.2"
-            },
-            "time": "2026-02-11T17:38:18+00:00"
-        },
-        {
             "name": "eliashaeussler/php-cs-fixer-config",
             "version": "3.1.0",
             "source": {
@@ -3861,71 +3806,6 @@
                 "source": "https://github.com/nikic/PHP-Parser/tree/v5.7.0"
             },
             "time": "2025-12-06T11:56:16+00:00"
-        },
-        {
-            "name": "opis/closure",
-            "version": "4.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/opis/closure.git",
-                "reference": "b97e42b95bb72d87507f5e2d137ceb239aea8d6b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/opis/closure/zipball/b97e42b95bb72d87507f5e2d137ceb239aea8d6b",
-                "reference": "b97e42b95bb72d87507f5e2d137ceb239aea8d6b",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^8.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^9.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "4.x-dev"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "src/functions.php"
-                ],
-                "psr-4": {
-                    "Opis\\Closure\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Marius Sarca",
-                    "email": "marius.sarca@gmail.com"
-                },
-                {
-                    "name": "Sorin Sarca",
-                    "email": "sarca_sorin@hotmail.com"
-                }
-            ],
-            "description": "A library that can be used to serialize closures (anonymous functions) and arbitrary data.",
-            "homepage": "https://opis.io/closure",
-            "keywords": [
-                "anonymous classes",
-                "anonymous functions",
-                "closure",
-                "function",
-                "serializable",
-                "serialization",
-                "serialize"
-            ],
-            "support": {
-                "issues": "https://github.com/opis/closure/issues",
-                "source": "https://github.com/opis/closure/tree/4.5.0"
-            },
-            "time": "2026-03-05T13:32:42+00:00"
         },
         {
             "name": "phar-io/manifest",

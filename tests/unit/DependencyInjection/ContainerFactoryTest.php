@@ -25,7 +25,6 @@ namespace EliasHaeussler\CacheWarmup\Tests\DependencyInjection;
 
 use EliasHaeussler\CacheWarmup as Src;
 use EliasHaeussler\CacheWarmup\Tests;
-use EliasHaeussler\DeepClosureComparator;
 use GuzzleHttp\ClientInterface;
 use PHPUnit\Framework;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -78,8 +77,7 @@ final class ContainerFactoryTest extends Framework\TestCase
         $crawler = $actual->get(Tests\Fixtures\Classes\DummyCrawler::class);
 
         self::assertSame($this->eventDispatcher, $crawler->eventDispatcher);
-        // @todo Switch to self::assertEquals() once support for PHP 8.2 (and PHPUnit 11.x) ist dropped
-        DeepClosureComparator\DeepClosureAssert::assertEquals($this->clientFactory->get(), Tests\Fixtures\Classes\DummyCrawler::$client);
+        self::assertEquals($this->clientFactory->get(), Tests\Fixtures\Classes\DummyCrawler::$client);
     }
 
     #[Framework\Attributes\Test]
@@ -88,8 +86,7 @@ final class ContainerFactoryTest extends Framework\TestCase
         $actual = $this->subject->build();
         $actual->get(Tests\Fixtures\Classes\DummyParser::class);
 
-        // @todo Switch to self::assertEquals() once support for PHP 8.2 (and PHPUnit 11.x) ist dropped
-        DeepClosureComparator\DeepClosureAssert::assertEquals($this->clientFactory->get(), Tests\Fixtures\Classes\DummyParser::$client);
+        self::assertEquals($this->clientFactory->get(), Tests\Fixtures\Classes\DummyParser::$client);
     }
 
     #[Framework\Attributes\Test]
@@ -101,8 +98,7 @@ final class ContainerFactoryTest extends Framework\TestCase
         self::assertSame($this->logger, $actual->get(Log\LoggerInterface::class));
         self::assertSame($this->eventDispatcher, $actual->get(EventDispatcherInterface::class));
         self::assertSame($this->clientFactory, $actual->get(Src\Http\Client\ClientFactory::class));
-        // @todo Switch to self::assertEquals() once support for PHP 8.2 (and PHPUnit 11.x) ist dropped
-        DeepClosureComparator\DeepClosureAssert::assertEquals($this->clientFactory->get(), $actual->get(ClientInterface::class));
+        self::assertEquals($this->clientFactory->get(), $actual->get(ClientInterface::class));
     }
 
     protected function tearDown(): void

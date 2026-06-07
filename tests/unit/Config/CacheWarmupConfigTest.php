@@ -25,7 +25,6 @@ namespace EliasHaeussler\CacheWarmup\Tests\Config;
 
 use EliasHaeussler\CacheWarmup as Src;
 use EliasHaeussler\CacheWarmup\Tests;
-use EliasHaeussler\DeepClosureComparator;
 use Generator;
 use PHPUnit\Framework;
 use Psr\Log;
@@ -106,8 +105,7 @@ final class CacheWarmupConfigTest extends Framework\TestCase
             Src\Config\Option\ExcludePattern::createFromRegularExpression('#foo#'),
         ];
 
-        // @todo Switch to self::assertEquals() once support for PHP 8.2 (and PHPUnit 11.x) ist dropped
-        DeepClosureComparator\DeepClosureAssert::assertEquals($expected, $this->subject->getExcludePatterns());
+        self::assertEquals($expected, $this->subject->getExcludePatterns());
     }
 
     #[Framework\Attributes\Test]
@@ -280,8 +278,7 @@ final class CacheWarmupConfigTest extends Framework\TestCase
             300,
         );
 
-        // @todo Switch to self::assertEquals() once support for PHP 8.2 (and PHPUnit 11.x) ist dropped
-        DeepClosureComparator\DeepClosureAssert::assertEquals($expected, $this->subject->merge($other));
+        self::assertEquals($expected, $this->subject->merge($other));
     }
 
     #[Framework\Attributes\Test]

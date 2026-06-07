@@ -25,7 +25,6 @@ namespace EliasHaeussler\CacheWarmup\Tests\Xml;
 
 use EliasHaeussler\CacheWarmup as Src;
 use EliasHaeussler\CacheWarmup\Tests;
-use EliasHaeussler\DeepClosureComparator;
 use GuzzleHttp\RequestOptions;
 use PHPUnit\Framework;
 
@@ -83,8 +82,7 @@ final class ParserFactoryTest extends Framework\TestCase
         $actual = $this->subject->get(Tests\Fixtures\Classes\DummyParser::class);
 
         self::assertInstanceOf(Tests\Fixtures\Classes\DummyParser::class, $actual);
-        // @todo Switch to self::assertEquals() once support for PHP 8.2 (and PHPUnit 11.x) ist dropped
-        DeepClosureComparator\DeepClosureAssert::assertEquals($this->clientFactory->get(), Tests\Fixtures\Classes\DummyParser::$client);
+        self::assertEquals($this->clientFactory->get(), Tests\Fixtures\Classes\DummyParser::$client);
     }
 
     #[Framework\Attributes\Test]
