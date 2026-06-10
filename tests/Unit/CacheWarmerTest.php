@@ -143,7 +143,7 @@ final class CacheWarmerTest extends TestCase
         $sitemaps,
         array $expectedSitemaps,
         array $expectedUrls,
-        array $prophesizedRequests = [],
+        array $prophesizedRequests = []
     ): void {
         foreach ($prophesizedRequests as $fixture => $expectedUri) {
             $this->prophesizeSitemapRequest($fixture, $expectedUri);

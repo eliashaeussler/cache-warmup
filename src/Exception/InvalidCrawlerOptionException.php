@@ -25,7 +25,6 @@ namespace EliasHaeussler\CacheWarmup\Exception;
 
 use EliasHaeussler\CacheWarmup\Crawler\ConfigurableCrawlerInterface;
 use RuntimeException;
-
 use function count;
 use function get_class;
 use function implode;

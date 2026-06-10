@@ -25,7 +25,6 @@ namespace EliasHaeussler\CacheWarmup;
 
 use InvalidArgumentException;
 use Psr\Http\Message\UriInterface;
-
 use function in_array;
 
 /**

@@ -31,7 +31,6 @@ use GuzzleHttp\Psr7\Uri;
 use InvalidArgumentException;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\UriInterface;
-
 use function count;
 use function gettype;
 use function in_array;

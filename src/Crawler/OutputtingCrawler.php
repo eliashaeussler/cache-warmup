@@ -28,7 +28,6 @@ use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
-
 use function count;
 
 /**

@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Crawler;
 
 use EliasHaeussler\CacheWarmup\Exception\InvalidCrawlerOptionException;
-
 use function array_diff_key;
 
 /**

@@ -25,7 +25,6 @@ namespace EliasHaeussler\CacheWarmup\Tests\Unit\Crawler;
 
 use EliasHaeussler\CacheWarmup\Exception\InvalidCrawlerOptionException;
 use PHPUnit\Framework\TestCase;
-
 use function get_class;
 
 /**
