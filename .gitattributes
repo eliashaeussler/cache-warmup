@@ -5,7 +5,6 @@
 /.gitignore               export-ignore
 /.php-cs-fixer.php        export-ignore
 /box.json                 export-ignore
-/codecov.yml              export-ignore
 /CODEOWNERS               export-ignore
 /phpstan.neon             export-ignore
 /phpunit.xml              export-ignore
