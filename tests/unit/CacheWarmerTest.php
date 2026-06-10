@@ -139,6 +139,7 @@ final class CacheWarmerTest extends Framework\TestCase
     {
         $this->expectException(Src\Exception\SitemapIsInvalid::class);
         $this->expectExceptionCode(1604055096);
+        // @todo Switch to $this->expectExceptionMessageIs() once support for PHPUnit 11 & 12 is dropped
         $this->expectExceptionMessage(sprintf('Sitemaps must be of type string or %s, bool given.', Src\Sitemap\Sitemap::class));
 
         $this->subject->addSitemaps([false]);

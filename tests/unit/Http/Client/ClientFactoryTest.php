@@ -47,6 +47,7 @@ final class ClientFactoryTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    #[Framework\Attributes\IgnorePhpunitWarnings('Comparing closures for equality is problematic because there is no reliable way to determine whether two closures are equal')]
     public function getReturnsClientWithDefaultConfig(): void
     {
         $expected = new Client([
@@ -57,6 +58,7 @@ final class ClientFactoryTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    #[Framework\Attributes\IgnorePhpunitWarnings('Comparing closures for equality is problematic because there is no reliable way to determine whether two closures are equal')]
     public function getReturnsClientWithMergedConfig(): void
     {
         $expected = new Client([

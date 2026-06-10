@@ -67,10 +67,40 @@ parameters:
 			path: ../../tests/unit/CacheWarmerTest.php
 
 		-
+			rawMessage: Attribute class PHPUnit\Framework\Attributes\IgnorePhpunitWarnings does not exist.
+			identifier: attribute.notFound
+			count: 1
+			path: ../../tests/unit/Config/Adapter/ConsoleInputConfigAdapterTest.php
+
+		-
+			rawMessage: Attribute class PHPUnit\Framework\Attributes\IgnorePhpunitWarnings does not exist.
+			identifier: attribute.notFound
+			count: 1
+			path: ../../tests/unit/Config/Adapter/EnvironmentVariablesConfigAdapterTest.php
+
+		-
+			rawMessage: Attribute class PHPUnit\Framework\Attributes\IgnorePhpunitWarnings does not exist.
+			identifier: attribute.notFound
+			count: 1
+			path: ../../tests/unit/Config/Adapter/FileConfigAdapterTest.php
+
+		-
+			rawMessage: Attribute class PHPUnit\Framework\Attributes\IgnorePhpunitWarnings does not exist.
+			identifier: attribute.notFound
+			count: 2
+			path: ../../tests/unit/Config/CacheWarmupConfigTest.php
+
+		-
 			rawMessage: 'Parameter #1 $limit of method EliasHaeussler\CacheWarmup\Config\CacheWarmupConfig::setLimit() expects int<0, max>, -10 given.'
 			identifier: argument.type
 			count: 1
 			path: ../../tests/unit/Config/CacheWarmupConfigTest.php
+
+		-
+			rawMessage: Attribute class PHPUnit\Framework\Attributes\IgnorePhpunitWarnings does not exist.
+			identifier: attribute.notFound
+			count: 1
+			path: ../../tests/unit/Crawler/CrawlerFactoryTest.php
 
 		-
 			rawMessage: 'Parameter #1 $crawlerClass of method EliasHaeussler\CacheWarmup\Crawler\CrawlerFactory::get() expects class-string<EliasHaeussler\CacheWarmup\Crawler\Crawler>, string given.'
@@ -79,7 +109,25 @@ parameters:
 			path: ../../tests/unit/Crawler/CrawlerFactoryTest.php
 
 		-
+			rawMessage: Attribute class PHPUnit\Framework\Attributes\IgnorePhpunitWarnings does not exist.
+			identifier: attribute.notFound
+			count: 3
+			path: ../../tests/unit/DependencyInjection/ContainerFactoryTest.php
+
+		-
+			rawMessage: Attribute class PHPUnit\Framework\Attributes\IgnorePhpunitWarnings does not exist.
+			identifier: attribute.notFound
+			count: 2
+			path: ../../tests/unit/Http/Client/ClientFactoryTest.php
+
+		-
 			rawMessage: 'Call to static method PHPUnit\Framework\Assert::assertSame() with ''foo'' and ''foo'' will always evaluate to true.'
 			identifier: staticMethod.alreadyNarrowedType
 			count: 1
 			path: ../../tests/unit/Time/TimeTrackerTest.php
+
+		-
+			rawMessage: Attribute class PHPUnit\Framework\Attributes\IgnorePhpunitWarnings does not exist.
+			identifier: attribute.notFound
+			count: 1
+			path: ../../tests/unit/Xml/ParserFactoryTest.php

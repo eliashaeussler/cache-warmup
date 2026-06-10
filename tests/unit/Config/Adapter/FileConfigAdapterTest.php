@@ -73,6 +73,7 @@ final class FileConfigAdapterTest extends Framework\TestCase
 
     #[Framework\Attributes\Test]
     #[Framework\Attributes\DataProvider('getMapsConfigFileToCacheWarmupConfigDataProvider')]
+    #[Framework\Attributes\IgnorePhpunitWarnings('Comparing closures for equality is problematic because there is no reliable way to determine whether two closures are equal')]
     public function getMapsConfigFileToCacheWarmupConfig(string $file): void
     {
         $expected = new Src\Config\CacheWarmupConfig(

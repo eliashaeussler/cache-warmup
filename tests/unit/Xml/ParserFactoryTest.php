@@ -77,6 +77,7 @@ final class ParserFactoryTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    #[Framework\Attributes\IgnorePhpunitWarnings('Comparing closures for equality is problematic because there is no reliable way to determine whether two closures are equal')]
     public function getReturnsParser(): void
     {
         $actual = $this->subject->get(Tests\Fixtures\Classes\DummyParser::class);

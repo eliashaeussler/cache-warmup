@@ -232,6 +232,7 @@ final class SitemapXmlParserTest extends Framework\TestCase
 
         $this->expectException(Src\Exception\FileIsMissing::class);
         $this->expectExceptionCode(1698427082);
+        // @todo Switch to $this->expectExceptionMessageIs() once support for PHPUnit 11 & 12 is dropped
         $this->expectExceptionMessage('The file "/foo" does not exist or is not readable');
 
         $this->subject->parse($sitemap);

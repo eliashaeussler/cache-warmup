@@ -77,6 +77,7 @@ final class SitemapTest extends Framework\TestCase
     {
         $this->expectException(Src\Exception\UrlIsEmpty::class);
         $this->expectExceptionCode(1604055264);
+        // @todo Switch to $this->expectExceptionMessageIs() once support for PHPUnit 11 & 12 is dropped
         $this->expectExceptionMessage('The given URL must not be empty.');
 
         new Src\Sitemap\Sitemap(new Psr7\Uri(''));
@@ -87,6 +88,7 @@ final class SitemapTest extends Framework\TestCase
     {
         $this->expectException(Src\Exception\UrlIsInvalid::class);
         $this->expectExceptionCode(1604055334);
+        // @todo Switch to $this->expectExceptionMessageIs() once support for PHPUnit 11 & 12 is dropped
         $this->expectExceptionMessage('The given URL "foo" is not valid.');
 
         new Src\Sitemap\Sitemap(new Psr7\Uri('foo'));

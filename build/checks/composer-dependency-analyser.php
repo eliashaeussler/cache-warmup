@@ -21,9 +21,13 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use PHPUnit\Framework;
 use ShipMonk\ComposerDependencyAnalyser;
 
 $configuration = new ComposerDependencyAnalyser\Config\Configuration();
 $configuration->ignoreErrorsOnExtension('ext-zlib', [ComposerDependencyAnalyser\Config\ErrorType::UNUSED_DEPENDENCY]);
+$configuration->ignoreUnknownClasses([
+    Framework\Attributes\IgnorePhpunitWarnings::class,
+]);
 
 return $configuration;

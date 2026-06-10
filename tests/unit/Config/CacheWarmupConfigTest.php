@@ -94,6 +94,7 @@ final class CacheWarmupConfigTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    #[Framework\Attributes\IgnorePhpunitWarnings('Comparing closures for equality is problematic because there is no reliable way to determine whether two closures are equal')]
     public function addExcludePatternAddsGivenExcludePatternToExcludePatterns(): void
     {
         $this->subject->addExcludePattern(
@@ -212,6 +213,7 @@ final class CacheWarmupConfigTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    #[Framework\Attributes\IgnorePhpunitWarnings('Comparing closures for equality is problematic because there is no reliable way to determine whether two closures are equal')]
     public function mergeMergesGivenConfigIntoCurrentConfigObject(): void
     {
         $other = new Src\Config\CacheWarmupConfig(
