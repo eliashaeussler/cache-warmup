@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of the Composer package "eliashaeussler/cache-warmup".
  *
- * Copyright (C) 2024 Elias Häußler <elias@haeussler.dev>
+ * Copyright (C) 2026 Elias Häußler <elias@haeussler.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -143,7 +143,7 @@ final class CacheWarmerTest extends TestCase
         $sitemaps,
         array $expectedSitemaps,
         array $expectedUrls,
-        array $prophesizedRequests = []
+        array $prophesizedRequests = [],
     ): void {
         foreach ($prophesizedRequests as $fixture => $expectedUri) {
             $this->prophesizeSitemapRequest($fixture, $expectedUri);
