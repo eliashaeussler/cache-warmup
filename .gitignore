@@ -5,3 +5,4 @@
 /tests/e2e/tools
 /vendor
 /Dockerfile
+/.php-cs-fixer.cache

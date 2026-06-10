@@ -70,6 +70,7 @@ final class ContainerFactoryTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    #[Framework\Attributes\IgnorePhpunitWarnings('Comparing closures for equality is problematic because there is no reliable way to determine whether two closures are equal')]
     public function buildCreatesContainerForConstructableCrawlers(): void
     {
         $actual = $this->subject->build();
@@ -81,6 +82,7 @@ final class ContainerFactoryTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    #[Framework\Attributes\IgnorePhpunitWarnings('Comparing closures for equality is problematic because there is no reliable way to determine whether two closures are equal')]
     public function buildCreatesContainerForConstructableParsers(): void
     {
         $actual = $this->subject->build();
@@ -90,6 +92,7 @@ final class ContainerFactoryTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    #[Framework\Attributes\IgnorePhpunitWarnings('Comparing closures for equality is problematic because there is no reliable way to determine whether two closures are equal')]
     public function buildRegistersComponentsAsServices(): void
     {
         $actual = $this->subject->build();
