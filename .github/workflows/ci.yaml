@@ -23,6 +23,7 @@ jobs:
     if: ${{ needs.prepare.outputs.continue == 'true' }}
 
     permissions:
+      contents: read
       security-events: write
 
     uses: eliashaeussler/gha/.github/workflows/checks.yaml@b205b470c2f8b2eec7ca41caedf3c401abda2dcf # 0.7.1
