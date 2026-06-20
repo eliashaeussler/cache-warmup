@@ -98,7 +98,7 @@ jobs:
           base-path: 'docs/.vitepress/dist'
 
       - name: 'Run cache warmup'
-        uses: eliashaeussler/cache-warmup-action@a0c1504d177d494a44681009bc6838df654d4b98 # v1
+        uses: eliashaeussler/cache-warmup-action@b2f60a92f2d12eadd36d6387d4a8131b69ef9ed9 # 2.0.0
         with:
           sitemaps: ${{ steps.deploy.outputs.pages-url }}/sitemap.xml
           progress: true
