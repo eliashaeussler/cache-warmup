@@ -14,7 +14,7 @@ permissions:
 jobs:
   prepare:
     name: 'Prepare workflow'
-    uses: eliashaeussler/gha/.github/workflows/preparation.yaml@25277ecb47b0e804f4cc464509789a0183cb78fc # 0.7.3
+    uses: eliashaeussler/gha/.github/workflows/preparation.yaml@24c8e1aa6eb95107a2f97721f962cc6372ae9016 # 0.8.1
 
   checks:
     name: 'Checks'
@@ -26,7 +26,7 @@ jobs:
       contents: read
       security-events: write
 
-    uses: eliashaeussler/gha/.github/workflows/checks.yaml@25277ecb47b0e804f4cc464509789a0183cb78fc # 0.7.3
+    uses: eliashaeussler/gha/.github/workflows/checks.yaml@24c8e1aa6eb95107a2f97721f962cc6372ae9016 # 0.8.1
     with:
       # We use the minimum supported PHP version
       php-version: 8.2 # renovate-ignore
@@ -52,12 +52,12 @@ jobs:
             dependencies: "highest"
             os: "Windows"
 
-    uses: eliashaeussler/gha/.github/workflows/composer-tests.yaml@25277ecb47b0e804f4cc464509789a0183cb78fc # 0.7.3
+    uses: eliashaeussler/gha/.github/workflows/composer-tests.yaml@24c8e1aa6eb95107a2f97721f962cc6372ae9016 # 0.8.1
     with:
       php-version: ${{ matrix.php-version }}
       dependencies: ${{ matrix.dependencies }}
       os: ${{ matrix.os }}
-      command: 'test:unit'
+      test-command: 'test:unit'
 
   e2e-tests:
     name: 'E2E tests'
@@ -65,9 +65,9 @@ jobs:
     needs: [prepare]
     if: ${{ needs.prepare.outputs.continue == 'true' }}
 
-    uses: eliashaeussler/gha/.github/workflows/composer-tests.yaml@25277ecb47b0e804f4cc464509789a0183cb78fc # 0.7.3
+    uses: eliashaeussler/gha/.github/workflows/composer-tests.yaml@24c8e1aa6eb95107a2f97721f962cc6372ae9016 # 0.8.1
     with:
-      command: 'test:e2e'
+      test-command: 'test:e2e'
       allowed-endpoints: >
         www.example.org:443
 
@@ -77,4 +77,4 @@ jobs:
     needs: [prepare]
     if: ${{ needs.prepare.outputs.continue == 'true' }}
 
-    uses: eliashaeussler/gha/.github/workflows/composer-test-coverage.yaml@25277ecb47b0e804f4cc464509789a0183cb78fc # 0.7.3
+    uses: eliashaeussler/gha/.github/workflows/composer-test-coverage.yaml@24c8e1aa6eb95107a2f97721f962cc6372ae9016 # 0.8.1
