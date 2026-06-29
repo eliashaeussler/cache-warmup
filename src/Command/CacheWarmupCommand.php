@@ -58,7 +58,7 @@ use function strtolower;
 /**
  * CacheWarmupCommand.
  *
- * @author Elias Häußler <elias@heussler.dev>
+ * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
 final class CacheWarmupCommand extends Console\Command\Command
@@ -73,7 +73,6 @@ final class CacheWarmupCommand extends Console\Command\Command
     private Formatter\Formatter $formatter;
     private Crawler\CrawlerFactory $crawlerFactory;
     private Xml\ParserFactory $parserFactory;
-    private bool $firstRun = true;
 
     public function __construct(
         private readonly EventDispatcherInterface $eventDispatcher = new EventDispatcher\EventDispatcher(),
@@ -486,15 +485,39 @@ HELP);
             throw new Console\Exception\RuntimeException('Neither sitemaps nor URLs are defined.', 1604261236);
         }
 
+        // Warn once before entering the endless run
+        if ($repeatAfter > 0) {
+            $this->showEndlessModeWarning($repeatAfter);
+        }
+
+        do {
+            $exitCode = $this->doExecute();
+
+            // Stop immediately if a run failed (also ends endless mode)
+            if (self::SUCCESSFUL !== $exitCode) {
+                return $exitCode;
+            }
+
+            // Wait before the next run in endless mode
+            if ($repeatAfter > 0) {
+                sleep($repeatAfter);
+            }
+        } while ($repeatAfter > 0);
+
+        return self::SUCCESSFUL;
+    }
+
+    /**
+     * @throws Exception\CrawlerDoesNotExist
+     * @throws Exception\CrawlerIsInvalid
+     * @throws Exception\OptionsAreInvalid
+     * @throws Exception\OptionsAreMalformed
+     */
+    private function doExecute(): int
+    {
         // Show header
         if ($this->formatter->isVerbose()) {
             $this->printHeader();
-        }
-
-        // Show warning on endless runs
-        if ($this->firstRun && $repeatAfter > 0) {
-            $this->showEndlessModeWarning($repeatAfter);
-            $this->firstRun = false;
         }
 
         // Print client options
@@ -528,18 +551,11 @@ HELP);
         // Print formatted cache warmup result
         $this->formatter->formatCacheWarmupResult($result, $this->timeTracker->getLastDuration());
 
-        // Early return if parsing or crawling failed
+        // Report failure if parsing or crawling failed
         if (!$this->config->areFailuresAllowed()
             && ([] !== $cacheWarmer->getFailedSitemaps() || !$result->isSuccessful())
         ) {
             return self::FAILED;
-        }
-
-        // Repeat on endless mode
-        if ($repeatAfter > 0) {
-            sleep($repeatAfter);
-
-            return $this->execute($input, $output);
         }
 
         return self::SUCCESSFUL;
