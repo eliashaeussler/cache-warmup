@@ -93,15 +93,24 @@ final class RequestPoolFactory
 
     private function onFulfilled(Message\ResponseInterface $response, int $index): void
     {
+        $uri = $this->visited[$index]->getUri();
+
+        // Release the settled request to keep memory bound to the configured concurrency.
+        unset($this->visited[$index]);
+
         foreach ($this->handlers as $handler) {
-            $handler->onSuccess($response, $this->visited[$index]->getUri());
+            $handler->onSuccess($response, $uri);
         }
     }
 
     private function onRejected(Throwable $throwable, int $index, Promise\Promise $aggregate): void
     {
+        $uri = $this->visited[$index]->getUri();
+
+        unset($this->visited[$index]);
+
         foreach ($this->handlers as $handler) {
-            $handler->onFailure($throwable, $this->visited[$index]->getUri());
+            $handler->onFailure($throwable, $uri);
         }
 
         if ($this->stopOnFailure) {
