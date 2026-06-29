@@ -88,6 +88,20 @@ final class RequestPoolFactoryTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
+    public function createPoolReleasesRequestsOnceTheirResponsesAreHandled(): void
+    {
+        $this->mockHandler->append(
+            new Psr7\Response(),
+            new Exception(),
+            new Psr7\Response(),
+        );
+
+        $this->subject->createPool()->promise()->wait();
+
+        self::assertPropertyEquals($this->subject, 'visited', []);
+    }
+
+    #[Framework\Attributes\Test]
     public function withClientClonesObjectAndAppliesGivenClient(): void
     {
         $this->mockHandler->append(new Psr7\Response());
