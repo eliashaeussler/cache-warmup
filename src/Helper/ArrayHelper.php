@@ -37,7 +37,7 @@ use function is_int;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class ArrayHelper
+final readonly class ArrayHelper
 {
     /**
      * @param iterable<string, mixed> $subject

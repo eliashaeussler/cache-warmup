@@ -41,7 +41,7 @@ use function strtoupper;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class CompactLogFormatter implements LogFormatter
+final readonly class CompactLogFormatter implements LogFormatter
 {
     private const TEMPLATE = '[%s] %s: %s %s';
 

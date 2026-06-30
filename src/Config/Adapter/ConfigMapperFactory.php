@@ -34,7 +34,7 @@ use EliasHaeussler\CacheWarmup\Sitemap;
  *
  * @internal
  */
-final class ConfigMapperFactory
+final readonly class ConfigMapperFactory
 {
     public function get(): Valinor\Mapper\TreeMapper
     {
