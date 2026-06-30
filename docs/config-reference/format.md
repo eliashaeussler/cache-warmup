@@ -51,6 +51,7 @@ The resulting JSON object includes the following properties:
 | `messages`          | Contains all logged messages, grouped by message severity (`error`, `info`, `success`, `warning`)                      |
 | `parserResult`      | Lists all parsed and excluded XML sitemaps and URLs, grouped by their parsing state (`excluded`, `failure`, `success`) |
 | `time`              | Lists all tracked times during cache warmup (`crawl`, `parse`)                                                         |
+| `memoryUsage`       | Displays the whole memory consumption in bytes                                                                         |
 
 The complete JSON structure can be found in the provided
 [JSON schema](../../res/cache-warmup-result.schema.json).
@@ -108,7 +109,8 @@ The complete JSON structure can be found in the provided
     "time": {
         "parse": "0.18s",
         "crawl": "0.212s"
-    }
+    },
+    "memoryUsage": 4194304
 }
 
 ```

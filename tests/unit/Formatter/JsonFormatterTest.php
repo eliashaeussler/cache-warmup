@@ -34,6 +34,8 @@ use Symfony\Component\Console;
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
+ *
+ * @phpstan-import-type JsonArray from Src\Formatter\JsonFormatter
  */
 #[Framework\Attributes\CoversClass(Src\Formatter\JsonFormatter::class)]
 final class JsonFormatterTest extends Framework\TestCase
@@ -164,7 +166,7 @@ final class JsonFormatterTest extends Framework\TestCase
 
         $this->subject->formatCacheWarmupResult($result);
 
-        self::assertSame([], $this->subject->getJson());
+        self::assertSame([], $this->getValidatedJson());
     }
 
     #[Framework\Attributes\Test]
@@ -182,7 +184,7 @@ final class JsonFormatterTest extends Framework\TestCase
                     'success' => [$url],
                 ],
             ],
-            $this->subject->getJson(),
+            $this->getValidatedJson(),
         );
     }
 
@@ -201,7 +203,7 @@ final class JsonFormatterTest extends Framework\TestCase
                     'failure' => [$url],
                 ],
             ],
-            $this->subject->getJson(),
+            $this->getValidatedJson(),
         );
     }
 
@@ -219,7 +221,7 @@ final class JsonFormatterTest extends Framework\TestCase
                     'cancelled' => true,
                 ],
             ],
-            $this->subject->getJson(),
+            $this->getValidatedJson(),
         );
     }
 
@@ -237,7 +239,7 @@ final class JsonFormatterTest extends Framework\TestCase
                     'crawl' => $duration->format(),
                 ],
             ],
-            $this->subject->getJson(),
+            $this->getValidatedJson(),
         );
     }
 
@@ -270,5 +272,20 @@ final class JsonFormatterTest extends Framework\TestCase
         yield 'info' => [Src\Formatter\MessageSeverity::Info, $message(Src\Formatter\MessageSeverity::Info)];
         yield 'success' => [Src\Formatter\MessageSeverity::Success, $message(Src\Formatter\MessageSeverity::Success)];
         yield 'warning' => [Src\Formatter\MessageSeverity::Warning, $message(Src\Formatter\MessageSeverity::Warning)];
+    }
+
+    /**
+     * @return JsonArray
+     */
+    private function getValidatedJson(): array
+    {
+        $json = $this->subject->getJson();
+
+        self::assertArrayHasKey('memoryUsage', $json);
+        self::assertGreaterThan(0, $json['memoryUsage']);
+
+        unset($json['memoryUsage']);
+
+        return $json;
     }
 }

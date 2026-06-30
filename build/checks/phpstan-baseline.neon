@@ -19,7 +19,7 @@ parameters:
 			path: ../../src/Crawler/AbstractConfigurableCrawler.php
 
 		-
-			rawMessage: 'Property EliasHaeussler\CacheWarmup\Formatter\JsonFormatter::$json (array{parserResult?: array{success?: array{sitemaps: list<string>, urls: list<string>}, failure?: array{sitemaps: list<string>}, excluded?: array{sitemaps: list<string>, urls: list<string>}}, cacheWarmupResult?: array{success?: list<string>, failure?: list<string>, cancelled?: bool}, messages?: array<''error''|''info''|''success''|''warning'', list<string>>, time?: array{parse?: string, crawl?: string}}) does not accept iterable<string, mixed>.'
+			rawMessage: 'Property EliasHaeussler\CacheWarmup\Formatter\JsonFormatter::$json (array{parserResult?: array{success?: array{sitemaps: list<string>, urls: list<string>}, failure?: array{sitemaps: list<string>}, excluded?: array{sitemaps: list<string>, urls: list<string>}}, cacheWarmupResult?: array{success?: list<string>, failure?: list<string>, cancelled?: bool}, messages?: array<''error''|''info''|''success''|''warning'', list<string>>, time?: array{parse?: string, crawl?: string}, memoryUsage?: int}) does not accept iterable<string, mixed>.'
 			identifier: assign.propertyType
 			count: 2
 			path: ../../src/Formatter/JsonFormatter.php
