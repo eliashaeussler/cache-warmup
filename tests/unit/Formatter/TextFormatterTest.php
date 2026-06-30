@@ -302,7 +302,7 @@ final class TextFormatterTest extends Framework\TestCase
         $output = $this->output->fetch();
 
         self::assertNotEmpty($output);
-        self::assertStringContainsString('Crawling finished in 0.5s', $output);
+        self::assertMatchesRegularExpression('/Crawling finished in 0\\.5s, consumed \\d+ [KMGTP]B of memory\\./', $output);
     }
 
     /**

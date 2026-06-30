@@ -101,6 +101,11 @@
 				}
 			},
 			"additionalProperties": false
+		},
+		"memoryUsage": {
+			"type": "integer",
+			"title": "Memory usage",
+			"description": "Displays the whole memory consumption in bytes"
 		}
 	},
 	"additionalProperties": false,

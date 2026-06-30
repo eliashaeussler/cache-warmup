@@ -33,6 +33,7 @@ use function array_map;
 use function is_array;
 use function is_scalar;
 use function json_encode;
+use function memory_get_usage;
 
 /**
  * JsonFormatter.
@@ -64,6 +65,7 @@ use function json_encode;
  *         parse?: string,
  *         crawl?: string,
  *     },
+ *     memoryUsage?: int,
  * }
  */
 final class JsonFormatter implements Formatter
@@ -116,6 +118,9 @@ final class JsonFormatter implements Formatter
         if (null !== $duration) {
             $this->addToJson('time/crawl', $duration->format());
         }
+
+        // Add memory usage
+        $this->addToJson('memoryUsage', memory_get_usage(true));
     }
 
     public function logMessage(string $message, MessageSeverity $severity = MessageSeverity::Info): void
@@ -150,9 +155,9 @@ final class JsonFormatter implements Formatter
     }
 
     /**
-     * @param string|bool|list<bool|float|int|resource|string|Stringable|null> $value
+     * @param string|int|bool|list<bool|float|int|resource|string|Stringable|null> $value
      */
-    private function addToJson(string $path, string|bool|array $value): void
+    private function addToJson(string $path, string|int|bool|array $value): void
     {
         if (is_scalar($value) && '' !== $value) {
             Helper\ArrayHelper::setValueByPath($this->json, $path, $value);

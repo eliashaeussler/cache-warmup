@@ -29,6 +29,7 @@ use EliasHaeussler\CacheWarmup\Time;
 use Symfony\Component\Console;
 
 use function call_user_func;
+use function memory_get_usage;
 use function method_exists;
 use function sprintf;
 
@@ -164,13 +165,14 @@ final readonly class TextFormatter implements Formatter
             $this->io->warning('Cache warmup was cancelled due to a crawling failure.');
         }
 
-        // Print duration
+        // Print duration and memory usage
         if (null !== $duration) {
             $this->io->writeln(
                 sprintf(
-                    'Crawling %s %s',
+                    'Crawling %s %s, consumed %s of memory.',
                     $result->wasCancelled() ? 'cancelled after' : 'finished in',
                     $duration->format(),
+                    Helper\StringHelper::formatBytes(memory_get_usage(true)),
                 ),
             );
             $this->io->newLine();
