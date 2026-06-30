@@ -38,6 +38,7 @@
 		"eliashaeussler/php-cs-fixer-config": "^3.0",
 		"eliashaeussler/phpstan-config": "^4.0.0",
 		"eliashaeussler/rector-config": "^4.0",
+		"eliashaeussler/task-runner": "^1.2",
 		"eliashaeussler/transient-logger": "^2.0",
 		"eliashaeussler/version-bumper": "^4.0",
 		"ergebnis/composer-normalize": "^2.28",
@@ -124,6 +125,11 @@
 		"test": [
 			"@test:e2e",
 			"@test:unit"
+		],
+		"test:benchmarks": [
+			"Composer\\Config::disableProcessTimeout",
+			"@php tests/benchmarks/bootstrap.php @additional_args",
+			"@php -dmemory_limit=-1 -d opcache.enable_cli=1 bin/cache-warmup https://cache-warmup.ddev.site/sitemap.xml -p @no_additional_args"
 		],
 		"test:coverage": [
 			"@test:unit:coverage"

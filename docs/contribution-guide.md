@@ -117,3 +117,12 @@ problem being solved.
 
 All documented code quality tools are executed automatically for pull requests across the currently
 supported PHP versions. For details, refer to the [GitHub Actions workflows](../.github/workflows).
+
+## Benchmarks (maintainers only)
+
+First, make sure you have [DDEV](https://ddev.com/) installed. Now run benchmarks:
+
+```bash
+ddev start
+composer test:benchmarks
+```
