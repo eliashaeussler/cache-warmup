@@ -103,12 +103,24 @@ function _run_test_case() {
 }
 
 function _tearDown() {
+    local result="$1"
+
     if [ -f "${scriptPath}/tearDown.sh" ]; then
         "${scriptPath}/tearDown.sh"
+    fi
+
+    if [ "${result}" -eq 0 ]; then
+        echo 'Result: ✅ OK'
+        exit 0
+    else
+        echo 'Result: 🚨 Failed'
+        exit 1
     fi
 }
 
 _setUp
+
+trap '_tearDown "$result"' EXIT
 
 result=0
 
@@ -117,13 +129,3 @@ for suite in "${suites[@]}"; do
         result=1
     fi
 done
-
-_tearDown
-
-if [ "${result}" -eq 0 ]; then
-    echo 'Result: ✅ OK'
-    exit 0
-else
-    echo 'Result: 🚨 Failed'
-    exit 1
-fi
