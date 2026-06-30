@@ -93,15 +93,19 @@ final class RequestPoolFactory
 
     private function onFulfilled(Message\ResponseInterface $response, int $index): void
     {
+        $uri = $this->fetchAndReleaseVisitedUri($index);
+
         foreach ($this->handlers as $handler) {
-            $handler->onSuccess($response, $this->visited[$index]->getUri());
+            $handler->onSuccess($response, $uri);
         }
     }
 
     private function onRejected(Throwable $throwable, int $index, Promise\Promise $aggregate): void
     {
+        $uri = $this->fetchAndReleaseVisitedUri($index);
+
         foreach ($this->handlers as $handler) {
-            $handler->onFailure($throwable, $this->visited[$index]->getUri());
+            $handler->onFailure($throwable, $uri);
         }
 
         if ($this->stopOnFailure) {
@@ -117,6 +121,19 @@ final class RequestPoolFactory
         foreach ($this->requests as $index => $request) {
             yield $this->visited[$index] = $request;
         }
+    }
+
+    /**
+     * @impure
+     */
+    private function fetchAndReleaseVisitedUri(int $index): Message\UriInterface
+    {
+        $uri = $this->visited[$index]->getUri();
+
+        // Release the settled request to keep memory bound to the configured concurrency
+        unset($this->visited[$index]);
+
+        return $uri;
     }
 
     public function withClient(ClientInterface $client): self
