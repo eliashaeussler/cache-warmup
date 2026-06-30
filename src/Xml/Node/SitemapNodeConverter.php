@@ -38,7 +38,7 @@ use Throwable;
  *
  * @internal
  */
-final class SitemapNodeConverter
+final readonly class SitemapNodeConverter
 {
     private const DATE_FORMATS = [
         DateTimeInterface::W3C,

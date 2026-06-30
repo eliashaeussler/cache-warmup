@@ -33,7 +33,7 @@ use function strlen;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class NullStream implements Message\StreamInterface
+final readonly class NullStream implements Message\StreamInterface
 {
     public function __toString(): string
     {

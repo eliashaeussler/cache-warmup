@@ -36,8 +36,11 @@ use function rtrim;
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-final class FilesystemHelper
+final readonly class FilesystemHelper
 {
+    /**
+     * @throws Exception\WorkingDirectoryCannotBeResolved
+     */
     public static function resolveRelativePath(string $relativePath): string
     {
         if (Filesystem\Path::isAbsolute($relativePath)) {
@@ -49,6 +52,9 @@ final class FilesystemHelper
         );
     }
 
+    /**
+     * @throws Exception\WorkingDirectoryCannotBeResolved
+     */
     public static function getWorkingDirectory(): string
     {
         $cwd = realpath((string) getcwd());
