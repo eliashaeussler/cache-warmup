@@ -10,3 +10,6 @@ readonly rootPath="${scriptPath}/../.."
 echo >&2 "⏳ Restoring Composer dev dependencies..."
 composer install --quiet --working-dir "${rootPath}"
 echo >&2 -e "\033[1A\033[K✅ Restored Composer dev dependencies."
+
+# Print empty newline
+echo
