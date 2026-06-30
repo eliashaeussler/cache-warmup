@@ -176,7 +176,7 @@ final class RequestPoolFactoryTest extends Framework\TestCase
         $actual->createPool()->promise()->wait();
     }
 
-    private function assertPropertyEquals(object $object, string $property, mixed $expected): void
+    private static function assertPropertyEquals(object $object, string $property, mixed $expected): void
     {
         $reflectionObject = new ReflectionObject($object);
         $reflectionProperty = $reflectionObject->getProperty($property);
