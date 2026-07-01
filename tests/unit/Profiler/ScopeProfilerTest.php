@@ -21,32 +21,24 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Tests\Time;
+namespace EliasHaeussler\CacheWarmup\Tests\Profiler;
 
 use EliasHaeussler\CacheWarmup as Src;
-use Exception;
 use PHPUnit\Framework;
 
 use function sleep;
 
 /**
- * TimeTrackerTest.
+ * ScopeProfilerTest.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Src\Time\TimeTracker::class)]
-final class TimeTrackerTest extends Framework\TestCase
+#[Framework\Attributes\CoversClass(Src\Profiler\ScopeProfiler::class)]
+final class ScopeProfilerTest extends Framework\TestCase
 {
-    private Src\Time\TimeTracker $subject;
-
-    protected function setUp(): void
-    {
-        $this->subject = new Src\Time\TimeTracker();
-    }
-
     #[Framework\Attributes\Test]
-    public function trackTracksTimeAndReturnsResultFromFunction(): void
+    public function startAndExecuteMeasuresScope(): void
     {
         $function = function () {
             sleep(2);
@@ -54,25 +46,22 @@ final class TimeTrackerTest extends Framework\TestCase
             return 'foo';
         };
 
-        self::assertNull($this->subject->getLastDuration());
-        self::assertSame('foo', $this->subject->track($function));
-        self::assertNotNull($this->subject->getLastDuration());
-        self::assertGreaterThan(2000, $this->subject->getLastDuration()->get());
+        $actual = Src\Profiler\ScopeProfiler::startAndExecute('foo', $function, $result);
+
+        self::assertSame('foo', $result);
+        self::assertGreaterThan(2000, $actual->duration);
     }
 
     #[Framework\Attributes\Test]
-    public function trackStoresDurationIfFunctionIsErroneous(): void
+    public function stopReturnsMeasuredScope(): void
     {
-        $function = static fn () => throw new Exception('dummy');
+        $subject = Src\Profiler\ScopeProfiler::start('foo');
 
-        self::assertNull($this->subject->getLastDuration());
+        sleep(1);
 
-        try {
-            $this->subject->track($function);
-        } catch (Exception) {
-            // Intended fallthrough.
-        }
+        $actual = $subject->stop();
 
-        self::assertNotNull($this->subject->getLastDuration());
+        self::assertSame('foo', $actual->action);
+        self::assertGreaterThan(0, $actual->duration);
     }
 }

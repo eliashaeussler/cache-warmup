@@ -140,19 +140,21 @@ final class JsonFormatterTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
-    public function formatParserResultAddsDuration(): void
+    public function formatParserResultAddsStatistics(): void
     {
         $successful = new Src\Result\ParserResult();
         $failed = new Src\Result\ParserResult();
         $excluded = new Src\Result\ParserResult();
-        $duration = new Src\Time\Duration(123.45);
+        $measurement = new Src\Profiler\MeasurementSpan(null, 123.45, 678, 901);
 
-        $this->subject->formatParserResult($successful, $failed, $excluded, $duration);
+        $this->subject->formatParserResult($successful, $failed, $excluded, $measurement);
 
         self::assertSame(
             [
-                'time' => [
-                    'parse' => $duration->format(),
+                'parserStatistics' => [
+                    'duration' => 123.45,
+                    'memoryUsage' => 678,
+                    'memoryPeak' => 901,
                 ],
             ],
             $this->subject->getJson(),
@@ -166,7 +168,7 @@ final class JsonFormatterTest extends Framework\TestCase
 
         $this->subject->formatCacheWarmupResult($result);
 
-        self::assertSame([], $this->getValidatedJson());
+        self::assertSame([], $this->subject->getJson());
     }
 
     #[Framework\Attributes\Test]
@@ -184,7 +186,7 @@ final class JsonFormatterTest extends Framework\TestCase
                     'success' => [$url],
                 ],
             ],
-            $this->getValidatedJson(),
+            $this->subject->getJson(),
         );
     }
 
@@ -203,7 +205,7 @@ final class JsonFormatterTest extends Framework\TestCase
                     'failure' => [$url],
                 ],
             ],
-            $this->getValidatedJson(),
+            $this->subject->getJson(),
         );
     }
 
@@ -221,25 +223,27 @@ final class JsonFormatterTest extends Framework\TestCase
                     'cancelled' => true,
                 ],
             ],
-            $this->getValidatedJson(),
+            $this->subject->getJson(),
         );
     }
 
     #[Framework\Attributes\Test]
-    public function formatCacheWarmupResultAddsDuration(): void
+    public function formatCacheWarmupResultAddsStatistics(): void
     {
         $result = new Src\Result\CacheWarmupResult();
-        $duration = new Src\Time\Duration(123.45);
+        $measurement = new Src\Profiler\MeasurementSpan(null, 123.45, 678, 901);
 
-        $this->subject->formatCacheWarmupResult($result, $duration);
+        $this->subject->formatCacheWarmupResult($result, $measurement);
 
         self::assertSame(
             [
-                'time' => [
-                    'crawl' => $duration->format(),
+                'cacheWarmupStatistics' => [
+                    'duration' => 123.45,
+                    'memoryUsage' => 678,
+                    'memoryPeak' => 901,
                 ],
             ],
-            $this->getValidatedJson(),
+            $this->subject->getJson(),
         );
     }
 
@@ -272,20 +276,5 @@ final class JsonFormatterTest extends Framework\TestCase
         yield 'info' => [Src\Formatter\MessageSeverity::Info, $message(Src\Formatter\MessageSeverity::Info)];
         yield 'success' => [Src\Formatter\MessageSeverity::Success, $message(Src\Formatter\MessageSeverity::Success)];
         yield 'warning' => [Src\Formatter\MessageSeverity::Warning, $message(Src\Formatter\MessageSeverity::Warning)];
-    }
-
-    /**
-     * @return JsonArray
-     */
-    private function getValidatedJson(): array
-    {
-        $json = $this->subject->getJson();
-
-        self::assertArrayHasKey('memoryUsage', $json);
-        self::assertGreaterThan(0, $json['memoryUsage']);
-
-        unset($json['memoryUsage']);
-
-        return $json;
     }
 }

@@ -23,9 +23,8 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Helper;
 
-use function abs;
-use function end;
-use function round;
+use NumberFormatter;
+use Symfony\Component\Console;
 
 /**
  * StringHelper.
@@ -37,17 +36,22 @@ final readonly class StringHelper
 {
     public static function formatBytes(int $bytes): string
     {
-        $bytes = round($bytes);
-        $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
+        return Console\Helper\Helper::formatMemory($bytes);
+    }
 
-        foreach ($units as $unit) {
-            if (abs($bytes) < 1024 || $unit === end($units)) {
-                break;
-            }
+    public static function formatDuration(int $milliseconds): string
+    {
+        return Console\Helper\Helper::formatTime($milliseconds / 1000);
+    }
 
-            $bytes /= 1024;
+    public static function formatNumber(int $number): string
+    {
+        $formatted = NumberFormatter::create('en', NumberFormatter::DEFAULT_STYLE)->format($number);
+
+        if (false === $formatted) {
+            return (string) $number;
         }
 
-        return round($bytes, 2).' '.($unit ?? 'B');
+        return $formatted;
     }
 }

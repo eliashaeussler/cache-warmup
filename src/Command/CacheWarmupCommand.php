@@ -33,9 +33,9 @@ use EliasHaeussler\CacheWarmup\Formatter;
 use EliasHaeussler\CacheWarmup\Helper;
 use EliasHaeussler\CacheWarmup\Http;
 use EliasHaeussler\CacheWarmup\Log;
+use EliasHaeussler\CacheWarmup\Profiler;
 use EliasHaeussler\CacheWarmup\Result;
 use EliasHaeussler\CacheWarmup\Sitemap;
-use EliasHaeussler\CacheWarmup\Time;
 use EliasHaeussler\CacheWarmup\Xml;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LogLevel;
@@ -67,7 +67,6 @@ final class CacheWarmupCommand extends Console\Command\Command
     private const FAILED = 1;
 
     private readonly Config\Component\OptionsParser $optionsParser;
-    private readonly Time\TimeTracker $timeTracker;
     private Config\CacheWarmupConfig $config;
     private Console\Style\SymfonyStyle $io;
     private Formatter\Formatter $formatter;
@@ -79,7 +78,6 @@ final class CacheWarmupCommand extends Console\Command\Command
         private readonly Crawler\Strategy\CrawlingStrategyFactory $crawlingStrategyFactory = new Crawler\Strategy\CrawlingStrategyFactory(),
     ) {
         $this->optionsParser = new Config\Component\OptionsParser();
-        $this->timeTracker = new Time\TimeTracker();
 
         parent::__construct('cache-warmup');
     }
@@ -529,15 +527,20 @@ HELP);
 
         // Initialize components
         $crawler = $this->initializeCrawler();
-        $cacheWarmer = $this->timeTracker->track(fn () => $this->initializeCacheWarmer($crawler));
-        $parseTime = $this->timeTracker->getLastDuration();
+        $parseMeasurement = Profiler\ScopeProfiler::startAndExecute(
+            'Parsing sitemaps',
+            fn () => $this->initializeCacheWarmer($crawler),
+            $cacheWarmer,
+        );
 
         // Start crawling
-        $result = $this->timeTracker->track(
+        $warmupMeasurement = Profiler\ScopeProfiler::startAndExecute(
+            'Crawling URLs',
             fn () => $this->runCacheWarmup(
                 $cacheWarmer,
                 $crawler instanceof Crawler\VerboseCrawler,
             ),
+            $result,
         );
 
         // Print formatted parser result
@@ -545,11 +548,12 @@ HELP);
             new Result\ParserResult($cacheWarmer->getSitemaps(), $cacheWarmer->getUrls()),
             new Result\ParserResult($cacheWarmer->getFailedSitemaps()),
             new Result\ParserResult($cacheWarmer->getExcludedSitemaps(), $cacheWarmer->getExcludedUrls()),
-            $parseTime,
+            $parseMeasurement,
         );
 
         // Print formatted cache warmup result
-        $this->formatter->formatCacheWarmupResult($result, $this->timeTracker->getLastDuration());
+        $this->formatter->formatCacheWarmupResult($result, $warmupMeasurement);
+        $this->formatter->formatMeasuredScopes(Profiler\ScopeProfiler::releaseStack());
 
         // Report failure if parsing or crawling failed
         if (!$this->config->areFailuresAllowed()

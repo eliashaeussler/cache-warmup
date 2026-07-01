@@ -39,20 +39,16 @@ final class StringHelperTest extends Framework\TestCase
     /**
      * @return Generator<string, array{int, string}>
      */
-    public static function formatBytesReturnsFormattedBytesDataProvider(): Generator
+    public static function formatNumberReturnsFormattedNumberDataProvider(): Generator
     {
-        yield 'bytes' => [1023, '1023 B'];
-        yield 'kilobytes' => [1024, '1 KB'];
-        yield 'megabytes' => [1024 * 1024, '1 MB'];
-        yield 'gigabytes' => [1024 * 1024 * 1024, '1 GB'];
-        yield 'terabytes' => [1024 * 1024 * 1024 * 1024, '1 TB'];
-        yield 'petabytes' => [1024 * 1024 * 1024 * 1024 * 1024, '1 PB'];
+        yield 'small number' => [123, '123'];
+        yield 'large number' => [123 * 456 * 789, '44,253,432'];
     }
 
     #[Framework\Attributes\Test]
-    #[Framework\Attributes\DataProvider('formatBytesReturnsFormattedBytesDataProvider')]
-    public function formatBytesReturnsFormattedBytes(int $bytes, string $expected): void
+    #[Framework\Attributes\DataProvider('formatNumberReturnsFormattedNumberDataProvider')]
+    public function formatNumberReturnsFormattedNumber(int $number, string $expected): void
     {
-        self::assertSame($expected, Src\Helper\StringHelper::formatBytes($bytes));
+        self::assertSame($expected, Src\Helper\StringHelper::formatNumber($number));
     }
 }
