@@ -45,13 +45,13 @@ CACHE_WARMUP_FORMAT=json
 
 The resulting JSON object includes the following properties:
 
-| Property            | Description                                                                                                            |
-|---------------------|------------------------------------------------------------------------------------------------------------------------|
-| `cacheWarmupResult` | Lists all crawled URLs, grouped by their crawling state (`failure`, `success`), and may contain `cancelled` state      |
-| `messages`          | Contains all logged messages, grouped by message severity (`error`, `info`, `success`, `warning`)                      |
-| `parserResult`      | Lists all parsed and excluded XML sitemaps and URLs, grouped by their parsing state (`excluded`, `failure`, `success`) |
-| `time`              | Lists all tracked times during cache warmup (`crawl`, `parse`)                                                         |
-| `memoryUsage`       | Displays the whole memory consumption in bytes                                                                         |
+| Property                | Description                                                                                                            |
+|-------------------------|------------------------------------------------------------------------------------------------------------------------|
+| `cacheWarmupResult`     | Lists all crawled URLs, grouped by their crawling state (`failure`, `success`), and may contain `cancelled` state      |
+| `cacheWarmupStatistics` | Displays measured time (in milliseconds) and memory (in bytes) used to perform cache warmup                            |
+| `messages`              | Contains all logged messages, grouped by message severity (`error`, `info`, `success`, `warning`)                      |
+| `parserResult`          | Lists all parsed and excluded XML sitemaps and URLs, grouped by their parsing state (`excluded`, `failure`, `success`) |
+| `parserStatistics`      | Displays measured time (in milliseconds) and memory (in bytes) used to parse XML sitemaps                              |
 
 The complete JSON structure can be found in the provided
 [JSON schema](../../res/cache-warmup-result.schema.json).
@@ -78,6 +78,11 @@ The complete JSON structure can be found in the provided
             "https://www.google.com/intl/ms/forms/about/",
             "https://www.google.com/intl/da/forms/about/"
         ]
+    },
+    "cacheWarmupStatistics": {
+        "duration": 212,
+        "memoryPeak": 4194304,
+        "memoryUsage": 5846873
     },
     "parserResult": {
         "excluded": {
@@ -106,11 +111,11 @@ The complete JSON structure can be found in the provided
             ]
         }
     },
-    "time": {
-        "parse": "0.18s",
-        "crawl": "0.212s"
-    },
-    "memoryUsage": 4194304
+    "parserStatistics": {
+        "duration": 180,
+        "memoryPeak": 9826,
+        "memoryUsage": 10083
+    }
 }
 
 ```

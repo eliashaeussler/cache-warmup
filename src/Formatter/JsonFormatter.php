@@ -24,16 +24,16 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Formatter;
 
 use EliasHaeussler\CacheWarmup\Helper;
+use EliasHaeussler\CacheWarmup\Profiler;
 use EliasHaeussler\CacheWarmup\Result;
-use EliasHaeussler\CacheWarmup\Time;
 use Stringable;
 use Symfony\Component\Console;
 
 use function array_map;
+use function in_array;
 use function is_array;
 use function is_scalar;
 use function json_encode;
-use function memory_get_usage;
 
 /**
  * JsonFormatter.
@@ -55,17 +55,27 @@ use function memory_get_usage;
  *             urls: list<string>,
  *         },
  *     },
+ *     parserStatistics?: array{
+ *         duration: float,
+ *         memoryUsage: int,
+ *         memoryPeak: int,
+ *     },
  *     cacheWarmupResult?: array{
  *         success?: list<string>,
  *         failure?: list<string>,
  *         cancelled?: bool,
  *     },
- *     messages?: array<value-of<MessageSeverity>, list<string>>,
- *     time?: array{
- *         parse?: string,
- *         crawl?: string,
+ *     cacheWarmupStatistics?: array{
+ *         duration: float,
+ *         memoryUsage: int,
+ *         memoryPeak: int,
  *     },
- *     memoryUsage?: int,
+ *     messages?: array<value-of<MessageSeverity>, list<string>>,
+ *     additionalStatistics?: array<string, array{
+ *         duration: float,
+ *         memoryUsage: int,
+ *         memoryPeak: int,
+ *     }>,
  * }
  */
 final class JsonFormatter implements Formatter
@@ -75,6 +85,11 @@ final class JsonFormatter implements Formatter
      */
     private array $json = [];
 
+    /**
+     * @var list<Profiler\MeasurementSpan>
+     */
+    private array $addedStatistics = [];
+
     public function __construct(
         private readonly Console\Style\SymfonyStyle $io,
     ) {}
@@ -83,7 +98,7 @@ final class JsonFormatter implements Formatter
         Result\ParserResult $successful,
         Result\ParserResult $failed,
         Result\ParserResult $excluded,
-        ?Time\Duration $duration = null,
+        ?Profiler\MeasurementSpan $measurement = null,
     ): void {
         // Add successful result
         if ($this->io->isVeryVerbose()) {
@@ -98,15 +113,15 @@ final class JsonFormatter implements Formatter
         $this->addToJson('parserResult/excluded/sitemaps', $excluded->getSitemaps());
         $this->addToJson('parserResult/excluded/urls', $excluded->getUrls());
 
-        // Add duration
-        if (null !== $duration) {
-            $this->addToJson('time/parse', $duration->format());
+        // Add statistics
+        if (null !== $measurement) {
+            $this->addStatistic($measurement, 'parserStatistics');
         }
     }
 
     public function formatCacheWarmupResult(
         Result\CacheWarmupResult $result,
-        ?Time\Duration $duration = null,
+        ?Profiler\MeasurementSpan $measurement = null,
     ): void {
         $this->addToJson('cacheWarmupResult/success', $result->getSuccessful());
         $this->addToJson('cacheWarmupResult/failure', $result->getFailed());
@@ -115,12 +130,17 @@ final class JsonFormatter implements Formatter
             $this->addToJson('cacheWarmupResult/cancelled', true);
         }
 
-        if (null !== $duration) {
-            $this->addToJson('time/crawl', $duration->format());
+        // Add statistics
+        if (null !== $measurement) {
+            $this->addStatistic($measurement, 'cacheWarmupStatistics');
         }
+    }
 
-        // Add memory usage
-        $this->addToJson('memoryUsage', memory_get_usage(true));
+    public function formatMeasuredScopes(array $measurements): void
+    {
+        foreach ($measurements as $measurement) {
+            $this->addStatistic($measurement, 'additionalStatistics/'.$measurement->action);
+        }
     }
 
     public function logMessage(string $message, MessageSeverity $severity = MessageSeverity::Info): void
@@ -154,10 +174,23 @@ final class JsonFormatter implements Formatter
         return 'json';
     }
 
+    private function addStatistic(Profiler\MeasurementSpan $measurement, string $pathPrefix): void
+    {
+        if (in_array($measurement, $this->addedStatistics, true)) {
+            return;
+        }
+
+        $this->addedStatistics[] = $measurement;
+
+        $this->addToJson($pathPrefix.'/duration', $measurement->duration);
+        $this->addToJson($pathPrefix.'/memoryUsage', $measurement->memoryUsage);
+        $this->addToJson($pathPrefix.'/memoryPeak', $measurement->memoryPeak);
+    }
+
     /**
-     * @param string|int|bool|list<bool|float|int|resource|string|Stringable|null> $value
+     * @param string|float|int|bool|list<bool|float|int|resource|string|Stringable|null> $value
      */
-    private function addToJson(string $path, string|int|bool|array $value): void
+    private function addToJson(string $path, string|float|int|bool|array $value): void
     {
         if (is_scalar($value) && '' !== $value) {
             Helper\ArrayHelper::setValueByPath($this->json, $path, $value);

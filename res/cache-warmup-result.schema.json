@@ -22,6 +22,11 @@
 			},
 			"additionalProperties": false
 		},
+		"cacheWarmupStatistics": {
+			"title": "Cache warmup statistics",
+			"description": "Measured time and memory usage used to run cache warmup",
+			"$ref": "#/definitions/statistics"
+		},
 		"messages": {
 			"type": "object",
 			"title": "Logged messages, grouped by severity",
@@ -86,26 +91,18 @@
 			},
 			"additionalProperties": false
 		},
-		"time": {
-			"type": "object",
-			"title": "Tracked times",
-			"description": "Lists all tracked times during cache warmup.",
-			"properties": {
-				"crawl": {
-					"type": "string",
-					"title": "Time used to crawl URLs"
-				},
-				"parse": {
-					"type": "string",
-					"title": "Time used to parse XML sitemaps"
-				}
-			},
-			"additionalProperties": false
+		"parserStatistics": {
+			"title": "Parser statistics",
+			"description": "Measured time and memory usage used to parse XML sitemaps",
+			"$ref": "#/definitions/statistics"
 		},
-		"memoryUsage": {
-			"type": "integer",
-			"title": "Memory usage",
-			"description": "Displays the whole memory consumption in bytes"
+		"additionalStatistics": {
+			"title": "Additional statistics",
+			"description": "AddMeasured time and memory usage of additional actions (excluding parsing and crawling)",
+			"type": "array",
+			"items": {
+				"$ref": "#/definitions/statistics"
+			}
 		}
 	},
 	"additionalProperties": false,
@@ -116,6 +113,24 @@
 			"items": {
 				"type": "string"
 			}
+		},
+		"statistics": {
+			"type": "object",
+			"properties": {
+				"duration": {
+					"type": "number",
+					"title": "Time (in milliseconds) used to perform a specific action"
+				},
+				"memoryPeak": {
+					"type": "integer",
+					"title": "Memory peak (in bytes) while performing a specifc action"
+				},
+				"memoryUsage": {
+					"type": "integer",
+					"title": "Memory (in bytes) used to perform a specifc action"
+				}
+			},
+			"additionalProperties": false
 		},
 		"urls": {
 			"type": "array",
