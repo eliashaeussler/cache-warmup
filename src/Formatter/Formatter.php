@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Formatter;
 
 use EliasHaeussler\CacheWarmup\Result;
-use EliasHaeussler\CacheWarmup\Time;
+use EliasHaeussler\ScopeProfiler;
 
 /**
  * Formatter.
@@ -38,13 +38,18 @@ interface Formatter
         Result\ParserResult $successful,
         Result\ParserResult $failed,
         Result\ParserResult $excluded,
-        ?Time\Duration $duration = null,
+        ?ScopeProfiler\Measurement $measurement = null,
     ): void;
 
     public function formatCacheWarmupResult(
         Result\CacheWarmupResult $result,
-        ?Time\Duration $duration = null,
+        ?ScopeProfiler\Measurement $measurement = null,
     ): void;
+
+    /**
+     * @param list<ScopeProfiler\Scope> $scopes
+     */
+    public function formatMeasuredScopes(array $scopes): void;
 
     public function logMessage(string $message, MessageSeverity $severity = MessageSeverity::Info): void;
 

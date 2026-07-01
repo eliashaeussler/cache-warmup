@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Tests\Formatter;
 
 use EliasHaeussler\CacheWarmup as Src;
+use EliasHaeussler\ScopeProfiler;
 use Generator;
 use GuzzleHttp\Psr7;
 use PHPUnit\Framework;
@@ -142,34 +143,44 @@ final class TextFormatterTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
-    public function formatParserResultDoesNotPrintDurationIfOutputIsNotDebug(): void
+    public function formatParserResultDoesNotPrintStatisticsIfOutputIsNotDebug(): void
     {
         $successful = new Src\Result\ParserResult();
         $failed = new Src\Result\ParserResult();
         $excluded = new Src\Result\ParserResult();
-        $duration = new Src\Time\Duration(500);
+        $measurement = new ScopeProfiler\Measurement(
+            new ScopeProfiler\Scope('foo'),
+            500,
+            0,
+            0,
+        );
 
-        $this->subject->formatParserResult($successful, $failed, $excluded, $duration);
+        $this->subject->formatParserResult($successful, $failed, $excluded, $measurement);
 
         self::assertEmpty($this->output->fetch());
     }
 
     #[Framework\Attributes\Test]
-    public function formatParserResultPrintsDuration(): void
+    public function formatParserResultPrintsStatistics(): void
     {
         $successful = new Src\Result\ParserResult();
         $failed = new Src\Result\ParserResult();
         $excluded = new Src\Result\ParserResult();
-        $duration = new Src\Time\Duration(500);
+        $measurement = new ScopeProfiler\Measurement(
+            new ScopeProfiler\Scope('Parsing'),
+            500,
+            678,
+            901,
+        );
 
         $this->output->setVerbosity(Console\Output\OutputInterface::VERBOSITY_DEBUG);
 
-        $this->subject->formatParserResult($successful, $failed, $excluded, $duration);
+        $this->subject->formatParserResult($successful, $failed, $excluded, $measurement);
 
         $output = $this->output->fetch();
 
         self::assertNotEmpty($output);
-        self::assertStringContainsString('Parsing finished in 0.5s', $output);
+        self::assertStringContainsString('Parsing took 500 ms and consumed 678 B of memory (peak at 901 B).', $output);
     }
 
     #[Framework\Attributes\Test]
@@ -292,17 +303,22 @@ final class TextFormatterTest extends Framework\TestCase
     }
 
     #[Framework\Attributes\Test]
-    public function formatCacheWarmupResultPrintsDuration(): void
+    public function formatCacheWarmupResultPrintsStatistics(): void
     {
         $result = new Src\Result\CacheWarmupResult();
-        $duration = new Src\Time\Duration(500);
+        $measurement = new ScopeProfiler\Measurement(
+            new ScopeProfiler\Scope('Crawling'),
+            500,
+            678,
+            901,
+        );
 
-        $this->subject->formatCacheWarmupResult($result, $duration);
+        $this->subject->formatCacheWarmupResult($result, $measurement);
 
         $output = $this->output->fetch();
 
         self::assertNotEmpty($output);
-        self::assertMatchesRegularExpression('/Crawling finished in 0\\.5s, consumed \\d+ [KMGTP]B of memory\\./', $output);
+        self::assertStringContainsString('Crawling took 500 ms and consumed 678 B of memory (peak at 901 B).', $output);
     }
 
     /**
