@@ -21,7 +21,7 @@
 		"@types/node": "^26.0.0",
 		"knip": "^6.0.0",
 		"markdown-it-replace-link": "^1.2.1",
-		"typescript": "^6.0.0"
+		"typescript": "^7.0.0"
 	},
 	"overrides": {
 		"esbuild": "^0.28.1"
