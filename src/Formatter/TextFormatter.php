@@ -24,12 +24,11 @@ declare(strict_types=1);
 namespace EliasHaeussler\CacheWarmup\Formatter;
 
 use EliasHaeussler\CacheWarmup\Helper;
+use EliasHaeussler\CacheWarmup\Profiler;
 use EliasHaeussler\CacheWarmup\Result;
-use EliasHaeussler\CacheWarmup\Time;
 use Symfony\Component\Console;
 
 use function call_user_func;
-use function memory_get_usage;
 use function method_exists;
 use function sprintf;
 
@@ -51,7 +50,7 @@ final readonly class TextFormatter implements Formatter
         Result\ParserResult $successful,
         Result\ParserResult $failed,
         Result\ParserResult $excluded,
-        ?Time\Duration $duration = null,
+        ?Profiler\MeasurementSpan $measurement = null,
     ): void {
         $sitemaps = [];
         $urlsShown = false;
@@ -102,9 +101,9 @@ final readonly class TextFormatter implements Formatter
         }
 
         // Print duration
-        if ($this->io->isDebug() && null !== $duration) {
+        if ($this->io->isDebug() && null !== $measurement) {
             $this->io->newLine();
-            $this->io->writeln(sprintf('Parsing finished in %s', $duration->format()));
+            $this->io->writeln($measurement->format());
         }
 
         if ([] !== $sitemaps || $urlsShown) {
@@ -114,7 +113,7 @@ final readonly class TextFormatter implements Formatter
 
     public function formatCacheWarmupResult(
         Result\CacheWarmupResult $result,
-        ?Time\Duration $duration = null,
+        ?Profiler\MeasurementSpan $measurement = null,
     ): void {
         $successfulUrls = $result->getSuccessful();
         $failedUrls = $result->getFailed();
@@ -145,8 +144,8 @@ final readonly class TextFormatter implements Formatter
             $countSuccessfulUrls = count($successfulUrls);
             $this->io->success(
                 sprintf(
-                    'Successfully warmed up caches for %d URL%s.',
-                    $countSuccessfulUrls,
+                    'Successfully warmed up caches for %s URL%s.',
+                    Helper\StringHelper::formatNumber($countSuccessfulUrls),
                     1 === $countSuccessfulUrls ? '' : 's',
                 ),
             );
@@ -155,8 +154,8 @@ final readonly class TextFormatter implements Formatter
             $countFailedUrls = count($failedUrls);
             $this->io->error(
                 sprintf(
-                    'Failed to warm up caches for %d URL%s.',
-                    $countFailedUrls,
+                    'Failed to warm up caches for %s URL%s.',
+                    Helper\StringHelper::formatNumber($countFailedUrls),
                     1 === $countFailedUrls ? '' : 's',
                 ),
             );
@@ -166,17 +165,32 @@ final readonly class TextFormatter implements Formatter
         }
 
         // Print duration and memory usage
-        if (null !== $duration) {
-            $this->io->writeln(
-                sprintf(
-                    'Crawling %s %s, consumed %s of memory.',
-                    $result->wasCancelled() ? 'cancelled after' : 'finished in',
-                    $duration->format(),
-                    Helper\StringHelper::formatBytes(memory_get_usage(true)),
-                ),
-            );
+        if (null !== $measurement && !$this->io->isDebug()) {
+            $this->io->writeln($measurement->format());
             $this->io->newLine();
         }
+    }
+
+    public function formatMeasuredScopes(array $measurements): void
+    {
+        if (!$this->io->isDebug()) {
+            return;
+        }
+
+        $table = $this->io->createTable();
+        $table->setStyle('box');
+        $table->setHeaders(['#', 'Action', 'Duration', 'Memory usage']);
+
+        foreach ($measurements as $index => $measurement) {
+            $table->addRow([
+                $index + 1,
+                $measurement->action,
+                $measurement->formatDuration(),
+                sprintf('%s (peak at %s)', $measurement->formatMemoryUsage(), $measurement->formatMemoryPeak()),
+            ]);
+        }
+
+        $table->render();
     }
 
     public function logMessage(string $message, MessageSeverity $severity = MessageSeverity::Info): void

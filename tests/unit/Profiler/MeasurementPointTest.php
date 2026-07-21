@@ -21,44 +21,31 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Tests\Time;
+namespace EliasHaeussler\CacheWarmup\Tests\Profiler;
 
 use EliasHaeussler\CacheWarmup as Src;
-use Generator;
 use PHPUnit\Framework;
 
+use function microtime;
+
 /**
- * DurationTest.
+ * MeasurementPointTest.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
  */
-#[Framework\Attributes\CoversClass(Src\Time\Duration::class)]
-final class DurationTest extends Framework\TestCase
+#[Framework\Attributes\CoversClass(Src\Profiler\MeasurementPoint::class)]
+final class MeasurementPointTest extends Framework\TestCase
 {
     #[Framework\Attributes\Test]
-    public function getReturnsDurationInMilliseconds(): void
+    public function nowReturnsMeasurementPointForCurrentTimeAndMemoryUsage(): void
     {
-        $subject = new Src\Time\Duration(123.45);
+        $currentTime = microtime(true) * 1000;
+        $currentMemoryUsage = memory_get_usage(true);
 
-        self::assertSame(123.45, $subject->get());
-    }
+        $actual = Src\Profiler\MeasurementPoint::now();
 
-    #[Framework\Attributes\Test]
-    #[Framework\Attributes\DataProvider('formatReturnsFormattedDurationDataProvider')]
-    public function formatReturnsFormattedDuration(float $milliseconds, string $expected): void
-    {
-        $subject = new Src\Time\Duration($milliseconds);
-
-        self::assertSame($expected, $subject->format());
-    }
-
-    /**
-     * @return Generator<string, array{float, string}>
-     */
-    public static function formatReturnsFormattedDurationDataProvider(): Generator
-    {
-        yield 'milliseconds' => [1.23456, '1.235ms'];
-        yield 'seconds' => [1234.56, '1.235s'];
+        self::assertGreaterThanOrEqual($currentTime, $actual->time);
+        self::assertGreaterThanOrEqual($currentMemoryUsage, $actual->memoryUsage);
     }
 }

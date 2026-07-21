@@ -21,49 +21,43 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace EliasHaeussler\CacheWarmup\Time;
+namespace EliasHaeussler\CacheWarmup\Profiler;
+
+use function memory_get_peak_usage;
 
 /**
- * TimeTracker.
+ * MeasurementPoint.
  *
  * @author Elias Häußler <elias@haeussler.dev>
  * @license GPL-3.0-or-later
+ *
+ * @internal
  */
-final class TimeTracker
+final readonly class MeasurementPoint
 {
-    private ?Duration $lastDuration = null;
+    public function __construct(
+        public float $time,
+        public int $memoryUsage,
+        public int $memoryPeak,
+    ) {}
 
-    /**
-     * @template T
-     *
-     * @param callable(): T $function
-     *
-     * @return T
-     */
-    public function track(callable $function): mixed
+    public static function now(): self
     {
-        $this->lastDuration = null;
-
-        $start = $this->now();
-
-        try {
-            $result = $function();
-        } finally {
-            $end = $this->now();
-
-            $this->lastDuration = new Duration($end - $start);
-        }
-
-        return $result;
+        return new self(self::currentTime(), self::currentMemoryUsage(), self::currentMemoryPeak());
     }
 
-    public function getLastDuration(): ?Duration
-    {
-        return $this->lastDuration;
-    }
-
-    private function now(): float
+    private static function currentTime(): float
     {
         return microtime(true) * 1000;
+    }
+
+    private static function currentMemoryUsage(): int
+    {
+        return memory_get_usage(true);
+    }
+
+    private static function currentMemoryPeak(): int
+    {
+        return memory_get_peak_usage(true);
     }
 }
