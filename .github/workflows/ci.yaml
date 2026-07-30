@@ -14,7 +14,7 @@ permissions:
 jobs:
   prepare:
     name: 'Prepare workflow'
-    uses: eliashaeussler/gha/.github/workflows/preparation.yaml@a6093ebd6b0e93dedcb221832dadcb279bff4cbd # 0.9.1
+    uses: eliashaeussler/gha/.github/workflows/preparation.yaml@0e769ba8c6b8cfd3826b206c4d529b48d450c8f1 # 0.9.2
 
   checks:
     name: 'Checks'
@@ -26,7 +26,7 @@ jobs:
       contents: read
       security-events: write
 
-    uses: eliashaeussler/gha/.github/workflows/checks.yaml@a6093ebd6b0e93dedcb221832dadcb279bff4cbd # 0.9.1
+    uses: eliashaeussler/gha/.github/workflows/checks.yaml@0e769ba8c6b8cfd3826b206c4d529b48d450c8f1 # 0.9.2
     with:
       # We use the minimum supported PHP version
       php-version: 8.2 # renovate-ignore
@@ -52,7 +52,7 @@ jobs:
             dependencies: "highest"
             os: "Windows"
 
-    uses: eliashaeussler/gha/.github/workflows/composer-tests.yaml@a6093ebd6b0e93dedcb221832dadcb279bff4cbd # 0.9.1
+    uses: eliashaeussler/gha/.github/workflows/composer-tests.yaml@0e769ba8c6b8cfd3826b206c4d529b48d450c8f1 # 0.9.2
     with:
       php-version: ${{ matrix.php-version }}
       dependencies: ${{ matrix.dependencies }}
@@ -65,7 +65,7 @@ jobs:
     needs: [prepare]
     if: ${{ needs.prepare.outputs.continue == 'true' }}
 
-    uses: eliashaeussler/gha/.github/workflows/composer-tests.yaml@a6093ebd6b0e93dedcb221832dadcb279bff4cbd # 0.9.1
+    uses: eliashaeussler/gha/.github/workflows/composer-tests.yaml@0e769ba8c6b8cfd3826b206c4d529b48d450c8f1 # 0.9.2
     with:
       test-command: 'test:e2e'
       allowed-endpoints: >
@@ -77,4 +77,4 @@ jobs:
     needs: [prepare]
     if: ${{ needs.prepare.outputs.continue == 'true' }}
 
-    uses: eliashaeussler/gha/.github/workflows/composer-test-coverage.yaml@a6093ebd6b0e93dedcb221832dadcb279bff4cbd # 0.9.1
+    uses: eliashaeussler/gha/.github/workflows/composer-test-coverage.yaml@0e769ba8c6b8cfd3826b206c4d529b48d450c8f1 # 0.9.2
