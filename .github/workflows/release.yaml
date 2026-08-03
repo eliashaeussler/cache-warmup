@@ -78,17 +78,22 @@ jobs:
         uses: eliashaeussler/gha/.github/actions/checkout@27331f61535ca3eca7e74928bb93e3a0b0007225 # 1.0.0
 
       - name: 'Download PHAR file'
+        id: download-phar
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           name: ${{ needs.assets.outputs.phar-artifact-name }}
 
       - name: 'Make PHAR executable'
-        run: chmod +x "$PHAR_FILE"
+        env:
+          DOWNLOAD_PATH: ${{ steps.download-phar.outputs.download-path }}
+        run: chmod +x "${DOWNLOAD_PATH}/${PHAR_FILE}"
 
       - name: 'Publish PHAR file'
+        env:
+          DOWNLOAD_PATH: ${{ steps.download-phar.outputs.download-path }}
         run: |
-          mv -v "${PHAR_FILE}" docs/public/
-          mv -v "${PHAR_FILE}.asc" docs/public/
+          mv -v "${DOWNLOAD_PATH}/${PHAR_FILE}" docs/public/
+          mv -v "${DOWNLOAD_PATH}/${PHAR_FILE}.asc" docs/public/
 
       - name: 'Build and deploy docs'
         id: deploy
