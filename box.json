@@ -3,5 +3,5 @@
 		"KevinGH\\Box\\Compactor\\Json"
 	],
 	"compression": "GZ",
-	"output": ".build/cache-warmup.phar"
+	"output": "cache-warmup.phar"
 }
