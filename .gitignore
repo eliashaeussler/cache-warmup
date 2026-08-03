@@ -4,5 +4,6 @@
 /node_modules
 /tests/e2e/tools
 /vendor
+/cache-warmup.phar
 /Dockerfile
 /.php-cs-fixer.cache
