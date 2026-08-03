@@ -91,30 +91,36 @@ final class RequestPoolFactory
         );
     }
 
-    private function onFulfilled(Message\ResponseInterface $response, int $index): void
+    private function onFulfilled(Message\ResponseInterface $response, int|string $index, Promise\PromiseInterface $aggregate): null
     {
-        $uri = $this->fetchAndReleaseVisitedUri($index);
+        $uri = $this->fetchAndReleaseVisitedUri((int) $index);
 
         foreach ($this->handlers as $handler) {
             $handler->onSuccess($response, $uri);
         }
+
+        return null;
     }
 
-    private function onRejected(Throwable $throwable, int $index, Promise\Promise $aggregate): void
+    private function onRejected(mixed $throwable, int|string $index, Promise\PromiseInterface $aggregate): null
     {
-        $uri = $this->fetchAndReleaseVisitedUri($index);
+        $uri = $this->fetchAndReleaseVisitedUri((int) $index);
 
-        foreach ($this->handlers as $handler) {
-            $handler->onFailure($throwable, $uri);
+        if ($throwable instanceof Throwable) {
+            foreach ($this->handlers as $handler) {
+                $handler->onFailure($throwable, $uri);
+            }
         }
 
         if ($this->stopOnFailure) {
             $aggregate->cancel();
         }
+
+        return null;
     }
 
     /**
-     * @return Generator<Message\RequestInterface>
+     * @return Generator<int, Message\RequestInterface>
      */
     private function decorateRequests(): Generator
     {

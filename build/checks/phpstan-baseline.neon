@@ -25,6 +25,18 @@ parameters:
 			path: ../../src/Formatter/JsonFormatter.php
 
 		-
+			rawMessage: 'Parameter #1 $config of class GuzzleHttp\Client constructor expects array{handler?: callable(Psr\Http\Message\RequestInterface, array<mixed>): GuzzleHttp\Promise\PromiseInterface<Psr\Http\Message\ResponseInterface, mixed>, base_uri?: Psr\Http\Message\UriInterface|string, transport_sharing?: string|null, max_host_connections?: int|null, max_total_connections?: int|null, allow_redirects?: array{max?: int, strict?: bool, referer?: bool, protocols?: non-empty-array<string>, on_redirect?: callable(Psr\Http\Message\RequestInterface, Psr\Http\Message\ResponseInterface, Psr\Http\Message\UriInterface): mixed, track_redirects?: bool}|bool, auth?: array{0: string, 1: string, 2?: string|null}|string|false|null, body?: callable-object|Iterator|resource|string|Stringable|null, ..., ...}, array<mixed> given.'
+			identifier: argument.type
+			count: 1
+			path: ../../src/Http/Client/ClientFactory.php
+
+		-
+			rawMessage: 'Parameter #3 $config of class GuzzleHttp\Pool constructor expects array{concurrency?: (callable(int): int)|int, options?: array{base_uri?: Psr\Http\Message\UriInterface|string, allow_redirects?: array{max?: int, strict?: bool, referer?: bool, protocols?: non-empty-array<string>, on_redirect?: callable(Psr\Http\Message\RequestInterface, Psr\Http\Message\ResponseInterface, Psr\Http\Message\UriInterface, int|string): mixed, track_redirects?: bool}|bool, auth?: array{0: string, 1: string, 2?: string|null}|string|false|null, body?: callable-object|Iterator|resource|string|Stringable|null, cert?: array{0: string, 1?: string|null}|string, cert_type?: string, connect_timeout?: float|int, cookies?: GuzzleHttp\Cookie\CookieJarInterface|false, ..., ...}, fulfilled?: callable(Psr\Http\Message\ResponseInterface, int|string, GuzzleHttp\Promise\PromiseInterface<mixed, mixed>): mixed, rejected?: callable(mixed, int|string, GuzzleHttp\Promise\PromiseInterface<mixed, mixed>): mixed}, array{concurrency: int, options: array<string, mixed>, fulfilled: Closure(Psr\Http\Message\ResponseInterface, int|string, GuzzleHttp\Promise\PromiseInterface): null, rejected: Closure(mixed, int|string, GuzzleHttp\Promise\PromiseInterface): null} given.'
+			identifier: argument.type
+			count: 1
+			path: ../../src/Http/Message/RequestPoolFactory.php
+
+		-
 			rawMessage: 'Parameter #1 $level (''alert''|''critical''|''debug''|''emergency''|''error''|''info''|''notice''|''warning'') of method EliasHaeussler\CacheWarmup\Log\FileLogger::log() should be contravariant with parameter $level (mixed) of method Psr\Log\AbstractLogger::log()'
 			identifier: method.childParameterType
 			count: 1
@@ -59,6 +71,12 @@ parameters:
 			identifier: method.childParameterType
 			count: 1
 			path: ../../src/Log/FileLogger.php
+
+		-
+			rawMessage: 'Parameter #2 $options of method GuzzleHttp\ClientInterface::send() expects array{base_uri?: Psr\Http\Message\UriInterface|string, allow_redirects?: array{max?: int, strict?: bool, referer?: bool, protocols?: non-empty-array<string>, on_redirect?: callable(Psr\Http\Message\RequestInterface, Psr\Http\Message\ResponseInterface, Psr\Http\Message\UriInterface): mixed, track_redirects?: bool}|bool, auth?: array{0: string, 1: string, 2?: string|null}|string|false|null, body?: callable-object|Iterator|resource|string|Stringable|null, cert?: array{0: string, 1?: string|null}|string, cert_type?: string, connect_timeout?: float|int, cookies?: GuzzleHttp\Cookie\CookieJarInterface|false, ..., ...}, non-empty-array<string, mixed> given.'
+			identifier: argument.type
+			count: 1
+			path: ../../src/Xml/SitemapXmlParser.php
 
 		-
 			rawMessage: 'Parameter #1 $sitemaps of method EliasHaeussler\CacheWarmup\CacheWarmer::addSitemaps() expects EliasHaeussler\CacheWarmup\Sitemap\Sitemap|list<EliasHaeussler\CacheWarmup\Sitemap\Sitemap|string>|string, array{false} given.'
