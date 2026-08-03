@@ -1,0 +1,18 @@
+.github/workflows/release.yaml
+  h_a1c258d8beeba3 9
+box.json
+  h_a1c258d8beeba3 6
+tests/e2e/suites/phar/context.sh
+  h_a1c258d8beeba3 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "7873429a6d418aaf8d33dd30a456725a5ed6a9d5",
+  "prompts": {},
+  "humans": {
+    "h_a1c258d8beeba3": {
+      "author": "Elias Häußler <elias@haeussler.dev>"
+    }
+  }
+}
