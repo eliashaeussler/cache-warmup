@@ -1,0 +1,14 @@
+.github/workflows/release.yaml
+  h_a1c258d8beeba3 81,87-89,92-93,95-96
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "1a75640b822488ff6b0102588a049bb6d44daacc",
+  "prompts": {},
+  "humans": {
+    "h_a1c258d8beeba3": {
+      "author": "Elias Häußler <elias@haeussler.dev>"
+    }
+  }
+}
