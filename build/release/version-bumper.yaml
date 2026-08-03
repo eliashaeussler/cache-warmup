@@ -12,4 +12,4 @@ releaseOptions:
   commitMessage: '[RELEASE] Release of cache-warmup {%version%}'
   signTag: true
 
-rootPath: ../
+rootPath: ../../
