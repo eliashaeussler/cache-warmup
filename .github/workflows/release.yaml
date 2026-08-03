@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  PHAR_FILE: '.build/cache-warmup.phar'
+  PHAR_FILE: 'cache-warmup.phar'
   REF_NAME: ${{ github.ref_name }}
 
 jobs:
