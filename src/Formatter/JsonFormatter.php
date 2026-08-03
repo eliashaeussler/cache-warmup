@@ -25,15 +25,15 @@ namespace EliasHaeussler\CacheWarmup\Formatter;
 
 use EliasHaeussler\CacheWarmup\Helper;
 use EliasHaeussler\CacheWarmup\Result;
-use EliasHaeussler\CacheWarmup\Time;
+use EliasHaeussler\ScopeProfiler;
 use Stringable;
 use Symfony\Component\Console;
 
 use function array_map;
 use function is_array;
+use function is_numeric;
 use function is_scalar;
 use function json_encode;
-use function memory_get_usage;
 
 /**
  * JsonFormatter.
@@ -55,17 +55,27 @@ use function memory_get_usage;
  *             urls: list<string>,
  *         },
  *     },
+ *     parserStatistics?: array{
+ *         duration: float,
+ *         memoryUsage: int,
+ *         memoryPeak: int,
+ *     },
  *     cacheWarmupResult?: array{
  *         success?: list<string>,
  *         failure?: list<string>,
  *         cancelled?: bool,
  *     },
- *     messages?: array<value-of<MessageSeverity>, list<string>>,
- *     time?: array{
- *         parse?: string,
- *         crawl?: string,
+ *     cacheWarmupStatistics?: array{
+ *         duration: float,
+ *         memoryUsage: int,
+ *         memoryPeak: int,
  *     },
- *     memoryUsage?: int,
+ *     messages?: array<value-of<MessageSeverity>, list<string>>,
+ *     additionalStatistics?: array<string, array{
+ *         duration: float,
+ *         memoryUsage: int,
+ *         memoryPeak: int,
+ *     }>,
  * }
  */
 final class JsonFormatter implements Formatter
@@ -83,7 +93,7 @@ final class JsonFormatter implements Formatter
         Result\ParserResult $successful,
         Result\ParserResult $failed,
         Result\ParserResult $excluded,
-        ?Time\Duration $duration = null,
+        ?ScopeProfiler\Measurement $measurement = null,
     ): void {
         // Add successful result
         if ($this->io->isVeryVerbose()) {
@@ -98,15 +108,15 @@ final class JsonFormatter implements Formatter
         $this->addToJson('parserResult/excluded/sitemaps', $excluded->getSitemaps());
         $this->addToJson('parserResult/excluded/urls', $excluded->getUrls());
 
-        // Add duration
-        if (null !== $duration) {
-            $this->addToJson('time/parse', $duration->format());
+        // Add statistics
+        if (null !== $measurement) {
+            $this->addStatistic($measurement, 'parserStatistics');
         }
     }
 
     public function formatCacheWarmupResult(
         Result\CacheWarmupResult $result,
-        ?Time\Duration $duration = null,
+        ?ScopeProfiler\Measurement $measurement = null,
     ): void {
         $this->addToJson('cacheWarmupResult/success', $result->getSuccessful());
         $this->addToJson('cacheWarmupResult/failure', $result->getFailed());
@@ -115,12 +125,17 @@ final class JsonFormatter implements Formatter
             $this->addToJson('cacheWarmupResult/cancelled', true);
         }
 
-        if (null !== $duration) {
-            $this->addToJson('time/crawl', $duration->format());
+        // Add statistics
+        if (null !== $measurement) {
+            $this->addStatistic($measurement, 'cacheWarmupStatistics');
         }
+    }
 
-        // Add memory usage
-        $this->addToJson('memoryUsage', memory_get_usage(true));
+    public function formatMeasuredScopes(array $scopes): void
+    {
+        foreach ($scopes as $scope) {
+            $this->addStatistic($scope->measure(), 'additionalStatistics/'.$scope->action);
+        }
     }
 
     public function logMessage(string $message, MessageSeverity $severity = MessageSeverity::Info): void
@@ -154,11 +169,21 @@ final class JsonFormatter implements Formatter
         return 'json';
     }
 
-    /**
-     * @param string|int|bool|list<bool|float|int|resource|string|Stringable|null> $value
-     */
-    private function addToJson(string $path, string|int|bool|array $value): void
+    private function addStatistic(ScopeProfiler\Measurement $measurement, string $pathPrefix): void
     {
+        $this->addToJson($pathPrefix.'/duration', $measurement->duration, true);
+        $this->addToJson($pathPrefix.'/memoryUsage', $measurement->memoryUsage, true);
+        $this->addToJson($pathPrefix.'/memoryPeak', $measurement->memoryPeak, true);
+    }
+
+    /**
+     * @param string|float|int|bool|list<bool|float|int|resource|string|Stringable|null> $value
+     */
+    private function addToJson(string $path, string|float|int|bool|array $value, bool $mergeNumbers = false): void
+    {
+        if ($mergeNumbers && is_numeric($value) && is_numeric($currentValue = Helper\ArrayHelper::getValueByPath($this->json, $path))) {
+            $value = $currentValue + $value;
+        }
         if (is_scalar($value) && '' !== $value) {
             Helper\ArrayHelper::setValueByPath($this->json, $path, $value);
         }

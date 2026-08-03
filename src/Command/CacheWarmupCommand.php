@@ -35,8 +35,8 @@ use EliasHaeussler\CacheWarmup\Http;
 use EliasHaeussler\CacheWarmup\Log;
 use EliasHaeussler\CacheWarmup\Result;
 use EliasHaeussler\CacheWarmup\Sitemap;
-use EliasHaeussler\CacheWarmup\Time;
 use EliasHaeussler\CacheWarmup\Xml;
+use EliasHaeussler\ScopeProfiler;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\Console;
@@ -67,7 +67,7 @@ final class CacheWarmupCommand extends Console\Command\Command
     private const FAILED = 1;
 
     private readonly Config\Component\OptionsParser $optionsParser;
-    private readonly Time\TimeTracker $timeTracker;
+    private readonly ScopeProfiler\ScopeProfiler $profiler;
     private Config\CacheWarmupConfig $config;
     private Console\Style\SymfonyStyle $io;
     private Formatter\Formatter $formatter;
@@ -79,7 +79,7 @@ final class CacheWarmupCommand extends Console\Command\Command
         private readonly Crawler\Strategy\CrawlingStrategyFactory $crawlingStrategyFactory = new Crawler\Strategy\CrawlingStrategyFactory(),
     ) {
         $this->optionsParser = new Config\Component\OptionsParser();
-        $this->timeTracker = new Time\TimeTracker();
+        $this->profiler = new ScopeProfiler\ScopeProfiler();
 
         parent::__construct('cache-warmup');
     }
@@ -529,27 +529,28 @@ HELP);
 
         // Initialize components
         $crawler = $this->initializeCrawler();
-        $cacheWarmer = $this->timeTracker->track(fn () => $this->initializeCacheWarmer($crawler));
-        $parseTime = $this->timeTracker->getLastDuration();
+        $parseScope = $this->profiler->pushScope('Parsing sitemaps');
+        $cacheWarmer = $parseScope->run(fn () => $this->initializeCacheWarmer($crawler));
+        $parseMeasurement = $parseScope->measure();
 
         // Start crawling
-        $result = $this->timeTracker->track(
-            fn () => $this->runCacheWarmup(
-                $cacheWarmer,
-                $crawler instanceof Crawler\VerboseCrawler,
-            ),
+        $warmupScope = $this->profiler->pushScope('Crawling URLs');
+        $result = $warmupScope->run(
+            fn () => $this->runCacheWarmup($cacheWarmer, $crawler instanceof Crawler\VerboseCrawler),
         );
+        $warmupMeasurement = $warmupScope->measure();
 
         // Print formatted parser result
         $this->formatter->formatParserResult(
             new Result\ParserResult($cacheWarmer->getSitemaps(), $cacheWarmer->getUrls()),
             new Result\ParserResult($cacheWarmer->getFailedSitemaps()),
             new Result\ParserResult($cacheWarmer->getExcludedSitemaps(), $cacheWarmer->getExcludedUrls()),
-            $parseTime,
+            $parseMeasurement,
         );
 
         // Print formatted cache warmup result
-        $this->formatter->formatCacheWarmupResult($result, $this->timeTracker->getLastDuration());
+        $this->formatter->formatCacheWarmupResult($result, $warmupMeasurement);
+        $this->formatter->formatMeasuredScopes($this->profiler->releaseScopes());
 
         // Report failure if parsing or crawling failed
         if (!$this->config->areFailuresAllowed()

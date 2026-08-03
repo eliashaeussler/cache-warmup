@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "02762c083dd2844d4be7baadb193df2e",
+    "content-hash": "481d635f668603d3c09bfbec2fb8bc91",
     "packages": [
         {
             "name": "cuyz/valinor",
@@ -85,6 +85,60 @@
                 }
             ],
             "time": "2026-07-28T21:32:29+00:00"
+        },
+        {
+            "name": "eliashaeussler/scope-profiler",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/eliashaeussler/scope-profiler.git",
+                "reference": "1cd058d76a71c4a68c2a553e1b4794488bc279cb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eliashaeussler/scope-profiler/zipball/1cd058d76a71c4a68c2a553e1b4794488bc279cb",
+                "reference": "1cd058d76a71c4a68c2a553e1b4794488bc279cb",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
+                "symfony/console": "^7.4 || ^8.0"
+            },
+            "require-dev": {
+                "armin/editorconfig-cli": "^2.0",
+                "eliashaeussler/php-cs-fixer-config": "^3.0",
+                "eliashaeussler/phpstan-config": "^4.0",
+                "eliashaeussler/rector-config": "^4.0",
+                "ergebnis/composer-normalize": "^2.30",
+                "phpstan/extension-installer": "^1.4",
+                "phpstan/phpstan-phpunit": "^2.0",
+                "phpunit/phpunit": "^11.5 || ^12.5 || ^13.0",
+                "shipmonk/composer-dependency-analyser": "^1.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "EliasHaeussler\\ScopeProfiler\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Elias Häußler",
+                    "email": "elias@haeussler.dev",
+                    "homepage": "https://haeussler.dev",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "Simple profiler to measure duration, memory usage and memory peak of various scoped actions",
+            "support": {
+                "issues": "https://github.com/eliashaeussler/scope-profiler/issues",
+                "source": "https://github.com/eliashaeussler/scope-profiler/tree/1.0.0"
+            },
+            "time": "2026-07-28T18:41:53+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -7071,6 +7125,7 @@
     "platform": {
         "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
         "ext-filter": "*",
+        "ext-intl": "*",
         "ext-json": "*",
         "ext-libxml": "*",
         "ext-mbstring": "*",

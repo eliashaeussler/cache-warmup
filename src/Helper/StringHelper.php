@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace EliasHaeussler\CacheWarmup\Helper;
 
-use function abs;
-use function end;
-use function round;
+use NumberFormatter;
+
+use function is_string;
 
 /**
  * StringHelper.
@@ -35,19 +35,14 @@ use function round;
  */
 final readonly class StringHelper
 {
-    public static function formatBytes(int $bytes): string
+    public static function formatNumber(int $number): string
     {
-        $bytes = round($bytes);
-        $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
+        $formatted = NumberFormatter::create('en', NumberFormatter::DEFAULT_STYLE)->format($number);
 
-        foreach ($units as $unit) {
-            if (abs($bytes) < 1024 || $unit === end($units)) {
-                break;
-            }
-
-            $bytes /= 1024;
+        if (!is_string($formatted)) {
+            return (string) $number;
         }
 
-        return round($bytes, 2).' '.($unit ?? 'B');
+        return $formatted;
     }
 }
