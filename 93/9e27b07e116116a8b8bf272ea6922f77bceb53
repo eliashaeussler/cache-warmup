@@ -1,0 +1,14 @@
+build/release/version-bumper.yaml
+  h_a1c258d8beeba3 15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "939e27b07e116116a8b8bf272ea6922f77bceb53",
+  "prompts": {},
+  "humans": {
+    "h_a1c258d8beeba3": {
+      "author": "Elias Häußler <elias@haeussler.dev>"
+    }
+  }
+}
