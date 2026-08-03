@@ -1,0 +1,16 @@
+build/checks/phpstan-baseline.neon
+  h_a1c258d8beeba3 27-38,75-80
+src/Http/Message/RequestPoolFactory.php
+  h_a1c258d8beeba3 94,96,101-102,105,107,109-112,118-119,123
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "64135eefba7f4e2386383f7aa5106322018846ac",
+  "prompts": {},
+  "humans": {
+    "h_a1c258d8beeba3": {
+      "author": "Elias Häußler <elias@haeussler.dev>"
+    }
+  }
+}
