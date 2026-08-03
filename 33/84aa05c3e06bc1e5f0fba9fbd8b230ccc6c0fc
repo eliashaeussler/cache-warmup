@@ -1,0 +1,18 @@
+package-lock.json
+  h_a1c258d8beeba3 3,9
+package.json
+  h_a1c258d8beeba3 4
+src/CacheWarmer.php
+  h_a1c258d8beeba3 44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "3384aa05c3e06bc1e5f0fba9fbd8b230ccc6c0fc",
+  "prompts": {},
+  "humans": {
+    "h_a1c258d8beeba3": {
+      "author": "Elias Häußler <elias@haeussler.dev>"
+    }
+  }
+}
