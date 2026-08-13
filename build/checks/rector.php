@@ -21,26 +21,15 @@ declare(strict_types=1);
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use EliasHaeussler\RectorConfig\Config\Config;
 use Rector\Config\RectorConfig;
-use Rector\Php80\Rector\Class_\AnnotationToAttributeRector;
-use Rector\ValueObject\PhpVersion;
 
-return static function (RectorConfig $rectorConfig): void {
-    $rootPath = dirname(__DIR__, 2);
+$rootPath = dirname(__DIR__, 2);
 
-    Config::create($rectorConfig, PhpVersion::PHP_82)
-        ->in(
-            $rootPath.'/src',
-            $rootPath.'/tests',
-        )
-        ->withPHPUnit()
-        ->skip(
-            AnnotationToAttributeRector::class,
-            [
-                $rootPath.'/src/Formatter/JsonFormatter.php',
-            ],
-        )
-        ->apply()
-    ;
-};
+return RectorConfig::configure()
+    ->withPaths([
+        $rootPath.'/src',
+        $rootPath.'/tests',
+    ])
+    ->withPhpSets(php82: true)
+    ->withComposerBased(phpunit: true)
+;
