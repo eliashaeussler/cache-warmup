@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9c3f50741993cbb2d440f154d788ce0e",
+    "content-hash": "6f511a25a7f2d12fa07d3f2918ec232d",
     "packages": [
         {
             "name": "cuyz/valinor",
@@ -2480,66 +2480,6 @@
                 "source": "https://github.com/eliashaeussler/phpstan-config/tree/4.0.0"
             },
             "time": "2025-12-09T08:43:49+00:00"
-        },
-        {
-            "name": "eliashaeussler/rector-config",
-            "version": "4.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/eliashaeussler/rector-config.git",
-                "reference": "8f1c49d4c0a9633a6f962c69bdc8df5bb2944009"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/rector-config/zipball/8f1c49d4c0a9633a6f962c69bdc8df5bb2944009",
-                "reference": "8f1c49d4c0a9633a6f962c69bdc8df5bb2944009",
-                "shasum": ""
-            },
-            "require": {
-                "composer-runtime-api": "^2.0",
-                "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
-                "rector/rector": "^2.0.17"
-            },
-            "require-dev": {
-                "armin/editorconfig-cli": "^2.0",
-                "composer/composer": "^2.0",
-                "eliashaeussler/php-cs-fixer-config": "^3.0",
-                "eliashaeussler/phpstan-config": "^3.0",
-                "ergebnis/composer-normalize": "^2.30",
-                "illuminate/container": "^12.0",
-                "phpstan/extension-installer": "^1.2",
-                "phpunit/phpunit": "^11.0 || ^12.0",
-                "ssch/typo3-rector": "^3.0",
-                "symfony/config": "^6.4 || ^7.0 || ^8.0",
-                "typo3/cms-core": "^13.4 || ^14.0"
-            },
-            "suggest": {
-                "ssch/typo3-rector": "Configures additional Rector rules for TYPO3 CMS projects (^3.0)"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "EliasHaeussler\\RectorConfig\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Elias Häußler",
-                    "email": "elias@haeussler.dev",
-                    "homepage": "https://haeussler.dev",
-                    "role": "Maintainer"
-                }
-            ],
-            "description": "My personal configuration for Rector",
-            "support": {
-                "issues": "https://github.com/eliashaeussler/rector-config/issues",
-                "source": "https://github.com/eliashaeussler/rector-config/tree/4.0.0"
-            },
-            "time": "2025-12-04T20:38:29+00:00"
         },
         {
             "name": "eliashaeussler/task-runner",
@@ -5349,16 +5289,16 @@
         },
         {
             "name": "rector/rector",
-            "version": "2.6.1",
+            "version": "2.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "b8e68f058bca43e01a2e1caa51ef022d6551ed95"
+                "reference": "03cd615cdd5648abb5f10ff3a684fdb976687190"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/b8e68f058bca43e01a2e1caa51ef022d6551ed95",
-                "reference": "b8e68f058bca43e01a2e1caa51ef022d6551ed95",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/03cd615cdd5648abb5f10ff3a684fdb976687190",
+                "reference": "03cd615cdd5648abb5f10ff3a684fdb976687190",
                 "shasum": ""
             },
             "require": {
@@ -5397,7 +5337,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/2.6.1"
+                "source": "https://github.com/rectorphp/rector/tree/2.6.2"
             },
             "funding": [
                 {
@@ -5405,7 +5345,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-03T17:30:34+00:00"
+            "time": "2026-08-12T06:23:05+00:00"
         },
         {
             "name": "sebastian/cli-parser",

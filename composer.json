@@ -37,7 +37,6 @@
 		"armin/editorconfig-cli": "^2.0",
 		"eliashaeussler/php-cs-fixer-config": "^3.0",
 		"eliashaeussler/phpstan-config": "^4.0.0",
-		"eliashaeussler/rector-config": "^4.0",
 		"eliashaeussler/task-runner": "^1.2",
 		"eliashaeussler/transient-logger": "^2.0",
 		"eliashaeussler/version-bumper": "^4.0",
@@ -46,6 +45,7 @@
 		"phpstan/phpstan-phpunit": "^2.0",
 		"phpstan/phpstan-symfony": "^2.0",
 		"phpunit/phpunit": "^11.5.1 || ^12.0 || ^13.0",
+		"rector/rector": "^2.6.2",
 		"shipmonk/composer-dependency-analyser": "^1.8",
 		"symfony/event-dispatcher-contracts": "^3.4.2",
 		"symfony/string": "^6.4.3 || ^7.0.3 || ^8.0"
