@@ -2594,16 +2594,16 @@
         },
         {
             "name": "eliashaeussler/version-bumper",
-            "version": "4.0.4",
+            "version": "4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eliashaeussler/version-bumper.git",
-                "reference": "b52c367464306813f9f7484d20559709327d8331"
+                "reference": "6c17846daef3dfa83e43190f791eb6da17507bb0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eliashaeussler/version-bumper/zipball/b52c367464306813f9f7484d20559709327d8331",
-                "reference": "b52c367464306813f9f7484d20559709327d8331",
+                "url": "https://api.github.com/repos/eliashaeussler/version-bumper/zipball/6c17846daef3dfa83e43190f791eb6da17507bb0",
+                "reference": "6c17846daef3dfa83e43190f791eb6da17507bb0",
                 "shasum": ""
             },
             "require": {
@@ -2659,9 +2659,9 @@
             "description": "Composer plugin to bump project versions during release preparations",
             "support": {
                 "issues": "https://github.com/eliashaeussler/version-bumper/issues",
-                "source": "https://github.com/eliashaeussler/version-bumper/tree/4.0.4"
+                "source": "https://github.com/eliashaeussler/version-bumper/tree/4.1.0"
             },
-            "time": "2026-07-31T13:56:22+00:00"
+            "time": "2026-08-20T19:03:17+00:00"
         },
         {
             "name": "ergebnis/agent-detector",
