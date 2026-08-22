@@ -3308,16 +3308,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v3.95.18",
+            "version": "v3.95.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer.git",
-                "reference": "a8b4e4216faabf67f4e96110ee99a48c96e4e683"
+                "reference": "1228a1cd06e867846b5922a09d2ee948d8182e91"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/a8b4e4216faabf67f4e96110ee99a48c96e4e683",
-                "reference": "a8b4e4216faabf67f4e96110ee99a48c96e4e683",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/1228a1cd06e867846b5922a09d2ee948d8182e91",
+                "reference": "1228a1cd06e867846b5922a09d2ee948d8182e91",
                 "shasum": ""
             },
             "require": {
@@ -3353,7 +3353,6 @@
                 "infection/infection": "^0.32.7",
                 "justinrainbow/json-schema": "^6.10.0",
                 "keradus/cli-executor": "^2.3",
-                "mikey179/vfsstream": "^1.6.12",
                 "php-coveralls/php-coveralls": "^2.9.1",
                 "php-cs-fixer/phpunit-constraint-isidenticalstring": "^1.8",
                 "php-cs-fixer/phpunit-constraint-xmlmatchesxsd": "^1.8",
@@ -3401,7 +3400,7 @@
             ],
             "support": {
                 "issues": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/issues",
-                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.95.18"
+                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.95.21"
             },
             "funding": [
                 {
@@ -3409,7 +3408,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-07-30T15:46:02+00:00"
+            "time": "2026-08-21T17:03:47+00:00"
         },
         {
             "name": "idiosyncratic/editorconfig",
@@ -3462,19 +3461,20 @@
         },
         {
             "name": "justinrainbow/json-schema",
-            "version": "6.10.0",
+            "version": "6.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jsonrainbow/json-schema.git",
-                "reference": "8b1308a9d7bdbdb20ce87ef920f82b4564bb2d33"
+                "reference": "7e420a943a6fbc95e60e3cf67acfbee85b3b4da7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jsonrainbow/json-schema/zipball/8b1308a9d7bdbdb20ce87ef920f82b4564bb2d33",
-                "reference": "8b1308a9d7bdbdb20ce87ef920f82b4564bb2d33",
+                "url": "https://api.github.com/repos/jsonrainbow/json-schema/zipball/7e420a943a6fbc95e60e3cf67acfbee85b3b4da7",
+                "reference": "7e420a943a6fbc95e60e3cf67acfbee85b3b4da7",
                 "shasum": ""
             },
             "require": {
+                "ext-filter": "*",
                 "ext-json": "*",
                 "marc-mabe/php-enum": "^4.4",
                 "php": "^7.2 || ^8.0"
@@ -3507,20 +3507,9 @@
             ],
             "authors": [
                 {
-                    "name": "Bruno Prieto Reis",
-                    "email": "bruno.p.reis@gmail.com"
-                },
-                {
-                    "name": "Justin Rainbow",
-                    "email": "justin.rainbow@gmail.com"
-                },
-                {
-                    "name": "Igor Wiedler",
-                    "email": "igor@wiedler.ch"
-                },
-                {
-                    "name": "Robert Schönthal",
-                    "email": "seroscho@googlemail.com"
+                    "name": "Danny van der Sluijs",
+                    "email": "danny.vandersluijs@icloud.com",
+                    "role": "Maintainer"
                 }
             ],
             "description": "A library to validate a json schema.",
@@ -3531,9 +3520,9 @@
             ],
             "support": {
                 "issues": "https://github.com/jsonrainbow/json-schema/issues",
-                "source": "https://github.com/jsonrainbow/json-schema/tree/6.10.0"
+                "source": "https://github.com/jsonrainbow/json-schema/tree/6.11.0"
             },
-            "time": "2026-06-16T20:50:26+00:00"
+            "time": "2026-08-21T10:30:42+00:00"
         },
         {
             "name": "localheinz/diff",
