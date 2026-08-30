@@ -23,10 +23,10 @@ jobs:
 
     steps:
       - name: 'Checkout'
-        uses: eliashaeussler/gha/.github/actions/checkout@92f522bc65751d9af12baa0969faf3caadd59e92 # 1.1.1
+        uses: eliashaeussler/gha/.github/actions/checkout@6f449e3c6a24edf70fd6e69945a8be1b2d8f8c4c # 1.1.4
 
       - name: 'Build PHAR'
-        uses: eliashaeussler/gha/.github/actions/build-phar@92f522bc65751d9af12baa0969faf3caadd59e92 # 1.1.1
+        uses: eliashaeussler/gha/.github/actions/build-phar@6f449e3c6a24edf70fd6e69945a8be1b2d8f8c4c # 1.1.4
         id: phar
         with:
           target-file: ${{ env.PHAR_FILE }}
@@ -38,7 +38,7 @@ jobs:
         run: chmod +x "$PHAR_FILE"
 
       - name: 'Build Docker'
-        uses: eliashaeussler/gha/.github/actions/build-docker@92f522bc65751d9af12baa0969faf3caadd59e92 # 1.1.1
+        uses: eliashaeussler/gha/.github/actions/build-docker@6f449e3c6a24edf70fd6e69945a8be1b2d8f8c4c # 1.1.4
         with:
           dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
           dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -75,7 +75,7 @@ jobs:
 
     steps:
       - name: 'Checkout'
-        uses: eliashaeussler/gha/.github/actions/checkout@92f522bc65751d9af12baa0969faf3caadd59e92 # 1.1.1
+        uses: eliashaeussler/gha/.github/actions/checkout@6f449e3c6a24edf70fd6e69945a8be1b2d8f8c4c # 1.1.4
 
       - name: 'Download PHAR file'
         id: download-phar
@@ -97,7 +97,7 @@ jobs:
 
       - name: 'Build and deploy docs'
         id: deploy
-        uses: eliashaeussler/gha/.github/actions/deploy-pages@92f522bc65751d9af12baa0969faf3caadd59e92 # 1.1.1
+        uses: eliashaeussler/gha/.github/actions/deploy-pages@6f449e3c6a24edf70fd6e69945a8be1b2d8f8c4c # 1.1.4
         with:
           build-command: 'docs:build'
           base-path: 'docs/.vitepress/dist'
@@ -118,6 +118,6 @@ jobs:
     permissions:
       contents: write
 
-    uses: eliashaeussler/gha/.github/workflows/github-release.yaml@92f522bc65751d9af12baa0969faf3caadd59e92 # 1.1.1
+    uses: eliashaeussler/gha/.github/workflows/github-release.yaml@6f449e3c6a24edf70fd6e69945a8be1b2d8f8c4c # 1.1.4
     with:
       artifact-name: ${{ needs.assets.outputs.phar-artifact-name }}
