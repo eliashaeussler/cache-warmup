@@ -1,0 +1,21 @@
+src/Command/CacheWarmupCommand.php
+  h_a1c258d8beeba3 628,631,665
+  h_a1c258d8beeba3 629-630
+tests/unit/Formatter/TextFormatterTest.php
+  h_a1c258d8beeba3 305
+src/DependencyInjection/Container.php
+  h_a1c258d8beeba3 96
+tests/unit/Fixtures/Classes/DummyEventDispatcher.php
+  h_a1c258d8beeba3 50
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "955b83f8e537a72c615cb77f0ac48de6fe5d48c5",
+  "prompts": {},
+  "humans": {
+    "h_a1c258d8beeba3": {
+      "author": "Elias Häußler <elias@haeussler.dev>"
+    }
+  }
+}
