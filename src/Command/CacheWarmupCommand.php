@@ -625,13 +625,10 @@ HELP);
         $crawlerOptions = $this->optionsParser->parse($this->config->getCrawlerOptions());
         $stopOnFailure = $this->config->shouldStopOnFailure();
 
-        // Select default crawler
-        if (null === $crawler) {
-            $crawler = $this->config->isProgressBarEnabled()
-                ? Crawler\OutputtingCrawler::class
-                : Crawler\ConcurrentCrawler::class
-            ;
-        }
+        $crawler ??= $this->config->isProgressBarEnabled()
+            ? Crawler\OutputtingCrawler::class
+            : Crawler\ConcurrentCrawler::class
+        ;
 
         // Initialize crawler
         if (is_string($crawler)) {
@@ -665,13 +662,8 @@ HELP);
 
     private function initializeParser(): Xml\Parser
     {
-        $parser = $this->config->getParser();
+        $parser = $this->config->getParser() ?? Xml\SitemapXmlParser::class;
         $parserOptions = $this->optionsParser->parse($this->config->getParserOptions());
-
-        // Select default parser
-        if (null === $parser) {
-            $parser = Xml\SitemapXmlParser::class;
-        }
 
         // Initialize parser
         if (is_string($parser)) {
