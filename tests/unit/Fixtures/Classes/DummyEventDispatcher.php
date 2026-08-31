@@ -47,9 +47,7 @@ final class DummyEventDispatcher extends EventDispatcher\EventDispatcher
 
     private function track(string $eventName): void
     {
-        if (!isset($this->dispatchedEvents[$eventName])) {
-            $this->dispatchedEvents[$eventName] = 0;
-        }
+        $this->dispatchedEvents[$eventName] ??= 0;
 
         ++$this->dispatchedEvents[$eventName];
     }

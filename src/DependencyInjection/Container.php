@@ -93,9 +93,7 @@ final class Container
      */
     public function set(string $className, object $service): self
     {
-        if (!isset($this->serviceBag[$className])) {
-            $this->serviceBag[$className] = $service;
-        }
+        $this->serviceBag[$className] ??= $service;
 
         if ($className !== $service::class) {
             $this->serviceBag[$service::class] = $service;
