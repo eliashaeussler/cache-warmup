@@ -23,10 +23,10 @@ jobs:
 
     steps:
       - name: 'Checkout'
-        uses: eliashaeussler/gha/.github/actions/checkout@c6dd61dc8827256bf04b94f8e916df5dd817ab77 # 1.1.15
+        uses: eliashaeussler/gha/.github/actions/checkout@18b13af6535654b3fcb96aa274caa278c48cc79c # 1.1.18
 
       - name: 'Build PHAR'
-        uses: eliashaeussler/gha/.github/actions/build-phar@c6dd61dc8827256bf04b94f8e916df5dd817ab77 # 1.1.15
+        uses: eliashaeussler/gha/.github/actions/build-phar@18b13af6535654b3fcb96aa274caa278c48cc79c # 1.1.18
         id: phar
         with:
           target-file: ${{ env.PHAR_FILE }}
@@ -38,7 +38,7 @@ jobs:
         run: chmod +x "$PHAR_FILE"
 
       - name: 'Build Docker'
-        uses: eliashaeussler/gha/.github/actions/build-docker@c6dd61dc8827256bf04b94f8e916df5dd817ab77 # 1.1.15
+        uses: eliashaeussler/gha/.github/actions/build-docker@18b13af6535654b3fcb96aa274caa278c48cc79c # 1.1.18
         with:
           dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
           dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -75,7 +75,7 @@ jobs:
 
     steps:
       - name: 'Checkout'
-        uses: eliashaeussler/gha/.github/actions/checkout@c6dd61dc8827256bf04b94f8e916df5dd817ab77 # 1.1.15
+        uses: eliashaeussler/gha/.github/actions/checkout@18b13af6535654b3fcb96aa274caa278c48cc79c # 1.1.18
 
       - name: 'Download PHAR file'
         id: download-phar
@@ -97,7 +97,7 @@ jobs:
 
       - name: 'Build and deploy docs'
         id: deploy
-        uses: eliashaeussler/gha/.github/actions/deploy-pages@c6dd61dc8827256bf04b94f8e916df5dd817ab77 # 1.1.15
+        uses: eliashaeussler/gha/.github/actions/deploy-pages@18b13af6535654b3fcb96aa274caa278c48cc79c # 1.1.18
         with:
           build-command: 'docs:build'
           base-path: 'docs/.vitepress/dist'
@@ -118,6 +118,6 @@ jobs:
     permissions:
       contents: write
 
-    uses: eliashaeussler/gha/.github/workflows/github-release.yaml@c6dd61dc8827256bf04b94f8e916df5dd817ab77 # 1.1.15
+    uses: eliashaeussler/gha/.github/workflows/github-release.yaml@18b13af6535654b3fcb96aa274caa278c48cc79c # 1.1.18
     with:
       artifact-name: ${{ needs.assets.outputs.phar-artifact-name }}
