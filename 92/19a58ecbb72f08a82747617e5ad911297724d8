@@ -1,0 +1,24 @@
+docs/.vitepress/config.mts
+  s_a8312dbf4edc22::t_6521221599ef1c 6,20
+  s_a8312dbf4edc22::t_78ab7defcaeabb 7-9
+docs/.vitepress/repo-link-replacer.ts
+  s_a8312dbf4edc22::t_6521221599ef1c 5-14
+package.json
+  s_a8312dbf4edc22::t_6521221599ef1c 8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9219a58ecbb72f08a82747617e5ad911297724d8",
+  "prompts": {},
+  "sessions": {
+    "s_a8312dbf4edc22": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a148536d-3cc5-4198-95cc-d6850afa9386",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "Elias Häußler <elias@haeussler.dev>"
+    }
+  }
+}
