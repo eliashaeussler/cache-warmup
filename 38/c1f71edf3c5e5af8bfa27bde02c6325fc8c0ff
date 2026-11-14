@@ -1,0 +1,26 @@
+tests/unit/Http/Message/Handler/VerboseProgressHandlerTest.php
+  h_a1c258d8beeba3 57,69,88,104
+tests/unit/Formatter/TextFormatterTest.php
+  h_a1c258d8beeba3 81,104,121,140,154,171,182,196,214,229,246,261,276,290,304,321
+tests/unit/Command/CacheWarmupCommandTest.php
+  h_a1c258d8beeba3 305,329,354,379,400,422,440,467,508,597,617,636,771,791,813,832,886,903,926
+src/Http/Message/RequestPoolFactory.php
+  h_a1c258d8beeba3 94
+tests/unit/Crawler/OutputtingCrawlerTest.php
+  h_a1c258d8beeba3 208,231
+tests/unit/Xml/SitemapXmlParserTest.php
+  h_a1c258d8beeba3 136
+build/checks/phpstan-baseline.neon
+  h_a1c258d8beeba3 28,34
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "38c1f71edf3c5e5af8bfa27bde02c6325fc8c0ff",
+  "prompts": {},
+  "humans": {
+    "h_a1c258d8beeba3": {
+      "author": "Elias Häußler <elias@haeussler.dev>"
+    }
+  }
+}
