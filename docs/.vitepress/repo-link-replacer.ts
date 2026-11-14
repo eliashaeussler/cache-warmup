@@ -1,13 +1,17 @@
-// @ts-ignore
 import path from 'path';
 
 export class RepoLinkReplacer
 {
-    constructor(
-        private readonly repoUrl: string,
-        private readonly rootPath: string,
-        private readonly gitReference: string,
-    ) {}
+    private readonly repoUrl: string;
+    private readonly rootPath: string;
+    private readonly gitReference: string;
+
+    constructor(repoUrl: string, rootPath: string, gitReference: string)
+    {
+        this.repoUrl = repoUrl;
+        this.rootPath = rootPath;
+        this.gitReference = gitReference;
+    }
 
     public replaceLink(link: string, templatePath: string): string
     {

@@ -5,6 +5,7 @@
 	"license": "GPL-3.0-or-later",
 	"repository": "https://github.com/eliashaeussler/cache-warmup.git",
 	"private": true,
+	"type": "module",
 	"author": {
 		"name": "Elias Häußler",
 		"email": "elias@haeussler.dev",
