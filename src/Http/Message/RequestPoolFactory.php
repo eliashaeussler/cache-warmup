@@ -91,7 +91,7 @@ final class RequestPoolFactory
         );
     }
 
-    private function onFulfilled(Message\ResponseInterface $response, int|string $index, Promise\PromiseInterface $aggregate): null
+    private function onFulfilled(Message\ResponseInterface $response, int|string $index): null
     {
         $uri = $this->fetchAndReleaseVisitedUri((int) $index);
 

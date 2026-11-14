@@ -302,7 +302,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         $output = $this->commandTester->getDisplay();
 
-        self::assertNotEmpty($output);
+        self::assertNotSame('', $output);
         self::assertStringContainsString('DONE  https://www.example.com/sitemap.xml', $output);
         self::assertStringContainsString('DONE  https://www.example.com/', $output);
         self::assertStringContainsString('DONE  https://www.example.com/foo', $output);
@@ -326,7 +326,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         $output = $this->commandTester->getDisplay();
 
-        self::assertNotEmpty($output);
+        self::assertNotSame('', $output);
         self::assertStringContainsString('DONE  https://www.example.com/sitemap.xml', $output);
         self::assertStringContainsString('DONE  https://www.example.com/', $output);
         self::assertStringContainsString('DONE  https://www.example.com/foo', $output);
@@ -351,7 +351,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         $output = $this->commandTester->getDisplay();
 
-        self::assertNotEmpty($output);
+        self::assertNotSame('', $output);
         self::assertStringContainsString('DONE  https://www.example.com/sitemap.xml', $output);
         self::assertStringContainsString('DONE  https://www.example.com/', $output);
         self::assertStringNotContainsString('https://www.example.com/foo', $output);
@@ -376,7 +376,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         $output = $this->commandTester->getDisplay();
 
-        self::assertNotEmpty($output);
+        self::assertNotSame('', $output);
         self::assertStringContainsString('https://www.example.com/', $output);
         self::assertStringContainsString('https://www.example.com/foo', $output);
     }
@@ -397,7 +397,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         $output = $this->commandTester->getDisplay();
 
-        self::assertNotEmpty($output);
+        self::assertNotSame('', $output);
         self::assertStringContainsString('SKIP  https://www.example.com/foo', $output);
     }
 
@@ -419,7 +419,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         $output = $this->commandTester->getDisplay();
 
-        self::assertNotEmpty($output);
+        self::assertNotSame('', $output);
         self::assertStringNotContainsString('100%', $output);
     }
 
@@ -437,7 +437,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         $output = $this->commandTester->getDisplay();
 
-        self::assertNotEmpty($output);
+        self::assertNotSame('', $output);
         self::assertStringNotContainsString(' DONE ', $output);
         self::assertStringContainsString('100%', $output);
     }
@@ -464,7 +464,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         $output = $this->commandTester->getDisplay();
 
-        self::assertNotEmpty($output);
+        self::assertNotSame('', $output);
         self::assertStringContainsString(' DONE ', $output);
         self::assertStringContainsString('100%', $output);
     }
@@ -505,7 +505,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         $output = $this->commandTester->getDisplay();
 
-        self::assertNotEmpty($output);
+        self::assertNotSame('', $output);
         self::assertStringContainsString('Using custom client options:', $output);
         self::assertMatchesRegularExpression('/"auth": \[\s+"username",\s+"password"\s+]/', $output);
     }
@@ -594,7 +594,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         $output = $this->commandTester->getDisplay();
 
-        self::assertNotEmpty($output);
+        self::assertNotSame('', $output);
         self::assertStringContainsString('Using custom crawler options:', $output);
         self::assertStringContainsString('"concurrency": 3', $output);
     }
@@ -614,7 +614,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         $output = $this->commandTester->getDisplay();
 
-        self::assertNotEmpty($output);
+        self::assertNotSame('', $output);
         self::assertStringContainsString('You passed crawler options to a non-configurable crawler.', $output);
     }
 
@@ -633,7 +633,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         $output = $this->commandTester->getDisplay();
 
-        self::assertNotEmpty($output);
+        self::assertNotSame('', $output);
         self::assertStringContainsString('You configured "stop on failure" for a non-stoppable crawler.', $output);
     }
 
@@ -768,7 +768,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         $output = $this->commandTester->getDisplay();
 
-        self::assertNotEmpty($output);
+        self::assertNotSame('', $output);
         self::assertStringContainsString('Using custom parser options:', $output);
         self::assertStringContainsString('"X-Foo": "Baz"', $output);
     }
@@ -788,7 +788,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         $output = $this->commandTester->getDisplay();
 
-        self::assertNotEmpty($output);
+        self::assertNotSame('', $output);
         self::assertStringContainsString('You passed parser options to a non-configurable parser.', $output);
     }
 
@@ -810,7 +810,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         $output = $this->commandTester->getDisplay();
 
         self::assertSame($expected, $exitCode);
-        self::assertNotEmpty($output);
+        self::assertNotSame('', $output);
         self::assertStringContainsString('Failed to warm up caches for 1 URL.', $output);
     }
 
@@ -829,7 +829,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         $output = $this->commandTester->getDisplay();
 
         self::assertSame(0, $exitCode);
-        self::assertNotEmpty($output);
+        self::assertNotSame('', $output);
         self::assertStringContainsString('FAIL  https://www.example.com/sitemap.xml', $output);
     }
 
@@ -883,7 +883,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
         ]);
 
         self::assertFileExists($logFile);
-        self::assertNotEmpty((string) file_get_contents($logFile));
+        self::assertNotSame('', (string) file_get_contents($logFile));
     }
 
     #[Framework\Attributes\Test]
@@ -900,7 +900,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         $output = $this->commandTester->getDisplay();
 
-        self::assertNotEmpty($output);
+        self::assertNotSame('', $output);
         self::assertStringContainsString('Cancelled', $output);
     }
 
@@ -923,7 +923,7 @@ final class CacheWarmupCommandTest extends Framework\TestCase
 
         $output = $this->commandTester->getDisplay();
 
-        self::assertNotEmpty($output);
+        self::assertNotSame('', $output);
         self::assertStringContainsString(
             '[WARNING] Command is scheduled to run forever. It will be repeated 1 second after each run.',
             $output,

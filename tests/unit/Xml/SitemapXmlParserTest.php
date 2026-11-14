@@ -133,7 +133,7 @@ final class SitemapXmlParserTest extends Framework\TestCase
 
         $result = $this->subject->parse($this->sitemap);
 
-        self::assertNotEmpty($result->getUrls());
+        self::assertNotSame([], $result->getUrls());
     }
 
     #[Framework\Attributes\Test]

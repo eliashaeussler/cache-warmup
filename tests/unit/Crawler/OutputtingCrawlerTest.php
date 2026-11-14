@@ -67,7 +67,6 @@ final class OutputtingCrawlerTest extends Framework\TestCase
         $this->subject->crawl([new Psr7\Uri('https://www.example.org')]);
 
         $lastOptions = $this->mockHandler->getLastOptions();
-        $sink = $lastOptions[RequestOptions::SINK] ?? null;
 
         self::assertInstanceOf(
             Src\Http\Message\Stream\NullStream::class,
@@ -206,7 +205,7 @@ final class OutputtingCrawlerTest extends Framework\TestCase
 
         $output = $this->output->fetch();
 
-        self::assertNotEmpty($output);
+        self::assertNotSame('', $output);
         self::assertStringContainsString('2 / 2', $output);
     }
 
@@ -229,7 +228,7 @@ final class OutputtingCrawlerTest extends Framework\TestCase
 
         $output = $output->fetch();
 
-        self::assertNotEmpty($output);
+        self::assertNotSame('', $output);
         self::assertStringContainsString('DONE  https://www.example.org', $output);
         self::assertStringContainsString('FAIL  https://www.foo.baz', $output);
     }
