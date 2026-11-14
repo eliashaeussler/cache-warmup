@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6f511a25a7f2d12fa07d3f2918ec232d",
+    "content-hash": "05843765a0918162507414fd52f73847",
     "packages": [
         {
             "name": "cuyz/valinor",
-            "version": "2.6.1",
+            "version": "2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CuyZ/Valinor.git",
-                "reference": "0076db8773d8662bba23f2a49fa95dc3e30ac44f"
+                "reference": "6e89ca1afaa8543619fd9512e4665722f225fb38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CuyZ/Valinor/zipball/0076db8773d8662bba23f2a49fa95dc3e30ac44f",
-                "reference": "0076db8773d8662bba23f2a49fa95dc3e30ac44f",
+                "url": "https://api.github.com/repos/CuyZ/Valinor/zipball/6e89ca1afaa8543619fd9512e4665722f225fb38",
+                "reference": "6e89ca1afaa8543619fd9512e4665722f225fb38",
                 "shasum": ""
             },
             "require": {
@@ -78,7 +78,7 @@
             ],
             "support": {
                 "issues": "https://github.com/CuyZ/Valinor/issues",
-                "source": "https://github.com/CuyZ/Valinor/tree/2.6.1"
+                "source": "https://github.com/CuyZ/Valinor/tree/2.7.0"
             },
             "funding": [
                 {
@@ -86,8 +86,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-04T13:14:00+00:00",
-            "published-time": "2026-11-04T13:14:21+00:00"
+            "time": "2026-11-12T10:33:19+00:00",
+            "published-time": "2026-11-12T10:33:37+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
