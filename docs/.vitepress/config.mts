@@ -3,8 +3,10 @@ import markdownItReplaceLink from 'markdown-it-replace-link';
 import {groupIconMdPlugin, groupIconVitePlugin} from 'vitepress-plugin-group-icons';
 import path from 'path';
 
-import {RepoLinkReplacer} from './repo-link-replacer';
-import {version} from '../../package.json';
+import {RepoLinkReplacer} from './repo-link-replacer.ts';
+import pkg from '../../package.json' with {type: 'json'};
+
+const {version} = pkg;
 
 // General information
 const hostname: string = 'https://cache-warmup.dev';
@@ -15,8 +17,7 @@ const imageAltText: string = 'Screenshot from a terminal window running the "cac
 
 // GitHub repository
 const repoUrl: string = 'https://github.com/eliashaeussler/cache-warmup';
-// @ts-ignore
-const rootPath: string = path.resolve(__dirname, '..');
+const rootPath: string = path.resolve(import.meta.dirname, '..');
 const replacer = new RepoLinkReplacer(repoUrl, rootPath, version);
 
 export default defineConfig({
